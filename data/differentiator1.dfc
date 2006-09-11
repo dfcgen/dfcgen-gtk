@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?> <!--*- mode: sgml; coding: utf-8 -*-->
+<project generator="dfcgen-gtk" version="0.1">
+	<author>Ralf Hoppe</author>
+	<author lang="de">Ralf Hoppe</author>
+	<title>1st order differentiator (FIR)</title>
+	<title lang="de">Differenzierer 1. Ordnung (FIR)</title>
+	<description>Differentiator of first order designed by backward differences. The transfer function is:
+H(z)=½(1-z&lt;sup&gt;-1&lt;/sup&gt;).</description>
+	<description lang="de">Differenzierer erster Ordnung gebildet durch Rückwärts-Differenzen. Die Übertragungsfunktion lautet:
+H(z)=½(1-z&lt;sup&gt;-1&lt;/sup&gt;).</description>
+	<filter>
+		<sample>44100</sample>
+		<numerator>
+			<degree>1</degree>
+			<coefficient tap="0">0.5</coefficient>
+			<coefficient tap="1">-0.5</coefficient>
+		</numerator>
+		<denominator>
+			<degree>0</degree>
+			<coefficient tap="0">1.0</coefficient>
+		</denominator>
+	</filter>
+</project>

@@ -1,0 +1,7 @@
+
+
+Differences wrt. dfcgen v1.x:
+
+Bugfixes:
+- axis label assignment does not work as expected (sometimes too less grid
+  points and labels)

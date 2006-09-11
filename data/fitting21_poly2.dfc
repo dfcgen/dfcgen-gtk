@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?> <!--*- mode: sgml; coding: utf-8 -*-->
+<project generator="dfcgen-gtk" version="0.1">
+	<author>Ralf Hoppe</author>
+	<author lang="de">Ralf Hoppe</author>
+	<title>Fitting filter 21, 2 (FIR)</title>
+	<title lang="de">Glättungsfilter 21, 2 (FIR)</title>
+	<description>Fitting of 21 samples by a polynomial of 2&lt;sup&gt;nd&lt;/sup&gt; order using the &lt;i&gt;Gauss&lt;/i&gt;ian least square criteria.</description>
+	<description lang="de">Glättung von 21 Abtastwerten durch ein Ausgleichspolynom 2. Ordnung bei Minimierung des &lt;i&gt;Gauß&lt;/i&gt;schen Fehlers.</description>
+	<filter>
+		<sample>44100</sample>
+		<numerator>
+			<degree>20</degree>
+			<coefficient tap="0">-2.857142857E-3</coefficient>
+			<coefficient tap="1">-8.571428571E-3</coefficient>
+			<coefficient tap="2">-0.01428571429</coefficient>
+			<coefficient tap="3">-0.01428571429</coefficient>
+			<coefficient tap="4">-5.714285714E-3</coefficient>
+			<coefficient tap="5">0.01714285714</coefficient>
+			<coefficient tap="6">0.05142857143</coefficient>
+			<coefficient tap="7">0.09428571429</coefficient>
+			<coefficient tap="8">0.13428571143</coefficient>
+			<coefficient tap="9">0.1628571429</coefficient>
+			<coefficient tap="10">0.1714285714</coefficient>
+			<coefficient tap="11">0.1628571429</coefficient>
+			<coefficient tap="12">0.13428571143</coefficient>
+			<coefficient tap="13">0.09428571429</coefficient>
+			<coefficient tap="14">0.05142857143</coefficient>
+			<coefficient tap="15">0.01714285714</coefficient>
+			<coefficient tap="16">-5.714285714E-3</coefficient>
+			<coefficient tap="17">-0.01428571429</coefficient>
+			<coefficient tap="18">-0.01428571429</coefficient>
+			<coefficient tap="19">-8.571428571E-3</coefficient>
+			<coefficient tap="20">-2.857142857E-3</coefficient>
+		</numerator>
+		<denominator>
+			<degree>0</degree>
+			<coefficient tap="0">1.0</coefficient>
+		</denominator>
+	</filter>
+</project>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?> <!--*- mode: sgml; coding: utf-8 -*-->
+<project generator="dfcgen-gtk" version="0.1">
+	<author>Ralf Hoppe</author>
+	<author lang="de">Ralf Hoppe</author>
+	<title>Simpson rule integrator (IIR)</title>
+	<title lang="de">Simpson-Regel Integrator (IIR)</title>
+	<description>&lt;i&gt;Simpson&lt;/i&gt; rule integrator. The transfer function is:
+H(z)=⅓(1+4z&lt;sup&gt;-1&lt;/sup&gt;+z&lt;sup&gt;-2&lt;/sup&gt;)/(1-z&lt;sup&gt;-2&lt;/sup&gt;).</description>
+	<description lang="de">&lt;i&gt;Simpson&lt;/i&gt;-Regel Integrator. Die Übertragungsfunktion lautet:
+H(z)=⅓(1+4z&lt;sup&gt;-1&lt;/sup&gt;+z&lt;sup&gt;-2&lt;/sup&gt;)/(1-z&lt;sup&gt;-2&lt;/sup&gt;).</description>
+	<filter>
+		<sample>44100</sample>
+		<numerator>
+			<degree>2</degree>
+			<coefficient tap="0">0.333333333333333</coefficient>
+			<coefficient tap="1">1.333333333333333</coefficient>
+			<coefficient tap="2">0.333333333333333</coefficient>
+		</numerator>
+		<denominator>
+			<degree>2</degree>
+			<coefficient tap="0">1.0</coefficient>
+			<coefficient tap="1">0</coefficient>
+			<coefficient tap="2">-1.0</coefficient>
+		</denominator>
+	</filter>
+</project>

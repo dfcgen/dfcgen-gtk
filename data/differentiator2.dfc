@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?> <!--*- mode: sgml; coding: utf-8 -*-->
+<project generator="dfcgen-gtk" version="0.1">
+	<author>Ralf Hoppe</author>
+	<author lang="de">Ralf Hoppe</author>
+	<title>2nd order differentiator (FIR)</title>
+	<title lang="de">Differenzierer 2. Ordnung (FIR)</title>
+	<description>Differentiator of second order based on three point interpolation. The transfer function is:
+H(z)=⅛(3-4z&lt;sup&gt;-1&lt;/sup&gt;+8z&lt;sup&gt;-2&lt;/sup&gt;).</description>
+	<description lang="de">Differenzierer zweiter Ordnung (Interpolation durch drei Punkte). Die Übertragungsfunktion lautet:
+H(z)=⅛(3-4z&lt;sup&gt;-1&lt;/sup&gt;+8z&lt;sup&gt;-2&lt;/sup&gt;).</description>
+	<filter>
+		<sample>44100</sample>
+		<numerator>
+			<degree>2</degree>
+			<coefficient tap="0">0.375</coefficient>
+			<coefficient tap="1">-0.5</coefficient>
+			<coefficient tap="1">0.125</coefficient>
+		</numerator>
+		<denominator>
+			<degree>0</degree>
+			<coefficient tap="0">1.0</coefficient>
+		</denominator>
+	</filter>
+</project>

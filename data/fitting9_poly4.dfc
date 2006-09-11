@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?> <!--*- mode: sgml; coding: utf-8 -*-->
+<project generator="dfcgen-gtk" version="0.1">
+	<author>Ralf Hoppe</author>
+	<author lang="de">Ralf Hoppe</author>
+	<title>Fitting filter 9, 4 (FIR)</title>
+	<title lang="de">Glättungsfilter 9, 4 (FIR)</title>
+	<description>Fitting of 9 samples by a polynomial of 4&lt;sup&gt;th&lt;/sup&gt; order using the &lt;i&gt;Gauss&lt;/i&gt;ian least square criteria.</description>
+	<description lang="de">Glättung von 9 Abtastwerten durch ein Ausgleichspolynom 4. Ordnung bei Minimierung des &lt;i&gt;Gauß&lt;/i&gt;schen Fehlers.</description>
+	<filter>
+		<sample>44100</sample>
+		<numerator>
+			<degree>8</degree>
+			<coefficient tap="0">0.03496503497</coefficient>
+			<coefficient tap="1">-0.12820511282</coefficient>
+			<coefficient tap="2">0.06993006993</coefficient>
+			<coefficient tap="3">0.3146853147</coefficient>
+			<coefficient tap="4">0.4172494172</coefficient>
+			<coefficient tap="5">0.3146853147</coefficient>
+			<coefficient tap="6">0.06993006993</coefficient>
+			<coefficient tap="7">-0.12820511282</coefficient>
+			<coefficient tap="8">0.03496503497</coefficient>
+		</numerator>
+		<denominator>
+			<degree>0</degree>
+			<coefficient tap="0">1.0</coefficient>
+		</denominator>
+	</filter>
+</project>

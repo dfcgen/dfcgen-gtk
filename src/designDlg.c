@@ -1,0 +1,276 @@
+/********************* -*- mode: C; coding: utf-8 -*- *************************/
+/**
+ * \file
+ *           Design dialogs management.
+ *
+ * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \version  $Header: /home/cvs/dfcgen-gtk/src/designDlg.c,v 1.1.1.1 2006-09-11 15:52:19 ralf Exp $
+ *
+ *
+ * \see
+ *
+ * History:
+ * $Log: not supported by cvs2svn $
+ *
+ *
+ ******************************************************************************/
+
+
+/* INCLUDE FILES **************************************************************/
+
+#include "gui.h"
+#include "filterSupport.h"
+#include "dialogSupport.h"
+#include "mainDlg.h"
+#include "designDlg.h"
+#include "stdIirDesignDlg.h"
+#include "miscDesignDlg.h"
+#include "dfcProject.h"
+
+
+/* GLOBAL CONSTANT DEFINITIONS ************************************************/
+
+
+/* GLOBAL VARIABLE DEFINITIONS ************************************************/
+
+
+/* LOCAL TYPE DECLARATIONS ****************************************************/
+
+typedef void (*DESIGNDLG_CREATE_FUNC)(GtkWidget *topWidget, GtkWidget *boxWidget);
+typedef void (*DESIGNDLG_DESTROY_FUNC)(GtkWidget *topWidget);
+typedef int (*DESIGNDLG_APPLY_FUNC)(GtkWidget *topWidget);
+typedef BOOL (*DESIGNDLG_ACTIVE_FUNC)(GtkWidget *topWidget);
+
+
+/** Design dialog descriptor.
+ */ 
+typedef struct
+{
+    char *name;                                     /**< Name of filter class */
+    DESIGNDLG_CREATE_FUNC create;        /**< Design dialog creation function */
+    DESIGNDLG_DESTROY_FUNC destroy;       /**< Design dialog destroy function */
+    DESIGNDLG_APPLY_FUNC apply;             /**< Design dialog apply function */
+    DESIGNDLG_ACTIVE_FUNC active;    /**< Design dialog active check function */
+} DESIGNDLG_DESC;
+
+
+/* LOCAL CONSTANT DEFINITIONS *************************************************/
+
+#define DESIGNDLG_DEFAULT       FLTCLASS_DEFAULT          /**< Default design */
+
+
+
+/* LOCAL VARIABLE DEFINITIONS *************************************************/
+
+static DESIGNDLG_DESC dlgDesc[FLTCLASS_SIZE] =
+{
+    {                                                        /* FLTCLASS_MISC */
+        N_("Miscellaneous"),
+        miscDesignDlgCreate, miscDesignDlgDestroy,
+        miscDesignDlgApply, miscDesignDlgActive
+    },
+    {                                                      /* FLTCLASS_LINFIR */
+        N_("Linear FIR"),
+        stdIirDesignDlgCreate, stdIirDesignDlgDestroy,
+        stdIirDesignDlgApply, stdIirDesignDlgActive
+    },
+    {                                                      /* FLTCLASS_STDIIR */
+        N_("Standard IIR"),
+        stdIirDesignDlgCreate, stdIirDesignDlgDestroy,
+        stdIirDesignDlgApply, stdIirDesignDlgActive
+    }
+};
+
+
+/* LOCAL MACRO DEFINITIONS ****************************************************/
+
+
+/* LOCAL FUNCTION DECLARATIONS ************************************************/
+
+static void updateLayout (GtkWidget *topWidget, FLTCLASS type);
+
+
+/* LOCAL FUNCTION DEFINITIONS *************************************************/
+
+
+/* FUNCTION *******************************************************************/
+/** Updates the design layout.
+ *
+ *  \param topWidget    Top level widget.
+ *  \param type         Filter class (may be FLTCLASS_NOTDEF).
+ *
+ ******************************************************************************/
+static void updateLayout (GtkWidget *topWidget, FLTCLASS type)
+{
+    static FLTCLASS currentDlgType = FLTCLASS_NOTDEF;
+
+    FLTCLASS i;
+
+    GtkWidget* boxWidget = lookup_widget (topWidget, "boxDesignDlg");
+    FLTCLASS index = type;
+
+    ASSERT (boxWidget != NULL);
+
+    if ((index < 0) || (index >= FLTCLASS_SIZE))
+    {
+        index = DESIGNDLG_DEFAULT;               /* set default startup value */
+    } /* if */
+
+    if (currentDlgType != index)
+    {
+        if (currentDlgType != FLTCLASS_NOTDEF)         /* not the first call? */
+        {
+            for (i = 0; i < FLTCLASS_SIZE; i++)
+            {
+                dlgDesc[i].destroy (topWidget); /* does nothing if not active */
+            } /* for */
+        } /* if */
+
+        dlgDesc[index].create (topWidget, boxWidget);
+        gtk_window_resize (GTK_WINDOW (topWidget), 1, 1); /* resize to minimum */
+        currentDlgType = index;
+    } /* if */
+} /* updateLayout() */
+
+
+
+
+/* EXPORTED FUNCTION DEFINITIONS **********************************************/
+
+
+/* FUNCTION *******************************************************************/
+/** This function should be called, if the design dialog (box) is realized.
+ *
+ *
+ *  \param widget       Widget pointer to \a boxDesignDlg, a GtkVBox.
+ *  \param user_data    Pointer to user data as passed to g_signal_connect()
+ *                      for the \e realize event (unused).
+ *
+ ******************************************************************************/
+void designDlgBoxRealize(GtkWidget *widget, gpointer user_data)
+{
+    FLTCLASS index;                     /* selection in filter class combobox */
+
+    GtkWidget *topWidget = gtk_widget_get_toplevel (widget);
+    GtkWidget* classWidget = lookup_widget (topWidget, "comboFilterClass");
+
+    ASSERT (topWidget != NULL);
+    ASSERT (classWidget != NULL);
+
+    for (index = 0; index < FLTCLASS_SIZE; index++)
+    {
+        gtk_combo_box_append_text (GTK_COMBO_BOX (classWidget),
+                                   gettext (dlgDesc[index].name));
+    } /* for */
+
+    if (GTK_WIDGET_TOPLEVEL(topWidget))
+    {
+        index = dfcPrjGetDesign(NULL);
+
+        if ((index < 0) || (index >= FLTCLASS_SIZE))
+        {
+            index = DESIGNDLG_DEFAULT;           /* set default startup value */
+        } /* if */
+
+        /* The following call emits a "changed" event, which then forces
+         * execution of updateLayout().
+         */
+        gtk_combo_box_set_active (GTK_COMBO_BOX (classWidget), index);
+    } /* if */
+} /* designDlgBoxRealize() */
+
+
+/* FUNCTION *******************************************************************/
+/** This function is called if the filter class changes.
+ *
+ *
+ *  \param combobox     Filter class combobox widget.
+ *  \param user_data    User data of \e changed event (unused).
+ *
+ ******************************************************************************/
+void designDlgOnFilterComboChanged (GtkComboBox* combobox, gpointer user_data)
+{
+    FLTCLASS index = gtk_combo_box_get_active(combobox);
+    GtkWidget* topWidget = gtk_widget_get_toplevel (GTK_WIDGET(combobox));
+
+    ASSERT (topWidget != NULL);
+    ASSERT (index < FLTCLASS_SIZE);
+    updateLayout (topWidget, index);
+
+} /* designDlgOnFilterComboChanged() */
+
+
+
+/* FUNCTION *******************************************************************/
+/** This function shall be called if the filter design dialog must be updated.
+ *
+ *  \param topWidget    Top level widget.
+ *
+ ******************************************************************************/
+void designDlgUpdate (GtkWidget *topWidget)
+{
+    DESIGNDLG design;
+
+    FLTCLASS type = dfcPrjGetDesign (&design);
+
+    updateLayout (topWidget, type);
+
+    if (type == FLTCLASS_NOTDEF)
+    {                          /* clear all entry fields and other selections */
+    } /* if */
+} /* designDlgUpdate() */
+
+
+
+/* FUNCTION *******************************************************************/
+/** This function is called if the \e Apply button emits the \e clicked signal.
+ *
+ *  \param button       \e Apply button widget handle.
+ *  \param data         User data as passed to function g_signal_connect. In
+ *                      that case (here) it is the filter class combobox widget
+ *                      handle.
+ *
+ ******************************************************************************/
+void designDlgApply (GtkButton *button, gpointer data)
+{
+    int err;
+
+    GtkWidget *topWidget = gtk_widget_get_toplevel (GTK_WIDGET (button));
+    GtkComboBox* combobox = GTK_COMBO_BOX (data);
+    FLTCLASS type = gtk_combo_box_get_active(combobox);
+
+    if (type >= 0)
+    {
+        err = dlgDesc[type].apply (topWidget);
+
+        if (!FLTERR_CRITICAL (err))
+        {
+            if (FLTERR_WARNING (err))
+            {
+                GtkWidget *dialog = gtk_message_dialog_new (GTK_WINDOW (topWidget),
+                                                            GTK_DIALOG_DESTROY_WITH_PARENT,
+                                                            GTK_MESSAGE_WARNING,
+                                                            GTK_BUTTONS_CLOSE,
+                                                            _("Filter generation has dropped some (near zero) coefficients, but the filter is still valid."));
+                gtk_dialog_run (GTK_DIALOG (dialog));
+                gtk_widget_destroy (dialog);
+            } /* if */
+
+            mainDlgUpdateFilter ();
+        } /* if */
+        else                                               /* FLTERR_CRITICAL */
+        {
+            if (err != INT_MAX)
+            {
+                dlgError (topWidget, _("Cannot generate such a filter. Please check the sample frequency, degree and other parameters."));
+            } /* if */
+        } /* else */
+    } /* if */
+
+} /* designDlgApply */
+
+
+
+/******************************************************************************/
+/* END OF FILE                                                                */
+/******************************************************************************/

@@ -1,0 +1,686 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: dfcgen-gtk 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-09-10 17:31+0200\n"
+"PO-Revision-Date: 2006-09-11 10:48+0200\n"
+"Last-Translator: Ralf Hoppe <ralf.hoppe@ieee.org>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: German\n"
+"X-Poedit-Country: GERMANY\n"
+"X-Poedit-SourceCharset: iso-8859-1\n"
+
+#: src/support.c:93 src/support.c:117
+#, c-format
+msgid "Couldn't find pixmap file: %s"
+msgstr ""
+
+#. FLTCLASS_MISC
+#: src/designDlg.c:68
+msgid "Miscellaneous"
+msgstr "Verschiedene"
+
+#. FLTCLASS_LINFIR
+#: src/designDlg.c:73
+msgid "Linear FIR"
+msgstr "Linear FIR"
+
+#. FLTCLASS_STDIIR
+#: src/designDlg.c:78
+msgid "Standard IIR"
+msgstr "Standard IIR"
+
+#: src/designDlg.c:253
+msgid ""
+"Filter generation has dropped some (near zero) coefficients, but the filter "
+"is still valid."
+msgstr ""
+
+#: src/designDlg.c:264
+msgid ""
+"Cannot generate such a filter. Please check the sample frequency, degree and "
+"other parameters."
+msgstr ""
+
+# Headline in list box identifying the tap associated with a coefficient.
+# Set this string as short as possible!
+#: src/mainDlg.c:211
+msgid "Tap"
+msgstr "Abzw."
+
+#: src/mainDlg.c:222
+msgid "Coefficient"
+msgstr "Koeffizient"
+
+#: src/mainDlg.c:345
+msgid "_File"
+msgstr ""
+
+#: src/mainDlg.c:398
+msgid "_Edit"
+msgstr ""
+
+#: src/mainDlg.c:412
+msgid "_View"
+msgstr ""
+
+#: src/mainDlg.c:418
+msgid "_Amplitude Response"
+msgstr "Amplitudengang"
+
+#: src/mainDlg.c:424
+msgid "Attenuation"
+msgstr "Dämpfung"
+
+#: src/mainDlg.c:430 src/responseWin.c:129
+msgid "Characteristic Function"
+msgstr "Drosselung"
+
+#: src/mainDlg.c:436 src/responseWin.c:143
+msgid "Phase Response"
+msgstr "Phasengang"
+
+#: src/mainDlg.c:442 src/responseWin.c:157
+msgid "Phase Delay"
+msgstr "Phasenlaufzeit"
+
+#: src/mainDlg.c:448 src/responseWin.c:171
+msgid "Group Delay"
+msgstr "Gruppenlaufzeit"
+
+#: src/mainDlg.c:454 src/responseWin.c:185
+msgid "Impulse Response"
+msgstr "Impulsantwort"
+
+#: src/mainDlg.c:460 src/responseWin.c:199
+msgid "Step Response"
+msgstr "Sprungantwort"
+
+#: src/mainDlg.c:466
+msgid "_Help"
+msgstr ""
+
+# Label for filter class combobox
+#: src/mainDlg.c:531
+msgid "<b>_Class</b>"
+msgstr "_Klasse"
+
+# Tooltip
+#: src/mainDlg.c:537
+msgid "Class of filter (or system)"
+msgstr ""
+
+# Tooltip for help button
+#: src/mainDlg.c:552
+msgid "Help"
+msgstr "Hilfe"
+
+# Tooltip
+#: src/mainDlg.c:559
+msgid "Apply input data"
+msgstr "Eingabe anwenden"
+
+#: src/mainDlg.c:600
+msgid "<b>Roots</b>"
+msgstr "Wurzeln"
+
+# Tooltip
+#: src/mainDlg.c:619
+msgid "Denominator coefficients"
+msgstr "Nennerkoeffizienten"
+
+# Tooltip
+#: src/mainDlg.c:631
+msgid "Numerator coefficients"
+msgstr "Zählerkoeffizienten"
+
+#: src/mainDlg.c:633
+msgid "<b>Numerator</b>"
+msgstr "<b>Zähler</b>"
+
+#: src/mainDlg.c:641
+msgid "<b>Denominator</b>"
+msgstr "<b>Nenner</b>"
+
+# Tooltip
+#: src/mainDlg.c:657
+msgid "Modify coefficient"
+msgstr ""
+
+#: src/mainDlg.c:665
+msgid "Round coefficient(s)"
+msgstr "Koeffizienten runden"
+
+#: src/mainDlg.c:673
+msgid "Scale coefficient(s)"
+msgstr "Koeffizienten skalieren"
+
+# Displayed if title, author or filename (may be a conversion error from filesystem
+# into UTF-8 coding) are unknown.
+#: src/mainDlg.c:802 src/fileDlg.c:91 src/fileDlg.c:96 src/dialogSupport.c:103
+msgid "<i>Unknown</i>"
+msgstr "<i>Unbekannt</i>"
+
+#: src/helpDlg.c:83
+msgid "Copyright (c) 2006 "
+msgstr "Copyright (c) 2006"
+
+#: src/responseWin.c:75
+msgid "Hz"
+msgstr "Hz"
+
+#: src/responseWin.c:76
+msgid "kHz"
+msgstr "kHz"
+
+#: src/responseWin.c:77
+msgid "MHz"
+msgstr "MHz"
+
+#: src/responseWin.c:78
+msgid "GHz"
+msgstr "GHz"
+
+#: src/responseWin.c:86
+msgid "s"
+msgstr "s"
+
+#: src/responseWin.c:87
+msgid "ms"
+msgstr "ms"
+
+#: src/responseWin.c:88
+msgid "µs"
+msgstr "µs"
+
+#: src/responseWin.c:89
+msgid "ns"
+msgstr "ns"
+
+#: src/responseWin.c:90
+msgid "ps"
+msgstr "ps"
+
+#. type
+#: src/responseWin.c:101
+msgid "Amplitude Response"
+msgstr ""
+
+# f means the physical unit Frequency
+#. name
+#. diag
+#. x
+#: src/responseWin.c:104 src/responseWin.c:118 src/responseWin.c:132
+#: src/responseWin.c:146 src/responseWin.c:160 src/responseWin.c:174
+msgid "<b>f</b>"
+msgstr "<b>f</b>"
+
+# Physical symbol for transfer function H(f)
+#. y
+#: src/responseWin.c:107
+msgid "<b>H</b>"
+msgstr ""
+
+#: src/responseWin.c:115
+msgid "Attenuation Response"
+msgstr "Dämpfungsverlauf"
+
+#. y
+#: src/responseWin.c:135
+msgid "<b>D</b>"
+msgstr ""
+
+#. y
+#: src/responseWin.c:163
+msgid "<b>T<sub>p</sub></b>"
+msgstr ""
+
+#. y
+#: src/responseWin.c:177
+msgid "<b>T<sub>g</sub></b>"
+msgstr ""
+
+# t means the physical unit Time
+#. diag
+#. x
+#: src/responseWin.c:188 src/responseWin.c:202
+msgid "<b>t</b>"
+msgstr "t"
+
+# Tooltip
+#: src/responseWin.c:308
+msgid "Set response plot preferences"
+msgstr "Plot Einstellungen"
+
+#: src/responseWin.c:318
+msgid "Print this response plot"
+msgstr ""
+
+#: src/responseWin.c:405
+msgid "Calculating"
+msgstr "Berechne"
+
+#: src/responseWin.c:416
+#, c-format
+msgid "%d Points"
+msgstr ""
+
+#: src/cairoPlot.c:185
+#, c-format
+msgid ""
+"<b>Cannot draw the plot.</b>\n"
+"\n"
+"<small>Maybe memory is exhausted or there are too many sample points. Change "
+"the start and/or endpoint of ordinate to circumvant this situation.</small>"
+msgstr ""
+
+#. if
+#: src/fileDlg.c:99
+#, c-format
+msgid ""
+"<b>Title</b>: %s\n"
+"<b>Author</b>: %s"
+msgstr ""
+"<b>Titel</b>: %s\n"
+"<b>Autor</b>: %s"
+
+#: src/fileDlg.c:147
+msgid "Project files"
+msgstr "Projektdateien"
+
+#: src/fileDlg.c:152
+msgid "All files"
+msgstr "Alle Dateien"
+
+#: src/fileDlg.c:206
+msgid "Load project file"
+msgstr "Projetdatei laden"
+
+#: src/fileDlg.c:229
+#, c-format
+msgid "Error loading project file '%s'."
+msgstr "Fehler beim Laden einer Projektdatei"
+
+#: src/fileDlg.c:260 src/fileDlg.c:324
+#, c-format
+msgid "Error saving project file '%s'."
+msgstr "Fehler beim Speichern einer Projektdatei"
+
+#: src/fileDlg.c:284
+msgid "Save project file"
+msgstr ""
+
+#: src/fileDlg.c:300
+msgid "Untitled"
+msgstr "Unbenannt"
+
+#: src/responseDlg.c:141
+msgid "Response Settings"
+msgstr ""
+
+#: src/responseDlg.c:165 src/responseDlg.c:247
+msgid "Start"
+msgstr ""
+
+#: src/responseDlg.c:171 src/responseDlg.c:253
+msgid "Stop"
+msgstr ""
+
+#: src/responseDlg.c:177
+msgid "Samples"
+msgstr ""
+
+#: src/responseDlg.c:194
+msgid "The number of samples to be used (0 = all)"
+msgstr ""
+
+#: src/responseDlg.c:204 src/responseDlg.c:210
+msgid "[kHz]"
+msgstr ""
+
+#: src/responseDlg.c:216 src/responseDlg.c:287
+msgid "Logarithmic"
+msgstr ""
+
+#: src/responseDlg.c:222 src/responseDlg.c:293
+msgid "Show Grid"
+msgstr ""
+
+#: src/responseDlg.c:229
+msgid "<b>x-Axis</b>"
+msgstr ""
+
+#: src/responseDlg.c:275 src/responseDlg.c:281
+msgid "[dB]"
+msgstr ""
+
+#: src/responseDlg.c:300
+msgid "Autoscaling"
+msgstr ""
+
+#: src/responseDlg.c:307
+msgid "<b>y-Axis</b>"
+msgstr ""
+
+#: src/responseDlg.c:324 src/responseDlg.c:340
+msgid "Graph"
+msgstr ""
+
+#: src/responseDlg.c:330
+msgid "Color"
+msgstr ""
+
+#: src/responseDlg.c:341
+msgid "Box"
+msgstr ""
+
+#: src/responseDlg.c:347
+msgid "Line (continuous)"
+msgstr ""
+
+#: src/responseDlg.c:348
+msgid "Circle (discrete)"
+msgstr ""
+
+#: src/responseDlg.c:349
+msgid "Samples (discrete)"
+msgstr ""
+
+#: src/responseDlg.c:350
+msgid "Cross (discrete)"
+msgstr ""
+
+#: src/responseDlg.c:351
+msgid "Box (discrete)"
+msgstr ""
+
+#: src/responseDlg.c:358
+msgid "<b>Style</b>"
+msgstr ""
+
+#. LOCAL CONSTANT DEFINITIONS ************************************************
+#: src/stdIirDesignDlg.c:48
+msgid "f<sub>_Center</sub>"
+msgstr ""
+
+#. *< Label for center frequency
+#: src/stdIirDesignDlg.c:49
+msgid "f<sub>_Cutoff</sub>"
+msgstr ""
+
+#. type, hasRipple, hasStopband, hasAngle
+#: src/stdIirDesignDlg.c:72
+msgid "Butterworth"
+msgstr ""
+
+#: src/stdIirDesignDlg.c:73
+msgid "Chebyshev"
+msgstr ""
+
+#: src/stdIirDesignDlg.c:74
+msgid "Chebyshev Inv."
+msgstr ""
+
+#: src/stdIirDesignDlg.c:75
+msgid "Cauer (Case I)"
+msgstr ""
+
+#: src/stdIirDesignDlg.c:76
+msgid "Cauer (Case II)"
+msgstr ""
+
+#: src/stdIirDesignDlg.c:77
+msgid "Bessel"
+msgstr ""
+
+#. for
+#: src/stdIirDesignDlg.c:287
+msgid "<b>Characteristic</b>"
+msgstr ""
+
+#: src/stdIirDesignDlg.c:319
+msgid "Type of frequency transformation"
+msgstr ""
+
+#: src/stdIirDesignDlg.c:323
+msgid "None"
+msgstr ""
+
+#: src/stdIirDesignDlg.c:324
+msgid "Highpass"
+msgstr ""
+
+#: src/stdIirDesignDlg.c:325
+msgid "Bandpass"
+msgstr ""
+
+#: src/stdIirDesignDlg.c:326
+msgid "Bandstop"
+msgstr ""
+
+#: src/stdIirDesignDlg.c:333
+msgid "Bandwidth"
+msgstr ""
+
+#: src/stdIirDesignDlg.c:336
+msgid "_Type"
+msgstr ""
+
+#: src/stdIirDesignDlg.c:352
+msgid "f<sub>_Bandwidth</sub>"
+msgstr ""
+
+#: src/stdIirDesignDlg.c:358
+msgid "_Geometric"
+msgstr ""
+
+#: src/stdIirDesignDlg.c:362
+msgid ""
+"Input center frequency is not symmetric (geometric mean between cutoff "
+"frequencies)"
+msgstr ""
+
+#: src/stdIirDesignDlg.c:369
+msgid "Cutoff frequency (highpass) or center frequency (bandpass, bandstop)"
+msgstr ""
+
+#: src/stdIirDesignDlg.c:372
+msgid "<b>Transform</b>"
+msgstr ""
+
+#: src/stdIirDesignDlg.c:398
+msgid "Cutoff frequency"
+msgstr ""
+
+#: src/stdIirDesignDlg.c:406 src/miscDesignDlg.c:179
+msgid "Sample frequency"
+msgstr ""
+
+#: src/stdIirDesignDlg.c:415
+msgid "Degree of reference lowpass"
+msgstr ""
+
+#: src/stdIirDesignDlg.c:418 src/miscDesignDlg.c:184
+msgid "_Degree"
+msgstr ""
+
+#: src/stdIirDesignDlg.c:426 src/miscDesignDlg.c:166
+msgid "f<sub>_Sample</sub>"
+msgstr ""
+
+#: src/stdIirDesignDlg.c:440
+msgid "<b>Lowpass</b>"
+msgstr ""
+
+#: src/stdIirDesignDlg.c:461
+msgid "_Ripple"
+msgstr ""
+
+#: src/stdIirDesignDlg.c:468
+msgid "Stop-Att."
+msgstr ""
+
+#: src/stdIirDesignDlg.c:475
+msgid "_Angle"
+msgstr ""
+
+#: src/stdIirDesignDlg.c:486
+msgid "Passband ripple in dB"
+msgstr ""
+
+#: src/stdIirDesignDlg.c:494
+msgid "Stopband attenuation in dB"
+msgstr ""
+
+#: src/stdIirDesignDlg.c:503
+msgid "Modular angle in degree"
+msgstr ""
+
+#: src/stdIirDesignDlg.c:506
+msgid "<b>Parameters</b>"
+msgstr ""
+
+#. MISCFLT_HILBERT (0): Hilbert transformer
+#: src/miscDesignDlg.c:72
+msgid "Hilbert transformer (FIR)"
+msgstr ""
+
+#: src/miscDesignDlg.c:73
+msgid ""
+"A <i>Hilbert</i> transformer is a 90° phase shifter with the impulse "
+"response g(t)=<sup>1</sup>/<sub>ϖt</sub>. The approximation is based on "
+"<i>Fourier</i> series expansion of the repetitive frequency response:\n"
+"H(f)=-j sgn(f)."
+msgstr ""
+
+#. MISCFLT_INT (1): Integrator
+#: src/miscDesignDlg.c:76
+msgid "Perfect Integrator (FIR)"
+msgstr ""
+
+#: src/miscDesignDlg.c:77
+msgid ""
+"A perfect integrator has the <i>Heaviside</i> unit step function as it&apos;"
+"s impulse response. The approximation is based on <i>Fourier</i> series "
+"expansion of the repetitive frequency response:\n"
+"H(f)=½δ(f)+<sup>1</sup>/<sub>j2ϖf</sub>."
+msgstr ""
+
+#. MISCFLT_DIFF (2): Differentiator
+#: src/miscDesignDlg.c:80
+msgid "Perfect Differentiator (FIR)"
+msgstr ""
+
+#: src/miscDesignDlg.c:81
+msgid ""
+"A perfect integrator has the <i>Dirac</i> impulse as it&apos;s impulse "
+"response.  The approximation is based on <i>Fourier</i> series expansion of "
+"the repetitive frequency response:\n"
+"H(f)=j2ϖf."
+msgstr ""
+
+#. MISCFLT_COMB (3): Comb filter
+#: src/miscDesignDlg.c:84
+msgid "Comb filter (FIR)"
+msgstr ""
+
+#: src/miscDesignDlg.c:85
+msgid ""
+"The comb filter is a computational physical model of a single discrete echo. "
+"It has the transfer function:\n"
+"H(z)=1-z<sup>-n</sup>\n"
+"and thus a linear phase."
+msgstr ""
+
+#. MISCFLT_AVGFIR (4): Moving average filter (non-recursive)
+#: src/miscDesignDlg.c:88
+msgid "Moving average (FIR)"
+msgstr ""
+
+#: src/miscDesignDlg.c:89
+msgid ""
+"The moving average filter (also called digital window integrator or sinc "
+"filter) is an approximation of the impulse response of the ideal lowpass. As "
+"a FIR implementation it&apos;s transfer function is:\n"
+"H(z)=1+z<sup>-1</sup>+z<sup>-2</sup>+...+z<sup>-n</sup>."
+msgstr ""
+
+#. MISCFLT_AVGIIR (5): Moving average filter (recursive)
+#: src/miscDesignDlg.c:92
+msgid "Moving average (IIR)"
+msgstr ""
+
+#: src/miscDesignDlg.c:93
+msgid ""
+"The moving average filter (also called digital window integrator or sinc "
+"filter) is an approximation of the impulse response of the ideal lowpass. As "
+"an IIR implementation it&apos;s transfer function is:\n"
+"H(z)=(1-z<sup>-n</sup>)/(1-z<sup>-1</sup>)."
+msgstr ""
+
+#. MISCFLT_AVGEXP (6): Exponential average filter
+#: src/miscDesignDlg.c:96
+msgid "Exponential average (IIR)"
+msgstr ""
+
+#: src/miscDesignDlg.c:97
+msgid ""
+"The exponential average lowpass approximates a first order (analog RC-) "
+"lowpass. The transfer function is:\n"
+"H(z)=1/[n-(n-1)z<sup>-1</sup>]."
+msgstr ""
+
+#: src/miscDesignDlg.c:161
+msgid "<b>_Type</b>"
+msgstr ""
+
+#: src/miscDesignDlg.c:197
+msgid "Degree of system"
+msgstr ""
+
+#: src/miscDesignDlg.c:218
+msgid "<i>Description</i>"
+msgstr ""
+
+#: src/miscDesignDlg.c:438
+#, c-format
+msgid "Could not load predefined filter(s) from '%s'"
+msgstr ""
+
+#: src/miscDesignDlg.c:593
+#, c-format
+msgid "Could not load predefined filter from '%s'"
+msgstr ""
+
+#: src/projectFile.c:642
+#, c-format
+msgid "Unexpected tag '%s'"
+msgstr ""
+
+#: src/projectFile.c:709
+#, c-format
+msgid "Syntax error at line %d"
+msgstr ""
+
+#: src/projectFile.c:1049
+#, c-format
+msgid "Mandatory tag '%s' missing"
+msgstr ""
+
+#: src/projectFile.c:1140
+#, c-format
+msgid "Something seems wrong with the project in '%s'"
+msgstr ""
+
+#: src/dialogSupport.c:168
+#, c-format
+msgid "Input \"<b>%s</b>\" is invalid for <b>%s</b> (min. %G, max. %G)."
+msgstr ""
+
+#: src/dialogSupport.c:217
+#, c-format
+msgid "Input \"<b>%s</b>\" is invalid for <b>%s</b> (min. %d, max. %d)."
+msgstr ""

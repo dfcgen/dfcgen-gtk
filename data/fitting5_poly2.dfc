@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?> <!--*- mode: sgml; coding: utf-8 -*-->
+<project generator="dfcgen-gtk" version="0.1">
+	<author>Ralf Hoppe</author>
+	<author lang="de">Ralf Hoppe</author>
+	<title>Fitting filter 5, 2 (FIR)</title>
+	<title lang="de">Glättungsfilter 5, 2 (FIR)</title>
+	<description>Fitting of 5 samples by a polynomial of 2&lt;sup&gt;nd&lt;/sup&gt; (or 3&lt;sup&gt;rd&lt;/sup&gt;) order using the &lt;i&gt;Gauss&lt;/i&gt;ian least square criteria.</description>
+	<description lang="de">Glättung von 5 Abtastwerten durch ein Ausgleichspolynom 2. (oder 3.) Ordnung bei Minimierung des &lt;i&gt;Gauß&lt;/i&gt;schen Fehlers.</description>
+	<filter>
+		<sample>44100</sample>
+		<numerator>
+			<degree>4</degree>
+			<coefficient tap="0">-0.08571428571</coefficient>
+			<coefficient tap="1">0.3428571429</coefficient>
+			<coefficient tap="2">0.4857142857</coefficient>
+			<coefficient tap="3">0.3428571429</coefficient>
+			<coefficient tap="4">-0.08571428571</coefficient>
+		</numerator>
+		<denominator>
+			<degree>0</degree>
+			<coefficient tap="0">1.0</coefficient>
+		</denominator>
+	</filter>
+</project>
