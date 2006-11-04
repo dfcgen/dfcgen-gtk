@@ -29,5 +29,8 @@ src/projectFile.c
 src/miscFilter.c
 src/dialogSupport.c
 src/responsePlot.c
+src/linFirDesignDlg.c
+src/linFirFilter.c
+src/rootsPlot.c
 
 
