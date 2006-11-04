@@ -7,11 +7,14 @@
  *
  *
  * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/src/miscFilter.c,v 1.1.1.1 2006-09-11 15:52:19 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/src/miscFilter.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:19  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -86,6 +89,8 @@ int miscFilterGen (const MISCFLT_DESIGN *pDesign, FLTCOEFF *pFilter)
     int err;
     int i, ic;                                       /* index, centered index */
     double *vec;                                /* ptr to coefficients vector */
+
+    pFilter->factor = 0.0;                 /* roots are invalid (unused here) */
 
     /* First set default numerator an denominator polynomial degree for memory
      * allocation.

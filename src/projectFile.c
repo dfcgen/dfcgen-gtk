@@ -12,11 +12,14 @@
  *           in the \e C locale for LC_NUMERIC.
  *
  * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/src/projectFile.c,v 1.1.1.1 2006-09-11 15:52:19 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/src/projectFile.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:19  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -111,7 +114,9 @@ typedef enum
     PRJF_IDTAG_ALGOZ = 17,
     PRJF_IDTAG_PASSBAND = 18,
     PRJF_IDTAG_STOPBAND = 19,
-    PRJF_IDTAG_MODULE = 20,
+    PRJF_IDTAG_MODULE = 20,                /**< Elliptic filters module angle */
+    PRJF_IDTAG_FTR = 21,                   /**< Frequency transformation type */
+    PRJF_IDTAG_DSPWIN = 22,                              /**< Window function */
 
     PRJF_IDTAG_SIZE
 
@@ -140,36 +145,39 @@ struct _PRJF_TAG_DESC
 
 /* LOCAL CONSTANT DEFINITIONS *************************************************/
 
-#define PRJF_IDTAG_HEADER_END PRJF_IDTAG_DESCRIPTION       /**< End of header */
-#define PRJF_TAGFLAG_ALL    (PRJF_TAGFLAG_MISC | PRJF_TAGFLAG_STDIIR | PRJF_TAGFLAG_LINFIR)
+#define PRJF_IDTAG_INFO_END     PRJF_IDTAG_DESCRIPTION       /**< End of header */
+#define PRJF_TAGFLAG_ALL        (PRJF_TAGFLAG_MISC | PRJF_TAGFLAG_STDIIR | PRJF_TAGFLAG_LINFIR)
 
-#define PRJF_TAG_AUTHOR       "author"
-#define PRJF_TAG_TITLE        "title"
-#define PRJF_TAG_DESCRIPTION  "description"
-#define PRJF_TAG_PROJECT      "project"
-#define PRJF_TAG_FILTER       "filter"
-#define PRJF_TAG_SAMPLE       "sample"
-#define PRJF_TAG_NUMERATOR    "numerator"
-#define PRJF_TAG_DENOMINATOR  "denominator"
-#define PRJF_TAG_DEGREE       "degree"
-#define PRJF_TAG_COEFF        "coefficient"
-#define PRJF_TAG_DESIGN       "design"
-#define PRJF_TAG_CLASS        "class"
-#define PRJF_TAG_TYPE         "type"
-#define PRJF_TAG_ORDER        "order"
-#define PRJF_TAG_ALGOZ        "algorithm"
-#define PRJF_TAG_CUTOFF       "cutoff"
-#define PRJF_TAG_CENTER       "center"
-#define PRJF_TAG_BANDWIDTH    "bandwidth"
-#define PRJF_TAG_PASSBAND     "passband"
-#define PRJF_TAG_STOPBAND     "stopband"
-#define PRJF_TAG_MODULE       "module"
+#define PRJF_TAG_AUTHOR         "author"
+#define PRJF_TAG_TITLE          "title"
+#define PRJF_TAG_DESCRIPTION    "description"
+#define PRJF_TAG_PROJECT        "project"
+#define PRJF_TAG_FILTER         "filter"
+#define PRJF_TAG_SAMPLE         "sample"
+#define PRJF_TAG_NUMERATOR      "numerator"
+#define PRJF_TAG_DENOMINATOR    "denominator"
+#define PRJF_TAG_DEGREE         "degree"
+#define PRJF_TAG_COEFF          "coefficient"
+#define PRJF_TAG_DESIGN         "design"
+#define PRJF_TAG_CLASS          "class"
+#define PRJF_TAG_TYPE           "type"
+#define PRJF_TAG_ORDER          "order"
+#define PRJF_TAG_ALGOZ          "algorithm"
+#define PRJF_TAG_CUTOFF         "cutoff"
+#define PRJF_TAG_CENTER         "center"
+#define PRJF_TAG_BANDWIDTH      "bandwidth"
+#define PRJF_TAG_PASSBAND       "passband"
+#define PRJF_TAG_STOPBAND       "stopband"
+#define PRJF_TAG_MODULE         "module"
+#define PRJF_TAG_FTR            "transform"      /**< Frequency transform tag */
+#define PRJF_TAG_DSPWIN         "window"                 /**< Window function */
 
-#define PRJF_ATTRN_LANG       "lang"   /**< Language attribute (of strings) */
-#define PRJF_ATTRN_SUPERSEDED "superseded"       /**< Design attribute name */
-#define PRJF_ATTRN_GEOMETRIC  "geometric" /**< Frequency transform attribute */
-#define PRJF_ATTRV_TRUE       "true"      /**< Boolean attribute value TRUE */
-#define PRJF_ATTRV_FALSE      "false"    /**< Boolean attribute value FALSE */
+#define PRJF_ATTRN_LANG         "lang"   /**< Language attribute (of strings) */
+#define PRJF_ATTRN_SUPERSEDED   "superseded"       /**< Design attribute name */
+#define PRJF_ATTRN_GEOMETRIC    "geometric" /**< Frequency transform attribute */
+#define PRJF_ATTRN_KAISER       "alpha" /**< Parameter \f$\alpha\f$ of \e Kaiser window */
+#define PRJF_ATTRV_TRUE         "true"      /**< Boolean attribute value TRUE */
+#define PRJF_ATTRV_FALSE        "false"    /**< Boolean attribute value FALSE */
 
 
 /* LOCAL FUNCTION DECLARATIONS ************************************************/
@@ -179,6 +187,7 @@ static void writeFrequTransf(FILE *f, double cutoff, FTRDESIGN *ftr);
 static void writePolyCoeffs(FILE *f, MATHPOLY *poly);
 static void writeMiscFltDesign (FILE *f, MISCFLT_DESIGN *pDesign);
 static void writeStdIirDesign(FILE *f, STDIIR_DESIGN *pDesign);
+static void writeLinFirDesign (FILE *f, LINFIR_DESIGN *pDesign);
 static void readProject (const char *filename, unsigned flags, GError **err);
 static int writeProject(FILE *f, DFCPRJ_FILTER *prj);
 static int tagStringHandler (GMarkupParseContext *ctx, PRJF_TAG_DESC *pTag,
@@ -199,6 +208,8 @@ static int attrSupersedHandler (GMarkupParseContext *ctx, PRJF_TAG_DESC *pTag,
                                 DFCPRJ_FILTER *prj, const gchar **attrn, const gchar **attrv);
 static int attrGeometricHandler (GMarkupParseContext *ctx, PRJF_TAG_DESC *pTag,
                                  DFCPRJ_FILTER *prj, const gchar **attrn, const gchar **attrv);
+static int attrKaiserHandler (GMarkupParseContext *ctx, PRJF_TAG_DESC *pTag,
+                              DFCPRJ_FILTER *prj, const gchar **attrn, const gchar **attrv);
 
 
 
@@ -225,11 +236,11 @@ static PRJF_TAG_DESC prjTagsDesc[PRJF_IDTAG_SIZE] =
      mandatory, data,                     openHandler,       contentsHandler
   */
     {PRJF_IDTAG_AUTHOR,      1,                 PRJF_TAG_AUTHOR,      INT_MAX,
-     0, &tmpPrj.header.author,    attrStringHandler, tagStringHandler},
+     0, &tmpPrj.info.author, attrStringHandler, tagStringHandler},
     {PRJF_IDTAG_TITLE,       1,                 PRJF_TAG_TITLE,       INT_MAX,
-     0, &tmpPrj.header.title,     attrStringHandler, tagStringHandler},
+     0, &tmpPrj.info.title,  attrStringHandler, tagStringHandler},
     {PRJF_IDTAG_DESCRIPTION, 1,                 PRJF_TAG_DESCRIPTION, INT_MAX,
-     0, &tmpPrj.header.desc,      attrStringHandler, tagStringHandler},
+     0, &tmpPrj.info.desc,   attrStringHandler, tagStringHandler},
     {PRJF_IDTAG_PROJECT,     0,                 PRJF_TAG_PROJECT,     0,
      PRJF_TAGFLAG_ALL, NULL,                     NULL,              NULL},
     {PRJF_IDTAG_FILTER,      1,                 PRJF_TAG_FILTER,      0,
@@ -241,7 +252,7 @@ static PRJF_TAG_DESC prjTagsDesc[PRJF_IDTAG_SIZE] =
     {PRJF_IDTAG_DENOMINATOR, 2,                 PRJF_TAG_DENOMINATOR, 0,
      PRJF_TAGFLAG_ALL, &tmpPrj.filter.den,       tagPolyHandler,    NULL},
     {PRJF_IDTAG_DEGREE,      3,                 PRJF_TAG_DEGREE,      FLT_DEGREE_MAX,
-     PRJF_TAGFLAG_ALL, NULL,                     NULL,              tagDegreeHandler},
+     PRJF_TAGFLAG_ALL,       NULL,              NULL,              tagDegreeHandler},
     {PRJF_IDTAG_COEFF,       3,                 PRJF_TAG_COEFF,       TRUE,
      PRJF_TAGFLAG_ALL, NULL,                     NULL,              tagCoeffHandler},
     {PRJF_IDTAG_DESIGN,      1,                 PRJF_TAG_DESIGN,      0,
@@ -253,19 +264,23 @@ static PRJF_TAG_DESC prjTagsDesc[PRJF_IDTAG_SIZE] =
     {PRJF_IDTAG_ORDER,       2,                 PRJF_TAG_ORDER,       FLT_DEGREE_MAX,
      PRJF_TAGFLAG_STDIIR | PRJF_TAGFLAG_LINFIR, &tmpPrj.design.all.order, NULL,              tagIntHandler},
     {PRJF_IDTAG_CUTOFF,      2,                 PRJF_TAG_CUTOFF,      FALSE,
-     PRJF_TAGFLAG_STDIIR | PRJF_TAGFLAG_LINFIR, &tmpPrj.design.all.cutoff,NULL,              tagDoubleHandler},
+     0, &tmpPrj.design.all.cutoff, NULL,              tagDoubleHandler},
     {PRJF_IDTAG_CENTER,      2,                 PRJF_TAG_CENTER,      FALSE,
-     0, &tmpPrj.design.all.ftr.center, attrGeometricHandler, tagDoubleHandler},
+     0, &tmpPrj.design.all.ftr.fc, attrGeometricHandler, tagDoubleHandler},
     {PRJF_IDTAG_BANDWIDTH,   2,                 PRJF_TAG_BANDWIDTH,   FALSE,
-     0, &tmpPrj.design.all.ftr.bandwidth, NULL,      tagDoubleHandler},
+     0, &tmpPrj.design.all.ftr.bw, NULL, tagDoubleHandler},
     {PRJF_IDTAG_ALGOZ,       2,                 PRJF_TAG_ALGOZ,       ZTR_SIZE - 1,
      PRJF_TAGFLAG_STDIIR, &tmpPrj.design.stdIir.zAlgo, NULL,           tagIntHandler},
     {PRJF_IDTAG_PASSBAND,    2,                 PRJF_TAG_PASSBAND,    FALSE,
-     0, &tmpPrj.design.stdIir.rippleAtt, NULL,       tagDoubleHandler},
+     0, &tmpPrj.design.stdIir.ripple, NULL,     tagDoubleHandler},
     {PRJF_IDTAG_STOPBAND,    2,                 PRJF_TAG_STOPBAND,    FALSE,
-     0, &tmpPrj.design.stdIir.minAtt, NULL,          tagDoubleHandler},
+     0, &tmpPrj.design.stdIir.minatt, NULL,     tagDoubleHandler},
     {PRJF_IDTAG_MODULE,      2,                 PRJF_TAG_MODULE,      FALSE,
-     0, &tmpPrj.design.stdIir.modAngle, NULL,        tagDoubleHandler}
+     0, &tmpPrj.design.stdIir.angle, NULL,      tagDoubleHandler},
+    {PRJF_IDTAG_FTR,        2,                  PRJF_TAG_FTR,         FTR_SIZE,
+     PRJF_TAGFLAG_STDIIR | PRJF_TAGFLAG_LINFIR, &tmpPrj.design.all.ftr.type,  NULL, tagIntHandler},
+    {PRJF_IDTAG_DSPWIN,     2,                  PRJF_TAG_DSPWIN,      LINFIR_DSPWIN_SIZE,
+     PRJF_TAGFLAG_LINFIR,  &tmpPrj.design.linFir.dspwin, attrKaiserHandler, tagIntHandler}
 };
 
 
@@ -592,6 +607,39 @@ static int attrGeometricHandler (GMarkupParseContext *ctx, PRJF_TAG_DESC *pTag,
 } /* attrGeometricHandler() */
 
 
+
+/* FUNCTION *******************************************************************/
+/** Handler for \e Open tag of window function (PRJF_IDTAG_DSPWIN).
+ *
+ *  \param ctx          Pointer to parser context.
+ *  \param pTag         Pointer to tag descriptor.
+ *  \param prj          Pointer to \e dfcgen project.
+ *  \param attrn        List of attribute names.
+ *  \param attrv        List of associated attribute values.
+ *
+ *  \return             Zero on success, else an error number.
+ ******************************************************************************/
+static int attrKaiserHandler (GMarkupParseContext *ctx, PRJF_TAG_DESC *pTag,
+                              DFCPRJ_FILTER *prj, const gchar **attrn, const gchar **attrv)
+{
+    ASSERT (pTag != NULL);
+
+    while (*attrn != NULL)           /* go through the array of char pointers */
+    {
+        if (!strncmp (*attrn, PRJF_ATTRN_KAISER,                    /* found? */
+                      sizeof (PRJF_ATTRN_KAISER)))
+        {
+            prj->design.linFir.winparm = g_ascii_strtod (*attrv, NULL);
+        } /* if */
+
+        ++attrn;                                        /* try next attribute */
+        ++attrv;
+    } /* while */
+
+    return 0;
+} /* attrKaiserHandler() */
+
+
 /* FUNCTION *******************************************************************/
 /** Handler which is called for every \e Open tag found in the XML file.
  *
@@ -626,7 +674,7 @@ static void prjFileOpenTagHandler (GMarkupParseContext *ctx,
 
         if ((prjTagPtr->openHandler == NULL) ||                /* no handler? */
             ((((DFCPRJ_FILTER*)data)->flags & DFCPRJ_FLAG_INTERNAL) &&
-             (prjTagPtr->id > PRJF_IDTAG_HEADER_END)))          /* only scan? */
+             (prjTagPtr->id > PRJF_IDTAG_INFO_END)))            /* only scan? */
         {
             return;                                              /* that's it */
         } /* if */
@@ -690,7 +738,7 @@ static void prjFileTextHandler (GMarkupParseContext *ctx, const gchar *text,
 
     if ((prjTagPtr->contentsHandler == NULL) || /* no handler (unimportant tag)? */
         ((((DFCPRJ_FILTER*)data)->flags & DFCPRJ_FLAG_INTERNAL) &&
-         (prjTagPtr->id > PRJF_IDTAG_HEADER_END)))            /* only scan? */
+         (prjTagPtr->id > PRJF_IDTAG_INFO_END)))                /* only scan? */
     {
         return;
     } /* if */
@@ -749,6 +797,8 @@ static void writeFrequTransf(FILE *f, double cutoff, FTRDESIGN *ftr)
 {
     char buf[G_ASCII_DTOSTR_BUF_SIZE];        /* buffer for double conversion */
 
+    fprintf (f, "\t\t<" PRJF_TAG_FTR ">%d</" PRJF_TAG_FTR ">\n", ftr->type);
+
     switch (ftr->type)
     {
         case FTR_NON:
@@ -759,7 +809,7 @@ static void writeFrequTransf(FILE *f, double cutoff, FTRDESIGN *ftr)
 
         case FTR_HIGHPASS:
             fprintf (f, "\t\t<" PRJF_TAG_CUTOFF ">%s</" PRJF_TAG_CUTOFF ">\n",
-                     g_ascii_dtostr (buf, sizeof(buf), ftr->bandwidth));
+                     g_ascii_dtostr (buf, sizeof(buf), ftr->fc));
             break;
 
 
@@ -769,10 +819,10 @@ static void writeFrequTransf(FILE *f, double cutoff, FTRDESIGN *ftr)
                      "=\"%s\">%s</" PRJF_TAG_CENTER ">\n",
                      (ftr->flags & FTRDESIGN_FLAG_CENTER_GEOMETRIC) ?
                      PRJF_ATTRV_TRUE : PRJF_ATTRV_FALSE,
-                     g_ascii_dtostr (buf, sizeof(buf), ftr->center));
+                     g_ascii_dtostr (buf, sizeof(buf), ftr->fc));
 
             fprintf (f, "\t\t<" PRJF_TAG_BANDWIDTH ">%s</" PRJF_TAG_BANDWIDTH ">\n",
-                     g_ascii_dtostr (buf, sizeof(buf), ftr->bandwidth));
+                     g_ascii_dtostr (buf, sizeof(buf), ftr->bw));
             break;
 
 
@@ -824,29 +874,29 @@ static void writeStdIirDesign(FILE *f, STDIIR_DESIGN *pDesign)
     {
         case STDIIR_TYPE_CHEBY:
             fprintf (f, "\t\t<" PRJF_TAG_PASSBAND ">%s</" PRJF_TAG_PASSBAND ">\n",
-                     g_ascii_dtostr (buf, sizeof(buf), pDesign->rippleAtt));
+                     g_ascii_dtostr (buf, sizeof(buf), pDesign->ripple));
             break;
 
 
         case STDIIR_TYPE_CHEBYINV:
             fprintf (f, "\t\t<" PRJF_TAG_STOPBAND ">%s</" PRJF_TAG_STOPBAND ">\n",
-                     g_ascii_dtostr (buf, sizeof(buf), pDesign->minAtt));
+                     g_ascii_dtostr (buf, sizeof(buf), pDesign->minatt));
             break;
 
 
         case STDIIR_TYPE_CAUER1:            /* design by max. passband ripple */
             fprintf (f, "\t\t<" PRJF_TAG_PASSBAND ">%s</" PRJF_TAG_PASSBAND ">\n",
-                     g_ascii_dtostr (buf, sizeof(buf), pDesign->rippleAtt));
+                     g_ascii_dtostr (buf, sizeof(buf), pDesign->ripple));
             fprintf (f, "\t\t<" PRJF_TAG_MODULE ">%s</" PRJF_TAG_MODULE ">\n",
-                     g_ascii_dtostr (buf, sizeof(buf), pDesign->modAngle));
+                     g_ascii_dtostr (buf, sizeof(buf), pDesign->angle));
             break;
 
 
         case STDIIR_TYPE_CAUER2:            /* design by min. stopband atten. */
             fprintf (f, "\t\t<" PRJF_TAG_STOPBAND ">%s</" PRJF_TAG_STOPBAND ">\n",
-                     g_ascii_dtostr (buf, sizeof(buf), pDesign->minAtt));
+                     g_ascii_dtostr (buf, sizeof(buf), pDesign->minatt));
             fprintf (f, "\t\t<" PRJF_TAG_MODULE ">%s</" PRJF_TAG_MODULE ">\n",
-                     g_ascii_dtostr (buf, sizeof(buf), pDesign->modAngle));
+                     g_ascii_dtostr (buf, sizeof(buf), pDesign->angle));
             break;
 
 
@@ -859,8 +909,40 @@ static void writeStdIirDesign(FILE *f, STDIIR_DESIGN *pDesign)
     } /* switch */
         
 
-    writeFrequTransf(f, pDesign->cutoff, &pDesign->ftr);
+    writeFrequTransf (f, pDesign->cutoff, &pDesign->ftr);
 } /* writeStdIirDesign() */
+
+
+
+/* FUNCTION *******************************************************************/
+/** Writes design data of linear FIR filter (FLTCLASS_LINFIR) to project file.
+ *
+ *  \param f            File.
+ *  \param pDesign      Pointer to linear FIR filter design data.
+ *
+ ******************************************************************************/
+static void writeLinFirDesign (FILE *f, LINFIR_DESIGN *pDesign)
+{
+    char buf[G_ASCII_DTOSTR_BUF_SIZE];        /* buffer for double conversion */
+
+    fprintf (f, "\t\t<" PRJF_TAG_TYPE ">%d</" PRJF_TAG_TYPE ">\n"
+                "\t\t<" PRJF_TAG_ORDER ">%d</" PRJF_TAG_ORDER ">\n",
+                pDesign->type, pDesign->order);
+
+    if (pDesign->dspwin == LINFIR_DSPWIN_KAISER)
+    {
+        fprintf (f, "\t\t<" PRJF_TAG_DSPWIN " " PRJF_ATTRN_KAISER "=\"%s\">%d</" PRJF_TAG_DSPWIN ">\n",
+                 g_ascii_dtostr (buf, sizeof(buf), pDesign->winparm), LINFIR_DSPWIN_KAISER);
+    } /* if */
+    else
+    {
+        fprintf (f, "\t\t<" PRJF_TAG_DSPWIN ">%d</" PRJF_TAG_DSPWIN ">\n",
+                 pDesign->dspwin);
+    } /* else */
+
+    writeFrequTransf (f, pDesign->cutoff, &pDesign->ftr);
+
+} /* writeLinFirDesign() */
 
 
 
@@ -916,9 +998,9 @@ static int writeProject (FILE *f, DFCPRJ_FILTER *prj)
                 "<" PRJF_TAG_PROJECT " generator=\"%s\" version=\"%s\">\n",
                 PACKAGE, VERSION);
 
-    writeMarkupText (f, locvec[0], PRJF_TAG_AUTHOR, prj->header.author);
-    writeMarkupText (f, locvec[0], PRJF_TAG_TITLE, prj->header.title);
-    writeMarkupText (f, locvec[0], PRJF_TAG_DESCRIPTION, prj->header.desc);
+    writeMarkupText (f, locvec[0], PRJF_TAG_AUTHOR, prj->info.author);
+    writeMarkupText (f, locvec[0], PRJF_TAG_TITLE, prj->info.title);
+    writeMarkupText (f, locvec[0], PRJF_TAG_DESCRIPTION, prj->info.desc);
 
     g_strfreev(locvec);
 
@@ -941,7 +1023,7 @@ static int writeProject (FILE *f, DFCPRJ_FILTER *prj)
     switch (prj->fltcls)
     {
         case FLTCLASS_STDIIR:
-            writeStdIirDesign(f, &prj->design.stdIir);
+            writeStdIirDesign (f, &prj->design.stdIir);
             break;
 
         case FLTCLASS_MISC:
@@ -949,7 +1031,7 @@ static int writeProject (FILE *f, DFCPRJ_FILTER *prj)
             break;
 
         case FLTCLASS_LINFIR:
-//            writeLinFirDesign (f, &prj->design.linFir);
+            writeLinFirDesign (f, &prj->design.linFir);
             break;
 
         default:
@@ -1129,7 +1211,7 @@ void prjFileRead (const char *filename, DFCPRJ_FILTER *pProject, GError **err)
 
         if ((mathPolyMallocRoots (&tmpPrj.filter.num) == 0) &&
             (mathPolyMallocRoots (&tmpPrj.filter.den) == 0) &&
-            (filterCheck(&tmpPrj.filter) == 0))
+            FLTERR_SUCCESS (filterCheck(&tmpPrj.filter)))
         {
             *pProject = tmpPrj;
         } /* if */
@@ -1146,57 +1228,57 @@ void prjFileRead (const char *filename, DFCPRJ_FILTER *pProject, GError **err)
 
 
 /* FUNCTION *******************************************************************/
-/** Scans for (administrative) header data in a \e dfcgen project file. In case
+/** Scans for project info (header) in a \e dfcgen project file. In case
  *  of an error it sets the pointer to the error structure, which itself can be
  *  used to display the original error message. Modification of the error
  *  structure pointer indicates an critical error. In that case it has to be
  *  free'ed with g_error_free().
  *
  *  \param filename     Filename of file (with path).
- *  \param pHeader      Pointer to header data buffer.
+ *  \param pInfo        Pointer to info data buffer.
  *  \param err          Pointer to an error (structure) pointer. The pointer
  *                      to the error structure must be set NULL before calling
  *                      function prjFileScan().
  *
  ******************************************************************************/
-void prjFileScan (const char *filename, DFCPRJ_HEADER *pHeader, GError **err)
+void prjFileScan (const char *filename, DFCPRJ_INFO *pInfo, GError **err)
 {
     readProject (filename, DFCPRJ_FLAG_INTERNAL, err);
 
     if (*err == NULL)
     {
         DEBUG_LOG ("Project file successfully scaned");
-        *pHeader = tmpPrj.header;
+        *pInfo = tmpPrj.info;
     } /* if */
 } /* prjFileScan() */
 
 
 
 /* FUNCTION *******************************************************************/
-/** Frees malloc'ed memory space from a project header (author, title, desc).
+/** Frees malloc'ed memory space from a project info (author, title, desc).
  *  This function is designed as a counterpart to function prjFileScan().
  *
- *  \param pHeader      Pointer to header data.
+ *  \param pInfo        Pointer to project info data.
  *
  ******************************************************************************/
-void prjFileFree (DFCPRJ_HEADER *pHeader)
+void prjFileFree (DFCPRJ_INFO *pInfo)
 {
-    if (pHeader->author != NULL)
+    if (pInfo->author != NULL)
     {
-        FREE (pHeader->author);
-        pHeader->author = NULL;
+        FREE (pInfo->author);
+        pInfo->author = NULL;
     } /* if */
 
-    if (pHeader->title != NULL)
+    if (pInfo->title != NULL)
     {
-        FREE (pHeader->title);
-        pHeader->title = NULL;
+        FREE (pInfo->title);
+        pInfo->title = NULL;
     } /* if */
 
-    if (pHeader->desc != NULL)
+    if (pInfo->desc != NULL)
     {
-        FREE (pHeader->desc);
-        pHeader->desc = NULL;
+        FREE (pInfo->desc);
+        pInfo->desc = NULL;
     } /* if */
 } /* prjFileFree() */
 

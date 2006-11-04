@@ -1,16 +1,19 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
  * \file
- *           Main dialog management.
+ *           Main dialog elements (right, bottom of window) handling.
  * \author   Copyright (c) 2006 Ralf Hoppe
  *
- * \version  $Header: /home/cvs/dfcgen-gtk/src/mainDlg.c,v 1.1.1.1 2006-09-11 15:52:19 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/src/mainDlg.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
  *
  *
  * \note     Parts of code taken over from \e glade in interface.c, which itself
  *           isn't a project file.
  *
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:19  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -22,11 +25,16 @@
 #include "gui.h"
 #include "dfcgen.h"
 #include "dfcProject.h"
+#include "cfgSettings.h"
 #include "mainDlg.h"
 #include "designDlg.h"
 #include "fileDlg.h"
+#include "editDlg.h"
 #include "helpDlg.h"
+#include "rootsPlot.h"
 #include "responseWin.h"
+#include "filterSupport.h"
+#include "dialogSupport.h"
 
 
 /* GLOBAL CONSTANT DEFINITIONS ************************************************/
@@ -37,13 +45,68 @@
 
 /* LOCAL TYPE DECLARATIONS ****************************************************/
 
+
+
+/** Function that operates on selected coefficients.
+ */
+typedef BOOL (* MAINDLG_COEFF_OPERATION) (GtkWidget *top, FLTCOEFF *pFilter,
+                                          MATHPOLY *poly, int index);
+
+
+
+/** Coefficients modification action descriptor 
+ */
+typedef struct
+{
+    GtkWidget *btn;
+    GtkWidget *menu;
+    MAINDLG_COEFF_OPERATION op;
+    char *text;                    /**< Menuitem text (describing the action) */
+    char *stockimg;
+    char *tooltip;
+} MAINDLG_COEFF_ACTION;
+
+
+
+/** Column identifiers for coefficients list GtkTreeview model.
+ */
 typedef enum
 {
    MAINDLG_LIST_COLUMN_INDEX = 0,
    MAINDLG_LIST_COLUMN_COEFF = 1,
 
-   MAINDLG_LIST_COLUMN_SIZE,
+   MAINDLG_LIST_COLUMN_SIZE
 } MAINDLG_LIST_COLUMN;
+
+
+
+
+/* LOCAL MACRO DEFINITIONS ****************************************************/
+
+
+/* LOCAL FUNCTION DECLARATIONS ************************************************/
+
+static void mainDlgDestroy (GtkObject* object, gpointer user_data);
+static void mainDlgQuit (GtkWidget* widget, gpointer user_data);
+static BOOL mainDlgCoeffEdit (GtkWidget *topWidget, FLTCOEFF *pFilter,
+                              MATHPOLY *poly, int index);
+static BOOL mainDlgCoeffsRound (GtkWidget *topWidget, FLTCOEFF *pFilter,
+                                MATHPOLY *poly, int index);
+static BOOL mainDlgCoeffsFactor (GtkWidget *topWidget, FLTCOEFF *pFilter,
+                                 MATHPOLY *poly, int index);
+static void allowCoeffActions (BOOL active);
+static int getSelectedCoeff (GtkTreeSelection *selection);
+static void treeSelectionCallback (GtkTreeSelection *treeselection, gpointer user_data);
+
+static GtkTreeView* createCoeffListTreeView (GtkTreeView **pOther);
+static void indexCellDataFunc (GtkTreeViewColumn *column, GtkCellRenderer *renderer,
+                               GtkTreeModel *model, GtkTreeIter *iter, gpointer data);
+static void coeffCellDataFunc (GtkTreeViewColumn *column, GtkCellRenderer *renderer,
+                               GtkTreeModel *model, GtkTreeIter *iter, gpointer data);
+static void fillCoeffListTreeView (GtkTreeView *tree,  GtkListStore *store,
+                                   MATHPOLY *poly);
+static MATHPOLY *getSelectedPoly (FLTCOEFF* pFilter, int *pIndex);
+
 
 
 /* LOCAL CONSTANT DEFINITIONS *************************************************/
@@ -55,42 +118,28 @@ typedef enum
 
 /* LOCAL VARIABLE DEFINITIONS *************************************************/
 
-/** Response window types as to be passed to g_signal_connect() and used in
- *  event callbacks.
- */
-static RESPONSE_TYPE viewWinType[RESPONSE_TYPE_SIZE] =
-{
-    RESPONSE_TYPE_AMPLITUDE,                          /**< amplitude response */
-    RESPONSE_TYPE_ATTENUATION,                               /**< attenuation */
-    RESPONSE_TYPE_CHAR,                          /**< characteristic function */
-    RESPONSE_TYPE_PHASE,                                  /**< phase response */
-    RESPONSE_TYPE_DELAY,                                     /**< phase delay */
-    RESPONSE_TYPE_GROUP,                                     /**< group delay */
-    RESPONSE_TYPE_IMPULSE,                  /**< time-domain impulse response */
-    RESPONSE_TYPE_STEP                         /**< time-domain step response */
-};
-
-
 static GtkWidget *topWidget;                            /**< Top level widget */
 static GtkTreeView *treeDenominator; /**< Denominator coefficients tree widget */
 static GtkTreeView *treeNumerator;    /**< Numerator coefficients tree widget */
+static GtkWidget *statusbar;      /**< Statusbar in bottom line of top widget */
 
 
+static MAINDLG_COEFF_ACTION mainDlgCoeffBtn[] =
+{
+    {
+        NULL, NULL, mainDlgCoeffEdit, N_("Change"),
+        "gtk-edit", N_("Edit a single coefficient")
+    },
+    {
+        NULL, NULL, mainDlgCoeffsFactor, N_("Multiply"),
+        "gtk-fullscreen", N_("Multiply all coefficients with a constant")
+    },
+    {
+        NULL, NULL, mainDlgCoeffsRound, N_("Round"),
+        "gtk-convert", N_("Round all coefficients")
+    }
+};
 
-/* LOCAL MACRO DEFINITIONS ****************************************************/
-
-
-/* LOCAL FUNCTION DECLARATIONS ************************************************/
-
-static void mainDlgDestroy (GtkObject* object, gpointer user_data);
-static void mainDlgQuit (GtkWidget* widget, gpointer user_data);
-static GtkTreeView* createCoeffListTreeView (void);
-static void indexCellDataFunc (GtkTreeViewColumn *column, GtkCellRenderer *renderer,
-                               GtkTreeModel *model, GtkTreeIter *iter, gpointer data);
-static void coeffCellDataFunc (GtkTreeViewColumn *column, GtkCellRenderer *renderer,
-                               GtkTreeModel *model, GtkTreeIter *iter, gpointer data);
-static void fillCoeffListTreeView (GtkTreeView *tree,  GtkListStore *store,
-                                   MATHPOLY *poly);
 
 
 /* LOCAL FUNCTION DEFINITIONS *************************************************/
@@ -102,7 +151,6 @@ static void fillCoeffListTreeView (GtkTreeView *tree,  GtkListStore *store,
  *  \param object       GtkWidget of top-level window which is destroyed.
  *  \param user_data    User data as passed to function g_signal_connect (unused).
  *
- *  \return     Top widget reference.
  ******************************************************************************/
 static void mainDlgDestroy (GtkObject* object, gpointer user_data)
 {
@@ -126,8 +174,307 @@ static void mainDlgQuit (GtkWidget* widget, gpointer user_data)
 } /* mainDlgQuit() */
 
 
+
 /* FUNCTION *******************************************************************/
-/** This function sets the "markup" property of an index cell instead of just
+/** This function determines the index of the associated coefficient from a
+ *  numerator or denominator GtkTreeview list.
+ *
+ *  \param selection    The current selection from numerator or denominator list.
+ *
+ *  \return             Returns the index of selected coefficient (if there is
+ *                      one selected) or -1 if no coefficient is selected.
+ ******************************************************************************/
+static int getSelectedCoeff (GtkTreeSelection *selection)
+{
+    int index, *pIndex;
+    GtkTreeModel *model;
+    GtkTreeIter iter;
+    GtkTreePath* path;
+
+    if (!gtk_tree_selection_get_selected (selection, &model, &iter))
+    {
+        return -1;                                        /* nothing selected */
+    } /* if */
+
+    path = gtk_tree_model_get_path (model, &iter);
+    pIndex = gtk_tree_path_get_indices (path);
+
+    if (pIndex == NULL)
+    {
+        return -1;
+    } /* if */
+
+    index = *pIndex;
+    gtk_tree_path_free (path);
+
+    return index;
+} /* getSelectedCoeff() */
+
+
+
+/* FUNCTION *******************************************************************/
+/** Determines selected polynomial and coefficient from the numerator and
+ *  denominator (GtkTreeView) list.
+ *
+ *  \param pFilter      Pointer to filter which is currently displayed in the
+ *                      GtkTreeView coefficients list.
+ *  \param pIndex       Pointer to buffer which gets the index of selected
+ *                      coefficient (if there is one).
+ *
+ *  \return             Selected polynomial (\p pFilter->den or \p Filter->num)
+ *                      or NULL if nothing is selected.
+ ******************************************************************************/
+static MATHPOLY *getSelectedPoly (FLTCOEFF* pFilter, int *pIndex)
+{
+    int idx;
+
+    if (pIndex == NULL)
+    {
+        pIndex = &idx;
+    } /* if */
+
+    *pIndex = getSelectedCoeff (gtk_tree_view_get_selection (treeNumerator));
+
+    if (*pIndex >= 0)
+    {
+        return &pFilter->num;
+    } /* if */
+
+    *pIndex = getSelectedCoeff (gtk_tree_view_get_selection (treeDenominator));
+
+    if (*pIndex >= 0)
+    {
+        return &pFilter->den;
+    } /* if */
+
+    return NULL;
+} /* getSelectedPoly() */
+
+
+
+/* FUNCTION *******************************************************************/
+/** Operation which is performed when the \e Edit button is clicked (called from
+ *  function mainDlgCoeffAction(), type is MAINDLG_COEFF_OPERATION).
+ *
+ *  \param topWidget    Topwidget reference.
+ *  \param pFilter      Pointer to filter which is currently displayed in the
+ *                      GtkTreeView coefficients list.
+ *  \param poly         Pointer to selected coefficients (\p pFilter->num or
+ *                      \p pFilter->den)
+ *  \param index        Index of selected coefficient in vector \p poly->coeff.
+ *
+ *  \return             TRUE if the operation was really performed, else
+ *                      FALSE (means no coefficient has changed).
+ ******************************************************************************/
+static BOOL mainDlgCoeffEdit (GtkWidget *topWidget, FLTCOEFF *pFilter,
+                              MATHPOLY *poly, int index)
+{
+    char *intro =
+        g_strdup_printf (_("Changes coefficient of tap z<sup>-%d</sup> in"
+                           " the selected list to a new value."), index);
+
+    BOOL ret = dlgPopupDouble (_("Change coefficient"),
+                               _("_New"), intro, poly->coeff + index);
+    g_free (intro);
+
+    return ret;
+} /* mainDlgCoeffEdit() */
+
+
+
+/* FUNCTION *******************************************************************/
+/** Operation which is performed when the \e Factor button is clicked (called
+ *  from function mainDlgCoeffAction(), type is MAINDLG_COEFF_OPERATION).
+ *
+ *  \param topWidget    Topwidget reference.
+ *  \param pFilter      Pointer to filter which is currently displayed in the
+ *                      GtkTreeView coefficients list.
+ *  \param poly         Pointer to selected coefficients (\p pFilter->num or
+ *                      \p pFilter->den)
+ *  \param index        Index of selected coefficient in vector \p poly->coeff.
+ *
+ *  \return             TRUE if the operation was really performed, else
+ *                      FALSE (means no coefficient has changed).
+ ******************************************************************************/
+static BOOL mainDlgCoeffsFactor (GtkWidget *topWidget, FLTCOEFF *pFilter,
+                                 MATHPOLY *poly, int index)
+{
+    int i;
+    double factor = 1.0;
+
+    BOOL ret = dlgPopupDouble (_("Multiply coefficients"),
+                               _("_Factor"),
+                               _("Multiplies all coefficients in the"
+                                 " selected list with the given factor."),
+                               &factor);
+    if (ret)
+    {
+        for (i = 0; i <= poly->degree; i++)
+        {
+            poly->coeff[i] *= factor;
+        } /* for */
+    } /* if */
+
+    return ret;
+} /* mainDlgCoeffsFactor() */
+
+
+
+/* FUNCTION *******************************************************************/
+/** Operation which is performed when the \e Round button is clicked (called
+ *  from function mainDlgCoeffAction(), type is MAINDLG_COEFF_OPERATION).
+ *
+ *  \param topWidget    Topwidget reference.
+ *  \param pFilter      Pointer to filter which is currently displayed in the
+ *                      GtkTreeView coefficients list.
+ *  \param poly         Pointer to selected coefficients (\p pFilter->num or
+ *                      \p pFilter->den)
+ *  \param index        Index of selected coefficient in vector \p poly->coeff.
+ *
+ *  \return             TRUE if the operation was really performed, else
+ *                      FALSE (means no coefficient has changed).
+ ******************************************************************************/
+static BOOL mainDlgCoeffsRound (GtkWidget *topWidget, FLTCOEFF *pFilter,
+                                MATHPOLY *poly, int index)
+{
+    int i;
+
+    GtkWidget *dialog =
+        gtk_message_dialog_new (GTK_WINDOW (topWidget),
+                                GTK_DIALOG_DESTROY_WITH_PARENT,
+                                GTK_MESSAGE_WARNING,
+                                GTK_BUTTONS_YES_NO,
+                                _("Do you really want to round all"
+                                  " coefficients in the selected list?"));
+
+    i = gtk_dialog_run (GTK_DIALOG (dialog));
+    gtk_widget_destroy (dialog);
+
+    if (i != GTK_RESPONSE_YES)                      /* user wants it (really) */
+    {
+        return FALSE;
+    } /* if */
+
+    for (i = 0; i <= poly->degree; i++)
+    {
+        poly->coeff[i] = round (poly->coeff[i]);
+    } /* for */
+
+    return TRUE;
+} /* mainDlgCoeffsRound() */
+
+
+
+/* FUNCTION *******************************************************************/
+/** This function is called if a coefficients button (\e Edit, \e Factor,
+ *  \e Round) was clicked.
+ *
+ *  \param widget       Button that was clicked.
+ *  \param user_data    User data as passed to function g_signal_connect. Here
+ *                      it is a pointer to the button descriptor in array
+ *                      mainDlgCoeffBtn.
+ *
+ ******************************************************************************/
+static void mainDlgCoeffAction (GtkButton *widget, gpointer user_data)
+{
+    int index, result;
+    FLTCOEFF tmp;
+
+    MAINDLG_COEFF_ACTION *pAction = user_data;
+
+    FLTCOEFF *pFilter = dfcPrjGetFilter ();
+    MATHPOLY *poly = getSelectedPoly (&tmp, &index);
+
+    if ((pFilter != NULL) && (poly != NULL))                 /* sanity checks */
+    {
+        if (filterDuplicate (&tmp, pFilter) == 0)        /* make temp. filter */
+        {
+            if (pAction->op (topWidget, &tmp, poly, index))     /* performed? */
+            {
+                result = filterCheck (&tmp);             /* check realization */
+
+                if (FLTERR_CRITICAL (result))
+                {
+                    filterFree(&tmp);
+                    dlgError (topWidget,
+                              _("Cannot implement such a filter."
+                                " Maybe the result of such an operation"
+                                " leads to vanishing coefficients at all."));
+                } /* if */
+                else                   /* seems okay (do not free any memory) */
+                {
+                    dfcPrjSetFilter (FLTCLASS_NOTDEF, &tmp, NULL);
+                    mainDlgUpdateFilter (result);
+                } /* else */
+            } /* if */
+        } /* if */
+        else
+        {
+            dlgError (topWidget,
+                      _("Cannot perform the desired operation."
+                        " It seems that all the memory is exhausted."));
+        } /* else */
+    } /* if */
+} /* mainDlgCoeffAction() */
+
+
+
+
+/* FUNCTION *******************************************************************/
+/** Activates (or deactivates) the coefficients buttons.
+ *
+ *  \param active       TRUE if the buttons shall be activated, FALSE to
+ *                      deactivate.
+ *
+ ******************************************************************************/
+static void allowCoeffActions (BOOL active)
+{
+    int i;
+
+    for (i = 0; i < N_ELEMENTS (mainDlgCoeffBtn); i++)
+    {
+        gtk_widget_set_sensitive (mainDlgCoeffBtn[i].btn, active);
+        gtk_widget_set_sensitive (mainDlgCoeffBtn[i].menu, active);
+    } /* for */
+} /* allowCoeffActions() */
+
+
+
+/* FUNCTION *******************************************************************/
+/** Callback function for \e changed signal on a GtkTreeSelection associated
+ *  with a coefficients list GtkTreeView.
+ *
+ *  \param selection    Selection of the GtkTreeView list.
+ *  \param user_data    Selection of the other GtkTreeView list (user data as
+ *                      passed to function g_signal_connect).
+ *
+ *  \todo  Process double-clicks (see the tree-view tutorial on how to make this)
+ ******************************************************************************/
+static void treeSelectionCallback (GtkTreeSelection *selection, gpointer user_data)
+{
+    int idx;
+    GtkTreeSelection *other;
+
+    ASSERT (user_data != NULL);
+
+    idx = getSelectedCoeff (selection);
+    other = gtk_tree_view_get_selection (*(GtkTreeView**)user_data);
+
+    ASSERT (other != NULL);
+
+    if (idx >= 0)                      /* unselected -> selected transition ? */
+    {
+        gtk_tree_selection_unselect_all (other);       /* deselect other list */
+    } /* if */
+
+    allowCoeffActions ((getSelectedCoeff (other) >= 0) || (idx >= 0));
+
+} /* treeSelectionCallback() */
+
+
+
+/* FUNCTION *******************************************************************/
+/** This function sets the \e markup property of an index cell instead of just
  *  using the straight mapping between the cell and the model. This is useful
  *  for customizing the cell renderer - in that case to handle markup.
  *
@@ -170,7 +517,7 @@ void coeffCellDataFunc (GtkTreeViewColumn *column, GtkCellRenderer *renderer,
     char buf[128];
 
     gtk_tree_model_get (model, iter, MAINDLG_LIST_COLUMN_COEFF, &coeff, -1);
-    g_snprintf (buf, sizeof (buf), "%G", coeff);
+    g_snprintf (buf, sizeof (buf), "%.*G", cfgGetDesktopPrefs()->outprec, coeff);
     g_object_set (renderer, "text", buf, NULL);
 } /* coeffCellDataFunc() */
 
@@ -182,10 +529,12 @@ void coeffCellDataFunc (GtkTreeViewColumn *column, GtkCellRenderer *renderer,
  *  \note If the GtkTreeView has \e fixed_height mode enabled, then all columns
  *        must have its \e sizing property set to be GTK_TREE_VIEW_COLUMN_FIXED.
  *
- *  \return GtkTreeView widget associated with the coefficients list.
+ *  \param pOther   Pointer to a variable which holds the GtkTreeView reference.
+ *
+ *  \return         GtkTreeView widget associated with the coefficients list.
  *
  ******************************************************************************/
-static GtkTreeView* createCoeffListTreeView (void)
+static GtkTreeView* createCoeffListTreeView (GtkTreeView **pOther)
 {
     GtkCellRenderer *renderer;
     GtkTreeViewColumn *column;
@@ -235,8 +584,15 @@ static GtkTreeView* createCoeffListTreeView (void)
     gtk_tree_view_set_model (tree, GTK_TREE_MODEL (store));
     g_object_unref (G_OBJECT (store));        /* view now holds the reference */
 
+
+    /* 5th step: Connect to "changed" signal
+     */
+    g_signal_connect_after ((gpointer) gtk_tree_view_get_selection (tree), "changed",
+                            G_CALLBACK (treeSelectionCallback), pOther);
+
     return tree;
 } /* createCoeffListTreeView() */
+
 
 
 /* FUNCTION *******************************************************************/
@@ -263,6 +619,7 @@ static void fillCoeffListTreeView (GtkTreeView *tree, GtkListStore *store,
 
 
 
+
 /* EXPORTED FUNCTION DEFINITIONS **********************************************/
 
 
@@ -274,13 +631,17 @@ static void fillCoeffListTreeView (GtkTreeView *tree, GtkListStore *store,
  *
  *
  *  \return     Top widget reference.
+ *  \todo       Reduce number of variables used (optimize the function)
  ******************************************************************************/
 GtkWidget* mainDlgCreate (void)
 {
-    GtkWidget *widget, *label;
-    GtkWidget *toolbarMain;
-    GtkWidget *menuMain, *menuMainItem, *menuContainer, *menuItem;
+    int i;
+    MAINDLG_COEFF_ACTION *pAction;
 
+    GtkWidget *widget, *label, *toolbarMain, *menuItem;
+    GtkWidget *menuMain, *menuMainItem, *menuContainer, *submenuContainer;
+
+    GdkPixbuf *iconPixbuf;
     GtkWidget *vbox1;
 
     GtkWidget *toolitem1;
@@ -301,23 +662,10 @@ GtkWidget* mainDlgCreate (void)
     GtkWidget *boxFilterDlg;
     GtkWidget *vpaneFilter;
     GtkWidget *frame1;
-    GtkWidget *alignment6;
-    GtkWidget *hbox12;
-    GtkWidget *aspectframe1;
-    GtkWidget *drawRoots;
-    GtkWidget *vbox4;
-    GtkWidget *btnRootsEnable;
-    GtkWidget *progressRoots;
     GtkWidget *scrolledwindow1;
     GtkWidget *scrolledwindow2;
     GtkWidget *table6;
     GtkWidget *hbuttonbox3;
-    GtkWidget *btnCoeffModify;
-    GtkWidget *btnRoeffRound;
-    GtkWidget *btnCoeffScale;
-    GtkWidget *alignment11;
-    GtkWidget *hbox13;
-    GtkWidget *statusbar1;
     GtkRequisition size;
 
     GtkTooltips *tooltips = gtk_tooltips_new ();
@@ -326,9 +674,13 @@ GtkWidget* mainDlgCreate (void)
     topWidget = gtk_window_new (GTK_WINDOW_TOPLEVEL);
     gtk_container_set_border_width (GTK_CONTAINER (topWidget), 6);
 
-#if 0
-    gtk_window_set_default_size (GTK_WINDOW (topWidget), 800, 600);
-#endif
+    iconPixbuf = create_pixbuf (PACKAGE_ICON);
+
+    if (iconPixbuf != NULL)
+    {
+        gtk_window_set_icon (GTK_WINDOW (topWidget), iconPixbuf);
+        gdk_pixbuf_unref (iconPixbuf);
+    } /* if */
 
     gtk_window_set_role (GTK_WINDOW (topWidget), PACKAGE);
 
@@ -401,13 +753,42 @@ GtkWidget* mainDlgCreate (void)
     menuContainer = gtk_menu_new ();
     gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuMainItem), menuContainer);
 
+    menuItem = gtk_image_menu_item_new_with_mnemonic (_("Project Info"));
+    gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
+    widget = gtk_image_new_from_stock ("gtk-info", GTK_ICON_SIZE_MENU);
+    gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menuItem), widget);
+    g_signal_connect ((gpointer) menuItem, "activate",
+                      G_CALLBACK (editDlgInfoActivate), NULL);
+
+    widget = gtk_menu_item_new_with_mnemonic (_("Coefficient(s)"));
+    gtk_container_add (GTK_CONTAINER (menuContainer), widget);
+    submenuContainer = gtk_menu_new ();
+    gtk_menu_item_set_submenu (GTK_MENU_ITEM (widget), submenuContainer);
+
+
+    for (i = 0, pAction = mainDlgCoeffBtn;
+         i < N_ELEMENTS (mainDlgCoeffBtn);
+         i++, pAction++)
+    {
+        pAction->menu =
+            gtk_image_menu_item_new_with_mnemonic (gettext (pAction->text));
+        gtk_container_add (GTK_CONTAINER (submenuContainer), pAction->menu);
+        widget = gtk_image_new_from_stock (pAction->stockimg, GTK_ICON_SIZE_MENU);
+        gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (pAction->menu), widget);
+        gtk_widget_set_sensitive (GTK_WIDGET(pAction->menu), FALSE);
+        g_signal_connect ((gpointer) pAction->menu, "activate",
+                          G_CALLBACK (mainDlgCoeffAction), pAction);
+    } /* for */
+
+
     widget = gtk_separator_menu_item_new ();
     gtk_container_add (GTK_CONTAINER (menuContainer), widget);
     gtk_widget_set_sensitive (widget, FALSE);
 
     menuItem = gtk_image_menu_item_new_from_stock ("gtk-preferences", accel_group);
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
-
+    g_signal_connect ((gpointer) menuItem, "activate",
+                      G_CALLBACK (editDlgSettingsActivate), NULL);
 
     menuMainItem = gtk_menu_item_new_with_mnemonic (_("_View"));
     gtk_container_add (GTK_CONTAINER (menuMain), menuMainItem);
@@ -419,49 +800,49 @@ GtkWidget* mainDlgCreate (void)
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (responseWinMenuActivate),
-                      &viewWinType[RESPONSE_TYPE_AMPLITUDE]);
+                      GINT_TO_POINTER (RESPONSE_TYPE_AMPLITUDE));
 
-    menuItem = gtk_check_menu_item_new_with_mnemonic (_("Attenuation"));
+    menuItem = gtk_check_menu_item_new_with_mnemonic (_("A_ttenuation"));
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (responseWinMenuActivate),
-                      &viewWinType[RESPONSE_TYPE_ATTENUATION]);
+                      GINT_TO_POINTER (RESPONSE_TYPE_ATTENUATION));
 
-    menuItem = gtk_check_menu_item_new_with_mnemonic (_("Characteristic Function"));
+    menuItem = gtk_check_menu_item_new_with_mnemonic (_("_Characteristic Function"));
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (responseWinMenuActivate),
-                      &viewWinType[RESPONSE_TYPE_CHAR]);
+                      GINT_TO_POINTER (RESPONSE_TYPE_CHAR));
 
-    menuItem = gtk_check_menu_item_new_with_mnemonic (_("Phase Response"));
+    menuItem = gtk_check_menu_item_new_with_mnemonic (_("_Phase Response"));
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (responseWinMenuActivate),
-                      &viewWinType[RESPONSE_TYPE_PHASE]);
+                      GINT_TO_POINTER (RESPONSE_TYPE_PHASE));
 
-    menuItem = gtk_check_menu_item_new_with_mnemonic (_("Phase Delay"));
+    menuItem = gtk_check_menu_item_new_with_mnemonic (_("Phase _Delay"));
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (responseWinMenuActivate),
-                      &viewWinType[RESPONSE_TYPE_DELAY]);
+                      GINT_TO_POINTER (RESPONSE_TYPE_DELAY));
 
-    menuItem = gtk_check_menu_item_new_with_mnemonic (_("Group Delay"));
+    menuItem = gtk_check_menu_item_new_with_mnemonic (_("_Group Delay"));
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (responseWinMenuActivate),
-                      &viewWinType[RESPONSE_TYPE_GROUP]);
+                      GINT_TO_POINTER (RESPONSE_TYPE_GROUP));
 
-    menuItem = gtk_check_menu_item_new_with_mnemonic (_("Impulse Response"));
+    menuItem = gtk_check_menu_item_new_with_mnemonic (_("_Impulse Response"));
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (responseWinMenuActivate),
-                      &viewWinType[RESPONSE_TYPE_IMPULSE]);
+                      GINT_TO_POINTER (RESPONSE_TYPE_IMPULSE));
 
-    menuItem = gtk_check_menu_item_new_with_mnemonic (_("Step Response"));
+    menuItem = gtk_check_menu_item_new_with_mnemonic (_("_Step Response"));
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (responseWinMenuActivate),
-                      &viewWinType[RESPONSE_TYPE_STEP]);
+                      GINT_TO_POINTER (RESPONSE_TYPE_STEP));
 
     menuMainItem = gtk_menu_item_new_with_mnemonic (_("_Help"));
     gtk_container_add (GTK_CONTAINER (menuMain), menuMainItem);
@@ -501,14 +882,15 @@ GtkWidget* mainDlgCreate (void)
     btnNew = (GtkWidget*) gtk_tool_button_new_from_stock ("gtk-new");
     gtk_container_add (GTK_CONTAINER (toolbarMain), btnNew);
     g_signal_connect ((gpointer) btnNew, "clicked",
-                      G_CALLBACK (fileDlgNewActivate),
-                      NULL);
+                      G_CALLBACK (fileDlgNewActivate), NULL);
 
     widget = (GtkWidget*) gtk_separator_tool_item_new ();
     gtk_container_add (GTK_CONTAINER (toolbarMain), widget);
 
     btnPreferences = (GtkWidget*) gtk_tool_button_new_from_stock ("gtk-preferences");
     gtk_container_add (GTK_CONTAINER (toolbarMain), btnPreferences);
+    g_signal_connect ((gpointer) btnPreferences, "clicked",
+                      G_CALLBACK (editDlgSettingsActivate), NULL);
 
     separatortoolitem2 = (GtkWidget*) gtk_separator_tool_item_new ();
     gtk_container_add (GTK_CONTAINER (toolbarMain), separatortoolitem2);
@@ -522,7 +904,7 @@ GtkWidget* mainDlgCreate (void)
 
     boxDesignDlg = gtk_vbox_new (FALSE, 12);
     gtk_box_pack_start (GTK_BOX (hbox1), boxDesignDlg, FALSE, TRUE, 0);
-    gtk_container_set_border_width (GTK_CONTAINER (boxDesignDlg), 0);
+    gtk_container_set_border_width (GTK_CONTAINER (boxDesignDlg), 6);
 
     hbox3 = gtk_hbox_new (FALSE, 12);
     gtk_box_pack_start (GTK_BOX (boxDesignDlg), hbox3, FALSE, FALSE, 0);
@@ -560,6 +942,7 @@ GtkWidget* mainDlgCreate (void)
 
     boxFilterDlg = gtk_vbox_new (FALSE, 0);
     gtk_box_pack_start (GTK_BOX (hbox1), boxFilterDlg, TRUE, TRUE, 0);
+    gtk_container_set_border_width (GTK_CONTAINER (boxFilterDlg), 6);
 
     vpaneFilter = gtk_vpaned_new ();
     gtk_box_pack_start (GTK_BOX (boxFilterDlg), vpaneFilter, TRUE, TRUE, 0);
@@ -569,33 +952,7 @@ GtkWidget* mainDlgCreate (void)
     gtk_paned_pack1 (GTK_PANED (vpaneFilter), frame1, FALSE, TRUE);
     gtk_container_set_border_width (GTK_CONTAINER (frame1), 6);
 
-    alignment6 = gtk_alignment_new (0.5, 0.5, 1, 1);
-    gtk_container_add (GTK_CONTAINER (frame1), alignment6);
-    gtk_alignment_set_padding (GTK_ALIGNMENT (alignment6), 0, 0, 12, 0);
-
-    hbox12 = gtk_hbox_new (FALSE, 0);
-    gtk_container_add (GTK_CONTAINER (alignment6), hbox12);
-
-    aspectframe1 = gtk_aspect_frame_new (NULL, 0, 0, 1, FALSE);
-    gtk_box_pack_start (GTK_BOX (hbox12), aspectframe1, TRUE, TRUE, 6);
-    gtk_frame_set_shadow_type (GTK_FRAME (aspectframe1), GTK_SHADOW_NONE);
-
-    drawRoots = gtk_drawing_area_new ();
-    gtk_container_add (GTK_CONTAINER (aspectframe1), drawRoots);
-
-    vbox4 = gtk_vbox_new (FALSE, 12);
-    gtk_box_pack_start (GTK_BOX (hbox12), vbox4, FALSE, FALSE, 0);
-    gtk_container_set_border_width (GTK_CONTAINER (vbox4), 6);
-
-    btnRootsEnable = gtk_check_button_new_with_mnemonic ("");
-    gtk_box_pack_end (GTK_BOX (vbox4), btnRootsEnable, FALSE, FALSE, 0);
-    GTK_WIDGET_UNSET_FLAGS (btnRootsEnable, GTK_CAN_FOCUS);
-    gtk_button_set_focus_on_click (GTK_BUTTON (btnRootsEnable), FALSE);
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (btnRootsEnable), TRUE);
-
-    progressRoots = gtk_progress_bar_new ();
-    gtk_box_pack_end (GTK_BOX (vbox4), progressRoots, TRUE, TRUE, 0);
-    gtk_progress_bar_set_orientation (GTK_PROGRESS_BAR (progressRoots), GTK_PROGRESS_BOTTOM_TO_TOP);
+    gtk_container_add (GTK_CONTAINER (frame1), rootsPlotCreate ());
 
     label = gtk_label_new (_("<b>Roots</b>"));
     gtk_frame_set_label_widget (GTK_FRAME (frame1), label);
@@ -613,7 +970,7 @@ GtkWidget* mainDlgCreate (void)
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow2), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolledwindow2), GTK_SHADOW_IN);
 
-    treeDenominator = createCoeffListTreeView ();
+    treeDenominator = createCoeffListTreeView (&treeNumerator);
     gtk_container_add (GTK_CONTAINER (scrolledwindow2), GTK_WIDGET (treeDenominator));
     gtk_tooltips_set_tip (tooltips, GTK_WIDGET (treeDenominator),
                           _("Denominator coefficients"), NULL);
@@ -625,7 +982,7 @@ GtkWidget* mainDlgCreate (void)
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow1), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolledwindow1), GTK_SHADOW_IN);
 
-    treeNumerator = createCoeffListTreeView ();
+    treeNumerator = createCoeffListTreeView (&treeDenominator);
     gtk_container_add (GTK_CONTAINER (scrolledwindow1), GTK_WIDGET (treeNumerator));
     gtk_tooltips_set_tip (tooltips, GTK_WIDGET (treeNumerator),
                           _("Numerator coefficients"), NULL);
@@ -649,44 +1006,27 @@ GtkWidget* mainDlgCreate (void)
     hbuttonbox3 = gtk_hbutton_box_new ();
     gtk_box_pack_start (GTK_BOX (boxFilterDlg), hbuttonbox3, FALSE, TRUE, 0);
     gtk_container_set_border_width (GTK_CONTAINER (hbuttonbox3), 6);
-    gtk_box_set_spacing (GTK_BOX (hbuttonbox3), 12);
+    gtk_box_set_spacing (GTK_BOX (hbuttonbox3), 6);
 
-    btnCoeffModify = gtk_button_new ();
-    gtk_container_add (GTK_CONTAINER (hbuttonbox3), btnCoeffModify);
-    gtk_widget_set_sensitive (btnCoeffModify, FALSE);
-    gtk_tooltips_set_tip (tooltips, btnCoeffModify, _("Modify coefficient"), NULL);
+    for (i = 0, pAction = mainDlgCoeffBtn;
+         i < N_ELEMENTS (mainDlgCoeffBtn);
+         i++, pAction++)
+    {
+        pAction->btn = gtk_button_new ();
+        gtk_container_add (GTK_CONTAINER (hbuttonbox3), pAction->btn);
+        gtk_widget_set_sensitive (pAction->btn, FALSE);
+        gtk_tooltips_set_tip (tooltips, pAction->btn,
+                              gettext (pAction->tooltip), NULL);
+        widget = gtk_image_new_from_stock (pAction->stockimg,
+                                           GTK_ICON_SIZE_BUTTON);
+        gtk_container_add (GTK_CONTAINER (pAction->btn), widget);
+        g_signal_connect ((gpointer) pAction->btn, "clicked",
+                          G_CALLBACK (mainDlgCoeffAction), pAction);
+    } /* for */
 
-    widget = gtk_image_new_from_stock ("gtk-edit", GTK_ICON_SIZE_BUTTON);
-    gtk_container_add (GTK_CONTAINER (btnCoeffModify), widget);
 
-    btnRoeffRound = gtk_button_new ();
-    gtk_container_add (GTK_CONTAINER (hbuttonbox3), btnRoeffRound);
-    gtk_widget_set_sensitive (btnRoeffRound, FALSE);
-    gtk_tooltips_set_tip (tooltips, btnRoeffRound, _("Round coefficient(s)"), NULL);
-
-    widget = gtk_image_new_from_stock ("gtk-convert", GTK_ICON_SIZE_BUTTON);
-    gtk_container_add (GTK_CONTAINER (btnRoeffRound), widget);
-
-    btnCoeffScale = gtk_button_new ();
-    gtk_container_add (GTK_CONTAINER (hbuttonbox3), btnCoeffScale);
-    gtk_widget_set_sensitive (btnCoeffScale, FALSE);
-    gtk_tooltips_set_tip (tooltips, btnCoeffScale, _("Scale coefficient(s)"), NULL);
-
-    alignment11 = gtk_alignment_new (0.5, 0.5, 0, 0);
-    gtk_container_add (GTK_CONTAINER (btnCoeffScale), alignment11);
-
-    hbox13 = gtk_hbox_new (FALSE, 2);
-    gtk_container_add (GTK_CONTAINER (alignment11), hbox13);
-
-    widget = gtk_image_new_from_stock ("gtk-fullscreen", GTK_ICON_SIZE_BUTTON);
-    gtk_box_pack_start (GTK_BOX (hbox13), widget, FALSE, FALSE, 0);
-
-    label = gtk_label_new_with_mnemonic ("");
-    gtk_box_pack_start (GTK_BOX (hbox13), label, FALSE, FALSE, 0);
-
-    statusbar1 = gtk_statusbar_new ();
-    gtk_box_pack_start (GTK_BOX (vbox1), statusbar1, FALSE, FALSE, 0);
-    gtk_container_set_border_width (GTK_CONTAINER (statusbar1), 4);
+    statusbar = gtk_statusbar_new ();
+    gtk_box_pack_start (GTK_BOX (vbox1), statusbar, FALSE, FALSE, 0);
 
     g_signal_connect ((gpointer) btnExit, "clicked",
                       G_CALLBACK (mainDlgQuit),
@@ -719,60 +1059,138 @@ GtkWidget* mainDlgCreate (void)
     GLADE_HOOKUP_OBJECT (topWidget, boxFilterDlg, "boxFilterDlg");
     GLADE_HOOKUP_OBJECT (topWidget, vpaneFilter, "vpaneFilter");
     GLADE_HOOKUP_OBJECT (topWidget, frame1, "frame1");
-    GLADE_HOOKUP_OBJECT (topWidget, alignment6, "alignment6");
-    GLADE_HOOKUP_OBJECT (topWidget, hbox12, "hbox12");
-    GLADE_HOOKUP_OBJECT (topWidget, drawRoots, "drawRoots");
-    GLADE_HOOKUP_OBJECT (topWidget, vbox4, "vbox4");
-    GLADE_HOOKUP_OBJECT (topWidget, btnRootsEnable, "btnRootsEnable");
-    GLADE_HOOKUP_OBJECT (topWidget, progressRoots, "progressRoots");
     GLADE_HOOKUP_OBJECT (topWidget, scrolledwindow1, "scrolledwindow1");
     GLADE_HOOKUP_OBJECT (topWidget, scrolledwindow2, "scrolledwindow2");
     GLADE_HOOKUP_OBJECT (topWidget, hbuttonbox3, "hbuttonbox3");
-    GLADE_HOOKUP_OBJECT (topWidget, btnCoeffModify, "btnCoeffModify");
-    GLADE_HOOKUP_OBJECT (topWidget, btnRoeffRound, "btnRoeffRound");
-    GLADE_HOOKUP_OBJECT (topWidget, btnCoeffScale, "btnCoeffScale");
-    GLADE_HOOKUP_OBJECT (topWidget, alignment11, "alignment11");
-    GLADE_HOOKUP_OBJECT (topWidget, hbox13, "hbox13");
-    GLADE_HOOKUP_OBJECT (topWidget, statusbar1, "statusbar1");
     GLADE_HOOKUP_OBJECT_NO_REF (topWidget, tooltips, "tooltips");
 
     gtk_window_add_accel_group (GTK_WINDOW (topWidget), accel_group);
     gtk_widget_show_all (topWidget);
-    gtk_widget_size_request (vpaneFilter, &size);
-    gtk_paned_set_position (GTK_PANED (vpaneFilter), size.height / 2);
+    gtk_widget_grab_focus (comboFilterClass);
 
     mainDlgUpdateAll (NULL);                             /* set initial state */
+
+    gtk_widget_size_request (boxDesignDlg, &size);
+    gtk_paned_set_position (GTK_PANED (vpaneFilter), size.height / 3);
+
     return topWidget;
-}
+} /* mainDlgCreate() */
+
 
 
 /* FUNCTION *******************************************************************/
-/** Updates the filter dialog in main widget from current project.
+/** Updates the project information in statusbar.
  *
  ******************************************************************************/
-void mainDlgUpdateFilter ()
+void mainDlgUpdatePrjInfo ()
+{
+    static guint prjInfoMsgId, prjInfoContextId;
+    static BOOL firstCall = TRUE;
+
+    char *msg;
+    const DFCPRJ_INFO *pInfo = dfcPrjGetInfo ();
+
+    if (firstCall)
+    {
+        prjInfoContextId =
+            gtk_statusbar_get_context_id (GTK_STATUSBAR (statusbar),
+                                          PACKAGE "Project Info");
+        firstCall = FALSE;
+    } /* if */
+    else
+    {
+        gtk_statusbar_remove (GTK_STATUSBAR (statusbar), prjInfoContextId,
+                              prjInfoMsgId);
+    } /* else */
+
+
+    if (pInfo->title == NULL)                              /* no title given? */
+    {
+        if (pInfo->author == NULL)
+        {
+            msg = g_strdup ("");      /* prepare unconditional g_free() later */
+        } /* if */
+        else
+        {
+            msg = g_strdup (pInfo->author);               /* only show author */
+        } /* else */
+    } /* if */
+    else                                                  /* there is a title */
+    {
+        if (pInfo->author == NULL)                           /* but no author */
+        {
+            msg = g_strdup (pInfo->title);
+        } /* if */
+        else                                                /* both specified */
+        {
+            msg = g_strdup_printf ("%s (%s)", pInfo->title, pInfo->author);
+        } /* else */
+    } /* else */
+
+    prjInfoMsgId = gtk_statusbar_push (GTK_STATUSBAR (statusbar),
+                                       prjInfoContextId, msg);
+    g_free (msg);
+} /* mainDlgUpdatePrjInfo() */
+
+
+
+
+/* FUNCTION *******************************************************************/
+/** Updates the main filter dialog from current project (if there is no error
+ *  passed in via \p err). If there is an critical error (coded as from function
+ *  filterCheck(), then it displays an error box. If \c FLTERR_WARNING(err)
+ *  indicates loss of coefficients then a warning will be shown.
+ *
+ *  \param err      Error indicator with coding as from filterCheck().
+ *
+ *  \return         Returns TRUE if the error is not FLTERR_CRITICAL(err),
+ *                  else FALSE.
+ ******************************************************************************/
+BOOL mainDlgUpdateFilter (int err)
 {
     GtkListStore *storeNum, *storeDen;
 
     FLTCOEFF* pFilter = dfcPrjGetFilter();
     BOOL valid = pFilter != NULL;
 
-    gtk_widget_set_sensitive (lookup_widget (topWidget, "toolBtnSave"), valid);
-    gtk_widget_set_sensitive (lookup_widget (topWidget, "menuItemFileSave"), valid);
-    gtk_widget_set_sensitive (lookup_widget (topWidget, "menuItemFileSaveAs"), valid);
-
-    storeNum = GTK_LIST_STORE (gtk_tree_view_get_model (treeNumerator));
-    storeDen = GTK_LIST_STORE (gtk_tree_view_get_model (treeDenominator));
-    gtk_list_store_clear (storeNum);
-    gtk_list_store_clear (storeDen);
-
-    if (valid)
+    if (!FLTERR_CRITICAL (err))
     {
-        fillCoeffListTreeView (treeNumerator, storeNum, &pFilter->num);
-        fillCoeffListTreeView (treeDenominator, storeDen, &pFilter->den);
+        if (FLTERR_WARNING (err))
+        {
+            GtkWidget *dialog =
+                gtk_message_dialog_new (GTK_WINDOW (topWidget),
+                                        GTK_DIALOG_DESTROY_WITH_PARENT,
+                                        GTK_MESSAGE_WARNING,
+                                        GTK_BUTTONS_CLOSE,
+                                        _("Filter generation has dropped some"
+                                          " (near zero) coefficients, but the"
+                                          " filter is still valid."));
+            gtk_dialog_run (GTK_DIALOG (dialog));
+            gtk_widget_destroy (dialog);
+        } /* if */
+
+
+        gtk_widget_set_sensitive (lookup_widget (topWidget, "toolBtnSave"), valid);
+        gtk_widget_set_sensitive (lookup_widget (topWidget, "menuItemFileSave"), valid);
+        gtk_widget_set_sensitive (lookup_widget (topWidget, "menuItemFileSaveAs"), valid);
+
+        storeNum = GTK_LIST_STORE (gtk_tree_view_get_model (treeNumerator));
+        storeDen = GTK_LIST_STORE (gtk_tree_view_get_model (treeDenominator));
+        gtk_list_store_clear (storeNum);
+        gtk_list_store_clear (storeDen);
+
+        if (valid)
+        {
+            fillCoeffListTreeView (treeNumerator, storeNum, &pFilter->num);
+            fillCoeffListTreeView (treeDenominator, storeDen, &pFilter->den);
+        } /* if */
+
+        responseWinRedraw (RESPONSE_TYPE_SIZE);
+        rootsPlotUpdate (pFilter);
+        return TRUE;
     } /* if */
 
-    responseWinRedraw (RESPONSE_TYPE_SIZE);
+    return FALSE;
 } /* mainDlgUpdateFilter() */
 
 
@@ -789,7 +1207,8 @@ void mainDlgUpdateFilter ()
 void mainDlgUpdateAll (const char* filename)
 {
     designDlgUpdate (topWidget);        /* update design from current project */
-    mainDlgUpdateFilter ();          /* update coefficients and roots display */
+    mainDlgUpdateFilter (0);         /* update coefficients and roots display */
+    mainDlgUpdatePrjInfo ();
 
     gtk_widget_grab_default (lookup_widget (topWidget, MAINDLG_BTN_APPLY));
 
@@ -802,15 +1221,15 @@ void mainDlgUpdateAll (const char* filename)
             utf8name = g_strdup (_("<i>Unknown</i>"));
         } /* if */
 
-        tmp = g_strdup_printf ("%s: %s", _(PACKAGE), utf8name);
+        tmp = g_strdup_printf ("%s: %s", PACKAGE, utf8name);
         gtk_window_set_title (GTK_WINDOW (topWidget), tmp);
-        FREE (utf8name);
-        FREE (tmp);
+        g_free (utf8name);
+        g_free (tmp);
 
         return;
     } /* if */
 
-    gtk_window_set_title (GTK_WINDOW (topWidget), _(PACKAGE));
+    gtk_window_set_title (GTK_WINDOW (topWidget), PACKAGE);
 } /* mainDlgUpdateAll() */
 
 

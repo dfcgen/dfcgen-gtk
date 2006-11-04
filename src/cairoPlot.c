@@ -4,11 +4,14 @@
  *           2-dimensional plot on a \e Cairo graphic context.
  *
  * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/src/cairoPlot.c,v 1.1.1.1 2006-09-11 15:52:19 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/src/cairoPlot.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:19  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -43,11 +46,6 @@
 #define PLOT_GRID_LINE_WIDTH    (0.5)                    /**< Grid line width */
 #define PLOT_GRID_DASH_LEN      (1.0)                   /**< Grid dash length */
 #define PLOT_BOX_LINE_WIDTH     (1.0)                /**< Plot box line width */
-#define PLOT_GRAPH_LINE_WIDTH   (1.5)                   /**< Graph line width */
-
-#define PLOT_TOLERANCE          (DBL_EPSILON * 4)         /**< Plot tolerance */
-#define PLOT_AXIS_MAX           (32768 / PLOT_TOLERANCE) /**< Maximum world value */
-#define PLOT_AXIS_MIN           (-PLOT_AXIS_MAX)     /**< Minimum world value */
 
 
 
@@ -107,34 +105,38 @@ typedef void (*PLOT_FUNC_DRAW)(cairo_t* cr, PLOT_AXIS_WORKSPACE* pY,
 /* MACRO **********************************************************************/
 /** Sets a color from \p colors array into \e Cairo context.
  *
+ *  \note               Do not use the function gdk_cairo_set_source_color(),
+ *                      because it does'nt work.
+ *
  *  \param cr           \e Cairo drawing context.
  *  \param colors       Pointer to array of GDK colors indexed by PLOT_COLOR.
  *                      If NULL, the color is unchanged.
  *  \param index        Identifies the color (PLOT_COLOR) to be changed.
  *
  ******************************************************************************/
-#define PLOT_COLOR_SET(cr, colors, index)                       \
-    if ((colors) != NULL)                                       \
-    {                                                           \
-        gdk_cairo_set_source_color ((cr), (colors) + (index));  \
+#define PLOT_COLOR_SET(cr, colors, index)                               \
+    if ((colors) != NULL)                                               \
+    {                                                                   \
+        cairo_set_source_rgb ((cr), (colors)[(index)].red / 65535.0,    \
+                              (colors)[(index)].green / 65535.0,        \
+                              (colors)[(index)].blue / 65535.0);        \
     }
 
 
 /* LOCAL FUNCTION DECLARATIONS ************************************************/
 
 
-static int drawMessage (cairo_t* cr, PLOT_DIAG *pDiag, int errcode);
+static int drawErrorMsg (cairo_t* cr, PLOT_DIAG *pDiag, int errcode);
 static int callInitFunc (PLOT_DIAG *pDiag, PLOT_AXIS_WORKSPACE *pX);
 static void callEndFunc (PLOT_DIAG *pDiag);
 static int callProgressFunc (PLOT_DIAG *pDiag, int cnt, int num);
 static double getUnitFactor (PLOT_AXIS *pAxis);
-static int chkWorldRanges (PLOT_AXIS *pAxis);
-static void setRatio (PLOT_AXIS_WORKSPACE *p);
+static double w2cRatio(PLOT_AXIS *pAxis, int start, int stop);
 static int searchMinMaxY (PLOT_DIAG* pDiag, PLOT_AXIS_WORKSPACE *pX);
 static double w2c (PLOT_AXIS_WORKSPACE *p, double coordinate);
-static double c2w (PLOT_AXIS_WORKSPACE *p, double offset);
 static double searchNearestLin (double mantissa);
-static PangoRectangle createAxisLabel (cairo_t *cr, double divider, PLOT_LABEL *label);
+static PangoRectangle createAxisLabel (cairo_t *cr, int precision,
+                                       double divider, PLOT_LABEL *label);
 static int scaleLin (cairo_t *cr, PLOT_AXIS_WORKSPACE *p, int margin, BOOL vertical);
 static int scaleLog(cairo_t *cr, PLOT_AXIS_WORKSPACE *p, int margin, BOOL vertical);
 static void drawLayout(cairo_t *cr, PangoLayout* layout, int x, int y);
@@ -176,26 +178,32 @@ static void drawStyleBoxOnly (cairo_t* cr, PLOT_AXIS_WORKSPACE* pY,
  *
  *  \return             The error code passed in by \p errcode.
  ******************************************************************************/
-static int drawMessage (cairo_t* cr, PLOT_DIAG *pDiag, int errcode)
+static int drawErrorMsg (cairo_t* cr, PLOT_DIAG *pDiag, int errcode)
 {
-    if (errcode < 0)
+    if ((errcode < 0) && (pDiag->area.width >= 20))
     {
+        PangoRectangle rect;
+
         PangoLayout* layout = pango_cairo_create_layout (cr);
         gchar *message =
             g_strdup_printf (_("<b>Cannot draw the plot.</b>\n\n"
-                               "<small>Maybe memory is exhausted or there are too many"
-                               " sample points. Change the start and/or endpoint"
-                               " of ordinate to circumvant this situation.</small>"));
+                               "<small>Maybe memory space is exhausted, there are too many"
+                               " sample points or a mathematical operation has failed."
+                               " Change the start and/or endpoint of ordinate"
+                               " to circumvant this situation.</small>"));
 
         pango_layout_set_width (layout, (pDiag->area.width - 20) * PANGO_SCALE);
         pango_layout_set_alignment (layout, PANGO_ALIGN_CENTER);
         pango_layout_set_markup (layout, message, -1);
-        drawLayout(cr, layout, 10, pDiag->area.height / 2);
-        FREE (message);
+        pango_layout_get_extents (layout, NULL, &rect);
+        drawLayout (cr, layout,
+                    pDiag->area.x - 10 + (pDiag->area.width - PANGO_PIXELS (rect.width)) / 2,
+                    pDiag->area.y - 10 + (pDiag->area.height - PANGO_PIXELS (rect.height)) / 2);
+        g_free (message);
     } /* if */
 
     return errcode;
-} /* drawMessage() */
+} /* drawErrorMsg() */
 
 
 /* FUNCTION *******************************************************************/
@@ -218,116 +226,38 @@ static double getUnitFactor(PLOT_AXIS *pAxis)
 } /* getUnitFactor() */
 
 
-/* FUNCTION *******************************************************************/
-/** Checks the plot range of an axis against some predefined limits. If the
- *  range [start, stop] doesn't match these limits the function changes the range
- *  automatically.
- *
- *
- *  \param pAxis        Pointer to axis workspace.
- *
- *  \return             If range is in boundaries then it returns the value 0,
- *                      else ERANGE from errno.h.
- ******************************************************************************/
-static int chkWorldRanges(PLOT_AXIS *pAxis)
-{
-    double result;
-    int ret = 0;
-
-
-    if (pAxis->flags & PLOT_AXIS_FLAG_LOG)                /* logarithmic axis */
-    {
-        pAxis->start = CLAMP(pAxis->start, PLOT_TOLERANCE, PLOT_AXIS_MAX);
-        pAxis->stop = CLAMP(pAxis->stop, PLOT_TOLERANCE, PLOT_AXIS_MAX);
-
-        result = mathTryDiv(pAxis->start, pAxis->stop);
-
-        if (gsl_isinf(result) || (result  < PLOT_TOLERANCE))
-        {
-            pAxis->start = pAxis->stop * PLOT_TOLERANCE;
-            ret = ERANGE;
-        } /* if */
-
-        result = mathTryDiv(pAxis->stop, pAxis->start);
-
-        if (gsl_isinf(result) || (result  < (1.0 + PLOT_TOLERANCE)))
-        {
-            pAxis->stop = pAxis->start * (1.0 + PLOT_TOLERANCE);
-            ret = ERANGE;
-        } /* if */
-    } /* if */
-    else                                                       /* linear axis */
-    {
-        pAxis->start = CLAMP(pAxis->start, PLOT_AXIS_MIN, PLOT_AXIS_MAX);
-        pAxis->stop = CLAMP(pAxis->stop, PLOT_AXIS_MIN, PLOT_AXIS_MAX);
-
-        if ((pAxis->stop - pAxis->start) < PLOT_TOLERANCE)
-        {
-            pAxis->stop = pAxis->start + PLOT_TOLERANCE;
-            ret = ERANGE;
-        } /* if */
-    } /* else */
-
-    return ret;
-} /* chkWorldRanges() */
-
-
 
 /* FUNCTION *******************************************************************/
 /** Calculates the ratio of GDK and world-coordinates. The function calculates
- *  the ratio between logical and world-coordinates and stores them in \p p->ratio.
- *  The ratio is the difference of world coordinates \p pAxis->stop-pAxis->start
- *  in the linear case or \p log10(pAxis->stop/pAxis->start) in the logarithmic
- *  case.
+ *  the ratio between logical and world-coordinates and returns them.
+ *  The ratio is the difference of world coordinates \p stop-start in the
+ *  linear case or \p log10(stop/start) in the logarithmic case.
  *
- *  \param p            Pointer to axis workspace, which is an I/O parameter
- *                      wrt. \p p->ratio.
+ *  \param pAxis        Pointer to axis description.
+ *  \param start        Start point of plot graph (box) in GDK coordinates.
+ *  \param stop         Stop point of plot graph (box) in GDK coordinates.
+ *
+ *  \return             The calculated ratio (e.g. for PLOT_AXIS_WORKSPACE).
  *
  ******************************************************************************/
-static void setRatio(PLOT_AXIS_WORKSPACE *p)
+static double w2cRatio(PLOT_AXIS *pAxis, int start, int stop)
 {
-    PLOT_AXIS *pAxis = p->pAxis;
-    int delta = p->stop - p->start;
+    double ratio;
+
+    int delta = stop - start;
 
     if (pAxis->flags & PLOT_AXIS_FLAG_LOG)
     {
-        p->ratio = delta / log10(pAxis->stop / pAxis->start);
+        ratio = delta / log10(pAxis->stop / pAxis->start);
     } /* if */
     else
     {
-        p->ratio = delta / (pAxis->stop - pAxis->start);
+        ratio = delta / (pAxis->stop - pAxis->start);
     } /* else */
 
-} /* setRatio() */
+    return ratio;
+} /* w2cRatio() */
 
-
-
-/* FUNCTION *******************************************************************/
-/** Returns a world-coordinate associated with a logical coordinate.
- *
- *  \note  Because chkWorldRanges() has checked the ranges \p p->pAxis.start
- *         and \p p->pAxis.stop with respect to the operation \p p->pAxis.stop -
- *         \p p->pAxis.start (lin. case) and \p p->pAxis.stop / \p p->pAxis.start
- *         (log. case) there is no need to use math. function mathTryDiv().
- *
- *  \param p            Pointer to axis workspace.
- *  \param offset       Logical coordinate relative to p->start.
- *
- *  \return             World-coordinate within this axis.
- ******************************************************************************/
-static double c2w(PLOT_AXIS_WORKSPACE *p, double offset)
-{
-    double offsetWorld = offset / p->ratio;
-    PLOT_AXIS *pAxis = p->pAxis;
-
-    if (pAxis->flags & PLOT_AXIS_FLAG_LOG)                      /* log. axis? */
-    {
-        return pAxis->start * pow10(CLAMP(offsetWorld, 0.0,
-                                          log10(pAxis->stop / pAxis->start)));
-    } /* if */
-
-    return pAxis->start + offsetWorld;                         /* linear case */
-} /* c2w() */
 
 
 /* FUNCTION *******************************************************************/
@@ -459,7 +389,7 @@ static void createAxisNameLayout(cairo_t *cr, PLOT_AXIS_WORKSPACE *p)
         if (pAxis->pUnit != NULL)
         {
             g_snprintf (string, sizeof(string), PLOT_AXISNAME_FORMAT("%s", "%s"),
-                        gettext(pAxis->name), gettext(pAxis->pUnit->name));
+                        gettext(pAxis->name), pAxis->pUnit->name);
             pango_layout_set_markup (p->layout, string, -1);
         } /* if */
         else
@@ -498,13 +428,15 @@ static void drawLayout(cairo_t *cr, PangoLayout* layout, int x, int y)
 /** Creates an axis label object.
  *
  *  \param cr           \e Cairo context for drawing.
+ *  \param precision    Output precision (number of digits).
  *  \param divider      Prescaling divider (normally from axis units).
  *  \param label        Pointer to label description.
  *
  *  \return             The enclosing rectangle of the axis-label (it's extent).
- *  \todo               Parametrize margin and %G format.
+ *  \todo               Parametrize margin by precision.
  ******************************************************************************/
-static PangoRectangle createAxisLabel(cairo_t *cr, double divider, PLOT_LABEL *label)
+static PangoRectangle createAxisLabel(cairo_t *cr, int precision,
+                                      double divider, PLOT_LABEL *label)
 {
     PangoRectangle labelRect;
     char labelText[128];
@@ -520,7 +452,7 @@ static PangoRectangle createAxisLabel(cairo_t *cr, double divider, PLOT_LABEL *l
      * available. Therefore create a layout from the cairo context.
      */
     label->layout = pango_cairo_create_layout (cr);
-    g_snprintf (labelText, sizeof(labelText), "%G", value);
+    g_snprintf (labelText, sizeof(labelText), "%.*G", precision, value);
     pango_layout_set_text (label->layout, labelText, -1);
     pango_layout_get_extents (label->layout, NULL, &labelRect);
 
@@ -591,7 +523,7 @@ static BOOL insertLabel(cairo_t *cr, PLOT_AXIS_WORKSPACE *p, int margin,
     double divider = getUnitFactor (p->pAxis);
 
     pLabel->world = coordinate;
-    labelRect = createAxisLabel (cr, divider, pLabel);
+    labelRect = createAxisLabel (cr, p->pAxis->prec, divider, pLabel);
     pLabel->grid = w2c(p, coordinate);
 
     size = labelRect.width;
@@ -665,7 +597,7 @@ static int scaleLin(cairo_t *cr, PLOT_AXIS_WORKSPACE *p, int margin, BOOL vertic
 
         while ((coordinate <= pAxis->stop) && (num <= try) && !bad)
         {
-            bad = insertLabel(cr, p, margin, vertical, coordinate, num++);
+            bad = insertLabel (cr, p, margin, vertical, coordinate, num++);
             coordinate += delta;                           /* next grid point */
         } /* while */
 
@@ -750,7 +682,7 @@ static int scaleLog(cairo_t *cr, PLOT_AXIS_WORKSPACE *p, int margin, BOOL vertic
 
         while ((coordinate <= pAxis->stop) && (num < PLOT_LABELS_MAX) && !bad)
         {
-            bad = insertLabel(cr, p, margin, vertical, coordinate, num++);
+            bad = insertLabel (cr, p, margin, vertical, coordinate, num++);
 
             if (++idx >= plotGridNum[scale])               /* next grid point */
             {
@@ -759,7 +691,7 @@ static int scaleLog(cairo_t *cr, PLOT_AXIS_WORKSPACE *p, int margin, BOOL vertic
             } /* if */
 
             norm.mantissa = plotGridPoint[scale][idx];
-            coordinate = mathDenorm10(norm);
+            coordinate = mathDenorm10 (norm);
         } /* while */
 
 
@@ -802,20 +734,23 @@ static void drawGridLabels (cairo_t *cr, GdkColor *colors,
     int i;
     PLOT_LABEL *pLabel;
 
+    /* Set the color into Cairo context (using cairo_set_source_rgb) before
+     * calling pango_cairo_show_layout(). It seems that a call to cairo_stroke
+     * isn't needed, may be its implemented in pango_cairo_show_layout().
+     */
+    PLOT_COLOR_SET (cr, colors, PLOT_COLOR_LABELS);
+
     for (i = 0, pLabel = pX->labels; i < numx; i++, pLabel++)
     {                                                        /* x-axis labels */
-        drawLayout(cr, pLabel->layout, pLabel->pos, pX->pos);
+        drawLayout (cr, pLabel->layout, pLabel->pos, pX->pos);
     } /* for */
 
 
     for (i = 0, pLabel = pY->labels; i < numy; i++, pLabel++)
     {                                                        /* y-axis labels */
-        drawLayout(cr, pLabel->layout, pY->pos, pLabel->pos);
+        drawLayout (cr, pLabel->layout, pY->pos, pLabel->pos);
     } /* for */
 
-
-    PLOT_COLOR_SET (cr, colors, PLOT_COLOR_LABELS);
-    cairo_stroke (cr);
 
     i = 0;                                      /* indicates any grid drawing */
 
@@ -953,7 +888,7 @@ static int searchMinMaxY (PLOT_DIAG* pDiag, PLOT_AXIS_WORKSPACE *pX)
  *  \param lastFlags    Properties of last sample point.
  *  \param curFlags     Properties of current sample point.
  *  \param x            x coordinate.
- *  \param y            y coordinate.
+ *  \param y            y coordinate (may be clamped to boundaries).
  *  \param size         x/y extent of the point pixmap (e.g. radius).
  *
  ******************************************************************************/
@@ -961,9 +896,10 @@ static void drawStyleCircleOnly (cairo_t* cr, PLOT_AXIS_WORKSPACE* pY,
                                  unsigned lastFlags, unsigned curFlags,
                                  int x, int y, int size)
 {
+    cairo_move_to (cr, x, y + size);                     /* avoid line to arc */
+
     if (!curFlags)                         /* check preconditions for drawing */
     {
-        cairo_move_to (cr, x, y + size);                 /* avoid line to arc */
         cairo_arc(cr, x, y, size, -3 * M_PI_2, M_PI_2);
     } /* if */
 } /* drawStyleCircleOnly() */
@@ -985,13 +921,15 @@ static void drawStyleCircleSample (cairo_t* cr, PLOT_AXIS_WORKSPACE* pY,
                                    unsigned lastFlags, unsigned curFlags,
                                    int x, int y, int size)
 {
-    if (!curFlags)                         /* check preconditions for drawing */
+    PLOT_AXIS *pAxisY = pY->pAxis;
+    int ybase = pY->start;              /* base point of sample line (bottom) */
+
+    if (!(curFlags & PLOT_FLAG_INVALID))   /* check preconditions for drawing */
     {
-        PLOT_AXIS *pAxisY = pY->pAxis;
-        int ybase = pY->start;                   /* base point of sample line */
-
-        drawStyleCircleOnly (cr, pY, lastFlags, curFlags, x, y, size);
-
+        /* Because a logarithmic axis always has start and stop greater than
+         * zero, the following steps can be skipped (and this avoids a call to
+         * w2c with argument 0)
+         */
         if (!(pAxisY->flags & PLOT_AXIS_FLAG_LOG))
         {
             if (pAxisY->stop < 0.0)
@@ -1007,7 +945,15 @@ static void drawStyleCircleSample (cairo_t* cr, PLOT_AXIS_WORKSPACE* pY,
             } /* else */
         } /* if */
 
-        if (abs (y - ybase) > size)          /* should we really draw a line? */
+
+        if (curFlags & PLOT_FLAG_OUTSIDE)
+        {
+            size = 0;      /* no circle to be drawn -> don't regard it's size */
+        } /* if */
+
+        drawStyleCircleOnly (cr, pY, lastFlags, curFlags, x, y, size);
+
+        if (abs (y - ybase) >= size)         /* should we really draw a line? */
         {
             if (ybase < y)
             {
@@ -1241,7 +1187,8 @@ static int drawGraph (cairo_t *cr, int size, PLOT_DIAG *pDiag,
  *
  *  \return             0 on success, else an error number from errno.h.
  *  \todo               Make axisX.start and axisX.stop positions dependent of
- *                      number of digits.
+ *                      number of digits. Especially think about the corrections
+ *                      of axisX.stop (which is an estimation at the moment).
  ******************************************************************************/
 int cairoPlot2d(cairo_t* cr, PLOT_DIAG *pDiag)
 {
@@ -1255,8 +1202,8 @@ int cairoPlot2d(cairo_t* cr, PLOT_DIAG *pDiag)
     axisX.pAxis = &pDiag->x;
     axisY.pAxis = &pDiag->y;
 
-    (void)chkWorldRanges(&pDiag->x);
-    (void)chkWorldRanges(&pDiag->y);
+    (void)cairoPlotChkRange (&pDiag->x);
+    (void)cairoPlotChkRange (&pDiag->y);
 
     cairo_font_extents (cr, &refsize);
     height = (int)refsize.height + 2;
@@ -1281,7 +1228,7 @@ int cairoPlot2d(cairo_t* cr, PLOT_DIAG *pDiag)
     {
         cairo_save(cr);
 
-        setRatio(&axisX);                                      /* preliminary */
+        axisX.ratio = w2cRatio (&pDiag->x, axisX.start, axisX.stop); /* preliminary */
         any = pDiag->y.flags & PLOT_AXIS_FLAG_AUTO;          /* auto scaling? */
 
         /* Try to find the minimum and maximum y-coordinates for auto-scaling.
@@ -1290,10 +1237,10 @@ int cairoPlot2d(cairo_t* cr, PLOT_DIAG *pDiag)
         {
             if (searchMinMaxY (pDiag, &axisX))
             {
-                return drawMessage (cr, pDiag, -1);
+                return drawErrorMsg (cr, pDiag, -1);
             } /* if */
 
-            any = chkWorldRanges(&pDiag->y);
+            any = cairoPlotChkRange (&pDiag->y);
 
             if (any && (pDiag->y.flags & PLOT_AXIS_FLAG_LOG))
             {
@@ -1309,11 +1256,10 @@ int cairoPlot2d(cairo_t* cr, PLOT_DIAG *pDiag)
         axisX.pos = axisY.stop + height / 2;            /* position of labels */
 
         /* Change y-coordinate for equal handling (notice the cairo context has
-         * north-west orientation).
+         * south-east orientation).
          */
         MATH_SWAP_INT (axisY.start, axisY.stop);
-        setRatio (&axisY);  /* calculate y-ratio (for new start, stop values) */
-
+        axisY.ratio = w2cRatio (&pDiag->y, axisY.start, axisY.stop);
 
         if (pDiag->y.flags & PLOT_AXIS_FLAG_LOG)       /* logarithmic y-axis? */
         {
@@ -1326,31 +1272,35 @@ int cairoPlot2d(cairo_t* cr, PLOT_DIAG *pDiag)
 
         axisY.pos = axisX.start;
 
-        createAxisNameLayout(cr, &axisX);      /* create axis names (or NULL) */
-        createAxisNameLayout(cr, &axisY);
+        createAxisNameLayout (cr, &axisX);     /* create axis names (or NULL) */
+        createAxisNameLayout (cr, &axisY);
 
-        axisX.start += MAX(axisY.maxw + width / 2, axisY.width / 2); 
-        axisX.stop -= MAX(axisX.maxw / 2, axisX.width / 2); /* axis name, last label */
+        /* Note: For the following corrections axisX.maxw cannot be used,
+         *       because it is valid only after scaleLin() for the x-axis.
+         */
+        axisX.start += MAX (axisY.maxw + width / 2, axisY.width / 2); 
+        axisX.stop -= MAX (2 * width, axisX.width / 2);
 
         if ((axisX.stop > axisX.start) && (axisY.start > axisY.stop))
         {
-            setRatio (&axisX);                   /* calculate x-ratio (again) */
+            /* calculate x-ratio (again)
+             */
+            axisX.ratio = w2cRatio (&pDiag->x, axisX.start, axisX.stop);
             cairo_set_tolerance (cr, 1.0);       /* speed path calculation up */
+            PLOT_COLOR_SET (cr, pDiag->colors, PLOT_COLOR_AXIS_NAME);
 
             if (axisX.layout != NULL)
             {
-                drawLayout(cr, axisX.layout, axisX.stop - axisX.width / 2,
-                           axisX.pos + 3 * height / 2);
+                drawLayout (cr, axisX.layout, axisX.stop - axisX.width / 2,
+                            axisX.pos + 3 * height / 2);
             } /* if */
 
             if (axisY.layout != NULL)
             {
-                drawLayout(cr, axisY.layout, axisX.start - axisY.width / 2,
-                           axisY.stop - 2 * height);
+                drawLayout (cr, axisY.layout, axisX.start - axisY.width / 2,
+                            axisY.stop - 2 * height);
             } /* if */
 
-            PLOT_COLOR_SET (cr, pDiag->colors, PLOT_COLOR_AXIS_NAME);
-            cairo_stroke (cr);
 
             if (pDiag->x.flags & PLOT_AXIS_FLAG_LOG)   /* logarithmic x-axis? */
             {
@@ -1361,6 +1311,10 @@ int cairoPlot2d(cairo_t* cr, PLOT_DIAG *pDiag)
                 numx = scaleLin (cr, &axisX, 2 * width, FALSE);
             } /* else */
 
+            pDiag->area.x = axisX.start;             /* prepare return values */
+            pDiag->area.y = axisY.stop;
+            pDiag->area.width = axisX.stop - axisX.start;
+            pDiag->area.height = axisY.start - axisY.stop;
 
             /* Now draw grid and labels with associated colors. Notice that
              * drawGridLabels() performs its own cairo_stroke() and modifies
@@ -1369,16 +1323,16 @@ int cairoPlot2d(cairo_t* cr, PLOT_DIAG *pDiag)
             drawGridLabels (cr, pDiag->colors, numx, &axisX, numy, &axisY);
 
             cairo_rectangle(cr, axisX.start, axisY.stop,
-                            axisX.stop - axisX.start, axisY.start - axisY.stop);
+                            pDiag->area.width, pDiag->area.height);
             PLOT_COLOR_SET (cr, pDiag->colors, PLOT_COLOR_BOX);
-            cairo_set_line_width (cr, PLOT_GRAPH_LINE_WIDTH);
+            cairo_set_line_width (cr, PLOT_BOX_LINE_WIDTH);
             cairo_stroke_preserve (cr);       /* retain the path for clipping */
             cairo_clip (cr);                                 /* clip the box  */
 
             ret = drawGraph (cr, height / 3, pDiag, &axisX, &axisY);
 
             PLOT_COLOR_SET (cr, pDiag->colors, PLOT_COLOR_GRAPH);
-            cairo_set_line_width (cr, PLOT_GRAPH_LINE_WIDTH);
+            cairo_set_line_width (cr,  pDiag->thickness);
             cairo_set_line_join (cr, CAIRO_LINE_JOIN_ROUND);
             cairo_set_line_cap (cr, CAIRO_LINE_CAP_BUTT);
             /* cairo_set_antialias (cr, CAIRO_ANTIALIAS_NONE); */
@@ -1399,8 +1353,100 @@ int cairoPlot2d(cairo_t* cr, PLOT_DIAG *pDiag)
 
     } /* if */
 
-    return drawMessage (cr, pDiag, ret);
+
+    return drawErrorMsg (cr, pDiag, ret);
 } /* cairoPlot2d() */
+
+
+/* FUNCTION *******************************************************************/
+/** Checks the plot range of an axis against some predefined limits. If the
+ *  range [start, stop] doesn't match these limits, it returns ERANGE and
+ *  changes the range automatically.
+ *
+ *
+ *  \param pAxis        Pointer to axis workspace.
+ *
+ *  \return             If range is in boundaries then it returns the value 0,
+ *                      else ERANGE from errno.h.
+ ******************************************************************************/
+int cairoPlotChkRange (PLOT_AXIS *pAxis)
+{
+    double result;
+    int ret = 0;
+
+
+    if (pAxis->flags & PLOT_AXIS_FLAG_LOG)                /* logarithmic axis */
+    {
+        pAxis->start = CLAMP (pAxis->start, PLOT_TOLERANCE, PLOT_AXIS_MAX);
+        pAxis->stop = CLAMP (pAxis->stop, PLOT_TOLERANCE, PLOT_AXIS_MAX);
+
+        result = mathTryDiv(pAxis->start, pAxis->stop);
+
+        if (gsl_isinf(result) || (result  < PLOT_TOLERANCE))
+        {
+            pAxis->start = pAxis->stop * PLOT_TOLERANCE;
+            ret = ERANGE;
+        } /* if */
+
+        result = mathTryDiv(pAxis->stop, pAxis->start);
+
+        if (gsl_isinf(result) || (result  < (1.0 + PLOT_TOLERANCE)))
+        {
+            pAxis->stop = pAxis->start * (1.0 + PLOT_TOLERANCE);
+            ret = ERANGE;
+        } /* if */
+    } /* if */
+    else                                                       /* linear axis */
+    {
+        pAxis->start = CLAMP (pAxis->start, PLOT_AXIS_MIN, PLOT_AXIS_MAX);
+        pAxis->stop = CLAMP (pAxis->stop, PLOT_AXIS_MIN, PLOT_AXIS_MAX);
+
+        if ((pAxis->stop - pAxis->start) < PLOT_TOLERANCE)
+        {
+            pAxis->stop = pAxis->start + PLOT_TOLERANCE;
+            ret = ERANGE;
+        } /* if */
+    } /* else */
+
+    return ret;
+} /* cairoPlotChkRange() */
+
+
+
+/* FUNCTION *******************************************************************/
+/** Returns a world-coordinate associated with a GDK coordinate.
+ *
+ *  \note  Because cairoPlotChkRange() has checked the ranges \p pAxis->start
+ *         and \p pAxis->stop with respect to the operation \p pAxis->stop -
+ *         \p pAxis->start (lin. case) and \p pAxis->stop / \p pAxis->start
+ *         (log. case) there is no need to use math. function mathTryDiv().
+ *
+ *  \param pAxis        Pointer to axis description (filled from a previuous
+ *                      call to cairoPlot2d).
+ *  \param start        Start point of plot graph (box) in GDK coordinates.
+ *  \param stop         Stop point of plot graph (box) in GDK coordinates.
+ *  \param coordinate   The GDK coordinate to be transformed into world.
+ *
+ *  \attention          Due to internal processing optimization (associated
+ *                      with the south-east orientation of y-axis) the
+ *                      calculation of y-coordinates gives correct results
+ *                      only when \p start and \p stop are exchanged.
+ *
+ *  \return             World-coordinate within this axis.
+ ******************************************************************************/
+double cairoPlotCoordinate (PLOT_AXIS *pAxis, int start, int stop, int coordinate)
+{
+    double offset = (coordinate - start) / w2cRatio (pAxis, start, stop);
+
+    if (pAxis->flags & PLOT_AXIS_FLAG_LOG)                      /* log. axis? */
+    {
+        return pAxis->start * pow10(CLAMP (offset, 0.0,
+                                           log10 (pAxis->stop / pAxis->start)));
+    } /* if */
+
+    return pAxis->start + offset;                              /* linear case */
+} /* cairoPlotCoordinate() */
+
 
 
 /******************************************************************************/

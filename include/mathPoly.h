@@ -4,13 +4,16 @@
  *           Polynomial functions.
  *
  * \author   Copyright (c) 2006 Ralf Hoppe
- * \version  $Header: /home/cvs/dfcgen-gtk/include/mathPoly.h,v 1.1.1.1 2006-09-11 15:52:21 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/include/mathPoly.h,v 1.2 2006-11-04 18:28:27 ralf Exp $
  *
  *
  * \see
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:21  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -125,58 +128,111 @@ typedef struct
 
 
 /* FUNCTION *******************************************************************/
-/** Transforms polynomial coefficients for fractional variable substitution.
- *  The function replaces the variable \f$z\f$ in (source domain)
+/** Computes the complex roots \f$z_i\f$ associated with the polynomial
+    \f[
+    p(z)=c_n z^n + c_{n-1} z^{n-1}+ \cdots + c_2 z^2 + c_1 z + c_0
+    \f]
+ *
+ *  \param poly         Pointer to polynomial that holds the coefficients in
+ *                      \p poly->coeff and gets the roots in \p poly->roots.
+ *
+ *  \return             Zero on success, else an error number (see errno.h or
+ *                      gsl_errno.h for predefined codes).
+ *  \todo               Try to avoid mixing error codes from gsl_errno.h
+ *                      and errno.h
+ ******************************************************************************/
+    int mathPolyCoeffs2Roots (MATHPOLY *poly);
+
+
+
+/* FUNCTION *******************************************************************/
+/** Adds two polynomials with scaling.
+ *
+ *  \param poly1        Pointer to first polynomial and result. The coefficients
+ *                      vector memory space must be large enough to get all
+ *                      coefficients. The degree is increased (without malloc
+ *                      of new memory), if \p poly2->degree is greater than
+ *                      poly1->degree;
+ *  \param poly2        Pointer to second polynomial.
+ *  \param scale        Factor which is applied to each coefficient of \p poly2.
+ *
+ ******************************************************************************/
+    void mathPolyAdd (MATHPOLY *poly1, const MATHPOLY *poly2, double scale);
+
+
+/* FUNCTION *******************************************************************/
+/** Multiplies a polynomial with the binomial \f$a z^n+b\f$.
+ *  The function multiplies the polynomial
     \f{eqnarray*}
     p(z) &=& c_r z^r + c_{r-1} z^{r-1}+ \cdots + c_2 z^2 + c_1 z + c_0 \\
          &=& (\cdots(((c_r z + c_{r-1})z + c_{r-2})z + c_{r-3})z+\cdots+c_1)z+c_0
     \f}
- *  by
+ *  with \f$az^n+b\f$. The degree of new polynomial is \f$rn\f$, which must
+ *  be available in \p poly.
     \f{eqnarray*}
-           z &=& a z^m + \frac{b}{z^n}\qquad a,b\in R;\quad m,n\in N \\
-        p(z) &=& z^{r n} p(a z^m + b z^{-n})
+    p(z) &=& (az^n + b)p(z) \\
+         &=& a z^n p(z) + b p(z)
     \f}
- *  Set \f$p_i(z)=u_i(z)/v_i(z)\f$ the transformation algorithm for
- *  coefficients \f$c_i\f$ is as follows:
-    \f{eqnarray*}
-    p_{i+1}(z) &=& p_{i}(z) (a z^m + b z^{-n}) + c_{r-i} \\
-               &=& a z^m\, p_{i}(z) + b z^{-n} \, p_{i}(z) + c_{r-i} \\
-               &=& p_{i}(z)\frac{a z^{n+m}+b}{z^n} + c_{r-i} \\
-    \frac{u_{i+1}(z)}{v_{i+1}(z)} &=& 
-    \frac{a z^{n+m} u_i(z)+b u_i(z)+z^n c_{r-i}v_i(z)}{z^n v_i(z)} \\
-    v_{i+1}(z) &=& z^n v_i(z) \\
-    u_{i+1}(z) &=& a z^{n+m}u_i(z)+b u_i(z)+c_{r-i}v_{i+1}(z)
-    \f}
- *  with \f$p_{0}(z)=0\f$.
- *  So the following special transformation cases can be simply calculated:
- *  - linear (\f$n=0,m=1\f$): \f$p(a z+b)\f$
- *  - square (\f$n=0,m=2\f$): \f$p(a z^2+b)\f$
- *  - inverse (\f$n=1,a=0\f$): \f$z^r p(b/z)\f$
  *
- *  \param poly         Pointer to polynomial that coefficients \p poly->coeff
- *                      shall be transformed. The allocated memory space must
- *                      be enough to hold a polynomial with degree \f$r(n+m)\f$.
- *  \param degm         Numerator degree of transformation, means \p m.
- *  \param degn         Denominator degree of transformation, means \p n.
- *  \param a            Transform parameter \p a.
- *  \param b            Transform parameter \p b.
+ *  \param poly         Pointer to polynomial which shalle be multiplied (in place).
+ *  \param degn         Degree of polynomial \f$az^n+b\f$.
+ *  \param a            Parameter \p a in polynomial \f$az^n+b\f$.
+ *  \param b            Parameter \p b in polynomial \f$az^n+b\f$.
  *
- *  \return             GSL_SUCCESS on success, else an error number (see
- *                      gsl_errno.h for predefined codes).
  ******************************************************************************/
-    int mathPolyTransform (MATHPOLY *poly, int degm, int degn, double a, double b);
+    void mathPolyMulBinomial (MATHPOLY *poly, int degn, double a, double b);
 
 
 /* FUNCTION *******************************************************************/
-/** Multiplies polynomial \f$p(z)\f$ by \f$z^n\f$, means shifts all
- *  coefficients left.
+/** Transforms polynomial coefficients for fractional variable substitution.
+ *  The function transforms the polynomial
+    \f{eqnarray*}
+    p(z) &=& c_r z^r + c_{r-1} z^{r-1}+ \cdots + c_2 z^2 + c_1 z + c_0 \\
+         &=& (\cdots(((c_r z + c_{r-1})z + c_{r-2})z + c_{r-3})z+\cdots+c_1)z+c_0
+    \f}
+ *  by replacing
+    \f[
+      z := \frac{\alpha z^m+\beta}{\gamma z^n+\delta}\qquad\alpha,\beta,\gamma,\delta\in R;\quad m,n\in N
+    \f]
+ *  into polynomial
+    \f[
+        p(z) := (\gamma z^n+\delta)^r p\left(\frac{\alpha z^m+\beta}{\gamma z^n+\delta}\right)
+    \f]
+ *  The new degree is \f$r\max(n,m)\f$.
+ *  Set \f$p_i(z)=u_i(z)/v_i(z)\f$ the transformation algorithm is based
+ *  on \e Horners scheme:
+    \f{eqnarray*}
+    p_{i}(z) &=& z\, p_{i-1}(z) + c_{r-i} \\
+             &=& \frac{\alpha z^m+\beta}{\gamma z^n+\delta}\, p_{i-1}(z) + c_{r-i} \\
+             &=& \frac{(\alpha z^m+\beta)\,p_{i-1}(z)+(\gamma z^n+\delta)\,c_{r-i}}{\gamma z^n+\delta} \\
+    \frac{u_{i}(z)}{v_{i}(z)} &=& 
+                 \frac{(\alpha z^m+\beta)\,\frac{u_{i-1}(z)}{v_{i-1}(z)}+(\gamma z^n+\delta)\,c_{r-i}}{\gamma z^n+\delta} \\
+    v_{i}(z) &=& (\gamma z^n+\delta) v_{i-1}(z),\quad v_0=1 \\
+    u_{i}(z) &=& (\alpha z^m+\beta)u_{i-1}(z)+c_{r-i}v_{i}(z),\quad u_0=c_r
+    \f}
+ *  with \f$i=1\ldots n\f$ and \f$p_{0}(z)=c_r\f$.
+ *  So the following special transformation cases can be simply calculated:
+ *  - linear (\f$n=0,\gamma=1,\delta=0,m=1\f$): \f$p(\alpha z+\beta)\f$
+ *  - square (\f$n=0,\gamma=1,\delta=0,m=2\f$): \f$p(\alpha z^2+\beta)\f$
+ *  - inverse (\f$n=1,\gamma=1,\delta=0,\alpha=0\f$): \f$z^r p(\beta/z)\f$
+ *  - bilinear (\f$n=1,m=1,\alpha=1,\gamma=1,\beta=-1,\delta=1\f$): \f$(z+1)^r p\left(\frac{z-1}{z+1}\right)\f$
  *
  *  \param poly         Pointer to polynomial that coefficients \p poly->coeff
- *                      shall be shifted.
- *  \param n            Number of coefficients shift to left.
+ *                      shall be transformed. The allocated memory space must
+ *                      be enough to hold a polynomial of degree \f$r\max(n,m)\f$.
+ *  \param degm         Numerator degree of transformation, means \f$m\f$.
+ *  \param a            Transform parameter \f$\alpha\f$.
+ *  \param b            Transform parameter \f$\beta\f$.
+ *  \param degn         Denominator degree of transformation, means \f$n\f$.
+ *  \param c            Transform parameter \f$\gamma\f$.
+ *  \param d            Transform parameter \f$\delta\f$.
  *
+ *  \return             Zero on success, else an error number (see errno.h or
+ *                      gsl_errno.h for predefined codes).
  ******************************************************************************/
-    void mathPolyShiftLeft (MATHPOLY *poly, int n);
+    int mathPolyTransform (MATHPOLY *poly,
+                           int degm, double a, double b,
+                           int degn, double c, double d);
 
 
 /* FUNCTION *******************************************************************/
@@ -224,6 +280,21 @@ typedef struct
  *  \return             \f$y \cos(1/n \arccos x)\f$.
  ******************************************************************************/
     double mathPolyChebyInv (int degree, double x);
+
+
+
+#ifdef DEBUG
+
+/* FUNCTION *******************************************************************/
+/** Logs polynomial coefficients for debug purposes.
+ *
+ *  \param poly         Pointer to polynomial that holds the coefficients.
+ *
+ ******************************************************************************/
+    void mathPolyDebugLog (MATHPOLY *poly);
+
+
+#endif /* DEBUG */
 
 
 

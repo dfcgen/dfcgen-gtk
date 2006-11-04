@@ -6,11 +6,14 @@
  * \note     Includes raw filters (filters without a design, except \f$f_{Sample}\f$).
  *
  * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/include/miscDesignDlg.h,v 1.1.1.1 2006-09-11 15:52:21 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/include/miscDesignDlg.h,v 1.2 2006-11-04 18:28:27 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:21  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -23,6 +26,7 @@
 /* INCLUDE FILES **************************************************************/
 
 #include "gui.h"
+#include "cfgSettings.h"
 
 
 #ifdef  __cplusplus
@@ -53,9 +57,27 @@ extern "C" {
  *
  *  \param topWidget    Toplevel widget.
  *  \param boxDesignDlg The box widget to be used for the filter dialog.
+ *  \param pPrefs       Pointer to desktop preferences.
  *
  ******************************************************************************/
-    void miscDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg);
+    void miscDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
+                              const CFG_DESKTOP* pPrefs);
+
+
+/* FUNCTION *******************************************************************/
+/** Misc filter design dialog preset function. Restores all states of dialog
+ *  elements from design data of a Misc filter.
+ *
+ *  \param topWidget    Toplevel widget.
+ *  \param pDesign      Pointer to misc filter design data.
+ *  \param pFilter      Pointer to filter coefficients (only member \a f0 used).
+ *  \param pPrefs       Pointer to desktop preferences.
+ *
+ ******************************************************************************/
+    void miscDesignDlgPreset (GtkWidget *topWidget,
+                              const MISCFLT_DESIGN *pDesign,
+                              const FLTCOEFF *pFilter,
+                              const CFG_DESKTOP* pPrefs);
 
 
 /* FUNCTION *******************************************************************/
@@ -99,7 +121,7 @@ extern "C" {
  *                        miscDesignDlgApply(), means the caller should not
  *                        popup a (second) message box.
  ******************************************************************************/
-    int miscDesignDlgApply (GtkWidget *topWidget);
+    int miscDesignDlgApply (GtkWidget *topWidget, const CFG_DESKTOP* pPrefs);
 
 
 #ifdef  __cplusplus

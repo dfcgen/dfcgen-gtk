@@ -7,11 +7,14 @@
  *           in the "C" locale for LC_NUMERIC.
  *
  * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/include/cfgSettings.h,v 1.1.1.1 2006-09-11 15:52:21 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/include/cfgSettings.h,v 1.2 2006-11-04 18:28:27 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:21  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -24,6 +27,7 @@
 /* INCLUDE FILES **************************************************************/
 
 #include "gui.h"
+#include "cairoPlot.h"
 #include "responsePlot.h"
 
 
@@ -33,6 +37,15 @@ extern "C" {
 
 
 /* GLOBAL TYPE DECLARATIONS ***************************************************/
+
+/** Desktop preferences.
+ */
+typedef struct
+{
+    PLOT_UNIT timeUnit;              /**< Time unit to be used for in-/output */
+    PLOT_UNIT frequUnit;        /**< Frequency unit to be used for in-/output */
+    int outprec;                              /**< Output precision in printf */
+} CFG_DESKTOP;
 
 
 /* GLOBAL CONSTANT DECLARATIONS ***********************************************/
@@ -65,6 +78,23 @@ extern "C" {
  *  \return             Zero on success, else an error number.
  ******************************************************************************/
     int cfgFlushSettings (void);
+
+
+/* FUNCTION *******************************************************************/
+/** Gets the current desktop configuration settings (preferences).
+ *
+ *  \return    Pointer to current preferences.
+ ******************************************************************************/
+    const CFG_DESKTOP* cfgGetDesktopPrefs (void);
+
+
+/* FUNCTION *******************************************************************/
+/** Sets new desktop configuration settings (preferences).
+ *
+ *  \param newPrefs     Pointer to new preferences.
+ *
+ ******************************************************************************/
+    void cfgSetDesktopPrefs (CFG_DESKTOP* newPrefs);
 
 
 /* FUNCTION *******************************************************************/

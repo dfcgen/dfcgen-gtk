@@ -4,11 +4,14 @@
  *           Filter response functions.
  *
  * \author   Copyright (c) Ralf Hoppe
- * \version  $Header: /home/cvs/dfcgen-gtk/src/filterResponse.c,v 1.1.1.1 2006-09-11 15:52:19 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/src/filterResponse.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:19  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -71,7 +74,6 @@
 /* LOCAL FUNCTION DECLARATIONS ************************************************/
 
 static gsl_complex evalPolyZ(double omega, const MATHPOLY *poly);
-static double evalPolyAbsZ(double omega, const MATHPOLY *poly);
 static double evalPolyAngleZ(double omega, const MATHPOLY *poly);
 static double evalPolyGroupZ(double omega, const MATHPOLY *poly);
 static double timeResponseGetNext (double time, FLTSIGNAL sig);
@@ -121,25 +123,6 @@ static gsl_complex evalPolyZ(double omega, const MATHPOLY *poly)
     return result;
 } /* evalPolyZ() */
 
-
-/* FUNCTION *******************************************************************/
-/** Evaluates absolute amplitude associated with a polynomial in \e Z domain.
- *  The function returns the absolute value of the following polynomial:
-    \f[
-    H(z)=a_0+a_1 z^{-1}+a_2 z^{-2}+\cdots a_n z^{-n}
-    \f]
- *  with \f$z^{-1}=\exp(-j\omega)\f$ at circular frequency
- *  \f$\omega=2\pi f/f_0\f$, given in rad/s.
- *
- *  \param omega        Frequency ratio \f$2\pi f/f_0\f$.
- *  \param poly         Pointer to polynomial coefficients in \e Z domain.
- *
- *  \return
- ******************************************************************************/
-static double evalPolyAbsZ(double omega, const MATHPOLY *poly)
-{
-    return gsl_complex_abs (evalPolyZ(omega, poly));
-} /* evalPolyAbsZ() */
 
 
 /* FUNCTION *******************************************************************/
@@ -294,6 +277,29 @@ static double timeResponseProcNext (FLTRESP_TIME_WORKSPACE *pWorkspace)
 
 
 /* FUNCTION *******************************************************************/
+/** Evaluates absolute amplitude associated with a polynomial in \e Z domain.
+ *  The function returns the absolute value of the following polynomial:
+    \f[
+    H(z)=a_0+a_1 z^{-1}+a_2 z^{-2}+\cdots a_n z^{-n}
+    \f]
+ *  with \f$z^{-1}=\exp(-j\omega)\f$ at circular frequency
+ *  \f$\omega=2\pi f/f_0\f$, given in rad/s.
+ *
+ *  \param omega        Frequency ratio \f$2\pi f/f_0\f$.
+ *  \param poly         Pointer to polynomial coefficients in \e Z domain.
+ *
+ *  \return             Amplitude value associated with the polynomial when
+ *                      evaluated successful, else GSL_POSINF or GSL_NEGINF.
+ *                      Use the functions gsl_isinf() or gsl_finite() for
+ *                      result checking.
+ ******************************************************************************/
+double filterResponsePoly (double omega, const MATHPOLY *poly)
+{
+    return gsl_complex_abs (evalPolyZ(omega, poly));
+} /* filterResponsePoly() */
+
+
+/* FUNCTION *******************************************************************/
 /** Computes the amplitude of a time-discrete system at a given frequency in
  *  \e Z domain.
  *
@@ -308,8 +314,8 @@ double filterResponseAmplitude (double f, const FLTCOEFF* pFilter)
 {
     double omega = 2.0 * M_PI * f / pFilter->f0;
 
-    return mathTryDiv (evalPolyAbsZ(omega, &pFilter->num),
-                       evalPolyAbsZ(omega, &pFilter->den));
+    return mathTryDiv (filterResponsePoly (omega, &pFilter->num),
+                       filterResponsePoly (omega, &pFilter->den));
 
 } /* filterResponseAmplitude() */
 
@@ -348,7 +354,9 @@ double filterResponseAttenuation (double f, FLTCOEFF* pFilter)
  *  \param f            Frequency point in Hz.
  *  \param pFilter      Representation of time-discrete system.
  *
- *  \return             Phase in rad.
+ *  \return             Phase in rad when successful evaluated, else
+ *                      GSL_POSINF or GSL_NEGINF. Use the functions gsl_isinf()
+ *                      or gsl_finite() for result checking.
  ******************************************************************************/
 double filterResponsePhase (double f, FLTCOEFF* pFilter)
 {
@@ -380,7 +388,7 @@ double filterResponsePhaseDelay (double f, FLTCOEFF* pFilter)
 
     if (gsl_finite (result))
     {
-        result = mathTryDiv(result, 2.0 * M_PI * f);
+        result = mathTryDiv (result, 2.0 * M_PI * f);
     } /* if */
 
     return result;

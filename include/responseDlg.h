@@ -4,11 +4,14 @@
  *           Response settings/properties dialog.
  *
  * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/include/responseDlg.h,v 1.1.1.1 2006-09-11 15:52:20 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/include/responseDlg.h,v 1.2 2006-11-04 18:28:27 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:20  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -21,6 +24,7 @@
 /* INCLUDE FILES **************************************************************/
 
 #include "gui.h"
+#include "cairoPlot.h"
 
 
 #ifdef  __cplusplus
@@ -44,11 +48,25 @@ extern "C" {
 
 
 /* FUNCTION *******************************************************************/
-/** Creates the properties dialog for a response window.
+/** Creates the properties dialog for a response plot.
+ *
+ *  \param pDiag        Pointer to current plot configuration (for preset).
  *
  *  \return             Dialog widget.
  ******************************************************************************/
-    GtkWidget* responseDlgCreate (void);
+    GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag);
+
+
+/* FUNCTION *******************************************************************/
+/** Sets a double value into a GtkEntry dialog widget.
+ *
+ *  \param dialog       Dialog (top-level) widget.
+ *  \param pDiag        Pointer to plot settings to be updated.
+ *
+ *  \return             Zero on success, else an error number (see errno.h or
+ *                      gsl_errno.h for predefined codes).
+ ******************************************************************************/
+    int responseDlgApply (GtkWidget *dialog, PLOT_DIAG *pDiag);
 
 
 #ifdef  __cplusplus

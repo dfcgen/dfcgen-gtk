@@ -4,13 +4,14 @@
  *           Miscellaneous mathematical functions and macros.
  *
  * \author   Copyright (c) Ralf Hoppe
- * \version  $Header: /home/cvs/dfcgen-gtk/include/mathMisc.h,v 1.1.1.1 2006-09-11 15:52:21 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/include/mathMisc.h,v 1.2 2006-11-04 18:28:27 ralf Exp $
  *
- *
- * \see
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:21  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/

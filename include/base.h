@@ -4,22 +4,14 @@
  *           Basic types, constants and macros.
  *
  * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/include/base.h,v 1.1.1.1 2006-09-11 15:52:21 ralf Exp $
- *
- * \page        Configure
- *              See output of \c ./configure \c --help
- * \page        Make
- * \section     Users
- *              - \c make \c [all] in root directory builds the package
- *              - \c make \c install root directory installs the package
- * \section     Developers
- *              - \c make \c update-po in \e po directory updates the
- *                strings list in file \e de.po
- *              - \c make \c all in \e po directory builds the \e mo file(s)
+ * \version  $Header: /home/cvs/dfcgen-gtk/include/base.h,v 1.2 2006-11-04 18:28:27 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:21  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/

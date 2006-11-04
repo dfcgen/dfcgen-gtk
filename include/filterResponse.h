@@ -4,11 +4,14 @@
  *           Filter response functions.
  *
  * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/include/filterResponse.h,v 1.1.1.1 2006-09-11 15:52:21 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/include/filterResponse.h,v 1.2 2006-11-04 18:28:27 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:21  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -60,6 +63,26 @@ typedef struct
 
 
 /* FUNCTION *******************************************************************/
+/** Evaluates absolute amplitude associated with a polynomial in \e Z domain.
+ *  The function returns the absolute value of the following polynomial:
+    \f[
+    H(z)=a_0+a_1 z^{-1}+a_2 z^{-2}+\cdots a_n z^{-n}
+    \f]
+ *  with \f$z^{-1}=\exp(-j\omega)\f$ at circular frequency
+ *  \f$\omega=2\pi f/f_0\f$, given in rad/s.
+ *
+ *  \param omega        Frequency ratio \f$2\pi f/f_0\f$.
+ *  \param poly         Pointer to polynomial coefficients in \e Z domain.
+ *
+ *  \return             Amplitude value associated with the polynomial when
+ *                      evaluated successful, else GSL_POSINF or GSL_NEGINF.
+ *                      Use the functions gsl_isinf() or gsl_finite() for
+ *                      result checking.
+ ******************************************************************************/
+    double filterResponsePoly (double omega, const MATHPOLY *poly);
+
+
+/* FUNCTION *******************************************************************/
 /** Computes the amplitude of a time-discrete system at a given frequency in
  *  \e Z domain.
  *
@@ -98,7 +121,9 @@ typedef struct
  *  \param f            Frequency point in Hz.
  *  \param pFilter      Representation of time-discrete system.
  *
- *  \return             Phase in rad.
+ *  \return             Phase in rad when successful evaluated, else
+ *                      GSL_POSINF or GSL_NEGINF. Use the functions gsl_isinf()
+ *                      or gsl_finite() for result checking.
  ******************************************************************************/
     double filterResponsePhase (double f, FLTCOEFF* pFilter);
 

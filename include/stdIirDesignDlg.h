@@ -4,13 +4,14 @@
  *           Standard IIR filter dialog functions.
  *
  * \author   Copyright (c) Ralf Hoppe
- * \version  $Header: /home/cvs/dfcgen-gtk/include/stdIirDesignDlg.h,v 1.1.1.1 2006-09-11 15:52:21 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/include/stdIirDesignDlg.h,v 1.2 2006-11-04 18:28:27 ralf Exp $
  *
- *
- * \see
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:21  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -23,6 +24,7 @@
 /* INCLUDE FILES **************************************************************/
 
 #include "gui.h"
+#include "cfgSettings.h"
 
 
 #ifdef  __cplusplus
@@ -54,9 +56,25 @@ extern "C" {
  *  \param topWidget    Toplevel widget.
  *  \param boxDesignDlg GtkVBox widget, which is the container for the dialog.
  *                      The dialog must be mapped to row 1 of it.
+ *  \param pPrefs       Pointer to desktop preferences.
  *
  ******************************************************************************/
-    void stdIirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg);
+    void stdIirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
+                                const CFG_DESKTOP* pPrefs);
+
+
+/* FUNCTION *******************************************************************/
+/** Standard IIR filter design dialog preset function. Restores all states
+ *  of dialog elements from design data of a standard IIR filter.
+ *
+ *  \param topWidget    Toplevel widget.
+ *  \param pDesign      Pointer to standard IIR design data.
+ *  \param pFilter      Pointer to filter coefficients (only member \a f0 used).
+ *  \param pPrefs       Pointer to desktop preferences.
+ *
+ ******************************************************************************/
+void stdIirDesignDlgPreset (GtkWidget *topWidget, const STDIIR_DESIGN *pDesign,
+                            const FLTCOEFF *pFilter, const CFG_DESKTOP* pPrefs);
 
 
 /* FUNCTION *******************************************************************/
@@ -85,6 +103,7 @@ extern "C" {
 /** Standard IIR filter design dialog ready/apply function.
  *
  *  \param topWidget    Toplevel widget.
+ *  \param pPrefs       Pointer to desktop preferences.
  *
  *  \return             - 0 (or GSL_SUCCESS) if okay and nothing has changed.
  *                      - a negative number (typically GSL_CONTINUE) if a
@@ -97,7 +116,7 @@ extern "C" {
  *                        FLTERR_CRITICAL macro from filterSupport.h to check
  *                        this condition.
  ******************************************************************************/
-    int stdIirDesignDlgApply (GtkWidget *topWidget);
+    int stdIirDesignDlgApply (GtkWidget *topWidget, const CFG_DESKTOP* pPrefs);
 
 
 #ifdef  __cplusplus

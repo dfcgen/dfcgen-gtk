@@ -4,13 +4,16 @@
  *           Design dialogs management.
  *
  * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/src/designDlg.c,v 1.1.1.1 2006-09-11 15:52:19 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/src/designDlg.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
  *
  *
  * \see
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:19  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -23,6 +26,7 @@
 #include "dialogSupport.h"
 #include "mainDlg.h"
 #include "designDlg.h"
+#include "linFirDesignDlg.h"
 #include "stdIirDesignDlg.h"
 #include "miscDesignDlg.h"
 #include "dfcProject.h"
@@ -36,9 +40,16 @@
 
 /* LOCAL TYPE DECLARATIONS ****************************************************/
 
-typedef void (*DESIGNDLG_CREATE_FUNC)(GtkWidget *topWidget, GtkWidget *boxWidget);
+typedef void (*DESIGNDLG_CREATE_FUNC)(GtkWidget *topWidget,
+                                      GtkWidget *boxWidget,
+                                      const CFG_DESKTOP* pPrefs);
+typedef void (*DESIGNDLG_PRESET_FUNC)(GtkWidget *topWidget,
+                                      const DESIGNDLG *pDesign,
+                                      const FLTCOEFF *pFilter,
+                                      const CFG_DESKTOP* pPrefs);
 typedef void (*DESIGNDLG_DESTROY_FUNC)(GtkWidget *topWidget);
-typedef int (*DESIGNDLG_APPLY_FUNC)(GtkWidget *topWidget);
+typedef int (*DESIGNDLG_APPLY_FUNC)(GtkWidget *topWidget,
+                                    const CFG_DESKTOP* pPrefs);
 typedef BOOL (*DESIGNDLG_ACTIVE_FUNC)(GtkWidget *topWidget);
 
 
@@ -48,6 +59,7 @@ typedef struct
 {
     char *name;                                     /**< Name of filter class */
     DESIGNDLG_CREATE_FUNC create;        /**< Design dialog creation function */
+    DESIGNDLG_PRESET_FUNC preset;          /**< Design dialog preset function */
     DESIGNDLG_DESTROY_FUNC destroy;       /**< Design dialog destroy function */
     DESIGNDLG_APPLY_FUNC apply;             /**< Design dialog apply function */
     DESIGNDLG_ACTIVE_FUNC active;    /**< Design dialog active check function */
@@ -57,6 +69,7 @@ typedef struct
 /* LOCAL CONSTANT DEFINITIONS *************************************************/
 
 #define DESIGNDLG_DEFAULT       FLTCLASS_DEFAULT          /**< Default design */
+#define DESIGNDLG_COMBO_CLASS    "comboFilterClass" /**< Filter class combobox widget name */
 
 
 
@@ -66,18 +79,18 @@ static DESIGNDLG_DESC dlgDesc[FLTCLASS_SIZE] =
 {
     {                                                        /* FLTCLASS_MISC */
         N_("Miscellaneous"),
-        miscDesignDlgCreate, miscDesignDlgDestroy,
-        miscDesignDlgApply, miscDesignDlgActive
+        miscDesignDlgCreate, (DESIGNDLG_PRESET_FUNC)miscDesignDlgPreset,
+        miscDesignDlgDestroy, miscDesignDlgApply, miscDesignDlgActive
     },
     {                                                      /* FLTCLASS_LINFIR */
         N_("Linear FIR"),
-        stdIirDesignDlgCreate, stdIirDesignDlgDestroy,
-        stdIirDesignDlgApply, stdIirDesignDlgActive
+        linFirDesignDlgCreate, (DESIGNDLG_PRESET_FUNC)linFirDesignDlgPreset,
+        linFirDesignDlgDestroy, linFirDesignDlgApply, linFirDesignDlgActive
     },
     {                                                      /* FLTCLASS_STDIIR */
         N_("Standard IIR"),
-        stdIirDesignDlgCreate, stdIirDesignDlgDestroy,
-        stdIirDesignDlgApply, stdIirDesignDlgActive
+        stdIirDesignDlgCreate, (DESIGNDLG_PRESET_FUNC)stdIirDesignDlgPreset,
+        stdIirDesignDlgDestroy, stdIirDesignDlgApply, stdIirDesignDlgActive
     }
 };
 
@@ -107,16 +120,21 @@ static void updateLayout (GtkWidget *topWidget, FLTCLASS type)
     FLTCLASS i;
 
     GtkWidget* boxWidget = lookup_widget (topWidget, "boxDesignDlg");
-    FLTCLASS index = type;
-
     ASSERT (boxWidget != NULL);
 
-    if ((index < 0) || (index >= FLTCLASS_SIZE))
+    if ((type < 0) || (type >= FLTCLASS_SIZE))
     {
-        index = DESIGNDLG_DEFAULT;               /* set default startup value */
+        if (currentDlgType == FLTCLASS_NOTDEF)             /* the first call? */
+        {
+            type = DESIGNDLG_DEFAULT;            /* set default startup value */
+        } /* if */
+        else
+        {
+            type = currentDlgType;                          /* change nothing */
+        } /* if */
     } /* if */
 
-    if (currentDlgType != index)
+    if (type != currentDlgType)
     {
         if (currentDlgType != FLTCLASS_NOTDEF)         /* not the first call? */
         {
@@ -126,9 +144,10 @@ static void updateLayout (GtkWidget *topWidget, FLTCLASS type)
             } /* for */
         } /* if */
 
-        dlgDesc[index].create (topWidget, boxWidget);
+
+        dlgDesc[type].create (topWidget, boxWidget, cfgGetDesktopPrefs ());
         gtk_window_resize (GTK_WINDOW (topWidget), 1, 1); /* resize to minimum */
-        currentDlgType = index;
+        currentDlgType = type;
     } /* if */
 } /* updateLayout() */
 
@@ -152,7 +171,7 @@ void designDlgBoxRealize(GtkWidget *widget, gpointer user_data)
     FLTCLASS index;                     /* selection in filter class combobox */
 
     GtkWidget *topWidget = gtk_widget_get_toplevel (widget);
-    GtkWidget* classWidget = lookup_widget (topWidget, "comboFilterClass");
+    GtkWidget* classWidget = lookup_widget (topWidget, DESIGNDLG_COMBO_CLASS);
 
     ASSERT (topWidget != NULL);
     ASSERT (classWidget != NULL);
@@ -202,7 +221,7 @@ void designDlgOnFilterComboChanged (GtkComboBox* combobox, gpointer user_data)
 
 
 /* FUNCTION *******************************************************************/
-/** This function shall be called if the filter design dialog must be updated.
+/** Initializes or updates the design dialog from (may be new) project data.
  *
  *  \param topWidget    Top level widget.
  *
@@ -210,13 +229,18 @@ void designDlgOnFilterComboChanged (GtkComboBox* combobox, gpointer user_data)
 void designDlgUpdate (GtkWidget *topWidget)
 {
     DESIGNDLG design;
-
     FLTCLASS type = dfcPrjGetDesign (&design);
 
     updateLayout (topWidget, type);
 
-    if (type == FLTCLASS_NOTDEF)
-    {                          /* clear all entry fields and other selections */
+    if (type != FLTCLASS_NOTDEF)
+    {
+        gtk_combo_box_set_active (
+            GTK_COMBO_BOX (
+                lookup_widget (topWidget, DESIGNDLG_COMBO_CLASS)), type);
+
+        dlgDesc[type].preset (topWidget, &design, dfcPrjGetFilter (),
+                              cfgGetDesktopPrefs ());
     } /* if */
 } /* designDlgUpdate() */
 
@@ -241,33 +265,20 @@ void designDlgApply (GtkButton *button, gpointer data)
 
     if (type >= 0)
     {
-        err = dlgDesc[type].apply (topWidget);
+        err = dlgDesc[type].apply (topWidget, cfgGetDesktopPrefs ());
 
-        if (!FLTERR_CRITICAL (err))
-        {
-            if (FLTERR_WARNING (err))
-            {
-                GtkWidget *dialog = gtk_message_dialog_new (GTK_WINDOW (topWidget),
-                                                            GTK_DIALOG_DESTROY_WITH_PARENT,
-                                                            GTK_MESSAGE_WARNING,
-                                                            GTK_BUTTONS_CLOSE,
-                                                            _("Filter generation has dropped some (near zero) coefficients, but the filter is still valid."));
-                gtk_dialog_run (GTK_DIALOG (dialog));
-                gtk_widget_destroy (dialog);
-            } /* if */
-
-            mainDlgUpdateFilter ();
-        } /* if */
-        else                                               /* FLTERR_CRITICAL */
+        if (!mainDlgUpdateFilter (err))
         {
             if (err != INT_MAX)
             {
-                dlgError (topWidget, _("Cannot generate such a filter. Please check the sample frequency, degree and other parameters."));
+                dlgError (topWidget, _("Cannot generate such a filter."
+                                       " Please check sample frequency, degree"
+                                       " and other design parameters."));
             } /* if */
-        } /* else */
+        } /* if */
     } /* if */
 
-} /* designDlgApply */
+} /* designDlgApply() */
 
 
 

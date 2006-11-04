@@ -4,11 +4,14 @@
  *           Dialog helper functions.
  *
  * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/include/dialogSupport.h,v 1.1.1.1 2006-09-11 15:52:21 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/include/dialogSupport.h,v 1.2 2006-11-04 18:28:27 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:21  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -73,25 +76,24 @@ extern "C" {
 /** Fetches a double value from a GtkEntry dialog widget.
  *
  *  \param topWidget    Toplevel widget.
- *  \param lname        Name of associated label (as set by GLADE_HOOKUP_OBJECT).
  *  \param ename        Name of text entry widget (as set by GLADE_HOOKUP_OBJECT).
- *  \param vmin         Minimum allowed value.
- *  \param vmax         Maximum allowed value.
+ *  \param vmin         Minimum allowed value (after applying \p multiplier).
+ *  \param vmax         Maximum allowed value (after applying \p multiplier).
+ *  \param multiplier   Multiplier for scaling the result (wrt. units).
  *  \param pResult      Pointer to result buffer.
  *
  *  \return             TRUE on success, else FALSE. If FALSe is returned then
  *                      a message was given to the user indicating the wrong
  *                      input.
  ******************************************************************************/
-    BOOL dlgGetDouble (GtkWidget* topWidget, char *lname, char *ename,
-                       double vmin, double vmax, double *pResult);
+    BOOL dlgGetDouble (GtkWidget* topWidget, const char *ename,
+                       double vmin, double vmax, double multiplier, double *pResult);
 
 
 /* FUNCTION *******************************************************************/
 /** Fetches an integer value from a GtkEntry dialog widget.
  *
  *  \param topWidget    Toplevel widget.
- *  \param lname        Name of associated label (as set by GLADE_HOOKUP_OBJECT).
  *  \param ename        Name of text entry widget (as set by GLADE_HOOKUP_OBJECT).
  *  \param vmin         Minimum allowed value.
  *  \param vmax         Maximum allowed value.
@@ -101,8 +103,37 @@ extern "C" {
  *                      a message was given to the user indicating the wrong
  *                      input.
  ******************************************************************************/
-    BOOL dlgGetInt (GtkWidget* topWidget, char *lname, char *ename,
+    BOOL dlgGetInt (GtkWidget* topWidget, const char *ename,
                     int vmin, int vmax, int *pResult);
+
+
+/* FUNCTION *******************************************************************/
+/** Sets a double value into a GtkEntry dialog widget.
+ *
+ *  \param topWidget    Toplevel widget.
+ *  \param name         Name of text entry widget (as set by GLADE_HOOKUP_OBJECT).
+ *  \param multiplier   Multiplier for scaling the result (wrt. units).
+ *  \param value        The double value to set.
+ *
+ ******************************************************************************/
+    void dlgSetDouble (GtkWidget* topWidget, const char *name,
+                       double multiplier, double value);
+
+
+
+/* FUNCTION *******************************************************************/
+/** A little popup dialog, where the user shall enter a double value.
+ *
+ *  \param title        Title of window.
+ *  \param label        Label to put before the GtkEntry text field.
+ *  \param comment      An introduction displayed at top of the dialog (may be
+ *                      NULL, then nothing is displayed at top position).
+ *  \param pResult      Pointer to result buffer, which must be initialized with
+ *                      a default value.
+ *
+ *  \return             TRUE on success, FALSE if the user has canceled.
+ ******************************************************************************/
+    BOOL dlgPopupDouble (char *title, char *label, char *comment, double *pResult);
 
 
 #ifdef  __cplusplus

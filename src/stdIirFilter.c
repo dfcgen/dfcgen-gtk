@@ -4,13 +4,14 @@
  *           Standard IIR filter coefficients generator.
  *
  * \author   Copyright (c) Ralf Hoppe
- * \version  $Header: /home/cvs/dfcgen-gtk/src/stdIirFilter.c,v 1.1.1.1 2006-09-11 15:52:19 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/src/stdIirFilter.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
  *
- *
- * \see
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:19  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -22,8 +23,6 @@
 #include "stdIirFilter.h"
 #include "filterSupport.h"
 
-#include <gsl/gsl_math.h>                              /* includes math.h too */
-#include <gsl/gsl_poly.h>                               /* polynomial support */
 #include <gsl/gsl_roots.h>                          /* roots solver functions */
 #include <gsl/gsl_sf.h>                              /* all special functions */
 
@@ -43,14 +42,14 @@
 /** Maximum number of iterations for finding \e Bessel lowpass cut-off
     frequency.
 */
-#define STDIIR_BESSEL_MAXITER   10000
+#define STDIIR_BESSEL_MAXITER   1000
 
 
 /** Maximum relative error \f$\varepsilon\f$ while finding \e Bessel lowpass
     cutoff frequency. The value is used to check the current range [a,b] wrt.
     to \f$|a-b|<\varepsilon \min(|a|,|b|)\f$.
  */
-#define STDIIR_BESSEL_EPSREL    1.0E-6
+#define STDIIR_BESSEL_EPSREL    1.0E-9
 
 
 
@@ -71,7 +70,7 @@
  *
  ******************************************************************************/
 #define STDIIR_ERROR_RET(pFilter, cond, string) \
-    ERROR_RET_IF(cond, string, filterFree (pFilter))
+    ERROR_RET_IF(cond, string, filterFree (pFilter); gsl_set_error_handler (oldHandler))
 
 
 /* LOCAL FUNCTION DECLARATIONS ************************************************/
@@ -93,13 +92,32 @@ static double approxBessel (FLTCOEFF *pFilter);
 /* LOCAL FUNCTION DEFINITIONS *************************************************/
 
 
+#ifdef DEBUG
+
+/* FUNCTION *******************************************************************/
+/** Logs filter coefficients.
+ *
+ *  \param pFilter      Representation of system in \e Laplace domain.
+ *
+ ******************************************************************************/
+static void debugLogCoeffs (FLTCOEFF *pFilter)
+{
+    DEBUG_LOG ("L-domain numerator coefficients");
+    mathPolyDebugLog (&pFilter->num);
+    DEBUG_LOG ("L-domain denominator coefficients");
+    mathPolyDebugLog (&pFilter->den);
+} /* debugLogCoeffs() */
+
+#endif
+
+
 
 /* FUNCTION *******************************************************************/
 /** Backward bilinear (frequency) transformation.
- *  The function corrects a frequency in Z domain to \e Laplace domain
- *  wrt. bilinear transformation:
+ *  The function transforms a frequency \f$f_z\f$ from Z domain into \e Laplace
+ *  domain (\f$f_l\f$) using bilinear transformation:
  *  \f[
-    f(s)=\frac{f_0}{\pi}\cdot\frac{\sin(2\pi f/f_0)}{1+\cos(2\pi f/f_0)}
+    f_l(s)=\frac{f_0}{\pi}\cdot\frac{\sin(2\pi f_z/f_0)}{1+\cos(2\pi f_z/f_0)}
     \f]
  *  That calculation is based on:
     \f[
@@ -132,14 +150,14 @@ static double bilinearInv(double fz, double f0)
  ******************************************************************************/
 static double drosselung(double att)
 {
-    return sqrt(pow10(0.1 * att) - 1.0);
+    return sqrt (pow10 (0.1 * att) - 1.0);
 } /* drosselung() */
 
 
 
 /* FUNCTION *******************************************************************/
 /** \e Laplace domain highpass transformation. The function transforms
- *  denormalized lowpass coefficients into a highpass:
+ *  lowpass coefficients into a highpass by substitution:
     \f[
         s:=\frac{\omega_c^2}{s}
     \f]
@@ -147,23 +165,24 @@ static double drosselung(double att)
  *
  *  \param pFilter      Representation of system in \e Laplace domain.
  *  \param omega        Angular frequency of mirror point \f$\omega_c\f$,
- *                      normally the lowpass cut-off frequiency.
+ *                      the denormalized lowpass cut-off frequency.
  *
  *  \return             Zero on success, else an error number (see errno.h or
  *                      gsl_errno.h for predefined codes).
  ******************************************************************************/
-static int ftrHighpass(FLTCOEFF *pFilter, double omega)
+static int ftrHighpass (FLTCOEFF *pFilter, double omega)
 {
-    omega *= omega;                    /* mirror at omega_c^2 */
+    int deg = pFilter->den.degree - pFilter->num.degree; /* degree difference */
 
-    ERROR_RET_IF(mathPolyTransform(&pFilter->den, 0, 1, 0.0, omega),
-                 "Highpass transformation (denominator)");
-    ERROR_RET_IF(mathPolyTransform(&pFilter->num, 0, 1, 0.0, omega),
-                 "Highpass transformation (numerator)");
+    ASSERT(deg >= 0);
+    omega *= omega;
 
-    ASSERT(pFilter->den.degree >= pFilter->num.degree);
-    mathPolyShiftLeft(&pFilter->num, pFilter->den.degree - pFilter->num.degree);
+    ERROR_RET_IF (mathPolyTransform (&pFilter->den, 0, 0.0, omega, 1, 1.0, 0.0),
+                  "Highpass transformation (denominator)");
+    ERROR_RET_IF (mathPolyTransform (&pFilter->num, 0, 0.0, omega, 1, 1.0, 0.0),
+                  "Highpass transformation (numerator)");
 
+    mathPolyMulBinomial (&pFilter->num, deg, 1.0, 0);           /* correction */
     return 0;
 } /* ftrHighpass() */
 
@@ -171,9 +190,10 @@ static int ftrHighpass(FLTCOEFF *pFilter, double omega)
 /* FUNCTION *******************************************************************/
 /** \e Laplace domain bandpass transformation. The function transforms
  *  denormalized lowpass coefficients into a bandpass:
-    \f[
-        s:=Q\frac{s^2+\omega_m^2}{s}=Qs+\frac{Q\,\omega_m^2}{s}
-    \f]
+    \f{eqnarray*}
+        s &:=& Q\left(s+\frac{\omega_m^2}{s}\right) \\
+        s &:=& Q\frac{s^2+\omega_m^2}{s}
+    \f}
  *  with
     \f{eqnarray*}
         \omega_m^2 &=& \omega_{c_1}\omega_{c_2} \\
@@ -182,30 +202,30 @@ static int ftrHighpass(FLTCOEFF *pFilter, double omega)
  *  and corrects the numerator filter degree.
  *
  *  \param pFilter      Representation of system in \e Laplace domain.
- *  \param omega        Angular center (mid) frequency \f$\omega_m\f$ in rad/s.
+ *  \param omega        Denormalized angular center (mid) frequency \f$\omega_m\f$.
  *  \param quality      Bandpass quality \f$Q\f$.
 
  *  \return             Zero on success, else an error number (see errno.h or
  *                      gsl_errno.h for predefined codes).
  ******************************************************************************/
-static int ftrBandpass(FLTCOEFF *pFilter, double omega, double quality)
+static int ftrBandpass (FLTCOEFF *pFilter, double omega, double quality)
 {
-    omega = omega * omega * quality;
+    int deg = pFilter->den.degree - pFilter->num.degree; /* degree difference */
 
-    /* With H(s) = U(s) / V(s) the following calculations are performed here:
-     * U(z) := s^m U(Q s + Q\omega_m^2 s^{-1})
-     * V(z) := s^n V(Q s + Q\omega_m^2 s^{-1})
-     */
+    ASSERT (deg >= 0);
 
-    ERROR_RET_IF (mathPolyTransform(&pFilter->den, 1, 1, quality, omega),
+    ERROR_RET_IF (mathPolyTransform (&pFilter->den, 2, quality,
+                                     omega * omega * quality, 1, 1.0, 0.0),
                   "Bandpass transformation (denominator)");
-    ERROR_RET_IF (mathPolyTransform(&pFilter->num, 1, 1, quality, omega),
+    ERROR_RET_IF (mathPolyTransform (&pFilter->num, 2, quality,
+                                     omega * omega * quality, 1, 1.0, 0.0),
                   "Bandpass transformation (numerator)");
 
-    /* Correct the number of zeros
+    /* Compensate the pre-factor z^{n-m} generated by function
+       mathPolyTransform(), means correct the number of zeros.
      */
-    ASSERT(pFilter->den.degree >= pFilter->num.degree);
-    mathPolyShiftLeft(&pFilter->num, pFilter->den.degree - pFilter->num.degree);
+    mathPolyMulBinomial (&pFilter->num, deg, 1.0, 0);
+
 
     return 0;
 } /* ftrBandpass() */
@@ -247,7 +267,8 @@ static double evalPolyAbsLaplace(double omega, MATHPOLY *poly)
 
 
 /* FUNCTION *******************************************************************/
-/** \e Laplace domain amplitude evaluation of a LTI-system by their coefficients.
+/** \e Laplace domain amplitude evaluation of a LTI-system by their
+ *  coefficients.
  *
  *  \param omega        Angular frequency in rad/s.
  *  \param pFilter      Representation of system in \e Laplace domain.
@@ -256,7 +277,7 @@ static double evalPolyAbsLaplace(double omega, MATHPOLY *poly)
  *                      GSL_POSINF or GSL_NEGINF. Use the functions gsl_isinf()
  *                      or gsl_finite() for result checking.
  ******************************************************************************/
-static double amplitudeLaplace(double omega, FLTCOEFF *pFilter)
+static double amplitudeLaplace (double omega, FLTCOEFF *pFilter)
 {
     return mathTryDiv(evalPolyAbsLaplace(omega, &pFilter->num),
                       evalPolyAbsLaplace(omega, &pFilter->den));
@@ -277,11 +298,11 @@ static double amplitudeLaplace(double omega, FLTCOEFF *pFilter)
  *                      stops root finding under the  condition INF is returned
  *                      by this function.
  ******************************************************************************/
-static double cutoffAmplitude(double omega, void *pFilter)
+static double cutoffAmplitude (double omega, void *pFilter)
 {
-    double amplitude = amplitudeLaplace(omega, (FLTCOEFF *)pFilter);
+    double amplitude = amplitudeLaplace (omega, (FLTCOEFF *)pFilter);
 
-    if (gsl_isinf(amplitude))
+    if (gsl_isinf (amplitude))
     {
         return amplitude;                       /* stop iteration immediately */
     } /* if */
@@ -319,9 +340,9 @@ static double approxButterworth (FLTCOEFF *pFilter)
 
     for (i = 0, pRoots = pFilter->den.root; i < pFilter->den.degree; i++, pRoots++)
     {                                                      /* circle of roots */
-        GSL_SET_COMPLEX(pRoots,
-                        -sin((2.0 * i + 1) * deltaPi),
-                        -cos((2.0 * i + 1) * deltaPi));
+        GSL_SET_COMPLEX (pRoots,
+                         -sin((2 * i + 1) * deltaPi),
+                         -cos((2 * i + 1) * deltaPi));
     } /* for */
 
     return 1.0;
@@ -353,13 +374,9 @@ static double approxChebyPassband (double maxAtt, FLTCOEFF *pFilter)
 
     int degree = pFilter->den.degree;
     double deltaPi = M_PI_2 / degree;
-    double sigmaInv = 1.0 / drosselung(maxAtt);                /* 1/sigma > 1 */
-
-    double reFactor = - sinh(asinh(sigmaInv) / degree)
-                      / mathPolyChebyInv(degree, sigmaInv);
-
-    double imFactor = cosh(asinh(sigmaInv) / degree)
-                      / mathPolyChebyInv(degree, sigmaInv);
+    double sigmaInv = 1.0 / drosselung (maxAtt);               /* 1/sigma > 1 */
+    double reFactor = - sinh (asinh (sigmaInv) / degree);
+    double imFactor = cosh (asinh (sigmaInv) / degree);
 
     pFilter->num.degree = 0;                          /* set numerator degree */
     pFilter->factor = sigmaInv * 2;
@@ -367,18 +384,18 @@ static double approxChebyPassband (double maxAtt, FLTCOEFF *pFilter)
     for (i = 0, pRoots = pFilter->den.root; i < degree; i++, pRoots++)
     {
         GSL_SET_COMPLEX(pRoots,
-                        reFactor * sin((2.0 * i + 1) * deltaPi),
-                        imFactor * cos((2.0 * i + 1) * deltaPi));
+                        reFactor * sin ((2 * i + 1) * deltaPi),
+                        imFactor * cos ((2 * i + 1) * deltaPi));
 
         /* Coefficient of highest degree power of Chebyshev polynomial is
-           2^{n - 1}.  Because T(s)T(-s)=1/(1+sigma^2 T^2(s/j)) the inverse of
-           2^{n-1}*sigma must be multiplied with the linearfactor representation
+           2^{n - 1}. Because T(s)T(-s)=1/(1+sigma^2 T^2(s/j)) the inverse of
+           2^{n-1}*sigma must be multiplied with the linear factor representation
            of polynomial.
         */
         pFilter->factor *= 0.5;
     } /* for */
 
-    return mathPolyChebyInv(degree, sigmaInv);
+    return mathPolyChebyInv (degree, sigmaInv);      /* 3dB cut-off frequency */
 } /* approxChebyPassband() */
 
 
@@ -420,33 +437,41 @@ static double approxChebyStopband (double minAtt, FLTCOEFF *pFilter)
     double reFactor = sinh(asinh(maxAmpl) / degree);
     double imFactor = cosh(asinh(maxAmpl) / degree);
 
-    GSL_SET_COMPLEX (&omega_s, mathPolyChebyInv(degree, maxAmpl), 0.0);
+    GSL_SET_COMPLEX (&omega_s, mathPolyChebyInv (degree, maxAmpl), 0.0);
 
     /* First calculate all denominator roots.
      */
     for (i = 0, pRoot = pFilter->den.root; i < degree; i++, pRoot++)
     {
-        arg = (2.0 * i + 1) * deltaPi;
-        GSL_SET_COMPLEX(pRoot, -reFactor * sin(arg), imFactor * cos(arg));
-        *pRoot = gsl_complex_div(omega_s, *pRoot);
+        arg = (2 * i + 1) * deltaPi;
+        GSL_SET_COMPLEX (pRoot, -reFactor * sin(arg), imFactor * cos(arg));
+        *pRoot = gsl_complex_div (omega_s, *pRoot);
     } /* for */
 
+    /* Now determine the numerator roots (all located at imag. axis). But notice
+     * that for odd degree one zero is located at infinity, means the numerator
+     * degree is less than the denominator degree. Determination of the
+     * pre-factor is a little bit tricky and requires analysis of numerator and
+     * denominator polynomial for both cases: the odd and the even degree (also
+     * of Chebyshev polynomials).
+     */
+    if (GSL_IS_ODD (degree))
+    {
+        pFilter->factor = degree-- * GSL_REAL (omega_s) / maxAmpl;
+    } /* if */
+    else                                                       /* even degree */
+    {
+        pFilter->factor = 1.0 / hypot (1.0, maxAmpl);
+    } /* else */
+
+    for (i = 0; i < degree / 2; i++)
+    {
+        arg = GSL_REAL (omega_s) / cos ((2 * i + 1) * deltaPi);
+        GSL_SET_COMPLEX (&pFilter->num.root[i], 0.0, arg);
+        GSL_SET_COMPLEX (&pFilter->num.root[degree - 1 - i], 0.0, -arg);
+    } /* for */
 
     pFilter->num.degree = degree;
-
-    /* Now determine the numerator roots (all located at j*omega).
-     */
-    for (i = 0, pRoot = pFilter->num.root; i < degree; i++, pRoot++)
-    {
-        GSL_SET_COMPLEX (pRoot, 0.0,
-                         GSL_REAL(omega_s) / cos((2.0 * i + 1) * deltaPi));
-    } /* for */
-
-    /* Because the highest power coefficient in numerator and denominator
-       polynomial of H(s) are equal, there is no need for a correcting factor in
-       roots represantation.
-    */
-    pFilter->factor = 1.0;
 
     return 1.0;
 } /* approxChebyStopband() */
@@ -459,7 +484,7 @@ static double approxChebyStopband (double minAtt, FLTCOEFF *pFilter)
  *  polynomial roots of \f$H(s)\f$ for \e Cauer type lowpass approximation.
  *  This type of approximation deals with the characteristic functions:
     \f{eqnarray*}
-        D(s) &=& -j\,s\,\frac{k}{\lambda} M \prod_{\eta=2,4,\ldots}^{n-1}
+        D(s) &=& \frac{k}{\lambda} M\,s \prod_{\eta=2,4,\ldots}^{n-1}
                  \frac{\jsn^2(\eta K/n)+s^2}{\frac{1}{k^2 \jsn^2(\eta K/n)}+s^2}
                  \quad (n=\textup{ungerade}) \\
         D(s) &=& \frac{1}{\lambda} \prod_{\eta=1,3,\ldots}^{n-1}
@@ -476,7 +501,7 @@ static double approxChebyStopband (double minAtt, FLTCOEFF *pFilter)
     \f}
 
  *  If we take the special property of first principal elliptic transformation
- *  into acount, namely the \e Laplace variable always is used squared (except
+ *  into account, namely the \e Laplace variable always is used squared (except
  *  one root at the origin in the odd case), which means \f$P(s)=\pm P(-s)\f$
  *  (neg. sign only for odd case) and \f$Q(s)=Q(-s)\f$, then:
     \f{eqnarray*}
@@ -504,23 +529,25 @@ static double approxChebyStopband (double minAtt, FLTCOEFF *pFilter)
                             H(\omega) &=& \frac{1}{\sqrt{1+\sigma^2 \jsn^2(u/M;\lambda)}}\\
                             \omega    &=& \jsn(u;k)
                         \f}
-                        which in range \f$u=K+j Im(u)=nM\Lambda+j \Im(u)\f$ can
+                        which in range \f$u=K+j \Im(u)=nM\Lambda+j \Im(u)\f$ can
                         be evaluated as:
                         \f{eqnarray*}
                             H(\omega) &=& \frac{1}{\sqrt{1+\sigma^2 \jnd^2(\Im u/M;\lambda')}}\\
                             \omega    &=& \jnd(\Im u;k')
                         \f}
                         Then \f$1\leq |D(\omega)|\leq 1/\lambda\f$ and
-                        \f$1\leq\omega_c\leq 1/k\f$ is true.
- *                      In case of an error the value 0.0 will be returned (and
- *                      \a errno set);
+                        \f$1\leq\omega_c\leq 1/k\f$ is true and the 3dB point
+                        condition is
+                        \f[
+                            \jsn(u/M;\lambda') = \frac{1-\sigma^2}{1-\lambda^2}
+                        \f]
+ *                      In case of an error the value 0.0 will be returned.
  *
  ******************************************************************************/
 static double approxCauer (STDIIR_TYPE type, double angle, double dr, FLTCOEFF *pFilter)
 {
     int i;
-    int err;
-    gsl_poly_complex_workspace *pPolyWsp; /* polynomial roots finder workspace */
+    gsl_sf_result result;    /* special GSL result structure (etmporary used) */
     gsl_complex *pRootNumD;         /* pointer to P(x) resp. P(s), with x=s^2 */
     gsl_complex *pRootDenD;         /* pointer to Q(x) resp. Q(s), with x=s^2 */
     gsl_complex *pRootNumH;             /* Pointer to numerator roots of H(s) */
@@ -528,16 +555,16 @@ static double approxCauer (STDIIR_TYPE type, double angle, double dr, FLTCOEFF *
     double snOdd, snEven, cn, dn;       /* Jacobian elliptic function results */
     double deltaK;             /* partial complete elliptic integral K(k) / n */
     double sigma;       /* scaling factor of characteristc function D(\omega) */
-    double *pZero;          /* pointer too numerator root (zero) of polynomial*/
-    double factor;       /* \f$k/\lambda M\f$ (odd) or \f$1/\lambda\f$ (even) */
-
+    double *pZero;           /* pointer to numerator root (zero) of polynomial*/
+    double factor; /* multiplier of characteristic function (\f$k/\lambda M\f$ */
+                             /* in odd case, \f$1/\lambda\f$ for even degree) */
     double multiplier = 1.0;                /* multiplier M of transformation */
     double lambda = 1.0;                 /* elliptic module of transformation */
 
     /* The module k^2 corresponds to kappa from Cauers original book or m in
        Abramowitz/Stegun.
     */
-    double module = sin(angle / 180.0 * M_PI);
+    double module = sin (angle / 180.0 * M_PI);
     double kappa = module * module;
     int degree = pFilter->den.degree;
 
@@ -552,16 +579,14 @@ static double approxCauer (STDIIR_TYPE type, double angle, double dr, FLTCOEFF *
     } /* if */
 
 
-    pFilter->num.degree = degree;
-    denPoly2.degree = (degree / 2) * 2;
-
+    pFilter->num.degree = denPoly2.degree = (degree / 2) * 2;
     deltaK = gsl_sf_ellint_Kcomp (module, GSL_PREC_DOUBLE) / degree;
 
     /* Set start index for running variable during for-loop. For odd degree the
        running index must take 1,3,5,... and for even degree 2,4,6,.. The
        variable \a pZero ensures this, while \c i is counting from zero.
     */
-    pZero = GSL_IS_ODD(degree) ? &snEven : &snOdd;
+    pZero = GSL_IS_ODD (degree) ? &snEven : &snOdd;
 
     /* Now prepare for-loop
      */
@@ -574,6 +599,7 @@ static double approxCauer (STDIIR_TYPE type, double angle, double dr, FLTCOEFF *
         if ((gsl_sf_elljac_e ((i + 1) * deltaK, kappa, &snOdd, &cn, &dn) != 0)
             || (gsl_sf_elljac_e ((i + 2) * deltaK, kappa, &snEven, &cn, &dn) != 0))
         {                                                             /* EDOM */
+            DEBUG_LOG ("Jacobian elliptic function calculation has failed");
             mathPolyFree(&denPoly2);
             return 0.0;
         } /* if */
@@ -609,11 +635,10 @@ static double approxCauer (STDIIR_TYPE type, double angle, double dr, FLTCOEFF *
     lambda *= gsl_pow_int (module, degree);              /* multiply with k^n */
     factor = 1.0 / lambda;     /* final result for factor at even degree poly */
 
-    if (GSL_IS_ODD(degree))                                       /* odd case */
+    if (GSL_IS_ODD (degree))                                      /* odd case */
     {
-        GSL_SET_COMPLEX(pRootNumD, 0.0, 0.0);  /* root of P(s)P(-s) at origin */
-        denPoly2.coeff[degree] = 0.0;                   /* see for-loop later */
-        factor *= module * multiplier;     /* odd case factor = k / \lambda M */
+        GSL_SET_COMPLEX (pRootNumD, 0.0, 0.0); /* root of P(s)P(-s) at origin */
+        factor *= -module * multiplier;  /* odd case factor = - k / \lambda M */
     } /* if */
 
 
@@ -633,9 +658,11 @@ static double approxCauer (STDIIR_TYPE type, double angle, double dr, FLTCOEFF *
             */
             sigma = dr;                                   /* sigma = dr / 1.0 */
 
-            if (sigma < lambda * drosselung(STDIIR_STOPATT_MIN))
+            if (sigma < lambda * drosselung (STDIIR_STOPATT_MIN))
             {
-                mathPolyFree(&denPoly2);
+                DEBUG_LOG ("Resulting stopband attenuation is less than 3dB");
+                mathPolyFree (&denPoly2);
+
                 return 0.0;        /* min. stopband attenuation less than 3dB */
             } /* if */
 
@@ -650,9 +677,11 @@ static double approxCauer (STDIIR_TYPE type, double angle, double dr, FLTCOEFF *
             */
             sigma = lambda * dr;         /* scaling of approximation function */
 
-            if (sigma > drosselung(STDIIR_RIPPLE_MAX))
+            if (sigma > drosselung (STDIIR_RIPPLE_MAX))
             {
+                DEBUG_LOG ("Resulting passband ripple is greater than 3dB");
                 mathPolyFree(&denPoly2);
+
                 return 0.0;                        /* ripple greater than 3dB */
             } /* if */
 
@@ -670,47 +699,32 @@ static double approxCauer (STDIIR_TYPE type, double angle, double dr, FLTCOEFF *
      * H(s)H(-s).
      */
     factor *= sigma;           /* factor now holds the product factor * sigma */
-    pFilter->factor = 1.0 / factor;       /* set scaling factor of H(s) roots */
-    factor *= factor;                /* square wrt. calculations of H(s)H(-s) */
+    pFilter->factor = 1.0 / fabs (factor); /* set scaling factor of H(s) roots */
+    factor *= fabs (factor); /* square \sigma wrt. calculations of H(s)H(-s), */
+                           /* but preserves the negative sign in the odd case */
 
-    if ((mathPolyRoots2Coeffs(&pFilter->den, 1.0) != 0)   /* coeffs of P(x)^2 */
-        || (mathPolyRoots2Coeffs(&denPoly2, 1.0) != 0));  /* coeffs of Q(x)^2 */
+    if ((mathPolyRoots2Coeffs (&pFilter->den, factor) != 0) /* coeffs of \sigma^2 P(x)^2 */
+        || (mathPolyRoots2Coeffs (&denPoly2, 1.0) != 0))  /* coeffs of Q(x)^2 */
     {
-        mathPolyFree(&denPoly2);
+        DEBUG_LOG ("Denominator polynomial coefficients calculation of squared"
+                   " transfer function failed for Cauer filter");
+        mathPolyFree (&denPoly2);
         return 0.0;
     } /* if */
 
 
-    /* Calculate Q(s)Q(-s) + \sigma^2 P(s)P(-s) in x=s^2.
+    /* Calculate Q(s)Q(-s) + \sigma^2 P(s)P(-s) for x=s^2.
      */
-    for (i = 0; i <= degree; i++)
-    {
-        pFilter->den.coeff[i] = denPoly2.coeff[i]
-                                + factor * pFilter->den.coeff[i];
-    } /* for */
-
-
+    mathPolyAdd (&pFilter->den, &denPoly2, 1.0);
     mathPolyFree(&denPoly2);                              /* no longer needed */
 
 
     /* Now calculate the denominator roots (poles) of transfer function in x
      * domain.
      */
-    pPolyWsp = gsl_poly_complex_workspace_alloc (degree + 1);
-
-    if (pPolyWsp == NULL)
+    if (mathPolyCoeffs2Roots (&pFilter->den) != GSL_SUCCESS)
     {
-        return 0.0;                                      /* not enough memory */
-    } /* if */
-
-
-    err = gsl_poly_complex_solve (pFilter->den.coeff, degree + 1, pPolyWsp,
-                                  (gsl_complex_packed_ptr) pFilter->den.root);
-
-    gsl_poly_complex_workspace_free (pPolyWsp);
-
-    if (err != GSL_SUCCESS)
-    {
+        DEBUG_LOG ("Roots finding for Cauer filter has failed");
         return 0.0;
     } /* if */
 
@@ -721,7 +735,7 @@ static double approxCauer (STDIIR_TYPE type, double angle, double dr, FLTCOEFF *
      */
     for (i = 0, pRootNumH = pFilter->den.root; i < degree; i++, pRootNumH++)
     {
-        *pRootNumH = gsl_complex_negative(gsl_complex_sqrt (*pRootNumH));
+        *pRootNumH = gsl_complex_negative (gsl_complex_sqrt (*pRootNumH));
     } /* for */
 
 
@@ -729,17 +743,36 @@ static double approxCauer (STDIIR_TYPE type, double angle, double dr, FLTCOEFF *
        1/sigma, omega=nd(u;k')). So the condition is:
        sn^2(u/M;lambda') = (1 - sigma^2) / (1 - lambda^2)
      */
-    sigma = 1.0 - sigma * sigma;
-    lambda = 1.0 - lambda * lambda;                      /* square of lambda' */
+    lambda = sqrt (1.0 - lambda * lambda);                        /* \lambda' */
+    sigma = asin (sqrt (1.0 - sigma * sigma) / lambda);  /* argument to funcs */
 
-    if ((gsl_sf_elljac_e (multiplier * gsl_sf_ellint_F (asin(sqrt(sigma / lambda)),
-                                                        sqrt(lambda), GSL_PREC_DOUBLE),
-                          sqrt(1.0 - kappa), &snOdd, &cn, &dn) != 0))
+    if (lambda == 1)                /* gsl_sf_ellint_F_e() cannot handle this */
+    {
+        result.val = log (fabs (tan (sigma / 2 + M_PI_4)));
+    } /* if */
+    else
+    {
+        if (gsl_sf_ellint_F_e (sigma, lambda, GSL_PREC_DOUBLE, &result) != GSL_SUCCESS)
+        {                               /* may give EDOM if \lambda is near 1 */
+            return 0.0;
+        } /* if */
+    } /* else */
+
+
+    if ((gsl_sf_elljac_e (multiplier * result.val, 1.0 - kappa,
+                          &snOdd, &cn, &dn) != GSL_SUCCESS))
     {
         return 0.0;
     } /* if */
 
-    return 1.0 / sqrt(1.0 - kappa * snOdd * snOdd);
+    dn = mathTryDiv (1.0, dn);                                   /* nd = 1/dn */
+
+    if (gsl_isinf (dn))
+    {
+        return 0.0;
+    } /* if */
+
+    return dn;
 } /* approxCauer() */
 
 
@@ -810,6 +843,7 @@ static double approxBessel (FLTCOEFF *pFilter)
 
             if ((status == GSL_SUCCESS) && (iter < STDIIR_BESSEL_MAXITER))
             {
+                DEBUG_LOG ("Bessel cut-off finding finished (%d iterations), omega = %G", iter, omega);
                 return omega;                      /* cut-off frequency found */
             } /* if */
         } /* if */
@@ -837,11 +871,14 @@ static double approxBessel (FLTCOEFF *pFilter)
  *
  *  \return             Zero on success, else an error number (see errno.h or
  *                      gsl_errno.h for predefined codes).
+ *  \todo               Implement sematic checks on bandwidth, center and cutoff
+ *                      frequency wrt. sample frequency.
  ******************************************************************************/
-int stdIirFilterGen (const STDIIR_DESIGN *pDesign, FLTCOEFF *pFilter)
+int stdIirFilterGen (STDIIR_DESIGN *pDesign, FLTCOEFF *pFilter)
 {
-    int i;
-    double realOmega;    /* Real-world (design) 3dB cut-off frequency [rad/s] */
+    int i, degree;
+    gsl_error_handler_t *oldHandler;
+    double fc;                   /* Real-world (design) 3dB cut-off frequency */
     double normOmega; /* Effective (normalized) 3dB cut-off angular frequency */
     double bpQuality;                                        /* Q of BP or BS */
 
@@ -851,6 +888,12 @@ int stdIirFilterGen (const STDIIR_DESIGN *pDesign, FLTCOEFF *pFilter)
     pFilter->num.degree = pFilter->den.degree = pDesign->order;
     ERROR_RET_IF (filterMalloc(pFilter),
                   "Standard IIR filter memory allocation");
+
+    /* All GSL errors are handled by the caller (starting from here), therefore
+     * disable the abort behaviour of the GSL library.
+     */
+    oldHandler = gsl_set_error_handler_off ();
+
     pFilter->factor = 0.0;            /* no valid roots representation so far */
 
     switch (pDesign->ftr.type)                    /* frequency transformation */
@@ -858,44 +901,47 @@ int stdIirFilterGen (const STDIIR_DESIGN *pDesign, FLTCOEFF *pFilter)
         case FTR_BANDPASS:
         case FTR_BANDSTOP:
         {
-            double fu, fo;
+            double f1, f2;
 
             pFilter->den.degree /= 2;      /* design lowpass with half degree */
 
             /* If center frequency \f$f_c\f$ is geometric, the bandwidth \f$B\f$
-               may exceed half of center frequency, because \f$f_c^2 = f_o^2
-               * f_u^2\f$ and \f$f_u = sqrt{(B/2)^2 + f_c^2} - B/2\f$ and \f$f_o
+               may exceed half of center frequency, because \f$f_c^2 = f_1^2
+               * f_2^2\f$ and \f$f_1 = sqrt{(B/2)^2 + f_c^2} - B/2\f$ and \f$f_2
                = sqrt{(B/2)^2 + f_c^2} + B/2, means the virtual linear center
                frequency is sqrt{(B/2)^2 + f_c^2}.
-             * But when linear the expression \f$f_c = 1/2 (f_o + f_u)\f$ is valid,
-               and this means \f$B = f_o - f_u\f$.
+             * But when linear, the expression \f$f_c = 1/2 (f_1 + f_2)\f$ is valid,
+               and this means \f$B = f_2 - f_1\f$.
              */
             if (pDesign->ftr.flags & FTRDESIGN_FLAG_CENTER_GEOMETRIC)
             {
-                realOmega = hypot(pDesign->ftr.center, 0.5 * pDesign->ftr.bandwidth);
+                fc = hypot(pDesign->ftr.fc, 0.5 * pDesign->ftr.bw);
             } /* if */
             else
             {
-                realOmega = pDesign->ftr.center;
+                fc = pDesign->ftr.fc;
             } /* else */
 
-            fu = bilinearInv(realOmega - 0.5 * pDesign->ftr.bandwidth, pFilter->f0);
-            fo = bilinearInv(realOmega + 0.5 * pDesign->ftr.bandwidth, pFilter->f0);
+            pDesign->cutoff = fc;            /* lowpass cutoff (return value) */
 
-            realOmega = sqrt(fu * fo);           /* geometric center frequency */
-            bpQuality = realOmega / (fo - fu);               /* quality = fc/B */
+            f1 = bilinearInv (fc - 0.5 * pDesign->ftr.bw, pFilter->f0);
+            f2 = bilinearInv (fc + 0.5 * pDesign->ftr.bw, pFilter->f0);
+
+            fc = sqrt (f1 * f2);                /* geometric center frequency */
+            bpQuality = fc / (f1 - f2);                     /* quality = fc/B */
 
             break;
         } /* FTR_BANDPASS, FTR_BANDSTOP */
 
 
         case FTR_HIGHPASS :
-            realOmega = bilinearInv(pDesign->ftr.bandwidth, pFilter->f0);
+            pDesign->cutoff = pDesign->ftr.fc;                /* return value */
+            fc = bilinearInv (pDesign->ftr.fc, pFilter->f0);
             break; /* FTR_HIGHPASS */
 
 
         case FTR_NON: /* LOWPASS */
-            realOmega = bilinearInv(pDesign->cutoff, pFilter->f0);
+            fc = bilinearInv(pDesign->cutoff, pFilter->f0);
             break; /* FTR_NON */
 
 
@@ -904,13 +950,10 @@ int stdIirFilterGen (const STDIIR_DESIGN *pDesign, FLTCOEFF *pFilter)
     } /* switch */
 
 
-    realOmega *= 2.0 * M_PI;      /* transform into angular frequency [rad/s] */
 
-
-    /* Now perform the desired approximation. All approximation functions must
-     * calculate the (L-domain) roots. Coefficients will be re-calculated later.
+    /* Now perform the desired approximation.
      */
-    switch (pDesign->type)                          /* Which type of lowpass? */
+    switch (pDesign->type)                          /* which type of lowpass? */
     {
         case STDIIR_TYPE_BUTTERWORTH:      /* flat magnitude response filters */
             normOmega = approxButterworth (pFilter);
@@ -918,24 +961,24 @@ int stdIirFilterGen (const STDIIR_DESIGN *pDesign, FLTCOEFF *pFilter)
 
 
         case STDIIR_TYPE_CHEBY: /* best approximation (in passband) ripple filter */
-            normOmega = approxChebyPassband (pDesign->rippleAtt, pFilter);
+            normOmega = approxChebyPassband (pDesign->ripple, pFilter);
             break;
 
 
         case STDIIR_TYPE_CHEBYINV:
-            normOmega = approxChebyStopband (pDesign->minAtt, pFilter);
+            normOmega = approxChebyStopband (pDesign->minatt, pFilter);
             break;
 
 
         case STDIIR_TYPE_CAUER1: /* input is max. ripple att. and module angle */
-            normOmega = approxCauer (STDIIR_TYPE_CAUER1, pDesign->modAngle,
-                                     drosselung(pDesign->rippleAtt), pFilter);
+            normOmega = approxCauer (STDIIR_TYPE_CAUER1, pDesign->angle,
+                                     drosselung(pDesign->ripple), pFilter);
             break;
 
 
         case STDIIR_TYPE_CAUER2: /* input is min. stopband att. and module angle */
-            normOmega = approxCauer (STDIIR_TYPE_CAUER1, pDesign->modAngle,
-                                    drosselung(pDesign->minAtt), pFilter);
+            normOmega = approxCauer (STDIIR_TYPE_CAUER2, pDesign->angle,
+                                     drosselung(pDesign->minatt), pFilter);
             break;
 
 
@@ -949,44 +992,34 @@ int stdIirFilterGen (const STDIIR_DESIGN *pDesign, FLTCOEFF *pFilter)
 
 
     STDIIR_ERROR_RET (pFilter, (normOmega == 0.0) ? GSL_EFAILED : 0,
-                      "Standard IIR filter approximation");
+                      "Standard IIR filter approximation has failed");
 
-    if (pFilter->factor != 0.0)              /* lowpass description by roots? */
+    if (pFilter->factor != 0.0)            /* lowpass specification by roots? */
     {                                          /* transform into coefficients */
-        STDIIR_ERROR_RET (pFilter, mathPolyRoots2Coeffs(&pFilter->den, 1.0),
-                          "Standard IIR filter approximation");
-        STDIIR_ERROR_RET (pFilter, mathPolyRoots2Coeffs(&pFilter->num, pFilter->factor),
-                          "Standard IIR filter approximation");
+        STDIIR_ERROR_RET (pFilter, mathPolyRoots2Coeffs (&pFilter->den, 1.0),
+                          "Conversion of poles into coefficients has failed");
+        STDIIR_ERROR_RET (pFilter, mathPolyRoots2Coeffs (&pFilter->num, pFilter->factor),
+                          "Conversion of zeros into coefficients has failed");
     } /* if */
 
 
-    pFilter->factor = 0.0;       /* invalidate roots, because not in Z-domain */
-
-
-    /* Denormalize filter coefficients to fit target cut-off frequency
-     */
-    STDIIR_ERROR_RET (pFilter, mathPolyTransform(&pFilter->den, 1, 0,
-                                                 normOmega / realOmega, 0.0),
-                      "Standard IIR filter frequency denormalization (denominator)");
-    STDIIR_ERROR_RET (pFilter, mathPolyTransform(&pFilter->num, 1, 0,
-                                                 normOmega / realOmega, 0.0),
-                      "Standard IIR filter frequency denormalization (numerator)");
+    pFilter->factor = 0.0;                /* roots are valid only in L-domain */
 
     switch (pDesign->ftr.type)
     {
         case FTR_HIGHPASS:                /* lowpass->highpass transformation */
-            STDIIR_ERROR_RET (pFilter, ftrHighpass(pFilter, realOmega),
+            STDIIR_ERROR_RET (pFilter, ftrHighpass (pFilter, normOmega),
                               "Lowpass->Highpass transformation");
             break;
 
 
         case FTR_BANDSTOP:
-            STDIIR_ERROR_RET (pFilter, ftrHighpass(pFilter, realOmega),
+            STDIIR_ERROR_RET (pFilter, ftrHighpass (pFilter, normOmega),
                               "Lowpass->Bandstop transformation");
                                                                /* fall trough */
 
         case FTR_BANDPASS:                           /* LP->BP transformation */
-            STDIIR_ERROR_RET (pFilter, ftrBandpass(pFilter, realOmega, bpQuality),
+            STDIIR_ERROR_RET (pFilter, ftrBandpass (pFilter, normOmega, bpQuality),
                               "Lowpass->Bandpass transformation");
             break;  /* FTR_BANDPASS, FTR_BANDSTOP */
 
@@ -1000,16 +1033,49 @@ int stdIirFilterGen (const STDIIR_DESIGN *pDesign, FLTCOEFF *pFilter)
     } /* switch */
 
 
-    for (i = 0; i <= pFilter->num.degree/2; i++)         /* re-sort wrt. z^-1 */
-    {
-        mathDoubleSwap(&pFilter->num.coeff[i],
-                       &pFilter->num.coeff[pFilter->num.degree - i]);
+    /* Scale standard approximation interval to normOmega / fc and
+       multiply with f0, which is the pre-factor of bilinear transformation.
+     */
+    normOmega = normOmega * pFilter->f0 / fc / M_PI;
 
-        mathDoubleSwap(&pFilter->den.coeff[i],
-                       &pFilter->den.coeff[pFilter->den.degree - i]);
+    /* Denominator polynomial degree is greater/equal numerator polynomial
+     * degree for standard approximations. Compensate later the pre-factor
+     * (1+z)^{n-m} inserted by function mathPolyTransform().
+     */
+    degree = pFilter->den.degree - pFilter->num.degree;
+    ASSERT (degree >= 0);
+
+    STDIIR_ERROR_RET (pFilter, mathPolyTransform (&pFilter->den, 1, normOmega, -normOmega, 1, 1.0, 1.0),
+                      "Bilinear transformation and denormalization (denominator)");
+    STDIIR_ERROR_RET (pFilter, mathPolyTransform (&pFilter->num, 1, normOmega, -normOmega, 1, 1.0, 1.0),
+                      "Bilinear transformation and denormalization (numerator)");
+
+    for (i = 0; i < degree; i++)
+    {
+        mathPolyMulBinomial (&pFilter->num, 1, 1.0, 1.0);
     } /* for */
 
-    return 0;
+
+    for (i = 0; i <= pFilter->num.degree / 2; i++)       /* re-sort wrt. z^-1 */
+    {
+        mathDoubleSwap (&pFilter->num.coeff[i],
+                        &pFilter->num.coeff[pFilter->num.degree - i]);
+
+        mathDoubleSwap (&pFilter->den.coeff[i],
+                        &pFilter->den.coeff[pFilter->den.degree - i]);
+    } /* for */
+
+
+    i = normFilterCoeffs (pFilter);
+
+    if (FLTERR_CRITICAL (i))
+    {
+        filterFree (pFilter);
+    } /* if */
+
+    gsl_set_error_handler (oldHandler);
+
+    return i;
 } /* stdIirFilterGen() */
 
 

@@ -7,11 +7,14 @@
  *           in the "C" locale for LC_NUMERIC.
  *
  * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/src/cfgSettings.c,v 1.1.1.1 2006-09-11 15:52:19 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/src/cfgSettings.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:19  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -26,6 +29,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+
+#include <gsl/gsl_const.h>
+
 
 
 /* GLOBAL CONSTANT DEFINITIONS ************************************************/
@@ -52,7 +58,7 @@ typedef struct
  */
 typedef struct
 {
-    char *key;                               /**< COnfiguration file key name */
+    char *key;                               /**< Configuration file key name */
     CFG_AXIS_SETTINGS x;
     CFG_AXIS_SETTINGS y;
     PLOT_STYLE style;                                     /**< Style of graph */
@@ -78,8 +84,11 @@ typedef struct
 #define COLOR_FORMAT_STRING     "#%04X%04X%04X"
 /* #define COLOR_FORMAT_STRING     "rgb:%04x/%04x/%04x"*/ /* New X11 color spec. format */
 
-
+#ifdef G_OS_WIN32
+#define CFG_FILE_NAME           PACKAGE ".ini"        /**< Configuration file */
+#else
 #define CFG_FILE_NAME           PACKAGE ".conf"       /**< Configuration file */
+#endif
 
 #define CFG_GROUP_APPLICATION   "Application" /**< Group key for \e Application */
 #define CFG_KEY_APPNAME         "AppName"           /**< Application name key */
@@ -87,6 +96,7 @@ typedef struct
 #define CFG_GROUP_DESKTOP       "Desktop"       /**< Group key for \e Desktop */
 #define CFG_KEY_UNIT_F          "Frequency"               /**< frequency unit */
 #define CFG_KEY_UNIT_T          "Time"                         /**< Time unit */
+#define CFG_KEY_PRECISION       "Precision"    /**< Output precision (digits) */
 #define CFG_GROUP_WINDOW        "Window-"  /**< (Partial) group key for plots */
 #define CFG_KEY_POINTS          "Points"   /**< Number of points used in plot */
 #define CFG_KEY_STYLE           "Style"                       /**< Plot style */
@@ -104,6 +114,18 @@ typedef struct
 
 
 /* LOCAL VARIABLE DEFINITIONS *************************************************/
+
+
+/** Desktop configuration settings (initialized with defaults).
+ */
+static CFG_DESKTOP deskPrefs =
+{
+    {"µs", GSL_CONST_NUM_MICRO},                                  /* timeUnit */
+    {"kHz", GSL_CONST_NUM_KILO},                                 /* frequUnit */
+    6                                             /* default output precision */
+};
+
+
 
 /** Response windows settings.
  */
@@ -202,10 +224,62 @@ static void cfgReadInteger (GKeyFile *keyFile, const gchar *group, const gchar *
                             int *pResult);
 static void cfgReadDouble (GKeyFile *keyFile, const gchar *group, const gchar *key,
                            double *pResult);
+static void cfgReadUnit (GKeyFile *keyFile, const gchar *group, const gchar *key,
+                         PLOT_UNIT *pUnit);
 
 
 
 /* LOCAL FUNCTION DEFINITIONS *************************************************/
+
+
+/* FUNCTION *******************************************************************/
+/** Reads an integer value from key file associated with \a key under \a group.
+ *  If the key is not found then target of \a pResult is unchanged.
+ *
+ *  \param keyFile      The key file (GKeyFile) to be used for search operation.
+ *  \param group        The group name.
+ *  \param key          Key inside \a group which is searched.
+ *  \param pUnit        Pointer to unit buffer.
+ *
+ ******************************************************************************/
+static void cfgReadUnit (GKeyFile *keyFile, const gchar *group, const gchar *key,
+                         PLOT_UNIT *pUnit)
+{
+    static PLOT_UNIT units[] =                             /* all known units */
+    {
+        {"Hz", 1.0},
+        {"kHz", GSL_CONST_NUM_KILO},
+        {"MHz", GSL_CONST_NUM_MEGA},
+        {"GHz", GSL_CONST_NUM_GIGA},
+        {"s", 1.0},
+        {"ms", GSL_CONST_NUM_MILLI},
+        {"µs", GSL_CONST_NUM_MICRO},
+        {"ns", GSL_CONST_NUM_NANO},
+        {"ps", GSL_CONST_NUM_PICO}
+    };
+
+    int i;
+
+    char *unitName = g_key_file_get_string (keyFile, group, key, NULL);
+
+    if (unitName != NULL)
+    {
+        for (i = 0; i < N_ELEMENTS (units); i++)
+        {
+            if (strcmp (unitName, units[i].name) == 0)              /* found? */
+            {
+                pUnit->name = units[i].name;
+                pUnit->multiplier = units[i].multiplier;
+
+                g_free (unitName);
+                return;
+            } /* if */
+        } /* for */
+
+        g_free (unitName);
+    } /* if */
+} /* cfgReadUnit() */
+
 
 
 /* FUNCTION *******************************************************************/
@@ -281,6 +355,8 @@ static void cfgReadDouble (GKeyFile *keyFile, const gchar *group, const gchar *k
         {
             *pResult = result;
         } /* if */
+
+        g_free (str);
     } /* if */
     else
     {
@@ -342,7 +418,6 @@ static void cfgReadFlag (GKeyFile *keyFile, const gchar *group, const gchar *key
  *
  *  \param widget       Top level widget used for default colors assignment.
  *
- *  \todo               Restore (and save) the axis units
  ******************************************************************************/
 void cfgCacheSettings (GtkWidget *widget)
 {
@@ -361,12 +436,11 @@ void cfgCacheSettings (GtkWidget *widget)
     {
         pSet->color[PLOT_COLOR_LABELS] =
         pSet->color[PLOT_COLOR_AXIS_NAME] =
-            CFG_WIDGET_COLOR (widget, text, GTK_STATE_NORMAL);
-
         pSet->color[PLOT_COLOR_BOX] =
         pSet->color[PLOT_COLOR_GRID] =
         pSet->color[PLOT_COLOR_GRAPH] =
-            CFG_WIDGET_COLOR (widget, fg, GTK_STATE_NORMAL);
+            CFG_WIDGET_COLOR (widget, text, GTK_STATE_NORMAL);
+
 
         pSet->color[PLOT_COLOR_NOTE_TEXT] =
         pSet->color[PLOT_COLOR_NOTE_BOX] =
@@ -376,6 +450,13 @@ void cfgCacheSettings (GtkWidget *widget)
 
     if (g_key_file_load_from_file (keyFile, name, G_KEY_FILE_NONE, NULL))
     {
+
+        /* Read desktop group
+         */
+        cfgReadUnit (keyFile, CFG_GROUP_DESKTOP, CFG_KEY_UNIT_T, &deskPrefs.timeUnit);
+        cfgReadUnit (keyFile, CFG_GROUP_DESKTOP, CFG_KEY_UNIT_F, &deskPrefs.frequUnit);
+        cfgReadInteger (keyFile, CFG_GROUP_DESKTOP, CFG_KEY_PRECISION, &deskPrefs.outprec);
+
 
         /* Read window group
          */
@@ -388,7 +469,7 @@ void cfgCacheSettings (GtkWidget *widget)
             cfgReadInteger (keyFile, pSet->key, CFG_KEY_STYLE, (int *) &pSet->style);
 
             colorList = g_key_file_get_string_list (keyFile, pSet->key,
-                                                   CFG_KEY_COLORS, NULL, NULL);
+                                                    CFG_KEY_COLORS, NULL, NULL);
 
             if (colorList != NULL)                              /* key found? */
             {
@@ -471,7 +552,7 @@ int cfgFlushSettings ()
     /* First write application group
      */
     g_key_file_set_comment (keyFile, NULL, NULL,
-                            PACKAGE ", " VERSION " session settings", NULL);
+                            PACKAGE ", " VERSION " session settings (UTF-8 coded)", NULL);
 
     g_key_file_set_string (keyFile, CFG_GROUP_APPLICATION, CFG_KEY_APPNAME, PACKAGE);
     g_key_file_set_string (keyFile, CFG_GROUP_APPLICATION, CFG_KEY_APPVERSION, VERSION);
@@ -479,9 +560,13 @@ int cfgFlushSettings ()
 
     /* Write desktop group
      */
+    g_key_file_set_string (keyFile, CFG_GROUP_DESKTOP, CFG_KEY_UNIT_T, deskPrefs.timeUnit.name);
+    g_key_file_set_string (keyFile, CFG_GROUP_DESKTOP, CFG_KEY_UNIT_F, deskPrefs.frequUnit.name);
+    g_key_file_set_integer (keyFile, CFG_GROUP_DESKTOP, CFG_KEY_PRECISION, deskPrefs.outprec);
+    g_key_file_set_comment (keyFile, CFG_GROUP_DESKTOP, NULL, "", NULL);
 
 
-    /* Write window group
+    /* Write all window groups
      */
     for (i = 0, pSet = respSet; i < RESPONSE_TYPE_SIZE; i++, pSet++)
     {
@@ -618,15 +703,27 @@ BOOL cfgRestoreResponseSettings(RESPONSE_TYPE type, PLOT_DIAG* pDiag)
 
 
 /* FUNCTION *******************************************************************/
-/** Saves the response window configuration settings.
+/** Sets new desktop configuration settings (preferences).
  *
- *  \param type         Type of response plot/window.
- *  \param pDiag        Pointer to plot which holds the current settings.
+ *  \param newPrefs     Pointer to new preferences.
  *
  ******************************************************************************/
-void cfgSaveDesktopSettings (RESPONSE_TYPE type, PLOT_DIAG* pDiag)
+void cfgSetDesktopPrefs (CFG_DESKTOP* newPrefs)
 {
-} /* cfgSaveDesktopSettings() */
+    memcpy (&deskPrefs, newPrefs, sizeof (deskPrefs));
+} /* cfgSetDesktopPrefs() */
+
+
+/* FUNCTION *******************************************************************/
+/** Gets the current desktop configuration settings (preferences).
+ *
+ *  \return    Pointer to current preferences.
+ ******************************************************************************/
+const CFG_DESKTOP* cfgGetDesktopPrefs ()
+{
+    return &deskPrefs;
+} /* cfgGetDesktopPrefs() */
+
 
 
 /******************************************************************************/

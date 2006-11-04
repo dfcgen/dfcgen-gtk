@@ -4,11 +4,14 @@
  *           Digital filter response plotter.
  *
  * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/src/responsePlot.c,v 1.1.1.1 2006-09-11 15:52:19 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/src/responsePlot.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:19  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -20,6 +23,7 @@
 #include "cairoPlot.h"
 #include "responsePlot.h"
 #include "filterResponse.h"
+#include "cfgSettings.h"
 
 #include <stdlib.h>
 
@@ -40,7 +44,6 @@ typedef struct
     PLOT_FUNC_GET sampleFunc;                 /**< real-world function y=f(x) */
     PLOT_FUNC_INIT initFunc;  /**< plot initialization function (may be NULL) */
     PLOT_FUNC_END endFunc; /**< plot de-initialization function (may be NULL) */
-    PLOT_FUNC_PROGRESS progressFunc; /**< Original plot progress callback (may be NULL) */
     void *pData;                     /**< Original data pointer (may be NULL) */
     FLTCOEFF *pFilter;                    /**< Pointer to filter coefficients */
     FLTRESP_TIME_WORKSPACE *pWorkspace;  /**< Time response workspace pointer */
@@ -52,7 +55,6 @@ typedef struct
 
 /* LOCAL FUNCTION DECLARATIONS ************************************************/
 
-static int plotProgressCallback (void *pData, double percent);
 static double plotAmplitude (double *px, void *pData);
 static double plotAttenuation (double *f, void *pData);
 static double plotChar (double *f, void *pData);
@@ -119,31 +121,6 @@ static RESPONSE_PLOT responsePlot[RESPONSE_TYPE_SIZE] =
 
 
 /* FUNCTION *******************************************************************/
-/** Private plot break/progress callback. For each plotted coordinate value
- *  this function is called back (if not NULL) for user break checking and
- *  progress indication.
- *
- *  \param pData        User application data pointer as stored in member
- *                      \a pData of structure PLOT_DIAG (as passed to function
- *                      cairoPlot2d().
- *  \param percent      A value between 0.0 and 1.0 which indicates the
- *                      percentage of completion.
- *
- *  \return             The function shall return an value unequal to 0, if the
- *                      plot has to be cancelled. In that case the associated
- *                      function of type PLOT_FUNC_END is called and the plot
- *                      in progress will be canceled.
- ******************************************************************************/
-static int plotProgressCallback (void *pData, double percent)
-{
-    RESPONSE_PLOT *pResponse = pData;
-
-    return pResponse->progressFunc (pResponse->pData, percent);
-} /* plotProgressCallback() */
-
-
-
-/* FUNCTION *******************************************************************/
 /** Computes the amplitude response of a filter (for usage on a \e Cairo plot).
  *
  *  \param f            Pointer to real-world x-coordinate (input value), means
@@ -196,6 +173,7 @@ static double plotAttenuation (double *f, void *pData)
  *  \return             Calculated phase (real-world y-coordinate) on success. If
  *                      there is no value at \p x resp. frequency (may be a
  *                      singularity), then it returns GSL_POSINF or GSL_NEGINF.
+ *  \todo               Check phase response of linear FIR filters and improve the graph layout.
  ******************************************************************************/
 static double plotPhase (double *f, void *pData)
 {
@@ -231,7 +209,7 @@ static double plotPhaseDelay (double *f, void *pData)
 
     if (gsl_finite (delay))
     {
-        if (delay < 0.0)               /* a time delay should not be negative */
+        if (delay < -DBL_EPSILON)        /* time delay should not be negative */
         {                                   /* transform into positive values */
             delay -= (2.0 * M_PI) * floor(delay / (2.0 * M_PI));
         } /* if */
@@ -408,30 +386,46 @@ int responsePlotDraw (cairo_t* cr, RESPONSE_TYPE type, PLOT_DIAG *pDiag)
 {
     int points = 0;
     RESPONSE_PLOT *pResponse = &responsePlot[type];
+    const CFG_DESKTOP* pPrefs = cfgGetDesktopPrefs ();
 
     ASSERT (type < RESPONSE_TYPE_SIZE);
-
     pResponse->pFilter = dfcPrjGetFilter ();
+
+    switch (type)
+    {
+        case RESPONSE_TYPE_IMPULSE:
+        case RESPONSE_TYPE_STEP:
+            pDiag->x.pUnit = &pPrefs->timeUnit;
+            break;
+
+        case RESPONSE_TYPE_DELAY:
+        case RESPONSE_TYPE_GROUP:
+            pDiag->y.pUnit = &pPrefs->timeUnit;
+            /* fall through here */
+
+        case RESPONSE_TYPE_AMPLITUDE:
+        case RESPONSE_TYPE_ATTENUATION:
+        case RESPONSE_TYPE_CHAR:
+        case RESPONSE_TYPE_PHASE:
+            pDiag->x.pUnit = &pPrefs->frequUnit;
+            break;
+
+        default:
+            ASSERT (0);
+    } /* switch */
+
 
     if (pResponse->pFilter != NULL)
     {
         pResponse->pData = pDiag->pData;        /* save original data pointer */
         pDiag->pData = pResponse;                 /* set private data pointer */
-        pResponse->progressFunc = pDiag->progressFunc; /* save original callback */
-
-        if (pDiag->progressFunc != NULL)
-        {
-            pDiag->progressFunc = plotProgressCallback; /* set private callback  */
-        } /* if */
-
         pDiag->initFunc = pResponse->initFunc;
         pDiag->sampleFunc = pResponse->sampleFunc;
         pDiag->endFunc = pResponse->endFunc;
 
+        pDiag->x.prec = pDiag->y.prec = pPrefs->outprec;
         points = cairoPlot2d (cr, pDiag);
-
-        pDiag->pData = pResponse->pData;      /* restore original data and... */
-        pDiag->progressFunc = pResponse->progressFunc; /* ...callback pointer */
+        pDiag->pData = pResponse->pData;     /* restore original data pointer */
 
     } /* if */
 

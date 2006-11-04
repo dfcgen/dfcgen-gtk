@@ -4,11 +4,14 @@
  *           Polynomial functions.
  *
  * \author   Copyright (c) 2006 Ralf Hoppe
- * \version  $Header: /home/cvs/dfcgen-gtk/src/mathPoly.c,v 1.1.1.1 2006-09-11 15:52:19 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/src/mathPoly.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:19  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -68,19 +71,18 @@ static double chebyT(double degree, double x)
 
     if (fabs(x) < 1.0)
     {
-        return cos(degree * acos(x));
+        return cos (degree * acos(x));
     } /* if */
 
-    result = cosh(degree * gsl_acosh(fabs(x)));
+    result = cosh (degree * gsl_acosh (fabs (x)));
 
-    if ((x >= 1.0) || (!GSL_IS_ODD((int)degree)))
+    if ((x >= 1.0) || GSL_IS_EVEN ((int)degree))
     {
         return result;
     } /* if */
 
     return -result;
 } /* chebyT() */
-
 
 
 
@@ -181,6 +183,43 @@ void mathPolyFree(MATHPOLY *poly)
 
 
 /* FUNCTION *******************************************************************/
+/** \e Chebyshev function (polynomial) of first kind.
+    \f{eqnarray*}
+        y &=& \cos(n\arccos x)\quad(x\leq 1) \\
+        y &=& \cosh(n\arcosh x)\quad(x>1)
+    \f}
+ *
+ *  \param degree       Polynomial degree.
+ *  \param x            Argument.
+ *
+ *  \return             \f$y \cos(n\arccos x)\f$.
+ ******************************************************************************/
+double mathPolyCheby (int degree, double x)
+{
+    return chebyT (degree, x);
+} /* mathPolyCheby() */
+
+
+/* FUNCTION *******************************************************************/
+/** Inverse \e Chebyshev function (polynomial) of first kind.
+    \f{eqnarray*}
+        y &=& \cos(1/n \arccos x)\quad(x\leq 1) \\
+        y &=& \cosh(1/n \arcosh x)\quad(x>1)
+    \f}
+ *
+ *  \param degree       Polynomial degree.
+ *  \param x            Argument.
+ *
+ *  \return             \f$y \cos(1/n \arccos x)\f$.
+ ******************************************************************************/
+double mathPolyChebyInv (int degree, double x)
+{
+    return chebyT (1.0 / degree, x);
+} /* mathPolyChebyInv */
+
+
+
+/* FUNCTION *******************************************************************/
 /** Calculates \e Bessel polynomial of n'th order in \p coeff.
     \f{eqnarray*}
         B_n &=& (2 n - 1) * B_{n-1} + s^2 B_{n-2} \\ 
@@ -240,125 +279,177 @@ int mathPolyBessel (int degree, double coeff[])
 
 
 /* FUNCTION *******************************************************************/
-/** Multiplies polynomial \f$p(z)\f$ by \f$z^n\f$, means shifts all
- *  coefficients left.
+/** Adds two polynomials with scaling.
  *
- *  \param poly         Pointer to polynomial that coefficients \p poly->coeff
- *                      shall be shifted.
- *  \param n            Number of coefficients shift to left.
+ *  \param poly1        Pointer to first polynomial and result. The coefficients
+ *                      vector memory space must be large enough to get all
+ *                      coefficients. The degree is increased (without malloc
+ *                      of new memory), if \p poly2->degree is greater than
+ *                      poly1->degree;
+ *  \param poly2        Pointer to second polynomial.
+ *  \param scale        Factor which is applied to each coefficient of \p poly2.
  *
  ******************************************************************************/
-void mathPolyShiftLeft(MATHPOLY *poly, int n)
+void mathPolyAdd (MATHPOLY *poly1, const MATHPOLY *poly2, double scale)
 {
-    int idxSrc = poly->degree;
-    int idxDest = idxSrc + n;
+    int i;
 
-    poly->degree = idxDest;                   /* correct degree of polynomial */
+    int mindeg = MIN (poly1->degree, poly2->degree);
 
-    while (idxSrc >= 0)
+    poly1->degree = MAX (poly1->degree, poly2->degree);
+
+    for (i = 0; i <= mindeg; i++)
     {
-        poly->coeff[idxDest--] = poly->coeff[idxSrc--];
-    } /* while */
+        poly1->coeff[i] += scale * poly2->coeff[i];
+    } /* for */
 
-
-    while (idxDest >= 0)
+    for (i = mindeg + 1; i <= poly2->degree; i++)
     {
-        poly->coeff[idxDest--] = 0.0;            /* clear lowest coefficients */
-    } /* while */
-} /* mathPolyShiftLeft() */
+        poly1->coeff[i] = scale * poly2->coeff[i];
+    } /* for */
+
+} /* mathPolyAdd() */
+
+
+
+/* FUNCTION *******************************************************************/
+/** Multiplies a polynomial with the binomial \f$a z^n+b\f$.
+ *  The function multiplies the polynomial
+    \f{eqnarray*}
+    p(z) &=& c_r z^r + c_{r-1} z^{r-1}+ \cdots + c_2 z^2 + c_1 z + c_0 \\
+         &=& (\cdots(((c_r z + c_{r-1})z + c_{r-2})z + c_{r-3})z+\cdots+c_1)z+c_0
+    \f}
+ *  with \f$az^n+b\f$. The degree of new polynomial is \f$rn\f$, which must
+ *  be available in \p poly.
+    \f{eqnarray*}
+    p(z) &=& (az^n + b)p(z) \\
+         &=& a z^n p(z) + b p(z)
+    \f}
+ *
+ *  \param poly         Pointer to polynomial which shalle be multiplied (in place).
+ *  \param degn         Degree of polynomial \f$az^n+b\f$.
+ *  \param a            Parameter \p a in polynomial \f$az^n+b\f$.
+ *  \param b            Parameter \p b in polynomial \f$az^n+b\f$.
+ *
+ ******************************************************************************/
+void mathPolyMulBinomial (MATHPOLY *poly, int degn, double a, double b)
+{
+    int i;
+
+    ASSERT (degn >= 0);
+
+    for (i = poly->degree; i >= 0; i--)                           /* z^n p(z) */
+    {
+        poly->coeff[i + degn] = poly->coeff[i];
+    } /* for */
+
+    for (i = 0; i < degn; i++)                    /* clear lower coefficients */
+    {
+        poly->coeff[i] = 0.0;
+    } /* for */
+
+
+    for (i = 0; i <= poly->degree; i++)          /* a * z^n * p(z) + b * p(z) */
+    {
+        poly->coeff[i] = a * poly->coeff[i] + b * poly->coeff[i + degn];
+    } /* for */
+
+    for (i = poly->degree + 1; i <= poly->degree + degn; i++)
+    {                                                   /* upper coefficients */
+        poly->coeff[i] *= a;
+    } /* if */
+
+    poly->degree += degn;
+} /* mathPolyMulBinomial() */
 
 
 
 /* FUNCTION *******************************************************************/
 /** Transforms polynomial coefficients for fractional variable substitution.
- *  The function replaces the variable \f$z\f$ in (source domain)
+ *  The function transforms the polynomial
     \f{eqnarray*}
     p(z) &=& c_r z^r + c_{r-1} z^{r-1}+ \cdots + c_2 z^2 + c_1 z + c_0 \\
          &=& (\cdots(((c_r z + c_{r-1})z + c_{r-2})z + c_{r-3})z+\cdots+c_1)z+c_0
     \f}
- *  by
+ *  by replacing
+    \f[
+      z := \frac{\alpha z^m+\beta}{\gamma z^n+\delta}\qquad\alpha,\beta,\gamma,\delta\in R;\quad m,n\in N
+    \f]
+ *  into polynomial
+    \f[
+        p(z) := (\gamma z^n+\delta)^r p\left(\frac{\alpha z^m+\beta}{\gamma z^n+\delta}\right)
+    \f]
+ *  The new degree is \f$r\max(n,m)\f$.
+ *  Set \f$p_i(z)=u_i(z)/v_i(z)\f$ the transformation algorithm is based
+ *  on \e Horners scheme:
     \f{eqnarray*}
-           z &=& a z^m + \frac{b}{z^n}\qquad a,b\in R;\quad m,n\in N \\
-        p(z) &=& z^{r n} p(a z^m + b z^{-n})
+    p_{i}(z) &=& z\, p_{i-1}(z) + c_{r-i} \\
+             &=& \frac{\alpha z^m+\beta}{\gamma z^n+\delta}\, p_{i-1}(z) + c_{r-i} \\
+             &=& \frac{(\alpha z^m+\beta)\,p_{i-1}(z)+(\gamma z^n+\delta)\,c_{r-i}}{\gamma z^n+\delta} \\
+    \frac{u_{i}(z)}{v_{i}(z)} &=& 
+                 \frac{(\alpha z^m+\beta)\,\frac{u_{i-1}(z)}{v_{i-1}(z)}+(\gamma z^n+\delta)\,c_{r-i}}{\gamma z^n+\delta} \\
+    v_{i}(z) &=& (\gamma z^n+\delta) v_{i-1}(z),\quad v_0=1 \\
+    u_{i}(z) &=& (\alpha z^m+\beta)u_{i-1}(z)+c_{r-i}v_{i}(z),\quad u_0=c_r
     \f}
- *  Set \f$p_i(z)=u_i(z)/v_i(z)\f$ the transformation algorithm for
- *  coefficients \f$c_i\f$ is as follows:
-    \f{eqnarray*}
-    p_{i+1}(z) &=& p_{i}(z) (a z^m + b z^{-n}) + c_{r-i} \\
-               &=& a z^m\, p_{i}(z) + b z^{-n} \, p_{i}(z) + c_{r-i} \\
-               &=& p_{i}(z)\frac{a z^{n+m}+b}{z^n} + c_{r-i} \\
-    \frac{u_{i+1}(z)}{v_{i+1}(z)} &=& 
-    \frac{a z^{n+m} u_i(z)+b u_i(z)+z^n c_{r-i}v_i(z)}{z^n v_i(z)} \\
-    v_{i+1}(z) &=& z^n v_i(z) \\
-    u_{i+1}(z) &=& a z^{n+m}u_i(z)+b u_i(z)+c_{r-i}v_{i+1}(z)
-    \f}
- *  with \f$p_{0}(z)=0\f$.
+ *  with \f$i=1\ldots n\f$ and \f$p_{0}(z)=c_r\f$.
  *  So the following special transformation cases can be simply calculated:
- *  - linear (\f$n=0,m=1\f$): \f$p(a z+b)\f$
- *  - square (\f$n=0,m=2\f$): \f$p(a z^2+b)\f$
- *  - inverse (\f$n=1,a=0\f$): \f$z^r p(b/z)\f$
+ *  - linear (\f$n=0,\gamma=1,\delta=0,m=1\f$): \f$p(\alpha z+\beta)\f$
+ *  - square (\f$n=0,\gamma=1,\delta=0,m=2\f$): \f$p(\alpha z^2+\beta)\f$
+ *  - inverse (\f$n=1,\gamma=1,\delta=0,\alpha=0\f$): \f$z^r p(\beta/z)\f$
+ *  - bilinear (\f$n=1,m=1,\alpha=1,\gamma=1,\beta=-1,\delta=1\f$): \f$(z+1)^r p\left(\frac{z-1}{z+1}\right)\f$
  *
  *  \param poly         Pointer to polynomial that coefficients \p poly->coeff
  *                      shall be transformed. The allocated memory space must
- *                      be enough to hold a polynomial with degree \f$r(n+m)\f$.
- *  \param degm         Numerator degree of transformation, means \p m.
- *  \param degn         Denominator degree of transformation, means \p n.
- *  \param a            Transform parameter \p a.
- *  \param b            Transform parameter \p b.
+ *                      be enough to hold a polynomial of degree \f$r\max(n,m)\f$.
+ *  \param degm         Numerator degree of transformation, means \f$m\f$.
+ *  \param a            Transform parameter \f$\alpha\f$.
+ *  \param b            Transform parameter \f$\beta\f$.
+ *  \param degn         Denominator degree of transformation, means \f$n\f$.
+ *  \param c            Transform parameter \f$\gamma\f$.
+ *  \param d            Transform parameter \f$\delta\f$.
  *
  *  \return             Zero on success, else an error number (see errno.h or
  *                      gsl_errno.h for predefined codes).
  ******************************************************************************/
-int mathPolyTransform(MATHPOLY *poly, int degm, int degn, double a, double b)
+int mathPolyTransform (MATHPOLY *poly,
+                       int degm, double a, double b,
+                       int degn, double c, double d)
 {
-    int i, k;
-    double *vecu;                             /* Polynomial u(z) coefficients */
+    int i;
+    MATHPOLY vecu, vecv;                           /* polynomial coefficients */
 
-    int expv = 0;                              /* Exponent of polynomial v(z) */
+    vecv.degree = degn * poly->degree;
+    vecu.degree = MAX (degn, degm) * poly->degree;
 
-    degm += degn;                                /* use variable degm = n + m */
-    vecu = MALLOC ((1 + (degm * poly->degree)) * sizeof(poly->coeff[0]));
-
-    if (vecu == NULL)
+    if (mathPolyMalloc (&vecu) != 0)
     {
         DEBUG_LOG ("Polynomial memory allocation");
         return ENOMEM;
     } /* if */
 
-
-    vecu[0] = 0.0;
-
-    for (i = 0; i <= poly->degree; i++)            /* perform Horner's scheme */
+    if (mathPolyMalloc (&vecv) != 0)
     {
-        for (k = i; k >= 0; k--)                     /* with all coefficients */
-        {
-            vecu[k + degm] = vecu[k];   /* u_i(z) * z^{n+m} (shift left degm) */
-        } /* for */
+        mathPolyFree (&vecu);
+        DEBUG_LOG ("Polynomial memory allocation");
+        return ENOMEM;
+    } /* if */
 
-        for (k = 0; k < degm; k++)          /* clear lower order coefficients */
-        {
-            vecu[k] = 0.0;
-        } /* if */
+    vecu.degree = vecv.degree = 0;      /* start with a constant (degree = 0) */
+    vecu.coeff[0] = poly->coeff[poly->degree];
+    vecv.coeff[0] = 1.0;
 
-        for (k = 0; k < i; k++)
-        {                                /* a * z^{n+m} * u_i(z) + b * u_i(z) */
-            vecu[k] = a * vecu[k] + b * vecu[k + degm];
-        } /* for */
-
-        for (k = 0; k < degm; k++) /* multiply higher order coefficients by a */
-        {
-            vecu[i + k] *= a;
-        } /* if */
-
-        expv += degn;                                 /* v_{i+1}(z)=z^n v_i(z)*/
-        ASSERT(expv < (1 + (degm * poly->degree)));
-        vecu[expv] += poly->coeff[poly->degree - i];  /* + c_{n-i} v_{i+1}(z) */
+    for (i = 1; i <= poly->degree; i++)            /* perform Horner's scheme */
+    {
+        mathPolyMulBinomial (&vecv, degn, c, d);                    /* v_i(z) */
+        mathPolyMulBinomial (&vecu, degm, a, b);
+        mathPolyAdd (&vecu, &vecv, poly->coeff[poly->degree - i]);  /* u_i(z) */
     } /* for */
 
 
-    poly->degree *= degm;
-    memcpy (poly->coeff, vecu, (1 + poly->degree) * sizeof(poly->coeff[0]));
-    FREE (vecu);
+    poly->degree = vecu.degree;
+    memcpy (poly->coeff, vecu.coeff, (1 + vecu.degree) * sizeof(vecu.coeff[0]));
+    mathPolyFree (&vecu);
+    mathPolyFree (&vecv);
 
     return 0;
 } /* mathPolyTransform() */
@@ -405,21 +496,21 @@ int mathPolyRoots2Coeffs(MATHPOLY *poly, double factor)
     {
         for (k = i + 1; k > 0; k--)                  /* with all coefficients */
         {
-            cplxPoly[k] = cplxPoly[k-1];                          /* P(i) * z */
+            cplxPoly[k] = cplxPoly[k - 1];                        /* P(i) * z */
         } /* for */
 
         GSL_SET_COMPLEX(cplxPoly, 0.0, 0.0);
 
         for (k = 0; k <= i; k++)                     /* with all coefficients */
         {
-            result = gsl_complex_mul (cplxPoly[k+1], poly->root[i]);
+            result = gsl_complex_mul (cplxPoly[k + 1], poly->root[i]);
             cplxPoly[k] = gsl_complex_sub (cplxPoly[k], result); /* -P(i)*z[i] */
         } /* for */
     } /* for */
 
-    for (i = 0; i <= poly->degree; i++)
+    for (i = 0; i <= poly->degree; i++)       /* copy into real result vector */
     {
-        poly->coeff[i] = factor * GSL_REAL(cplxPoly[i]);
+        poly->coeff[i] = factor * GSL_REAL (cplxPoly[i]);
     } /* for */
 
     free(cplxPoly);
@@ -430,41 +521,71 @@ int mathPolyRoots2Coeffs(MATHPOLY *poly, double factor)
 
 
 /* FUNCTION *******************************************************************/
-/** \e Chebyshev function (polynomial) of first kind.
-    \f{eqnarray*}
-        y &=& \cos(n\arccos x)\quad(x\leq 1) \\
-        y &=& \cosh(n\arcosh x)\quad(x>1)
-    \f}
+/** Computes the complex roots \f$z_i\f$ associated with the polynomial
+    \f[
+    p(z)=c_n z^n + c_{n-1} z^{n-1}+ \cdots + c_2 z^2 + c_1 z + c_0
+    \f]
  *
- *  \param degree       Polynomial degree.
- *  \param x            Argument.
+ *  \param poly         Pointer to polynomial that holds the coefficients in
+ *                      \p poly->coeff and gets the roots in \p poly->roots.
  *
- *  \return             \f$y \cos(n\arccos x)\f$.
+ *  \return             Zero on success, else an error number (see errno.h or
+ *                      gsl_errno.h for predefined codes).
+ *  \todo               Try to avoid mixing error codes from gsl_errno.h
+ *                      and errno.h
  ******************************************************************************/
-double mathPolyCheby(int degree, double x)
+int mathPolyCoeffs2Roots (MATHPOLY *poly)
 {
-    return chebyT(degree, x);
-} /* mathPolyCheby() */
+    int err = 0;
 
+    if (poly->degree > 0)
+    {
+        gsl_poly_complex_workspace *polyWsp = /* polynomial roots finder workspace */
+            gsl_poly_complex_workspace_alloc (poly->degree + 1);
+
+        if (polyWsp == NULL)
+        {
+            return GSL_ENOMEM;                           /* not enough memory */
+        } /* if */
+
+
+        err = gsl_poly_complex_solve (poly->coeff, poly->degree + 1, polyWsp,
+                                      (gsl_complex_packed_ptr) poly->root);
+        gsl_poly_complex_workspace_free (polyWsp);
+    } /* if */
+
+    return err;
+} /* mathPolyRoots2Coeffs() */
+
+
+
+#ifdef DEBUG
 
 /* FUNCTION *******************************************************************/
-/** Inverse \e Chebyshev function (polynomial) of first kind.
-    \f{eqnarray*}
-        y &=& \cos(1/n \arccos x)\quad(x\leq 1) \\
-        y &=& \cosh(1/n \arcosh x)\quad(x>1)
-    \f}
+/** Logs polynomial coefficients for debug purposes.
  *
- *  \param degree       Polynomial degree.
- *  \param x            Argument.
+ *  \param poly         Pointer to polynomial that holds the coefficients.
  *
- *  \return             \f$y \cos(1/n \arccos x)\f$.
  ******************************************************************************/
-double mathPolyChebyInv(int degree, double x)
+void mathPolyDebugLog (MATHPOLY *poly)
 {
-    return chebyT(1.0 / degree, x);
-} /* mathPolyChebyInv */
+    int i;
 
+    for (i = 0; i <= poly->degree; i++)
+    {
+        DEBUG_LOG ("coeff[%d] = %G", i, poly->coeff[i]);
+    } /* for */
 
+    for (i = 0; i < poly->degree; i++)
+    {
+        DEBUG_LOG (" root[%d] = %G +j %G", i,
+                   GSL_REAL (poly->root[i]), GSL_IMAG (poly->root[i]));
+    } /* for */
+
+    DEBUG_LOG ("");
+} /* mathPolyDebugLog() */
+
+#endif /* DEBUG */
 
 
 /******************************************************************************/

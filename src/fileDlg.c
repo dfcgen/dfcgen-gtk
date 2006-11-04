@@ -4,11 +4,14 @@
  *           File menu dialogs.
  *
  * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/src/fileDlg.c,v 1.1.1.1 2006-09-11 15:52:20 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/src/fileDlg.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:20  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -70,7 +73,7 @@ static void previewUpdate (GtkFileChooser *chooser, gpointer labelWidget)
     GError *err;
     gchar* buf;
     char *author, *title;
-    DFCPRJ_HEADER header;
+    DFCPRJ_INFO info;
 
     char* fname = gtk_file_chooser_get_preview_filename (chooser);
 
@@ -79,12 +82,12 @@ static void previewUpdate (GtkFileChooser *chooser, gpointer labelWidget)
         if (g_str_has_suffix (fname, PRJFILE_NAME_SUFFIX))
         {
             err = NULL;
-            prjFileScan (fname, &header, &err);
+            prjFileScan (fname, &info, &err);
 
             if (err == NULL)
             {
-                title = header.title;
-                author = header.author;
+                title = info.title;
+                author = info.author;
 
                 if (author == NULL)
                 {
@@ -101,7 +104,7 @@ static void previewUpdate (GtkFileChooser *chooser, gpointer labelWidget)
                 gtk_file_chooser_set_preview_widget_active(chooser, TRUE);
                 gtk_label_set_markup (GTK_LABEL (labelWidget), buf);
 
-                prjFileFree (&header);                    /* free header data */
+                prjFileFree (&info);                     /* free project info */
                 FREE (buf);
 
                 return;
@@ -144,12 +147,12 @@ static GtkWidget* createFileDialog (const gchar *title, GtkWindow *parent,
     gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (dialog), TRUE);
 
     filter = gtk_file_filter_new ();
-    gtk_file_filter_set_name (filter, _("Project files"));
+    gtk_file_filter_set_name (filter, _("Project files (*" PRJFILE_NAME_SUFFIX ")"));
     gtk_file_filter_add_pattern (filter, "*" PRJFILE_NAME_SUFFIX);
     gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
 
     filter = gtk_file_filter_new ();
-    gtk_file_filter_set_name (filter, _("All files"));
+    gtk_file_filter_set_name (filter, _("All files (*)"));
     gtk_file_filter_add_pattern (filter, "*");
     gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
 

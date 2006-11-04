@@ -2,13 +2,16 @@
 /**
  * \file
  *              Digital Filter Coefficients Generator common types.
- * \version     $Header: /home/cvs/dfcgen-gtk/include/dfcgen.h,v 1.1.1.1 2006-09-11 15:52:21 ralf Exp $
+ * \version     $Header: /home/cvs/dfcgen-gtk/include/dfcgen.h,v 1.2 2006-11-04 18:28:27 ralf Exp $
  *
  * \author      Copyright (c) Ralf Hoppe
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:21  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -82,8 +85,8 @@ typedef struct
 {
     FTR type;                              /**< Frequency transformation type */
     unsigned flags;        /**< Special flags for bandpass/bandstop transform */
-    double center;                      /**< Center frequency (only BP or BS) */
-    double bandwidth;        /**< Bandwidth (BP, BS) or cutoff (HP) frequency */
+    double fc;                  /**< Center (BP, BS) or cutoff (HP) frequency */
+    double bw;                                /**< Bandwidth (only BP or BS)  */
 } FTRDESIGN;
 
 
@@ -91,7 +94,7 @@ typedef struct
  */
 typedef struct
 {
-    double f0;                                        /**< Sampling frequency */
+    double f0;                                          /**< Sample frequency */
     MATHPOLY num;              /**< Numerator polynomial coefficients & roots */
     MATHPOLY den;            /**< Denominator polynomial coefficients & roots */
     double factor;       /**< Transfer function factor applied to roots product.

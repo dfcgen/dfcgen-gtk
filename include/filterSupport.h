@@ -4,13 +4,16 @@
  *           Description.
  *
  * \author   Copyright (c) Ralf Hoppe
- * \version  $Header: /home/cvs/dfcgen-gtk/include/filterSupport.h,v 1.1.1.1 2006-09-11 15:52:21 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/include/filterSupport.h,v 1.2 2006-11-04 18:28:27 ralf Exp $
  *
  *
  * \see
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:21  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -74,6 +77,22 @@ extern "C" {
 
 
 /* FUNCTION *******************************************************************/
+/** Duplicates a filter. This function mallocs memory space for filter
+ *  coefficients and roots based on the degree of the source filter pointed by
+ *  \p src. Then it copies the numerator and denominator polynomial to \p dest.
+ *  Use function filterFree() to free all the new associated memory.
+ *
+ *  \param src          Source filter (input).
+ *  \param dest         Destination filter (output).
+ *
+ *  \return             Zero on success, else an error code (typically ENOMEM).
+ ******************************************************************************/
+    int filterDuplicate (FLTCOEFF *dest, FLTCOEFF *src);
+
+
+
+
+/* FUNCTION *******************************************************************/
 /** Checks ability to implement a digital system/filter.
  *
  *  \param pFilter      Pointer to filter coefficients/roots.
@@ -90,6 +109,28 @@ extern "C" {
  *                        this condition.
  ******************************************************************************/
     int filterCheck (FLTCOEFF *pFilter);
+
+
+
+/* FUNCTION *******************************************************************/
+/** Normalizes the coefficients of a filter. To perform that, it
+ *  first modifies the denominator coefficients such that \f$den_0=1\f$ is
+ *  ensured. At the second step it re-calculates the numerator coefficients.
+ *
+ *  \param pFilter      Pointer to filter.
+ *
+ *  \return             - 0 (or GSL_SUCCESS) if okay and nothing has changed.
+ *                      - a negative number (typically GSL_CONTINUE) if a
+ *                        coefficient or the degree has changed, but the filter
+ *                        is valid. You can use the FLTERR_WARNING macro from
+ *                        filterSupport.h to check this condition.
+ *                      - a positive error number (typically from from errno.h
+ *                        or gsl_errno.h) that something is wrong and the
+ *                        filter must be seen as invalid. You can use the
+ *                        FLTERR_CRITICAL macro from filterSupport.h to check
+ *                        this condition.
+ ******************************************************************************/
+    int normFilterCoeffs (FLTCOEFF *pFilter);
 
 
 /* FUNCTION *******************************************************************/

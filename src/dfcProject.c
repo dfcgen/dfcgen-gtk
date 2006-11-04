@@ -8,11 +8,14 @@
  *           or to libxml is possible, but need a lot of work.
  *
  * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/src/dfcProject.c,v 1.1.1.1 2006-09-11 15:52:20 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/src/dfcProject.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:20  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -49,7 +52,7 @@
  */
 static DFCPRJ_FILTER project =
 {
-    {                                       /**< Administrative data (header) */
+    {                                              /**< Project info (header) */
         NULL, NULL, NULL                               /* author, title, desc */
     },
 
@@ -89,9 +92,9 @@ static DFCPRJ_FILTER project =
  ******************************************************************************/
 FLTCLASS dfcPrjGetDesign (DESIGNDLG *pBuf)
 {
-    if (pBuf != NULL)
+    if ((pBuf != NULL) && (project.fltcls != FLTCLASS_NOTDEF))
     {
-//        memcpy (pBuf, project.dialog, sizeof (*pBuf));
+        memcpy (pBuf, &project.design, sizeof (*pBuf));
     } /* if */
 
     return project.fltcls;
@@ -114,6 +117,18 @@ FLTCOEFF* dfcPrjGetFilter()
 
     return &project.filter;
 } /* dfcPrjGetFilter() */
+
+
+
+/* FUNCTION *******************************************************************/
+/** Returns a pointer to the current project information.
+ *
+ *  \return             Pointer to project info.
+ ******************************************************************************/
+DFCPRJ_INFO* dfcPrjGetInfo ()
+{
+    return &project.info;
+} /* dfcPrjGetInfo() */
 
 
 
@@ -176,8 +191,7 @@ void dfcPrjFree (DFCPRJ_FILTER *pProject)
         pProject = &project;
     } /* if */
 
-
-    prjFileFree (&pProject->header);                      /* free header data */
+    prjFileFree (&pProject->info);                       /* free project info */
     filterFree (&pProject->filter);
     memset (pProject, 0, sizeof (project));          /* reset current project */
     pProject->fltcls = FLTCLASS_NOTDEF;                   /* indicate invalid */
@@ -189,21 +203,49 @@ void dfcPrjFree (DFCPRJ_FILTER *pProject)
 /** Sets the (new) passed design and filter into the current project. All old
  *  project data, except the header information, are free'ed.
  *
- *  \param type         Class of filter (shall not be FLTCLASS_NOTDEF).
- *  \param pDesign      Pointer to new design data.
+ *  \param type         Class of filter. If FLTCLASS_NOTDEF is passed in here,
+ *                      then the current filter class is unchanged.
  *  \param pFilter      Pointer to new filter (coefficients) data.
+ *  \param pDesign      Pointer to new design data. Set this to NULL if design
+ *                      data shall not be changed (or are not available).
  *
  ******************************************************************************/
-void dfcPrjSet (FLTCLASS type, DESIGNDLG *pDesign, FLTCOEFF* pFilter)
+void dfcPrjSetFilter (FLTCLASS type, FLTCOEFF* pFilter, DESIGNDLG *pDesign)
 {
     filterFree (&project.filter);
 
-    project.fltcls = type;
-    project.design = *pDesign;
+    if (pDesign != NULL)
+    {
+        project.design = *pDesign;
+    } /* if */
+
+    if (type != FLTCLASS_NOTDEF)
+    {
+        project.fltcls = type;
+    } /* if */
+
     project.filter = *pFilter;
 
-} /* dfcPrjSet() */
+} /* dfcPrjSetFilter() */
 
+
+
+
+/* FUNCTION *******************************************************************/
+/** Sets new project information data.
+ *
+ *  \param pFilter      Pointer to new project info.
+ *
+ ******************************************************************************/
+void dfcPrjSetInfo (DFCPRJ_INFO *pInfo)
+{
+    prjFileFree (&project.info);                         /* free project info */
+
+    project.info.author = pInfo->author;
+    project.info.title = pInfo->title;
+    project.info.desc = pInfo->desc;
+
+} /* dfcPrjSetInfo() */
 
 
 /******************************************************************************/

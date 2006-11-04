@@ -4,13 +4,16 @@
  *           Main dialog management.
  *
  * \author   Copyright (c) Ralf Hoppe
- * \version  $Header: /home/cvs/dfcgen-gtk/include/mainDlg.h,v 1.1.1.1 2006-09-11 15:52:21 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/include/mainDlg.h,v 1.2 2006-11-04 18:28:27 ralf Exp $
  *
  *
  * \see
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:21  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -44,6 +47,7 @@ extern "C" {
 
 /* EXPORTED FUNCTIONS *********************************************************/
 
+
 /* FUNCTION *******************************************************************/
 /** dfcgen top widget creation.
  *
@@ -57,21 +61,32 @@ extern "C" {
 
 
 /* FUNCTION *******************************************************************/
-/** Updates the filter dialog in main widget from a project (read from file
- *  before).
- *
- *  \param filename     Associated filename in filesystem coding, or NULL to
- *                      reset.
+/** Updates the project information in statusbar.
  *
  ******************************************************************************/
+    void mainDlgUpdatePrjInfo (void);
+
+
+/* FUNCTION *******************************************************************/
+/** Updates the main filter dialog from current project if there is no error
+ *  passed in. If there is an critical error (coded as from function filterCheck(),
+ *  then it displays an error box. If FLTERR_WARNING (err) indicates loss of
+ *  coefficients then a warning will be shown.
+ *
+ *  \param err      Error indicator with coding as from filterCheck().
+ *
+ *  \return         Returns TRUE if the error is not FLTERR_CRITICAL(),
+ *                  else FALSE.
+ ******************************************************************************/
     void mainDlgUpdateAll (const char* filename);
+
 
 
 /* FUNCTION *******************************************************************/
 /** Updates the filter dialog in main widget from current project.
  *
  ******************************************************************************/
-    void mainDlgUpdateFilter (void);
+    BOOL mainDlgUpdateFilter (int err);
 
 
 #ifdef  __cplusplus

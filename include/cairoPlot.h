@@ -4,11 +4,14 @@
  *           2-dimensional plot functions (GDK), normally for filter responses.
  *
  * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/include/cairoPlot.h,v 1.1.1.1 2006-09-11 15:52:20 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/include/cairoPlot.h,v 1.2 2006-11-04 18:28:27 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:20  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -31,6 +34,12 @@ extern "C" {
 
 
 /* GLOBAL CONSTANT DECLARATIONS ***********************************************/
+
+
+#define PLOT_TOLERANCE          (DBL_EPSILON * 4)         /**< Plot tolerance */
+#define PLOT_AXIS_MAX           (32768 / PLOT_TOLERANCE) /**< Maximum world value */
+#define PLOT_AXIS_MIN           (-PLOT_AXIS_MAX)     /**< Minimum world value */
+
 
 #define PLOT_AXIS_FLAG_LOG      1                       /**< logarithmic axis */
 #define PLOT_AXIS_FLAG_GRID     2                           /**< display grid */
@@ -71,24 +80,46 @@ extern "C" {
     } PLOT_COLOR;
 
 
-/** Unit descriptor for an axis.
- */
+    /** Unit descriptor for an axis.
+     */
     typedef struct
     {
-        char *name;      /**< Unit name string, possibly with \e Pango markup */
+        /** Unit name string (possibly with \e Pango markup), but never
+            translated into a specific language. It is assumed that units are
+            always based on the international system of units (SI).
+            It is allowed to set \a name NULL.
+
+            \see http://physics.nist.gov/cuu/Units.
+        */
+        char *name;
         double multiplier;                      /**< Multiplier for this unit */
     } PLOT_UNIT;
 
 
-/** Description of a plot axis.
- */
+    /** Description of a plot axis.
+     */
     typedef struct
     {
-        char *name; /**< axis name, possibly with \e Pango markup (may be NULL) */
-        PLOT_UNIT *pUnit;      /**< Pointer to unit description (may be NULL) */
+        const char *name; /**< axis name, possibly with \e Pango markup (may be NULL) */
+        const PLOT_UNIT *pUnit; /**< Pointer to unit description (may be NULL) */
         double start;               /**< real-world coordinate of start-point */
         double stop;                  /**< real-world coordinate of end-point */
-        unsigned flags; /**< flags (e.g. PLOT_AXIS_FLAG_LOG, PLOT_AXIS_FLAG_GRID) */
+
+        /** If the exponent of a floating point number would be less than -4 or
+         *  greater than or equal to the precision \a prec, then the number will
+         *  be converted in the style of '%E' (exponential notation); otherwise
+         *  to the '%f' style (fixed-point notation). The `%f' conversion prints
+         *  its argument in fixed-point notation, producing output of the form
+         *  [-]ddd.ddd, where the number of digits following the decimal point
+         *  is controlled by \a prec.  The '%E' conversion prints its argument
+         *  in exponential notation, producing output of the form
+         *  [-]d.dddE[+|-]dd. Again, the number of digits following the decimal
+         *  point is controlled by \a prec.  The exponent always contains at
+         *  least two digits.
+         */
+        int prec;
+
+        unsigned flags; /**< Flags (e.g. PLOT_AXIS_FLAG_LOG, PLOT_AXIS_FLAG_GRID) */
     } PLOT_AXIS;
 
 
@@ -168,13 +199,14 @@ extern "C" {
         PLOT_AXIS x;                                   /**< x-axis descriptor */
         PLOT_AXIS y; /**< y-axis descriptor (modified if PLOT_AXIS_AUTOSCALE) */
         void *pData; /**< user (application) data ptr (passed to \a initFunc) */
+        double thickness;                             /**< Thickness of graph */
+        PLOT_STYLE style;                                 /**< Style of graph */
+        int num;        /**< Number of samples to take (0 = number of pixels) */
         PLOT_FUNC_PROGRESS progressFunc; /**< plot progress/break function (may be NULL) */
         PLOT_FUNC_INIT initFunc; /**< plot initialization function (may be NULL) */
         PLOT_FUNC_GET sampleFunc;             /**< real-world function y=f(x) */
         PLOT_FUNC_END endFunc; /**< plot de-initialization function (may be NULL) */
         GdkColor *colors;      /**< Pointer to allocated colors (may be NULL) */
-        PLOT_STYLE style;                                 /**< Style of graph */
-        int num;        /**< Number of samples to take (0 = number of pixels) */
         GdkRectangle area;        /**< In: drawing area, out: graph rectangle */
     } PLOT_DIAG;
 
@@ -221,8 +253,46 @@ extern "C" {
  *                      (independent of a possible break) or a negative
  *                      number on error.
  ******************************************************************************/
-    int cairoPlot2d(cairo_t* cr, PLOT_DIAG *pDiag);
+    int cairoPlot2d (cairo_t* cr, PLOT_DIAG *pDiag);
 
+
+
+/* FUNCTION *******************************************************************/
+/** Checks the plot range of an axis against some predefined limits. If the
+ *  range [start, stop] doesn't match these limits, it returns ERANGE and
+ *  changes the range automatically.
+ *
+ *
+ *  \param pAxis        Pointer to axis workspace.
+ *
+ *  \return             If range is in boundaries then it returns the value 0,
+ *                      else ERANGE from errno.h.
+ ******************************************************************************/
+    int cairoPlotChkRange (PLOT_AXIS *pAxis);
+
+
+/* FUNCTION *******************************************************************/
+/** Returns a world-coordinate associated with a GDK coordinate.
+ *
+ *  \note  Because cairoPlotChkRange() has checked the ranges \p pAxis->start
+ *         and \p pAxis->stop with respect to the operation \p pAxis->stop -
+ *         \p pAxis->start (lin. case) and \p pAxis->stop / \p pAxis->start
+ *         (log. case) there is no need to use math. function mathTryDiv().
+ *
+ *  \param pAxis        Pointer to axis description (filled from a previous
+ *                      call to cairoPlot2d).
+ *  \param start        Start point of plot graph (box) in GDK coordinates.
+ *  \param stop         Stop point of plot graph (box) in GDK coordinates.
+ *
+ *  \attention          Due to internal processing optimization (associated
+ *                      with the north-west orientation of y-axis) the
+ *                      calculation of y-coordinates gives correct results
+ *                      only when \p start and \p stop are exchanged.
+ *
+ *  \return             World-coordinate within this axis.
+ ******************************************************************************/
+    double cairoPlotCoordinate (PLOT_AXIS *pAxis, int start, int stop,
+                                int coordinate);
 
 
 #ifdef  __cplusplus

@@ -4,11 +4,14 @@
  *           Interface to Standard IIR Filter approximation functions.
  *
  * \author   Copyright (c) Ralf Hoppe
- * \version  $Header: /home/cvs/dfcgen-gtk/include/stdIirFilter.h,v 1.1.1.1 2006-09-11 15:52:21 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/include/stdIirFilter.h,v 1.2 2006-11-04 18:28:27 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:21  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -74,9 +77,9 @@ typedef struct
     double cutoff;  /**< Cutoff frequency. \attention Must be the 3rd element */
     FTRDESIGN ftr; /**< Frequency transformation data. \attention Must be the 4th element */
     STDIIR_ZTR zAlgo; /**< Laplace to Z transform algorithm (not implemented yet) */
-    double rippleAtt;   /**< Ripple attenuation in passband (elliptic filter) */
-    double minAtt;     /**< Minimum attenuation in stopband (elliptic filter) */
-    double modAngle;                         /**< Module angle (Cauer filter) */
+    double ripple; /**< Maximum passband (ripple) attenuation in dB (elliptic filter) */
+    double minatt;  /**< Minimum stopband attenuation in dB (elliptic filter) */
+    double angle;                         /**< Module angle (\e Cauer filter) */
 } STDIIR_DESIGN;
 
 
@@ -90,6 +93,8 @@ typedef struct
 #define STDIIR_RIPPLE_MAX       (10*log10(2.0)) /**< Maximum ripple attenuation (3dB) */
 #define STDIIR_STOPATT_MIN      (10*log10(2.0)) /**< Minimum stopband attenuation (3dB) */
 #define STDIIR_STOPATT_MAX      STDIIR_ATT_MAX /**< Maximum stopband attenuation (\f$\infty\f$) */
+#define STDIIR_ANGLE_MIN        (0.001) /**< Minimum modular angle of elliptic filters */
+#define STDIIR_ANGLE_MAX        (89.999) /**< Maximum modular angle of elliptic filters */
 
 
 /* GLOBAL VARIABLE DECLARATIONS ***********************************************/
@@ -118,7 +123,7 @@ typedef struct
  *  \return             Zero on success, else an error number (see errno.h or
  *                      gsl_errno.h for predefined codes).
  ******************************************************************************/
-int stdIirFilterGen (const STDIIR_DESIGN *pDesign, FLTCOEFF *pFilter);
+int stdIirFilterGen (STDIIR_DESIGN *pDesign, FLTCOEFF *pFilter);
 
 
 

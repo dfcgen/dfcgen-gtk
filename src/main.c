@@ -11,6 +11,11 @@
 
 #include <gtk/gtk.h>
 
+#if DEBUG
+#define PIXMAP_DIR "../pixmaps"
+#else
+#define PIXMAP_DIR PACKAGE_PIXMAPS_DIR
+#endif
 
 int
 main (int argc, char *argv[])
@@ -26,7 +31,7 @@ main (int argc, char *argv[])
   gtk_set_locale ();
   gtk_init (&argc, &argv);
 
-  add_pixmap_directory (PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S "pixmaps");
+  add_pixmap_directory (PIXMAP_DIR);
 
   /*
    * The following code was added by Glade to create one of each component

@@ -6,11 +6,14 @@
  * \note     Includes raw filters (filters without a design).
  *
  * \author   Copyright (c) Ralf Hoppe
- * \version  $Header: /home/cvs/dfcgen-gtk/src/miscDesignDlg.c,v 1.1.1.1 2006-09-11 15:52:19 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/src/miscDesignDlg.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:19  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -51,17 +54,16 @@ typedef struct
 #if DEBUG
 #define MISCDLG_FILTER_DATAPATH ".." G_DIR_SEPARATOR_S "data"
 #else
-#define MISCDLG_FILTER_DATAPATH PACKAGE_DATA_DIR
+#define MISCDLG_FILTER_DATAPATH PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE
 #endif
 
 #define MISCDLG_WIDGET_MAIN     "miscDesignDlgMain"
 #define MISCDLG_ENTRY_SAMPLE    "entrySampleF"    /**< Sample frequency entry */
-#define MISCDLG_LABEL_DEGREE    "labelDegree" /**< Label of degree entry/spin */
 #define MISCDLG_SPIN_DEGREE     "spinDegree" /**< Degree of filter entry/spin */
 #define MISCDLG_COMBO_TYPE      "comboType"      /**< Type of filter combobox */
 #define MISCDLG_LABEL_DESC      "labelDesc"        /**< Description of filter */
 #define MISCDLG_EXPANDER_DESC   "expanderDesc"           /**< Expander widget */
-#define MISCDLG_LABEL_SAMPLE    "labelSampleF"    /**< Sample frequency label */
+#define MISCDLG_UNIT_SAMPLE     "unitSampleF" /**< Sample frequency unit label */
 
 
 /* LOCAL VARIABLE DEFINITIONS *************************************************/
@@ -78,7 +80,7 @@ static MISCDLG_FILTER_DESC miscFilterList[MISCFLT_SIZE] =
     },
     {                                     /* MISCFLT_DIFF (2): Differentiator */
         1, NULL, N_("Perfect Differentiator (FIR)"),
-        N_("A perfect integrator has the <i>Dirac</i> impulse as it&apos;s impulse response.  The approximation is based on <i>Fourier</i> series expansion of the repetitive frequency response:\nH(f)=j2ϖf.")
+        N_("A perfect differentiator has the <i>Dirac</i> impulse as it&apos;s impulse response.  The approximation is based on <i>Fourier</i> series expansion of the repetitive frequency response:\nH(f)=j2ϖf.")
     },
     {                                        /* MISCFLT_COMB (3): Comb filter */
         1, NULL, N_("Comb filter (FIR)"),
@@ -109,7 +111,8 @@ static GArray* rawFilterList = NULL;
 
 static gboolean miscDlgComboSeparator(GtkTreeModel *model, GtkTreeIter *iter, gpointer data);
 static void miscDlgOnTypeComboChanged (GtkComboBox *combo, gpointer user_data);
-static GtkWidget* createDialog (GtkWidget *topWidget, GtkWidget *boxDesignDlg);
+static GtkWidget* createDialog (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
+                                const CFG_DESKTOP* pPrefs);
 static void updateLayout (GtkWidget *topWidget, GtkWidget *combo, int index);
 
 
@@ -121,10 +124,12 @@ static void updateLayout (GtkWidget *topWidget, GtkWidget *combo, int index);
  *
  *  \param topWidget    Toplevel widget.
  *  \param boxDesignDlg The box widget to be used for the filter dialog.
+ *  \param pPrefs       Pointer to desktop preferences.
  *
  *  \return             The filter type combobox widget.
  ******************************************************************************/
-static GtkWidget* createDialog (GtkWidget *topWidget, GtkWidget *boxDesignDlg)
+static GtkWidget* createDialog (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
+                                const CFG_DESKTOP* pPrefs)
 {
     GtkWidget *miscDesignDlgMain, *miscDesignDlgTable;
     GtkWidget *label, *expander, *combo, *widget;
@@ -143,14 +148,14 @@ static GtkWidget* createDialog (GtkWidget *topWidget, GtkWidget *boxDesignDlg)
     gtk_container_add (GTK_CONTAINER (miscDesignDlgMain), widget);
     gtk_alignment_set_padding (GTK_ALIGNMENT (widget), 0, 0, 12, 0); /* indent childs */
 
-    miscDesignDlgTable = gtk_table_new (4, 2, FALSE);
+    miscDesignDlgTable = gtk_table_new (4, 3, FALSE);
     gtk_container_add (GTK_CONTAINER (widget), miscDesignDlgTable);
     gtk_container_set_border_width (GTK_CONTAINER (miscDesignDlgTable), 6);
     gtk_table_set_row_spacings (GTK_TABLE (miscDesignDlgTable), 6);
-    gtk_table_set_col_spacings (GTK_TABLE (miscDesignDlgTable), 12);
+    gtk_table_set_col_spacings (GTK_TABLE (miscDesignDlgTable), 6);
 
     combo = gtk_combo_box_new_text ();             /* type of filter combobox */
-    gtk_table_attach (GTK_TABLE (miscDesignDlgTable), combo, 0, 2, 0, 1,
+    gtk_table_attach (GTK_TABLE (miscDesignDlgTable), combo, 0, 3, 0, 1,
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (0), 0, 6);
     g_signal_connect_after ((gpointer) combo, "changed",
@@ -169,7 +174,6 @@ static GtkWidget* createDialog (GtkWidget *topWidget, GtkWidget *boxDesignDlg)
                       (GtkAttachOptions) (0), 3, 0);
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
     gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
-    GLADE_HOOKUP_OBJECT (topWidget, label, MISCDLG_LABEL_SAMPLE);
 
     widget = gtk_entry_new ();
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
@@ -177,16 +181,22 @@ static GtkWidget* createDialog (GtkWidget *topWidget, GtkWidget *boxDesignDlg)
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (0), 0, 0);
     gtk_tooltips_set_tip (tooltips, widget, _("Sample frequency"), NULL);
-    gtk_entry_set_width_chars (GTK_ENTRY (widget), 10);
+    gtk_entry_set_width_chars (GTK_ENTRY (widget), GUI_ENTRY_WIDTH_CHARS);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
     GLADE_HOOKUP_OBJECT (topWidget, widget, MISCDLG_ENTRY_SAMPLE);
+
+    label = gtk_label_new (pPrefs->frequUnit.name);  /* sample frequency unit */
+    gtk_table_attach (GTK_TABLE (miscDesignDlgTable), label, 2, 3, 2, 3,
+                      (GtkAttachOptions) (GTK_FILL),
+                      (GtkAttachOptions) (0), 0, 0);
+    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    GLADE_HOOKUP_OBJECT (topWidget, label, MISCDLG_UNIT_SAMPLE);
 
     label = gtk_label_new_with_mnemonic (_("_Degree"));
     gtk_table_attach (GTK_TABLE (miscDesignDlgTable), label, 0, 1, 1, 2,
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (0), 0, 0);
     gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
-    GLADE_HOOKUP_OBJECT (topWidget, label, MISCDLG_LABEL_DEGREE);
 
     spinAdjustment = gtk_adjustment_new (1, FLT_DEGREE_MIN, FLT_DEGREE_MAX, 1, 10, 10);
     widget = gtk_spin_button_new (GTK_ADJUSTMENT (spinAdjustment), 1, 0);
@@ -200,7 +210,7 @@ static GtkWidget* createDialog (GtkWidget *topWidget, GtkWidget *boxDesignDlg)
     GLADE_HOOKUP_OBJECT (topWidget, widget, MISCDLG_SPIN_DEGREE);
 
     expander = gtk_expander_new (NULL);
-    gtk_table_attach (GTK_TABLE (miscDesignDlgTable), expander, 0, 2, 3, 4,
+    gtk_table_attach (GTK_TABLE (miscDesignDlgTable), expander, 0, 3, 3, 4,
                       (GtkAttachOptions) (GTK_SHRINK | GTK_FILL),
                       (GtkAttachOptions) (GTK_SHRINK | GTK_FILL), 0, 12);
     gtk_expander_set_expanded (GTK_EXPANDER (expander), TRUE);
@@ -237,7 +247,6 @@ static GtkWidget* createDialog (GtkWidget *topWidget, GtkWidget *boxDesignDlg)
 static void updateLayout (GtkWidget *topWidget, GtkWidget *combo, int index)
 {
     const char *desc;
-    char buf[128];
     GtkWidget *widget;
     MISCDLG_FILTER_DESC raw;
 
@@ -258,10 +267,10 @@ static void updateLayout (GtkWidget *topWidget, GtkWidget *combo, int index)
     } /* if */
     else                                           /* raw/predefined filters? */
     {
-        raw = g_array_index (rawFilterList, MISCDLG_FILTER_DESC, index - MISCFLT_SIZE - 1);
+        raw = g_array_index (rawFilterList, MISCDLG_FILTER_DESC,
+                             index - MISCFLT_SIZE - 1);
         desc = raw.desc;                                       /* may be NULL */
-        g_snprintf (buf, sizeof (buf), "%d", raw.degree);
-        gtk_entry_set_text (GTK_ENTRY (widget), buf);
+        gtk_spin_button_set_value (GTK_SPIN_BUTTON (widget), raw.degree);
         gtk_widget_set_sensitive (widget, FALSE);
     } /* else */
 
@@ -337,9 +346,11 @@ static gboolean miscDlgComboSeparator(GtkTreeModel *model, GtkTreeIter *iter, gp
  *
  *  \param topWidget    Toplevel widget.
  *  \param boxDesignDlg The box widget to be used for the filter dialog.
+ *  \param pPrefs       Pointer to desktop preferences.
  *
  ******************************************************************************/
-void miscDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg)
+void miscDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
+                          const CFG_DESKTOP* pPrefs)
 {
     const gchar* filename;
     DFCPRJ_FILTER prj;
@@ -352,7 +363,7 @@ void miscDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg)
 
     /* 1st step: create dialog layout
      */
-    GtkComboBox* combo = GTK_COMBO_BOX (createDialog (topWidget, boxDesignDlg));
+    GtkComboBox* combo = GTK_COMBO_BOX (createDialog (topWidget, boxDesignDlg, pPrefs));
 
 
     /* 2nd step: insert misc filters
@@ -392,15 +403,15 @@ void miscDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg)
                     {
                         DEBUG_LOG("Predefined filter read from '%s'", filename);
 
-                        if (prj.header.title != NULL)
+                        if (prj.info.title != NULL)
                         {
                             raw.degree = GSL_MAX (prj.filter.den.degree,
                                                   prj.filter.num.degree);
-                            raw.title = g_strdup (prj.header.title);
-                            raw.desc = g_strdup (prj.header.desc); /* may be NULL */
+                            raw.title = g_strdup (prj.info.title);
+                            raw.desc = g_strdup (prj.info.desc); /* may be NULL */
 
                             g_array_append_val(rawFilterList, raw);
-                            gtk_combo_box_append_text (combo, prj.header.title);
+                            gtk_combo_box_append_text (combo, prj.info.title);
                             ++count;
                         } /* if */
                         else
@@ -455,6 +466,55 @@ void miscDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg)
 
 } /* miscDesignDlgCreate() */
 
+
+/* FUNCTION *******************************************************************/
+/** Standard IIR filter design dialog preset function. Restores all states
+ *  of dialog elements from design data of a standard IIR filter.
+ *
+ *  \param topWidget    Toplevel widget.
+ *  \param pDesign      Pointer to standard IIR design data.
+ *  \param pFilter      Pointer to filter coefficients (only member \a f0 used).
+ *  \param pPrefs       Pointer to desktop preferences.
+ *
+ ******************************************************************************/
+void miscDesignDlgPreset (GtkWidget *topWidget, const MISCFLT_DESIGN *pDesign,
+                          const FLTCOEFF *pFilter, const CFG_DESKTOP* pPrefs)
+{
+    GtkWidget *widget = lookup_widget (topWidget, MISCDLG_SPIN_DEGREE);
+    gtk_label_set_text (GTK_LABEL (lookup_widget (topWidget, MISCDLG_UNIT_SAMPLE)),
+                        pPrefs->frequUnit.name);                  /* set unit */
+
+    dlgSetDouble (topWidget, MISCDLG_ENTRY_SAMPLE,        /* sample frequency */
+                  pPrefs->frequUnit.multiplier, pFilter->f0);
+
+    if ((pDesign->type >= 0) && (pDesign->type < MISCFLT_SIZE)) /* known design? */
+    {                                                          /* show degree */
+        gtk_combo_box_set_active(
+            GTK_COMBO_BOX (lookup_widget (topWidget, MISCDLG_COMBO_TYPE)),
+            pDesign->type);
+
+        gtk_spin_button_set_value (GTK_SPIN_BUTTON (widget), pDesign->order);
+        gtk_widget_set_sensitive (widget, TRUE);
+    } /* if */
+    else
+    {
+        gtk_spin_button_set_value (
+            GTK_SPIN_BUTTON (widget),
+            GSL_MAX (pFilter->den.degree, pFilter->num.degree));
+
+        widget = gtk_message_dialog_new_with_markup (
+            GTK_WINDOW (topWidget), GTK_DIALOG_DESTROY_WITH_PARENT,
+            GTK_MESSAGE_WARNING, GTK_BUTTONS_CLOSE,
+            _("For this digital system only a limited set of design data is"
+              " available. Thus the <i>Type</i> box and <i>Description</i>"
+              " field will not reflect the original design (but still the"
+              " coefficients)."));
+
+        gtk_dialog_run (GTK_DIALOG (widget));
+        gtk_widget_destroy (widget);
+    } /* else */
+
+} /* miscDesignDlgPreset() */
 
 
 /* FUNCTION *******************************************************************/
@@ -523,6 +583,7 @@ BOOL miscDesignDlgActive (GtkWidget *topWidget)
 /** Miscellaneous FIR/IIR filter design dialog \e Apply function.
  *
  *  \param topWidget    Toplevel widget.
+ *  \param pPrefs       Pointer to desktop preferences.
  *
  *  \return             - 0 (or GSL_SUCCESS) if okay and no coefficients are
  *                        dropped.
@@ -538,9 +599,8 @@ BOOL miscDesignDlgActive (GtkWidget *topWidget)
  *                        error message box was displayed by function
  *                        miscDesignDlgApply(), means the caller should not
  *                        popup a (second) message box.
- * \todo Use frequency units from cfgSettings.h
  ******************************************************************************/
-int miscDesignDlgApply (GtkWidget *topWidget)
+int miscDesignDlgApply (GtkWidget *topWidget, const CFG_DESKTOP* pPrefs)
 {
     int index;
     DFCPRJ_FILTER prj;                                      /* filter project */
@@ -554,20 +614,21 @@ int miscDesignDlgApply (GtkWidget *topWidget)
 
         if (index >= 0)                  /* anything selected (sanity check)? */
         {
-            if (dlgGetDouble (topWidget, MISCDLG_LABEL_SAMPLE, MISCDLG_ENTRY_SAMPLE,
-                              FLT_SAMPLE_MIN, FLT_SAMPLE_MAX, &prj.filter.f0))
+            if (dlgGetDouble (topWidget, MISCDLG_ENTRY_SAMPLE, FLT_SAMPLE_MIN,
+                              FLT_SAMPLE_MAX, pPrefs->frequUnit.multiplier,
+                              &prj.filter.f0))
             {
                 if (index < MISCFLT_SIZE)       /* misc filter (with design)? */
                 {
-                    if (dlgGetInt (topWidget, MISCDLG_LABEL_DEGREE, MISCDLG_SPIN_DEGREE,
-                                   FLT_DEGREE_MIN, FLT_DEGREE_MAX, &prj.design.miscFlt.order))
+                    if (dlgGetInt (topWidget, MISCDLG_SPIN_DEGREE, FLT_DEGREE_MIN,
+                                   FLT_DEGREE_MAX, &prj.design.miscFlt.order))
                     {
                         prj.design.miscFlt.type = index;
                         err = miscFilterGen (&prj.design.miscFlt, &prj.filter);
 
                         if (!FLTERR_CRITICAL (err))
                         {
-                            dfcPrjSet (FLTCLASS_MISC, &prj.design, &prj.filter);
+                            dfcPrjSetFilter (FLTCLASS_MISC, &prj.filter, &prj.design);
                         } /* if */
                     } /* if */
                 } /* if */
@@ -583,8 +644,8 @@ int miscDesignDlgApply (GtkWidget *topWidget)
                     if (gerr == NULL)
                     {
                         prj.filter.f0 = sample;         /* restore user input */
-                        dfcPrjSet (FLTCLASS_MISC, &prj.design, &prj.filter);
-                        prjFileFree (&prj.header);    /* only free author,... */
+                        dfcPrjSetFilter (FLTCLASS_MISC, &prj.filter, &prj.design);
+                        prjFileFree (&prj.info);      /* only free author,... */
                         err = 0;
                     } /* if */
                     else

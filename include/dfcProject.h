@@ -4,11 +4,14 @@
  *           \e dfcgen filter project management.
  *
  * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/include/dfcProject.h,v 1.1.1.1 2006-09-11 15:52:21 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/include/dfcProject.h,v 1.2 2006-11-04 18:28:27 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:21  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -32,14 +35,14 @@ extern "C" {
 /* GLOBAL TYPE DECLARATIONS ***************************************************/
 
 
-/** \e dfcgen project header data.
+/** \e dfcgen project info data.
  */
 typedef struct
 {
     char *author;                   /**< Pointer to author name (may be NULL) */
     char *title;                   /**< Pointer to project name (may be NULL) */
     char *desc;             /**< Pointer to project description (may be NULL) */
-} DFCPRJ_HEADER;
+} DFCPRJ_INFO;
 
 
 
@@ -47,7 +50,7 @@ typedef struct
  */
 typedef struct
 {
-    DFCPRJ_HEADER header;                   /**< Administrative data (header) */
+    DFCPRJ_INFO info;                              /**< Project info (header) */
     FLTCLASS fltcls;                                        /**< Filter class */
     DESIGNDLG design;                         /**< Filter design data (union) */
     FLTCOEFF filter;                            /**< Coefficients in Z domain */
@@ -91,12 +94,23 @@ typedef struct
 /** Sets the (new) passed design and filter into the current project. All old
  *  project data, except the header information, are free'ed.
  *
- *  \param type         Class of filter (shall not be FLTCLASS_NOTDEF).
- *  \param pDesign      Pointer to new design data.
+ *  \param type         Class of filter. If FLTCLASS_NOTDEF is passed in here,
+ *                      then the current filter class is unchanged.
  *  \param pFilter      Pointer to new filter (coefficients) data.
+ *  \param pDesign      Pointer to new design data. Set this to NULL if design
+ *                      data shall not be changed (or are not available).
  *
  ******************************************************************************/
-    void dfcPrjSet (FLTCLASS type, DESIGNDLG *pDesign, FLTCOEFF* pFilter);
+    void dfcPrjSetFilter (FLTCLASS type, FLTCOEFF* pFilter, DESIGNDLG *pDesign);
+
+
+/* FUNCTION *******************************************************************/
+/** Sets new project information data.
+ *
+ *  \param pFilter      Pointer to new project info.
+ *
+ ******************************************************************************/
+    void dfcPrjSetInfo (DFCPRJ_INFO *pInfo);
 
 
 
@@ -119,6 +133,16 @@ typedef struct
  *                      defined).
  ******************************************************************************/
     FLTCOEFF* dfcPrjGetFilter (void);
+
+
+
+/* FUNCTION *******************************************************************/
+/** Returns a pointer to the current project information.
+ *
+ *  \return             Pointer to project info.
+ ******************************************************************************/
+DFCPRJ_INFO* dfcPrjGetInfo (void);
+
 
 
 /* FUNCTION *******************************************************************/

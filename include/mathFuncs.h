@@ -4,11 +4,14 @@
  *           Mathematical functions.
  *
  * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/include/mathFuncs.h,v 1.1.1.1 2006-09-11 15:52:21 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/include/mathFuncs.h,v 1.2 2006-11-04 18:28:27 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:21  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -23,7 +26,10 @@
 #include "base.h"               /* includes config.h (include before math.h)  */
 
 #include <math.h>
+
 #include <gsl/gsl_math.h>
+#include <gsl/gsl_sf.h>                              /* all special functions */
+#include <gsl/gsl_errno.h>
 
 
 #ifdef  __cplusplus
@@ -115,6 +121,91 @@ typedef struct
  *  \return             Denormalized value.
  ******************************************************************************/
     double mathDenorm10(MATH_NORMDBL val);
+
+
+
+/* FUNCTION *******************************************************************/
+/** Rectangle function
+    \f[
+       y = \begin{cases} 0, & \mbox{if} \;\; x<0 \\
+                         0, & \mbox{if} \;\; x>1 \\
+                         1, & \mbox{else} \end{cases}
+    \f]
+ *
+ *  \param x            Argument \f$x\f$.
+ *
+ *  \return             Result \f$y\f$.
+ ******************************************************************************/
+    double mathFuncRectangle (double x);
+
+
+/* FUNCTION *******************************************************************/
+/** \e Hamming window function
+    \f[
+       y = \begin{cases} 0, & \mbox{if} \;\; x<0 \\
+                         0, & \mbox{if} \;\; x>1 \\
+                         0.54-0.46 \cos(2\pi x), & \mbox{else} \end{cases}
+    \f]
+ *
+ *  \param x            Argument \f$x\f$.
+ *
+ *  \return             Result \f$y\f$.
+ ******************************************************************************/
+    double mathFuncHamming (double x);
+
+
+
+/* FUNCTION *******************************************************************/
+/** \e Hanning window function
+    \f[
+       y = \begin{cases} 0, & \mbox{if} \;\; x<0 \\
+                         0, & \mbox{if} \;\; x>1 \\
+                         \frac{1}{2}\,[1-\cos(2\pi x)], & \mbox{else} \end{cases}
+    \f]
+ *
+ *  \param x            Argument \f$x\f$.
+ *
+ *  \return             Result \f$y\f$.
+ ******************************************************************************/
+    double mathFuncHanning (double x);
+
+
+
+/* FUNCTION *******************************************************************/
+/** \e Blackman window function
+    \f[
+       y = \begin{cases} 0, & \mbox{if} \;\; x<0 \\
+                         0, & \mbox{if} \;\; x>1 \\
+                         0.42-0.5\cos(2\pi x)+0.08\cos(4\pi x), & \mbox{else}
+           \end{cases}
+    \f]
+ *
+ *  \param x            Argument \f$x\f$.
+ *
+ *  \return             Result \f$y\f$.
+ ******************************************************************************/
+    double mathFuncBlackman (double x);
+
+
+
+/* FUNCTION *******************************************************************/
+/** \e Kaiser window function
+    \f[
+       y = \begin{cases} 0, & \mbox{if} \;\; x<0 \\
+                         0, & \mbox{if} \;\; x>1 \\
+                         \frac{I_0\left(\alpha\sqrt{1-(2 x-1)^2}\right)}
+                              {I_0(\alpha)}, & \mbox{else}
+           \end{cases}
+    \f]
+ *
+ *  \param x            Argument \f$x\f$.
+ *  \param alpha        Parameter \f$\alpha\f$.
+ *
+ *  \return             Result \f$y\f$ when successful evaluated, else
+ *                      GSL_POSINF or GSL_NEGINF. Use the functions gsl_isinf()
+ *                      or gsl_finite() for result checking.
+ ******************************************************************************/
+   double mathFuncKaiser (double x, double alpha);
 
 
 #ifdef  __cplusplus

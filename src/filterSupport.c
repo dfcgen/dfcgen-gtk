@@ -4,13 +4,16 @@
  *           Filter support functions.
  *
  * \author   Copyright (c) Ralf Hoppe
- * \version  $Header: /home/cvs/dfcgen-gtk/src/filterSupport.c,v 1.1.1.1 2006-09-11 15:52:19 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/src/filterSupport.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
  *
  *
  * \see
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:19  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -21,6 +24,8 @@
 #include "mathMisc.h"
 #include "filterSupport.h"
 #include "filterResponse.h"
+
+#include <string.h>
 
 
 /* GLOBAL CONSTANT DEFINITIONS ************************************************/
@@ -64,7 +69,7 @@ static int checkPolyZ(MATHPOLY *poly);
  *                      - a positive error number (from errno.h) that something
  *                        is wrong and the polynomial must be seen as invalid.
  ******************************************************************************/
-static int checkPolyZ(MATHPOLY *poly)
+static int checkPolyZ (MATHPOLY *poly)
 {
     int i, k, ret = 0;
     int degree = poly->degree;
@@ -170,6 +175,46 @@ int filterMalloc (FLTCOEFF *flt)
 } /* filterMalloc() */
 
 
+
+/* FUNCTION *******************************************************************/
+/** Duplicates a filter. This function mallocs memory space for filter
+ *  coefficients and roots based on the degree of the source filter pointed by
+ *  \p src. Then it copies the numerator and denominator polynomial to \p dest.
+ *  Use function filterFree() to free all the new associated memory.
+ *
+ *  \param src          Source filter (input).
+ *  \param dest         Destination filter (output).
+ *
+ *  \return             Zero on success, else an error code (typically ENOMEM).
+ ******************************************************************************/
+int filterDuplicate (FLTCOEFF *dest, FLTCOEFF *src)
+{
+    int err;
+
+    dest->f0 = src->f0;
+    dest->num.degree = src->num.degree;
+    dest->den.degree = src->den.degree;
+
+    err = filterMalloc (dest);
+
+    if (err != 0)
+    {
+        return err;
+    } /* if */
+
+    memcpy (dest->num.coeff, src->num.coeff,
+            (1 + src->num.degree) * sizeof(src->num.coeff[0]));
+    memcpy (dest->den.coeff, src->den.coeff,
+            (1 + src->den.degree) * sizeof(src->den.coeff[0]));
+    memcpy (dest->num.root, src->num.root,
+            src->num.degree * sizeof(src->num.root[0]));
+    memcpy (dest->den.root, src->den.root,
+            src->den.degree * sizeof(src->den.root[0]));
+
+    return 0;
+} /* filterDuplicate() */
+
+
 /* FUNCTION *******************************************************************/
 /** Free's all memory space allocated for a filter.
  *
@@ -201,10 +246,10 @@ void filterFree(FLTCOEFF *flt)
  *                        FLTERR_CRITICAL macro from filterSupport.h to check
  *                        this condition.
  ******************************************************************************/
-int filterCheck(FLTCOEFF *pFilter)
+int filterCheck (FLTCOEFF *pFilter)
 {
-    int err1 = checkPolyZ(&pFilter->num);
-    int err2 = checkPolyZ(&pFilter->den);
+    int err1 = checkPolyZ (&pFilter->num);
+    int err2 = checkPolyZ (&pFilter->den);
 
     if (FLTERR_CRITICAL (err1))  /* anything wrong with numerator polynomial? */
     {
@@ -219,6 +264,55 @@ int filterCheck(FLTCOEFF *pFilter)
     return err1;
 } /* filterCheck() */
 
+
+
+/* FUNCTION *******************************************************************/
+/** Normalizes the coefficients of a filter. To perform that, it
+ *  first modifies the denominator coefficients such that \f$den_0=1\f$ is
+ *  ensured. At the second step it re-calculates the numerator coefficients.
+ *
+ *  \param pFilter      Pointer to filter.
+ *
+ *  \return             - 0 (or GSL_SUCCESS) if okay and nothing has changed.
+ *                      - a negative number (typically GSL_CONTINUE) if a
+ *                        coefficient or the degree has changed, but the filter
+ *                        is valid. You can use the FLTERR_WARNING macro from
+ *                        filterSupport.h to check this condition.
+ *                      - a positive error number (typically from from errno.h
+ *                        or gsl_errno.h) that something is wrong and the
+ *                        filter must be seen as invalid. You can use the
+ *                        FLTERR_CRITICAL macro from filterSupport.h to check
+ *                        this condition.
+ ******************************************************************************/
+int normFilterCoeffs (FLTCOEFF *pFilter)
+{
+    int i;
+
+    double *pCoeff, normCoeff = pFilter->den.coeff[0];
+
+    for(i = 0, pCoeff = pFilter->den.coeff; i <= pFilter->den.degree; i++, pCoeff++)
+    {
+        *pCoeff = mathTryDiv (*pCoeff, normCoeff);
+
+        if (gsl_isinf(*pCoeff))
+        {
+            return ERANGE;
+        } /* if */
+    } /* for */
+
+
+    for (i = 0, pCoeff = pFilter->num.coeff; i <= pFilter->num.degree; i++, pCoeff++)
+    {
+        *pCoeff = mathTryDiv (*pCoeff, normCoeff);
+
+        if (gsl_isinf(*pCoeff))
+        {
+            return ERANGE;
+        } /* if */
+    } /* for */
+
+    return filterCheck (pFilter);
+} /* normFilterCoeffs() */
 
 
 /* FUNCTION *******************************************************************/
@@ -243,41 +337,35 @@ int filterCheck(FLTCOEFF *pFilter)
  *                        FLTERR_CRITICAL macro from filterSupport.h to check
  *                        this condition.
  ******************************************************************************/
-int normFilterAmplitude(FLTCOEFF *pFilter, double f, double refgain)
+int normFilterAmplitude (FLTCOEFF *pFilter, double f, double refgain)
 {
-    int i;
-    double factor, actual, *pCoeff;
+    double amplitude;
 
-    for(i = pFilter->den.degree, pCoeff = &pFilter->den.coeff[pFilter->den.degree];
-        i >= 0; i--, pCoeff--)                          /* norm den[0] to 1.0 */
+    int i, err = normFilterCoeffs (pFilter);
+
+    if (FLTERR_CRITICAL (err))
     {
-        *pCoeff = mathTryDiv(*pCoeff, pFilter->den.coeff[0]);
+        return err;
+    } /* if */
 
-        if (gsl_isinf(*pCoeff))
-        {
-            return ERANGE;
-        } /* if */
-    } /* for */
+    amplitude = filterResponseAmplitude (f, pFilter);
 
-
-    actual = filterResponseAmplitude (f, pFilter);
-
-    if (gsl_isinf(actual))                          /* amplitude singularity? */
+    if (gsl_isinf(amplitude))                       /* amplitude singularity? */
     {
         return ERANGE;
     } /* if */
 
-    factor = mathTryDiv(refgain, actual);
+    amplitude = mathTryDiv(refgain, amplitude);
 
-    if (gsl_isinf(factor))
+    if (gsl_isinf(amplitude))
     {
         return (ERANGE);
     } /* if */
 
 
-    for (i = 0, pCoeff = pFilter->num.coeff; i <= pFilter->num.degree; i++, pCoeff++)
+    for (i = 0; i <= pFilter->num.degree; i++)  /* scale all numerator coeffs */
     {
-        *pCoeff *= factor;
+        pFilter->num.coeff[i] *= amplitude;
     } /* for */
 
     return filterCheck(pFilter);
