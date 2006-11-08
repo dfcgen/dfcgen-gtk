@@ -212,7 +212,7 @@ sbindir = ${exec_prefix}/sbin
 sharedstatedir = ${prefix}/com
 sysconfdir = ${prefix}/etc
 target_alias = 
-SUBDIRS = po include src data doc
+SUBDIRS = po include src pixmaps data doc
 dfcgen_gtkdocdir = ${prefix}/doc/dfcgen-gtk
 dfcgen_gtkdoc_DATA = \
 	README\

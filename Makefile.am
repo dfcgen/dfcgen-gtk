@@ -3,7 +3,7 @@
 ## If you don't want it to overwrite it,
 ## 	Please disable it in the Anjuta project configuration
 
-SUBDIRS = po include src data doc
+SUBDIRS = po include src pixmaps data doc
 
 dfcgen_gtkdocdir = ${prefix}/doc/dfcgen-gtk
 dfcgen_gtkdoc_DATA = \
