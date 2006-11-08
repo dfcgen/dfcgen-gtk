@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: dfcgen-gtk 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-11-08 18:32+0100\n"
-"PO-Revision-Date: 2006-11-06 17:59+0100\n"
+"PO-Revision-Date: 2006-11-08 19:35+0100\n"
 "Last-Translator: Ralf Hoppe <ralf.hoppe@ieee.org>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -346,7 +346,7 @@ msgid ""
 msgstr ""
 "<b>Kann Diagramm nicht zeichnen.</b>\n"
 "\n"
-"\"<small>Möglicherweise ist der Speicherplatz ausgegangen, es sind zu viele "
+"<small>Möglicherweise ist der Speicherplatz ausgegangen, es sind zu viele "
 "Stützwerte oder eine math. Operation konnte nicht erfolgreich abgeschlossen "
 "werden. Ändern Sie das Anzeigeintervall der Ordinate um das Problem zu "
 "beheben.</small>"
@@ -752,7 +752,7 @@ msgid ""
 msgstr ""
 "Der <i>Hilbert</i>-Transformator ist ein 90° Phasenschieber mit der "
 "Impulsantwort g(t)=<sup>1</sup>/<sub>ϖt</sub>. Die Approximation basiert auf "
-"\"<i>Fourier</i>-Reihenentwicklung des (periodischen) Amplitudenganges:\n"
+"<i>Fourier</i>-Reihenentwicklung des (periodischen) Amplitudenganges:\n"
 "H(f)=-j sgn(f)."
 
 #. MISCFLT_INT (1): Integrator
@@ -768,7 +768,7 @@ msgid ""
 "H(f)=½δ(f)+<sup>1</sup>/<sub>j2ϖf</sub>."
 msgstr ""
 "Ein idealer Integrator hat die <i>Heaviside</i>-Spungfunktion als "
-"Impulsantwort. Die Approximation basiert auf \"<i>Fourier</i>-"
+"Impulsantwort. Die Approximation basiert auf <i>Fourier</i>-"
 "Reihenentwicklung des (periodischen) Amplitudenganges:\n"
 "H(f)=½δ(f)+<sup>1</sup>/<sub>j2ϖf</sub>."
 
@@ -785,7 +785,7 @@ msgid ""
 "H(f)=j2ϖf."
 msgstr ""
 "Der ideale Differenziererhat den <i>Dirac</i>-Stoß als Impulsantwort. Die "
-"Approximation basiert auf \"<i>Fourier</i>-Reihenentwicklung des "
+"Approximation basiert auf <i>Fourier</i>-Reihenentwicklung des "
 "(periodischen) Amplitudenganges:\n"
 "H(f)=j2ϖf."
 
@@ -901,7 +901,7 @@ msgstr "Syntaxfehler in Zeile %d."
 #: src/projectFile.c:1134
 #, c-format
 msgid "Mandatory tag '%s' missing"
-msgstr "Pflicht-Tag '%s\" nicht gefunden."
+msgstr "Pflicht-Tag '%s' nicht gefunden."
 
 #: src/projectFile.c:1225
 #, c-format
@@ -911,8 +911,7 @@ msgstr "Irgendetwas scheint mit dem Projekt in '%s' nicht in Ordnung."
 #: src/dialogSupport.c:81
 #, c-format
 msgid "Input \"<b>%s</b>\" is invalid for <b>%s</b> (min. %G, max. %G)."
-msgstr ""
-"Eingabe \\\"<b>%s</b>\\\" für <b>%s</b> ist ungültig (Min. %G, Max. %G)."
+msgstr "Eingabe \"<b>%s</b>\" für <b>%s</b> ist ungültig (Min. %G, Max. %G)."
 
 #. type,            btn,  name
 #: src/linFirDesignDlg.c:95
