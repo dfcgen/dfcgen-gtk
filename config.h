@@ -102,6 +102,9 @@
 /* Define to the address where bug reports for this package should be sent. */
 #define PACKAGE_BUGREPORT ""
 
+/* package icon */
+#define PACKAGE_ICON "dfcgen.png"
+
 /* Package local directory */
 #define PACKAGE_LOCALE_DIR "/usr/local/share/locale"
 

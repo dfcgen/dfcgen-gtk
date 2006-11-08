@@ -2,7 +2,7 @@
 Compatibility Level: 1 
 
 <PROJECT_DESCRIPTION_START>
-Digital Filter Coefficients Generator (GTK)<PROJECT_DESCRIPTION_END>
+Digital Filter Coefficients Generator (GTK+)<PROJECT_DESCRIPTION_END>
 <CONFIG_PROGS_START>
 <CONFIG_PROGS_END>
 <CONFIG_LIBS_START>
@@ -16,6 +16,8 @@ AC_CHECK_HEADER([gsl/gsl_math.h],
                               [AC_MSG_ERROR([You must have installed GNU Scientific Library (GSL) header files])])
 <CONFIG_HEADERS_END>
 <CONFIG_CHARACTERISTICS_START>
+AC_LANG(C)
+
 AC_C_CONST
 AC_C_INLINE
 <CONFIG_CHARACTERISTICS_END>
@@ -32,6 +34,7 @@ AC_DEFINE(_GNU_SOURCE, 1, [Enable header file extensions on GNU systems])
 
 AC_DEFINE_UNQUOTED(PACKAGE_WEBSITE, ["http://home.arcor.de/dfcgen"], [package website])
 AC_DEFINE_UNQUOTED(PACKAGE_AUTHOR, ["Ralf Hoppe"], [package author])
+AC_DEFINE_UNQUOTED(PACKAGE_ICON, ["dfcgen.png"], [package icon])
 
 dnl Because Anjuta generates old-style macro calls AC_INT and AM_INIT_AUTOMAKE
 dnl But does not work so far
@@ -68,7 +71,7 @@ project.excluded.modules=intl
 project.config.extra.modules.before=
 project.config.extra.modules.after=
 project.config.blocked=0
-project.config.disable.overwriting=0 0 0 0 0 0 0 0 0 
+project.config.disable.overwriting=0 0 0 0 0 0 0 0 1 
 
 project.menu.entry=dfcgen-gtk Version 0.1
 project.menu.group=Applications
@@ -121,7 +124,11 @@ module.include.files=\
 	support.h\
 	dialogSupport.h\
 	responsePlot.h\
-	responseDlg.h
+	responseDlg.h\
+	linFirDesignDlg.h\
+	editDlg.h\
+	rootsPlot.h\
+	doxygen.h
 
 module.source.name=src
 module.source.type=
@@ -149,11 +156,23 @@ module.source.files=\
 	projectFile.c\
 	miscFilter.c\
 	dialogSupport.c\
-	responsePlot.c
+	responsePlot.c\
+	linFirDesignDlg.c\
+	linFirFilter.c\
+	rootsPlot.c
 
 module.pixmap.name=pixmaps
 module.pixmap.type=
-module.pixmap.files=
+module.pixmap.files=\
+	dfcgen.png\
+	attenuation.png\
+	charfunc.png\
+	grpdelay.png\
+	impulse.png\
+	phase.png\
+	phasedelay.png\
+	step.png\
+	amplitude.png
 
 module.data.name=data
 module.data.type=
@@ -192,10 +211,9 @@ compiler.options.library.paths=
 compiler.options.libraries=
 compiler.options.libraries.selected=
 compiler.options.defines=\
-	HAVE_CONFIG_H\
-	DEBUG
+	HAVE_CONFIG_H
 compiler.options.defines.selected=
-compiler.options.warning.buttons=0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 
+compiler.options.warning.buttons=0 0 1 0 0 0 0 0 1 0 0 0 0 1 0 0 
 compiler.options.optimize.buttons=1 0 0 0 
 compiler.options.other.buttons=0 0 
 compiler.options.other.c.flags=

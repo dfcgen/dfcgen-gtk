@@ -14,6 +14,7 @@ dfcgen_gtk_pixmaps_DATA = \
 	impulse.png\
 	phase.png\
 	phasedelay.png\
-	step.png
+	step.png\
+	amplitude.png
 
 EXTRA_DIST = $(dfcgen_gtk_pixmaps_DATA)

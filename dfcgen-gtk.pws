@@ -1,17 +1,18 @@
 
 [filenumbers]
-0=12
-1=7
-2=516
-3=188
-4=588
-5=13
-6=20
-7=263
-8=20
-9=263
-10=80
-11=196
+0=153
+1=15
+2=12
+3=1
+4=80
+5=12
+6=97
+7=79
+8=188
+9=1
+10=3
+11=20
+12=84
 
 [filemarkers]
 0=
@@ -26,6 +27,7 @@
 9=
 10=
 11=
+12=
 
 [File View]
 filter.file.unmatch=*.so *.o *.a *.la
@@ -38,19 +40,8 @@ RunInTerminal=true
 [Project State]
 clean before build=false
 
-[filelist]
-0=/home/ralf/prj/dfcgen-gtk/src/responseDlg.c
-1=/home/ralf/prj/dfcgen-gtk/src/responsePlot.c
-2=/home/ralf/prj/dfcgen-gtk/src/responseWin.c
-3=/home/ralf/prj/dfcgen-gtk/src/cairoPlot.c
-4=/home/ralf/prj/dfcgen-gtk/src/miscDesignDlg.c
-5=/home/ralf/prj/dfcgen-gtk/src/mainDlg.c
-6=/home/ralf/prj/dfcgen-gtk/src/fileDlg.c
-7=/home/ralf/prj/dfcgen-gtk/src/designDlg.c
-
 [Project Tree]
 0=0
-1=0:1
 
 [Symbol Tree]
 0=3

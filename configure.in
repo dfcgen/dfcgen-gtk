@@ -40,6 +40,8 @@ AC_CHECK_HEADER([gsl/gsl_math.h],
 
 
 dnl Checks for typedefs, structures, and compiler characteristics.
+AC_LANG(C)
+
 AC_C_CONST
 AC_C_INLINE
 
@@ -58,6 +60,7 @@ AC_DEFINE(_GNU_SOURCE, 1, [Enable header file extensions on GNU systems])
 
 AC_DEFINE_UNQUOTED(PACKAGE_WEBSITE, ["http://home.arcor.de/dfcgen"], [package website])
 AC_DEFINE_UNQUOTED(PACKAGE_AUTHOR, ["Ralf Hoppe"], [package author])
+AC_DEFINE_UNQUOTED(PACKAGE_ICON, ["dfcgen.png"], [package icon])
 
 dnl Because Anjuta generates old-style macro calls AC_INT and AM_INIT_AUTOMAKE
 dnl But does not work so far
@@ -140,6 +143,7 @@ Makefile
 po/Makefile.in
 include/Makefile
 src/Makefile
+pixmaps/Makefile
 data/Makefile
 doc/Makefile
 ])

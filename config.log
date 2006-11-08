@@ -14,7 +14,7 @@ hostname = dfcgen
 uname -m = i686
 uname -r = 2.6.12-10-k7
 uname -s = Linux
-uname -v = #1 Tue Jul 18 21:50:09 UTC 2006
+uname -v = #1 Fri Sep 15 16:20:30 UTC 2006
 
 /usr/bin/uname -p = unknown
 /bin/uname -X     = unknown
@@ -825,68 +825,68 @@ configure:22901: $? = 0
 configure:22921: result: yes
 configure:22956: checking for gsl/gsl_math.h
 configure:22963: result: yes
-configure:22982: checking for an ANSI C-conforming const
-configure:23049: gcc -c -g -O2  conftest.c >&5
-configure:23055: $? = 0
-configure:23058: test -z 			 || test ! -s conftest.err
-configure:23061: $? = 0
-configure:23064: test -s conftest.o
-configure:23067: $? = 0
-configure:23078: result: yes
-configure:23088: checking for inline
-configure:23109: gcc -c -g -O2  conftest.c >&5
-configure:23115: $? = 0
-configure:23118: test -z 			 || test ! -s conftest.err
-configure:23121: $? = 0
-configure:23124: test -s conftest.o
-configure:23127: $? = 0
-configure:23139: result: inline
-configure:23164: checking for hypot
-configure:23221: gcc -o conftest -g -O2   conftest.c -lgsl -lgslcblas -lm  >&5
+configure:22989: checking for an ANSI C-conforming const
+configure:23056: gcc -c -g -O2  conftest.c >&5
+configure:23062: $? = 0
+configure:23065: test -z 			 || test ! -s conftest.err
+configure:23068: $? = 0
+configure:23071: test -s conftest.o
+configure:23074: $? = 0
+configure:23085: result: yes
+configure:23095: checking for inline
+configure:23116: gcc -c -g -O2  conftest.c >&5
+configure:23122: $? = 0
+configure:23125: test -z 			 || test ! -s conftest.err
+configure:23128: $? = 0
+configure:23131: test -s conftest.o
+configure:23134: $? = 0
+configure:23146: result: inline
+configure:23171: checking for hypot
+configure:23228: gcc -o conftest -g -O2   conftest.c -lgsl -lgslcblas -lm  >&5
 conftest.c:60: warning: conflicting types for built-in function 'hypot'
-configure:23227: $? = 0
-configure:23230: test -z 			 || test ! -s conftest.err
-configure:23233: $? = 0
-configure:23236: test -s conftest
-configure:23239: $? = 0
-configure:23251: result: yes
-configure:23265: checking for trunc
-configure:23322: gcc -o conftest -g -O2   conftest.c -lgsl -lgslcblas -lm  >&5
+configure:23234: $? = 0
+configure:23237: test -z 			 || test ! -s conftest.err
+configure:23240: $? = 0
+configure:23243: test -s conftest
+configure:23246: $? = 0
+configure:23258: result: yes
+configure:23272: checking for trunc
+configure:23329: gcc -o conftest -g -O2   conftest.c -lgsl -lgslcblas -lm  >&5
 conftest.c:61: warning: conflicting types for built-in function 'trunc'
-configure:23328: $? = 0
-configure:23331: test -z 			 || test ! -s conftest.err
-configure:23334: $? = 0
-configure:23337: test -s conftest
-configure:23340: $? = 0
-configure:23352: result: yes
-configure:23366: checking for round
-configure:23423: gcc -o conftest -g -O2   conftest.c -lgsl -lgslcblas -lm  >&5
+configure:23335: $? = 0
+configure:23338: test -z 			 || test ! -s conftest.err
+configure:23341: $? = 0
+configure:23344: test -s conftest
+configure:23347: $? = 0
+configure:23359: result: yes
+configure:23373: checking for round
+configure:23430: gcc -o conftest -g -O2   conftest.c -lgsl -lgslcblas -lm  >&5
 conftest.c:62: warning: conflicting types for built-in function 'round'
-configure:23429: $? = 0
-configure:23432: test -z 			 || test ! -s conftest.err
-configure:23435: $? = 0
-configure:23438: test -s conftest
-configure:23441: $? = 0
-configure:23453: result: yes
-configure:23467: checking for exp10
-configure:23524: gcc -o conftest -g -O2   conftest.c -lgsl -lgslcblas -lm  >&5
+configure:23436: $? = 0
+configure:23439: test -z 			 || test ! -s conftest.err
+configure:23442: $? = 0
+configure:23445: test -s conftest
+configure:23448: $? = 0
+configure:23460: result: yes
+configure:23474: checking for exp10
+configure:23531: gcc -o conftest -g -O2   conftest.c -lgsl -lgslcblas -lm  >&5
 conftest.c:63: warning: conflicting types for built-in function 'exp10'
-configure:23530: $? = 0
-configure:23533: test -z 			 || test ! -s conftest.err
-configure:23536: $? = 0
-configure:23539: test -s conftest
-configure:23542: $? = 0
-configure:23554: result: yes
-configure:23568: checking for pow10
-configure:23625: gcc -o conftest -g -O2   conftest.c -lgsl -lgslcblas -lm  >&5
+configure:23537: $? = 0
+configure:23540: test -z 			 || test ! -s conftest.err
+configure:23543: $? = 0
+configure:23546: test -s conftest
+configure:23549: $? = 0
+configure:23561: result: yes
+configure:23575: checking for pow10
+configure:23632: gcc -o conftest -g -O2   conftest.c -lgsl -lgslcblas -lm  >&5
 conftest.c:64: warning: conflicting types for built-in function 'pow10'
-configure:23631: $? = 0
-configure:23634: test -z 			 || test ! -s conftest.err
-configure:23637: $? = 0
-configure:23640: test -s conftest
-configure:23643: $? = 0
-configure:23655: result: yes
-configure:23909: creating ./config.status
+configure:23638: $? = 0
+configure:23641: test -z 			 || test ! -s conftest.err
+configure:23644: $? = 0
+configure:23647: test -s conftest
+configure:23650: $? = 0
+configure:23662: result: yes
+configure:23921: creating ./config.status
 
 ## ---------------------- ##
 ## Running config.status. ##
@@ -903,15 +903,16 @@ generated by GNU Autoconf 2.59.  Invocation command line was
 
 on dfcgen
 
-config.status:793: creating Makefile
-config.status:793: creating po/Makefile.in
-config.status:793: creating include/Makefile
-config.status:793: creating src/Makefile
-config.status:793: creating data/Makefile
-config.status:793: creating doc/Makefile
-config.status:859: creating config.h
-config.status:1217: executing depfiles commands
-config.status:1217: executing default-1 commands
+config.status:794: creating Makefile
+config.status:794: creating po/Makefile.in
+config.status:794: creating include/Makefile
+config.status:794: creating src/Makefile
+config.status:794: creating pixmaps/Makefile
+config.status:794: creating data/Makefile
+config.status:794: creating doc/Makefile
+config.status:860: creating config.h
+config.status:1220: executing depfiles commands
+config.status:1220: executing default-1 commands
 
 ## ---------------- ##
 ## Cache variables. ##
@@ -1209,6 +1210,7 @@ target_alias=''
 #define PACKAGE_DATA_DIR "/usr/local/share"
 #define PACKAGE_DOC_DIR "/usr/local/doc/dfcgen-gtk"
 #define PACKAGE_HELP_DIR "/usr/local/share/help"
+#define PACKAGE_ICON "dfcgen.png"
 #define PACKAGE_LOCALE_DIR "/usr/local/share/locale"
 #define PACKAGE_MENU_DIR "/usr/local/share"
 #define PACKAGE_NAME ""
