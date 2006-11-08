@@ -96,3 +96,6 @@ Improvements on algorithms currently implemented
     More export formats for filter coefficients and plots
 
 
+  - Response Plot
+    Display coordinate when mouse moves over graph area
+
