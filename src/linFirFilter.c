@@ -4,11 +4,14 @@
  *           Linear FIR filter coefficients generator.
  *
  * \author   Copyright (c) Ralf Hoppe
- * \version  $Header: /home/cvs/dfcgen-gtk/src/linFirFilter.c,v 1.1 2006-11-04 18:24:25 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/src/linFirFilter.c,v 1.2 2006-11-08 17:31:42 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1  2006/11/04 18:24:25  ralf
+ * Initial revision
+ *
  *
  *
  ******************************************************************************/
@@ -104,7 +107,7 @@ static double ftrBandpass (FLTCOEFF *pFilter, double fc, double bw, BOOL geometr
 
 
 /* FUNCTION *******************************************************************/
-/** Rectangular amplitude response system generator. Calculation of coefficient
+/** Rectangular magnitude response system generator. Calculation of coefficient
  *  \f$c_i\f$ is based on the argument \f$x\f$ and polynomial degree \f$n\f$
  *  following the formula:
     \f[
@@ -143,7 +146,7 @@ static int genRectangularSystem (double x, MATHPOLY *poly)
 
 
 /* FUNCTION *******************************************************************/
-/** Cosine amplitude response system generator. Calculation of coefficient
+/** Cosine magnitude response system generator. Calculation of coefficient
  *  \f$c_i\f$ is based on the argument \f$x\f$ and polynomial degree \f$n\f$
  *  following the formula:
     \f[
@@ -182,7 +185,7 @@ static int genCosineSystem (double x, MATHPOLY *poly)
 
 
 /* FUNCTION *******************************************************************/
-/** Squared cosine amplitude response system generator. Calculation of
+/** Squared cosine magnitude response system generator. Calculation of
  *  coefficient \f$c_i\f$ is based on the argument \f$x\f$ and polynomial degree
  *  \f$n\f$ following the formula:
     \f[
@@ -231,7 +234,7 @@ static int genCosine2System (double x, MATHPOLY *poly)
 
 
 /* FUNCTION *******************************************************************/
-/** Squared first order lowpass amplitude response system generator. Calculation
+/** Squared first order lowpass magnitude response system generator. Calculation
  *  of coefficient \f$c_i\f$ is based on the argument \f$x\f$ and polynomial
  *  degree \f$n\f$ following the formula:
     \f[
@@ -271,7 +274,7 @@ static int genSquaredSystem (double x, MATHPOLY *poly)
 
 
 /* FUNCTION *******************************************************************/
-/** \e Gaussian amplitude response system generator. Calculation of coefficient
+/** \e Gaussian magnitude response system generator. Calculation of coefficient
  *  \f$c_i\f$ is based on the argument \f$x\f$ and polynomial degree \f$n\f$
  *  following the formula:
     \f[
@@ -397,7 +400,7 @@ static double firWinKaiser (double x, double parameter)
     \f[
         c_{n/2} := c_{n/2} - H(0)
     \f]
- *  The resulting amplitude response is:
+ *  The resulting magnitude response is:
     \f[
         |H_{HP}(f)| = H(0) - |H_{LP}(f)|
     \f]
@@ -405,18 +408,18 @@ static double firWinKaiser (double x, double parameter)
  *  \param pFilter      Pointer to linear FIR lowpass that coefficients shall
  *                      transformed.
  *
- *  \return             The frequency where the amplitude response has it's
+ *  \return             The frequency where the magnitude response has it's
  *                      maximum.
  * \todo Handle odd degree
  ******************************************************************************/
 static double ftrHighpass (FLTCOEFF *pFilter)
 {
     MATHPOLY *poly = &pFilter->num;
-    double amplitude = gsl_poly_eval (poly->coeff, poly->degree + 1, 1.0);
+    double magnitude = gsl_poly_eval (poly->coeff, poly->degree + 1, 1.0);
 
     if (GSL_IS_EVEN (poly->degree))
     {
-        poly->coeff[poly->degree / 2] -= amplitude;
+        poly->coeff[poly->degree / 2] -= magnitude;
     } /* if */
 
     return pFilter->f0 / 2.0 - DBL_EPSILON;
@@ -435,7 +438,7 @@ static double ftrHighpass (FLTCOEFF *pFilter)
     \f[
         f_c := \sqrt{\left(\frac{\Delta f}{2}\right)^2+f_c^2}
     \f]
- *  The resulting amplitude response is:
+ *  The resulting magnitude response is:
     \f[
         \frac{|H_{BP}(f)|}{2} = |H_{LP}(f-f_c)| + |H_{LP}(f+f_c)|
     \f]
@@ -449,7 +452,7 @@ static double ftrHighpass (FLTCOEFF *pFilter)
  *  \param geometric    If TRUE then the center frequency is geometric, else
  *                      arithmetic.
  *
- *  \return             The frequency where the amplitude response has it's
+ *  \return             The frequency where the magnitude response has it's
  *                      maximum.
  ******************************************************************************/
 static double ftrBandpass (FLTCOEFF *pFilter, double fc, double bw, BOOL geometric)
@@ -489,22 +492,22 @@ static double ftrBandpass (FLTCOEFF *pFilter, double fc, double bw, BOOL geometr
  *  \param geometric    If TRUE then the center frequency is geometric, else
  *                      arithmetic.
  *
- *  \return             The frequency where the amplitude response has it's
+ *  \return             The frequency where the magnitude response has it's
  *                      maximum.
  *  \todo Handle GSL_POSINF for call to filterResponsePoly()
  ******************************************************************************/
 static double ftrBandstop (FLTCOEFF *pFilter, double fc, double bw, BOOL geometric)
 {
-    double amplitude;
+    double magnitude;
 
     MATHPOLY *poly = &pFilter->num;
 
     fc = ftrBandpass (pFilter, fc, bw, geometric);
-    amplitude = filterResponsePoly (2 * M_PI * fc / pFilter->f0, poly);
+    magnitude = filterResponsePoly (2 * M_PI * fc / pFilter->f0, poly);
 
     if (GSL_IS_EVEN (poly->degree))
     {
-        poly->coeff[poly->degree / 2] -= amplitude;
+        poly->coeff[poly->degree / 2] -= magnitude;
     } /* if */
 
     return pFilter->f0 / 2.0 - DBL_EPSILON;
@@ -517,7 +520,7 @@ static double ftrBandstop (FLTCOEFF *pFilter, double fc, double bw, BOOL geometr
 
 /* FUNCTION *******************************************************************/
 /** Generates a linear FIR filter. The cutoff frequency always is assumed to be
- *  the 3dB point of amplitude response.
+ *  the 3dB point of magnitude response.
  *
  *  \param pDesign      Pointer to linear FIR filter design data.
  *  \param pFilter      Pointer to buffer which gets the generated filter.
@@ -646,7 +649,7 @@ int linFirFilterGen (LINFIR_DESIGN *pDesign, FLTCOEFF *pFilter)
     } /* switch */
 
 
-    i = normFilterAmplitude (pFilter, fnorm, 1.0);
+    i = normFilterMagnitude (pFilter, fnorm, 1.0);
 
     if (FLTERR_CRITICAL (i))
     {

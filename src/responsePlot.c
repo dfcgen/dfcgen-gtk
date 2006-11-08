@@ -4,11 +4,14 @@
  *           Digital filter response plotter.
  *
  * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/src/responsePlot.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/src/responsePlot.c,v 1.3 2006-11-08 17:31:42 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2006/11/04 18:26:27  ralf
+ * Further work (near 0.1 now)
+ *
  * Revision 1.1.1.1  2006/09/11 15:52:19  ralf
  * Initial CVS import
  *
@@ -55,7 +58,7 @@ typedef struct
 
 /* LOCAL FUNCTION DECLARATIONS ************************************************/
 
-static double plotAmplitude (double *px, void *pData);
+static double plotMagnitude (double *px, void *pData);
 static double plotAttenuation (double *f, void *pData);
 static double plotChar (double *f, void *pData);
 static double plotPhase (double *f, void *pData);
@@ -75,8 +78,8 @@ static void timeResponseEnd (void *pData);
 static RESPONSE_PLOT responsePlot[RESPONSE_TYPE_SIZE] =
 {
     {
-        RESPONSE_TYPE_AMPLITUDE,                                      /* type */
-        plotAmplitude,                                          /* sampleFunc */
+        RESPONSE_TYPE_MAGNITUDE,                                      /* type */
+        plotMagnitude,                                          /* sampleFunc */
     },
     {
         RESPONSE_TYPE_ATTENUATION,
@@ -121,23 +124,23 @@ static RESPONSE_PLOT responsePlot[RESPONSE_TYPE_SIZE] =
 
 
 /* FUNCTION *******************************************************************/
-/** Computes the amplitude response of a filter (for usage on a \e Cairo plot).
+/** Computes the magnitude response of a filter (for usage on a \e Cairo plot).
  *
  *  \param f            Pointer to real-world x-coordinate (input value), means
  *                      the frequency here.
  *  \param pData        User application data pointer as passed to cairoPlot2d()
  *                      in element \a pData of structure PLOT_DIAG. In that
  *                      special case here it is a pointer to
- *                      responsePlot[RESPONSE_TYPE_AMPLITUDE].
+ *                      responsePlot[RESPONSE_TYPE_MAGNITUDE].
  *
  *  \return             Calculated real-world y-coordinate on success. If there
  *                      is no value at \p x resp. frequency (may be a singularity),
  *                      then it returns GSL_POSINF or GSL_NEGINF.
  ******************************************************************************/
-static double plotAmplitude (double *f, void *pData)
+static double plotMagnitude (double *f, void *pData)
 {
-    return filterResponseAmplitude (*f, ((RESPONSE_PLOT *)pData)->pFilter);
-} /* plotAmplitude() */
+    return filterResponseMagnitude (*f, ((RESPONSE_PLOT *)pData)->pFilter);
+} /* plotMagnitude() */
 
 
 /* FUNCTION *******************************************************************/
@@ -403,7 +406,7 @@ int responsePlotDraw (cairo_t* cr, RESPONSE_TYPE type, PLOT_DIAG *pDiag)
             pDiag->y.pUnit = &pPrefs->timeUnit;
             /* fall through here */
 
-        case RESPONSE_TYPE_AMPLITUDE:
+        case RESPONSE_TYPE_MAGNITUDE:
         case RESPONSE_TYPE_ATTENUATION:
         case RESPONSE_TYPE_CHAR:
         case RESPONSE_TYPE_PHASE:

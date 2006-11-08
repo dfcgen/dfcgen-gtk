@@ -4,11 +4,14 @@
  *           Standard IIR filter coefficients generator.
  *
  * \author   Copyright (c) Ralf Hoppe
- * \version  $Header: /home/cvs/dfcgen-gtk/src/stdIirFilter.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/src/stdIirFilter.c,v 1.3 2006-11-08 17:31:42 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2006/11/04 18:26:27  ralf
+ * Further work (near 0.1 now)
+ *
  * Revision 1.1.1.1  2006/09/11 15:52:19  ralf
  * Initial CVS import
  *
@@ -80,8 +83,8 @@ static double drosselung(double att);
 static int ftrHighpass(FLTCOEFF *pFilter, double omega);
 static int ftrBandpass(FLTCOEFF *pFilter, double omega, double quality);
 static double evalPolyAbsLaplace(double omega, MATHPOLY *poly);
-static double amplitudeLaplace(double omega, FLTCOEFF *pFilter);
-static double cutoffAmplitude(double omega, void *pFilter);
+static double magnitudeLaplace(double omega, FLTCOEFF *pFilter);
+static double cutoffMagnitude(double omega, void *pFilter);
 static double approxButterworth (FLTCOEFF *pFilter);
 static double approxChebyPassband (double maxAtt, FLTCOEFF *pFilter);
 static double approxChebyStopband (double minAtt, FLTCOEFF *pFilter);
@@ -232,7 +235,7 @@ static int ftrBandpass (FLTCOEFF *pFilter, double omega, double quality)
 
 
 /* FUNCTION *******************************************************************/
-/** Evaluates absolute amplitude associated with a polynomial in \e Laplace
+/** Evaluates absolute magnitude associated with a polynomial in \e Laplace
  *  domain. The function returns the absolute value of polynomial \f$P(s)\f$
  *  for \f$s\Rightarrow j\omega\f$:
     \f{eqnarray*}
@@ -267,22 +270,22 @@ static double evalPolyAbsLaplace(double omega, MATHPOLY *poly)
 
 
 /* FUNCTION *******************************************************************/
-/** \e Laplace domain amplitude evaluation of a LTI-system by their
+/** \e Laplace domain magnitude evaluation of a LTI-system by their
  *  coefficients.
  *
  *  \param omega        Angular frequency in rad/s.
  *  \param pFilter      Representation of system in \e Laplace domain.
  *
- *  \return             Amplitude value when successful evaluated, else
+ *  \return             Magnitude value when successful evaluated, else
  *                      GSL_POSINF or GSL_NEGINF. Use the functions gsl_isinf()
  *                      or gsl_finite() for result checking.
  ******************************************************************************/
-static double amplitudeLaplace (double omega, FLTCOEFF *pFilter)
+static double magnitudeLaplace (double omega, FLTCOEFF *pFilter)
 {
     return mathTryDiv(evalPolyAbsLaplace(omega, &pFilter->num),
                       evalPolyAbsLaplace(omega, &pFilter->den));
 
-} /* amplitudeLaplace() */
+} /* magnitudeLaplace() */
 
 
 
@@ -293,23 +296,23 @@ static double amplitudeLaplace (double omega, FLTCOEFF *pFilter)
  *  \param omega        Current angular frequency in rad/s.
  *  \param pFilter      Representation of LTI system in \e Laplace domain (FLTCOEFF *).
  *
- *  \return             Amplitude - \f$1/\sqrt{2}\f$value when successful
+ *  \return             Magnitude - \f$1/\sqrt{2}\f$value when successful
  *                      evaluated, else GSL_POSINF or GSL_NEGINF. Normally GSL
  *                      stops root finding under the  condition INF is returned
  *                      by this function.
  ******************************************************************************/
-static double cutoffAmplitude (double omega, void *pFilter)
+static double cutoffMagnitude (double omega, void *pFilter)
 {
-    double amplitude = amplitudeLaplace (omega, (FLTCOEFF *)pFilter);
+    double magnitude = magnitudeLaplace (omega, (FLTCOEFF *)pFilter);
 
-    if (gsl_isinf (amplitude))
+    if (gsl_isinf (magnitude))
     {
-        return amplitude;                       /* stop iteration immediately */
+        return magnitude;                       /* stop iteration immediately */
     } /* if */
 
-    return amplitude - M_SQRT1_2;
+    return magnitude - M_SQRT1_2;
 
-} /* cutoffAmplitude() */
+} /* cutoffMagnitude() */
 
 
 
@@ -433,7 +436,7 @@ static double approxChebyStopband (double minAtt, FLTCOEFF *pFilter)
 
     int degree = pFilter->den.degree;
     double deltaPi = M_PI_2 / degree;
-    double maxAmpl = drosselung(minAtt); /* max. stopband amplitude T_n(omega_s) */
+    double maxAmpl = drosselung(minAtt); /* max. stopband magnitude T_n(omega_s) */
     double reFactor = sinh(asinh(maxAmpl) / degree);
     double imFactor = cosh(asinh(maxAmpl) / degree);
 
@@ -809,7 +812,7 @@ static double approxBessel (FLTCOEFF *pFilter)
     double omega1 = 0.0;           /* initial and current range value (lower) */
     double omega2 = 10.0 * pFilter->den.degree;          /* upper range value */
 
-    cutoffFunc.function = cutoffAmplitude; /* set function for which a root to be find */
+    cutoffFunc.function = cutoffMagnitude; /* set function for which a root to be find */
     cutoffFunc.params = pFilter;
 
     pFilter->num.degree = 0;
@@ -859,7 +862,7 @@ static double approxBessel (FLTCOEFF *pFilter)
 
 /* FUNCTION *******************************************************************/
 /** Generates an IIR filter from standard approximations. The cutoff frequency
- *  always is assumed to be the 3dB point of amplitude response.
+ *  always is assumed to be the 3dB point of magnitude response.
  *
  *  \note               gsl_error_handler_t * gsl_set_error_handler (gsl_error_handler_t new_handler)
  *                      fpsetround()

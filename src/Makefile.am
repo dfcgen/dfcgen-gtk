@@ -9,8 +9,8 @@ INCLUDES = \
 	 -I../include
 
 AM_CFLAGS =\
-	 -DHAVE_CONFIG_H -DDEBUG\
-	 -Wall
+	 -DHAVE_CONFIG_H\
+	 -Wall -Wuninitialized -Wmissing-prototypes
 
 bin_PROGRAMS = dfcgen-gtk
 
@@ -38,7 +38,10 @@ dfcgen_gtk_SOURCES = \
 	projectFile.c\
 	miscFilter.c\
 	dialogSupport.c\
-	responsePlot.c
+	responsePlot.c\
+	linFirDesignDlg.c\
+	linFirFilter.c\
+	rootsPlot.c
 
 dfcgen_gtk_LDFLAGS = 
 

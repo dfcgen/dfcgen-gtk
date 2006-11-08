@@ -4,13 +4,16 @@
  *           Main dialog elements (right, bottom of window) handling.
  * \author   Copyright (c) 2006 Ralf Hoppe
  *
- * \version  $Header: /home/cvs/dfcgen-gtk/src/mainDlg.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/src/mainDlg.c,v 1.3 2006-11-08 17:31:42 ralf Exp $
  *
  *
  * \note     Parts of code taken over from \e glade in interface.c, which itself
  *           isn't a project file.
  *
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2006/11/04 18:26:27  ralf
+ * Further work (near 0.1 now)
+ *
  * Revision 1.1.1.1  2006/09/11 15:52:19  ralf
  * Initial CVS import
  *
@@ -169,8 +172,26 @@ static void mainDlgDestroy (GtkObject* object, gpointer user_data)
  ******************************************************************************/
 static void mainDlgQuit (GtkWidget* widget, gpointer user_data)
 {
+    gint ack = GTK_RESPONSE_YES;
     ASSERT (topWidget != NULL);
-    gtk_widget_destroy (topWidget);
+
+    if ((dfcPrjGetFilter() != NULL) && !(dfcPrjGetFlags() & DFCPRJ_FLAG_SAVED))
+    {
+        GtkWidget *widget = gtk_message_dialog_new_with_markup (
+            GTK_WINDOW (topWidget), GTK_DIALOG_DESTROY_WITH_PARENT,
+            GTK_MESSAGE_WARNING, GTK_BUTTONS_YES_NO,
+            _("The current filter/system has not been saved. Are you sure to"
+              " quit now?"));
+
+        ack = gtk_dialog_run (GTK_DIALOG (widget));
+        gtk_widget_destroy (widget);
+    } /* if */
+
+    if (ack == GTK_RESPONSE_YES)
+    {
+        gtk_widget_destroy (topWidget);
+    } /* if */
+
 } /* mainDlgQuit() */
 
 
@@ -796,13 +817,13 @@ GtkWidget* mainDlgCreate (void)
     menuContainer = gtk_menu_new ();
     gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuMainItem), menuContainer);
 
-    menuItem = gtk_check_menu_item_new_with_mnemonic (_("_Amplitude Response"));
+    menuItem = gtk_check_menu_item_new_with_mnemonic (_("_Magnitude Response"));
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (responseWinMenuActivate),
-                      GINT_TO_POINTER (RESPONSE_TYPE_AMPLITUDE));
+                      GINT_TO_POINTER (RESPONSE_TYPE_MAGNITUDE));
 
-    menuItem = gtk_check_menu_item_new_with_mnemonic (_("A_ttenuation"));
+    menuItem = gtk_check_menu_item_new_with_mnemonic (_("_Attenuation"));
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (responseWinMenuActivate),

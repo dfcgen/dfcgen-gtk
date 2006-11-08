@@ -61,7 +61,9 @@ am_dfcgen_gtk_OBJECTS = support.$(OBJEXT) main.$(OBJEXT) \
 	responseDlg.$(OBJEXT) editDlg.$(OBJEXT) \
 	stdIirDesignDlg.$(OBJEXT) miscDesignDlg.$(OBJEXT) \
 	projectFile.$(OBJEXT) miscFilter.$(OBJEXT) \
-	dialogSupport.$(OBJEXT) responsePlot.$(OBJEXT)
+	dialogSupport.$(OBJEXT) responsePlot.$(OBJEXT) \
+	linFirDesignDlg.$(OBJEXT) linFirFilter.$(OBJEXT) \
+	rootsPlot.$(OBJEXT)
 dfcgen_gtk_OBJECTS = $(am_dfcgen_gtk_OBJECTS)
 am__DEPENDENCIES_1 =
 dfcgen_gtk_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -215,8 +217,8 @@ INCLUDES = \
 	 -I../include
 
 AM_CFLAGS = \
-	 -DHAVE_CONFIG_H -DDEBUG\
-	 -Wall
+	 -DHAVE_CONFIG_H\
+	 -Wall -Wuninitialized -Wmissing-prototypes
 
 dfcgen_gtk_SOURCES = \
 	support.c\
@@ -242,7 +244,10 @@ dfcgen_gtk_SOURCES = \
 	projectFile.c\
 	miscFilter.c\
 	dialogSupport.c\
-	responsePlot.c
+	responsePlot.c\
+	linFirDesignDlg.c\
+	linFirFilter.c\
+	rootsPlot.c
 
 dfcgen_gtk_LDFLAGS = 
 dfcgen_gtk_LDADD = \
@@ -329,6 +334,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/filterResponse.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/filterSupport.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/helpDlg.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/linFirDesignDlg.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/linFirFilter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mainDlg.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mathFuncs.Po@am__quote@
@@ -340,6 +347,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/responseDlg.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/responsePlot.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/responseWin.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rootsPlot.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stdIirDesignDlg.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stdIirFilter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/support.Po@am__quote@

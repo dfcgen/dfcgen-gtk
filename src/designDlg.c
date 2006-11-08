@@ -4,13 +4,16 @@
  *           Design dialogs management.
  *
  * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/src/designDlg.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/src/designDlg.c,v 1.3 2006-11-08 17:31:42 ralf Exp $
  *
  *
  * \see
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2006/11/04 18:26:27  ralf
+ * Further work (near 0.1 now)
+ *
  * Revision 1.1.1.1  2006/09/11 15:52:19  ralf
  * Initial CVS import
  *
@@ -259,21 +262,40 @@ void designDlgApply (GtkButton *button, gpointer data)
 {
     int err;
 
-    GtkWidget *topWidget = gtk_widget_get_toplevel (GTK_WIDGET (button));
+    GtkWidget *widget, *topWidget = gtk_widget_get_toplevel (GTK_WIDGET (button));
     GtkComboBox* combobox = GTK_COMBO_BOX (data);
     FLTCLASS type = gtk_combo_box_get_active(combobox);
 
     if (type >= 0)
     {
-        err = dlgDesc[type].apply (topWidget, cfgGetDesktopPrefs ());
+        gint ack = GTK_RESPONSE_YES;
 
-        if (!mainDlgUpdateFilter (err))
+        if (dfcPrjGetFlags() & DFCPRJ_FLAG_SUPERSEDED)
         {
-            if (err != INT_MAX)
+            widget = gtk_message_dialog_new_with_markup (
+                GTK_WINDOW (topWidget), GTK_DIALOG_DESTROY_WITH_PARENT,
+                GTK_MESSAGE_WARNING, GTK_BUTTONS_YES_NO,
+                _("Somewhere along the way you made some direct changes at"
+                  " the coefficients of current filter. Would you really"
+                  " forget these changes and generate new filter coefficients?"));
+
+            ack = gtk_dialog_run (GTK_DIALOG (widget));
+            gtk_widget_destroy (widget);
+        } /* if */
+
+
+        if (ack == GTK_RESPONSE_YES)                         /* apply really? */
+        {
+            err = dlgDesc[type].apply (topWidget, cfgGetDesktopPrefs ());
+
+            if (!mainDlgUpdateFilter (err))
             {
-                dlgError (topWidget, _("Cannot generate such a filter."
-                                       " Please check sample frequency, degree"
-                                       " and other design parameters."));
+                if (err != INT_MAX)
+                {
+                    dlgError (topWidget, _("Cannot generate such a filter."
+                                           " Please check sample frequency, degree"
+                                           " and other design parameters."));
+                } /* if */
             } /* if */
         } /* if */
     } /* if */

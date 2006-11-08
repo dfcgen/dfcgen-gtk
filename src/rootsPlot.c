@@ -4,11 +4,14 @@
  *           Roots plot functions.
  *
  * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/src/rootsPlot.c,v 1.1 2006-11-04 18:24:25 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/src/rootsPlot.c,v 1.2 2006-11-08 17:31:42 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1  2006/11/04 18:24:25  ralf
+ * Initial revision
+ *
  *
  *
  ******************************************************************************/
@@ -63,6 +66,20 @@ static double plotUnitCircleTop (double *px, void *pData);
 /* LOCAL FUNCTION DEFINITIONS *************************************************/
 
 
+/* FUNCTION *******************************************************************/
+/** Initialization function for a roots plot. This function must be of type
+ *  PLOT_FUNC_INIT from cairoPlot.h (see there).
+ *
+ *  \param start        The real-world start x-coordinate.
+ *  \param stop         The real-world stop x-coordinate.
+ *  \param pData        Pointer to polynomial (MATHPOLY) for which the roots
+ *                      shall be plotted. If \p pData is NULL the function
+ *                      returns -1.
+ *
+ *  \return  The function returns:
+ *           - normally the degree of polynomial referenced by \p pData
+ *           - a negative number, if \p pData is NULL.
+ ******************************************************************************/
 static int rootsPlotInit (double start, double stop, void *pData)
 {
     MATHPOLY *poly = pData;
@@ -78,6 +95,21 @@ static int rootsPlotInit (double start, double stop, void *pData)
 } /* rootsPlotInit() */
 
 
+
+/* FUNCTION *******************************************************************/
+/** Plot function for a polynomial root. This function must be of type
+ *  PLOT_FUNC_GET from cairoPlot.h (see there).
+ *
+ *  \param px           Pointer to buffer, which gets the x-coordinate (real
+ *                      part) of the next root.
+ *  \param pData        User application data pointer as passed to cairoPlot2d()
+ *                      in element \a pData of structure PLOT_DIAG. Here it
+ *                      must point to the polynomial (MATHPOLY) for which the
+ *                      next root shall be plotted.
+ *
+ *  \return             The y-coordinate (imag. part) of the next root. If there
+ *                      is no value at \p px, then it returns GSL_POSINF.
+ ******************************************************************************/
 static double plotRoot (double *px, void *pData)
 {
     double y;
@@ -97,6 +129,18 @@ static double plotRoot (double *px, void *pData)
 
 
 
+/* FUNCTION *******************************************************************/
+/** Plot function for a polynomial root at 0,0. This function must be of type
+ *  PLOT_FUNC_GET from cairoPlot.h (see there).
+ *
+ *  \param px           Pointer to buffer, which gets the x-coordinate (real
+ *                      part) of the root.
+ *  \param pData        User application data pointer as passed to cairoPlot2d()
+ *                      in element \a pData of structure PLOT_DIAG. Here it
+ *                      is unused, because return ZeroRoot() always returns 0,0.
+ *
+ *  \return             The y-coordinate (imag. part) of the next root (always 0).
+ ******************************************************************************/
 static double returnZeroRoot (double *px, void *pData)
 {
     *px = 0.0;
@@ -105,6 +149,19 @@ static double returnZeroRoot (double *px, void *pData)
 } /* returnZeroRoot() */
 
 
+
+/* FUNCTION *******************************************************************/
+/** Plot function for a north-oriented semicircle with unity radius. This
+ *  function must be of type PLOT_FUNC_GET from cairoPlot.h (see there).
+ *
+ *  \param px           Pointer to real-world x-coordinate.
+ *  \param pData        User application data pointer as passed to cairoPlot2d()
+ *                      in element \a pData of structure PLOT_DIAG. Here it is
+ *                      unused.
+ *
+ *  \return             The y-coordinate \f$y=\sqrt{1-x^2}\f$ of the semicircle
+ *                      associated with \p *px.
+ ******************************************************************************/
 static double plotUnitCircleTop (double *px, void *pData)
 {
     double y;
@@ -122,6 +179,19 @@ static double plotUnitCircleTop (double *px, void *pData)
 } /* plotUnitCircleTop() */
 
 
+
+/* FUNCTION *******************************************************************/
+/** Plot function for a south-oriented semicircle with unity radius. This
+ *  function must be of type PLOT_FUNC_GET from cairoPlot.h (see there).
+ *
+ *  \param px           Pointer to real-world x-coordinate.
+ *  \param pData        User application data pointer as passed to cairoPlot2d()
+ *                      in element \a pData of structure PLOT_DIAG. Here it is
+ *                      unused.
+ *
+ *  \return             The y-coordinate \f$y=-\sqrt{1-x^2}\f$ of the semicircle
+ *                      associated with \p *px.
+ ******************************************************************************/
 static double plotUnitCircleBottom (double *px, void *pData)
 {
     double y;
@@ -139,6 +209,16 @@ static double plotUnitCircleBottom (double *px, void *pData)
 } /* plotUnitCircleBottom() */
 
 
+
+/* FUNCTION *******************************************************************/
+/** Updates real/imag maximum and minimum values from roots positions.
+ *
+ *  \param poly         Polynomial which roots shall be compared with the
+ *                      current maximum and minimum values.
+ *  \param rmin         Current minimum value to be updated from \p poly->root.
+ *  \param rmax         Current maximum value to be updated from \p poly->root.
+ *
+ ******************************************************************************/
 static void updateRootsMinMax (MATHPOLY *poly, gsl_complex *rmin, gsl_complex *rmax)
 {
     int i;
@@ -170,14 +250,25 @@ static void updateRootsMinMax (MATHPOLY *poly, gsl_complex *rmin, gsl_complex *r
 
 
 /* FUNCTION *******************************************************************/
-/** The function tries to find the minimum and maximum y-coordinates used for
- *  auto-scaling.
+/** The function calculates the roots of a polynomial. The function assumes
+ *  that all coefficients \f$c_i\f$ in \p poly are based on the following
+ *  representation in \e Z domain:
+    \f[
+    p(z)=c_n z^{-n} + c_{n-1} z^{-(n-1)}+ \cdots + c_2 z^{-2} + c_1 z^{-1} + c_0
+    \f]
+ *  If we substitute \f$w=z^{-1}\f$ it gives
+    \f[
+    p(w)=c_n w^n + c_{n-1} w^{n-1}+ \cdots + c_2 w^2 + c_1 w + c_0
+    \f]
+ *  In that sense the function first calculates the roots \f$w_i\f$, then it
+ *  transforms all back into \f$z_i\f$. So the linear factor presentation of
+ *  \f$p(z)\f$ by the help of \f$z_i\f$ is equivalent to the polynomial
+ *  presentation in \e Z domain.
  *
- *  \param pDiag        Pointer to plot descriptor. The members \a pDiag->y.start
- *                      and \a pDiag->y.stop are modified on success.
- *  \param pX           Pointer to x-axis workspace.
+ *  \param poly         Pointer to polynomial that holds the coefficients in
+ *                      \p poly->coeff and gets the roots in \p poly->roots.
  *
- *  \return             0 on success, else an error number from errno.h.
+ *  \return             0 on success, else an error number.
  ******************************************************************************/
 static int calcRoots (MATHPOLY *poly)
 {
@@ -194,7 +285,7 @@ static int calcRoots (MATHPOLY *poly)
     } /* if */
 
     return ret;
-} /* if */
+} /* calcRoots */
 
 
 
@@ -357,6 +448,13 @@ static gboolean rootsPlotExposeHandler (GtkWidget *widget, GdkEventExpose *event
 /* EXPORTED FUNCTION DEFINITIONS **********************************************/
 
 
+/* FUNCTION *******************************************************************/
+/** Creates a \e GtkDrawingArea used for roots display.
+ *
+ *  \return             Pointer to widget (\e GtkDrawingArea, GDK drawable), which
+ *                      is used in function rootsPlotUpdate() to draw polynomial
+ *                      roots.
+ ******************************************************************************/
 GtkWidget *rootsPlotCreate ()
 {
     plotDrawable = gtk_drawing_area_new ();
@@ -370,6 +468,14 @@ GtkWidget *rootsPlotCreate ()
 
 
 
+/* FUNCTION *******************************************************************/
+/** Re-calculates the roots of transfer \f$H(z)\f$ of a filter.
+ *
+ *  \param pFilter      Pointer to filter coefficients, for which the roots
+ *                      shall be calculated. Set this to NULL, if the filter
+ *                      (and therefore the roots too) is invalid.
+ *
+ ******************************************************************************/
 void rootsPlotUpdate (FLTCOEFF *pFilter)
 {
     if (pFilter != NULL)
@@ -390,6 +496,10 @@ void rootsPlotUpdate (FLTCOEFF *pFilter)
 
 
 
+/* FUNCTION *******************************************************************/
+/** Forces a asynchronous redraw of all transfer function roots.
+ *
+ ******************************************************************************/
 void rootsPlotRedraw ()
 {
     GdkWindow *win = plotDrawable->window;

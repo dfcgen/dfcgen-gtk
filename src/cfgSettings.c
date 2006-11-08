@@ -7,11 +7,14 @@
  *           in the "C" locale for LC_NUMERIC.
  *
  * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/src/cfgSettings.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/src/cfgSettings.c,v 1.3 2006-11-08 17:31:42 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2006/11/04 18:26:27  ralf
+ * Further work (near 0.1 now)
+ *
  * Revision 1.1.1.1  2006/09/11 15:52:19  ralf
  * Initial CVS import
  *
@@ -131,8 +134,8 @@ static CFG_DESKTOP deskPrefs =
  */
 static CFG_RESPONSE_SETTINGS respSet[RESPONSE_TYPE_SIZE] =
 {
-    {                                              /* RESPONSE_TYPE_AMPLITUDE */
-        CFG_GROUP_WINDOW "Amplitude",
+    {                                              /* RESPONSE_TYPE_MAGNITUDE */
+        CFG_GROUP_WINDOW "Magnitude",
         {0.0, CFG_DEFAULT_F_STOP, PLOT_AXIS_FLAG_GRID},
         {0, 1, PLOT_AXIS_FLAG_GRID | PLOT_AXIS_FLAG_AUTO},
         PLOT_STYLE_LINE_ONLY, 0, 0                       /* style, num, flags */

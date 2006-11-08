@@ -61,7 +61,9 @@ am_dfcgen_gtk_OBJECTS = support.$(OBJEXT) main.$(OBJEXT) \
 	responseDlg.$(OBJEXT) editDlg.$(OBJEXT) \
 	stdIirDesignDlg.$(OBJEXT) miscDesignDlg.$(OBJEXT) \
 	projectFile.$(OBJEXT) miscFilter.$(OBJEXT) \
-	dialogSupport.$(OBJEXT) responsePlot.$(OBJEXT)
+	dialogSupport.$(OBJEXT) responsePlot.$(OBJEXT) \
+	linFirDesignDlg.$(OBJEXT) linFirFilter.$(OBJEXT) \
+	rootsPlot.$(OBJEXT)
 dfcgen_gtk_OBJECTS = $(am_dfcgen_gtk_OBJECTS)
 am__DEPENDENCIES_1 =
 dfcgen_gtk_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -215,8 +217,8 @@ INCLUDES = \
 	 -I../include
 
 AM_CFLAGS = \
-	 -DHAVE_CONFIG_H -DDEBUG\
-	 -Wall
+	 -DHAVE_CONFIG_H\
+	 -Wall -Wuninitialized -Wmissing-prototypes
 
 dfcgen_gtk_SOURCES = \
 	support.c\
@@ -242,7 +244,10 @@ dfcgen_gtk_SOURCES = \
 	projectFile.c\
 	miscFilter.c\
 	dialogSupport.c\
-	responsePlot.c
+	responsePlot.c\
+	linFirDesignDlg.c\
+	linFirFilter.c\
+	rootsPlot.c
 
 dfcgen_gtk_LDFLAGS = 
 dfcgen_gtk_LDADD = \
@@ -329,6 +334,8 @@ include ./$(DEPDIR)/fileDlg.Po
 include ./$(DEPDIR)/filterResponse.Po
 include ./$(DEPDIR)/filterSupport.Po
 include ./$(DEPDIR)/helpDlg.Po
+include ./$(DEPDIR)/linFirDesignDlg.Po
+include ./$(DEPDIR)/linFirFilter.Po
 include ./$(DEPDIR)/main.Po
 include ./$(DEPDIR)/mainDlg.Po
 include ./$(DEPDIR)/mathFuncs.Po
@@ -340,6 +347,7 @@ include ./$(DEPDIR)/projectFile.Po
 include ./$(DEPDIR)/responseDlg.Po
 include ./$(DEPDIR)/responsePlot.Po
 include ./$(DEPDIR)/responseWin.Po
+include ./$(DEPDIR)/rootsPlot.Po
 include ./$(DEPDIR)/stdIirDesignDlg.Po
 include ./$(DEPDIR)/stdIirFilter.Po
 include ./$(DEPDIR)/support.Po

@@ -7,11 +7,14 @@
  *
  *
  * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/src/miscFilter.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/src/miscFilter.c,v 1.3 2006-11-08 17:31:42 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2006/11/04 18:26:27  ralf
+ * Further work (near 0.1 now)
+ *
  * Revision 1.1.1.1  2006/09/11 15:52:19  ralf
  * Initial CVS import
  *
@@ -161,7 +164,7 @@ int miscFilterGen (const MISCFLT_DESIGN *pDesign, FLTCOEFF *pFilter)
                 vec[ic + i] = 1.0 - vec[ic - i];
             } /* for */                  /* not antimetric -> non lin. FIR */
 
-            err = normFilterAmplitude (pFilter, 0.0, 1.0);
+            err = normFilterMagnitude (pFilter, 0.0, 1.0);
 
             if (FLTERR_CRITICAL(err))
             {

@@ -4,11 +4,14 @@
  *           2-dimensional plot on a \e Cairo graphic context.
  *
  * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/src/cairoPlot.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/src/cairoPlot.c,v 1.3 2006-11-08 17:31:42 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2006/11/04 18:26:27  ralf
+ * Further work (near 0.1 now)
+ *
  * Revision 1.1.1.1  2006/09/11 15:52:19  ralf
  * Initial CVS import
  *
@@ -389,12 +392,12 @@ static void createAxisNameLayout(cairo_t *cr, PLOT_AXIS_WORKSPACE *p)
         if (pAxis->pUnit != NULL)
         {
             g_snprintf (string, sizeof(string), PLOT_AXISNAME_FORMAT("%s", "%s"),
-                        gettext(pAxis->name), pAxis->pUnit->name);
+                        gettext (pAxis->name), pAxis->pUnit->name);
             pango_layout_set_markup (p->layout, string, -1);
         } /* if */
         else
         {
-            pango_layout_set_markup (p->layout, gettext(pAxis->name), -1);
+            pango_layout_set_markup (p->layout, gettext (pAxis->name), -1);
         } /* else */
 
         pango_layout_get_extents (p->layout, NULL, &rect);

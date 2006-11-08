@@ -8,11 +8,14 @@
  *           or to libxml is possible, but need a lot of work.
  *
  * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/src/dfcProject.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/src/dfcProject.c,v 1.3 2006-11-08 17:31:42 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2006/11/04 18:26:27  ralf
+ * Further work (near 0.1 now)
+ *
  * Revision 1.1.1.1  2006/09/11 15:52:20  ralf
  * Initial CVS import
  *
@@ -143,6 +146,11 @@ int dfcPrjSave (char *filename)
 {
     int err = prjFileWrite (filename, &project);
 
+    if (err == 0)                                        /* successful saved? */
+    {
+        project.flags |= DFCPRJ_FLAG_SAVED;
+    } /* if */
+
     return err;
 } /* dfcPrjSave() */
 
@@ -171,6 +179,7 @@ void dfcPrjLoad (char *filename, GError **err)
     {
         dfcPrjFree (&project);
         project = newprj;
+        project.flags |= DFCPRJ_FLAG_SAVED;
     } /* if */
 } /* dfcPrjLoad() */
 
@@ -193,7 +202,7 @@ void dfcPrjFree (DFCPRJ_FILTER *pProject)
 
     prjFileFree (&pProject->info);                       /* free project info */
     filterFree (&pProject->filter);
-    memset (pProject, 0, sizeof (project));          /* reset current project */
+    memset (pProject, 0, sizeof (DFCPRJ_FILTER));    /* reset current project */
     pProject->fltcls = FLTCLASS_NOTDEF;                   /* indicate invalid */
 } /* dfcPrjFree() */
 
@@ -201,7 +210,10 @@ void dfcPrjFree (DFCPRJ_FILTER *pProject)
 
 /* FUNCTION *******************************************************************/
 /** Sets the (new) passed design and filter into the current project. All old
- *  project data, except the header information, are free'ed.
+ *  project data, except the header information, are free'ed. The project flag
+ *  DFCPRJ_FLAG_SAVED is cleared in this function. The project flag
+ *  DFCPRJ_FLAG_SUPERSEDED is set if \p type is equal to FLTCLASS_NOTDEF, else
+ *  it is cleared.
  *
  *  \param type         Class of filter. If FLTCLASS_NOTDEF is passed in here,
  *                      then the current filter class is unchanged.
@@ -219,11 +231,17 @@ void dfcPrjSetFilter (FLTCLASS type, FLTCOEFF* pFilter, DESIGNDLG *pDesign)
         project.design = *pDesign;
     } /* if */
 
-    if (type != FLTCLASS_NOTDEF)
+    if (type == FLTCLASS_NOTDEF)
+    {
+        project.flags |= DFCPRJ_FLAG_SUPERSEDED;
+    } /* if */
+    else
     {
         project.fltcls = type;
+        project.flags &= ~DFCPRJ_FLAG_SUPERSEDED;
     } /* if */
 
+    project.flags &= ~DFCPRJ_FLAG_SAVED;
     project.filter = *pFilter;
 
 } /* dfcPrjSetFilter() */
@@ -234,7 +252,7 @@ void dfcPrjSetFilter (FLTCLASS type, FLTCOEFF* pFilter, DESIGNDLG *pDesign)
 /* FUNCTION *******************************************************************/
 /** Sets new project information data.
  *
- *  \param pFilter      Pointer to new project info.
+ *  \param pInfo    Pointer to new project info.
  *
  ******************************************************************************/
 void dfcPrjSetInfo (DFCPRJ_INFO *pInfo)
@@ -246,6 +264,29 @@ void dfcPrjSetInfo (DFCPRJ_INFO *pInfo)
     project.info.desc = pInfo->desc;
 
 } /* dfcPrjSetInfo() */
+
+
+/* FUNCTION *******************************************************************/
+/** Sets, clears and gets project flags.
+ *
+ *  \param andMask  Mask to be applied to project flags by an \e AND operation.
+ *  \param orMask   Mask to be applied to project flags by an \e OR operation.
+ *
+ *  \return         Returns old project flags.
+ ******************************************************************************/
+unsigned dfcPrjSetFlags (unsigned andMask, unsigned orMask)
+{
+    unsigned oldFlags = 0;
+
+    if (project.fltcls != FLTCLASS_NOTDEF)                          /* sanity */
+    {
+        oldFlags = project.flags;
+        project.flags &= andMask;
+        project.flags |= orMask;
+    } /* if */
+
+    return oldFlags;
+} /* dfcPrjSetFlags() */
 
 
 /******************************************************************************/

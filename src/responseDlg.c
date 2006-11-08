@@ -4,11 +4,14 @@
  *           Response settings/properties dialog.
  *
  * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/src/responseDlg.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/src/responseDlg.c,v 1.3 2006-11-08 17:31:42 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2006/11/04 18:26:27  ralf
+ * Further work (near 0.1 now)
+ *
  * Revision 1.1.1.1  2006/09/11 15:52:18  ralf
  * Initial CVS import
  *
@@ -122,7 +125,6 @@ static void responseDlgSetEntry (GtkWidget* topWidget, const char *name,
  *
  *  \return             0 on success, else an error code from errno.h or
  *                      gsl_error.h.
- *  \todo               Check ranges or remove vmin, vmax paramters.
  ******************************************************************************/
 static int responseDlgGetAxis (GtkWidget* topWidget, const char *widgets[],
                                 double vmin, double vmax, PLOT_AXIS *pAxis)

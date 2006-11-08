@@ -4,11 +4,14 @@
  *           Filter response functions.
  *
  * \author   Copyright (c) Ralf Hoppe
- * \version  $Header: /home/cvs/dfcgen-gtk/src/filterResponse.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/src/filterResponse.c,v 1.3 2006-11-08 17:31:42 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2006/11/04 18:26:27  ralf
+ * Further work (near 0.1 now)
+ *
  * Revision 1.1.1.1  2006/09/11 15:52:19  ralf
  * Initial CVS import
  *
@@ -84,8 +87,8 @@ static double timeResponseProcNext (FLTRESP_TIME_WORKSPACE *pWorkspace);
 
 
 /* FUNCTION *******************************************************************/
-/** Evaluates complex amplitude associated with a polynomial in \e Z domain.
- *  The function returns the complex amplitude of the numerator or denominator
+/** Evaluates complex magnitude associated with a polynomial in \e Z domain.
+ *  The function returns the complex magnitude of the numerator or denominator
  *  polynomial of a time-discrete system at the circular frequency
  *  \f$\omega=2\pi f/f_0\f$. The calculation is performed by the following
  *  algorithm:
@@ -158,7 +161,7 @@ static double evalPolyAngleZ(double omega, const MATHPOLY *poly)
  *  \f$\omega=2\pi f/f_0\f$, given in rad/s.
  *
  *  The group delay \f$T_g\f$ is calculated from phase \f$B(\omega)\f$ and
- *  amplitude \f$H(\omega)\f$ by:
+ *  magnitude \f$H(\omega)\f$ by:
     \f[
     T_g(\omega)=\frac{\imop'[B(\omega)]\reop[B(\omega)]-\reop'[B(\omega)]\imop[B(\omega)]}{H^2(\omega)}
     \f]
@@ -277,7 +280,7 @@ static double timeResponseProcNext (FLTRESP_TIME_WORKSPACE *pWorkspace)
 
 
 /* FUNCTION *******************************************************************/
-/** Evaluates absolute amplitude associated with a polynomial in \e Z domain.
+/** Evaluates absolute magnitude associated with a polynomial in \e Z domain.
  *  The function returns the absolute value of the following polynomial:
     \f[
     H(z)=a_0+a_1 z^{-1}+a_2 z^{-2}+\cdots a_n z^{-n}
@@ -288,7 +291,7 @@ static double timeResponseProcNext (FLTRESP_TIME_WORKSPACE *pWorkspace)
  *  \param omega        Frequency ratio \f$2\pi f/f_0\f$.
  *  \param poly         Pointer to polynomial coefficients in \e Z domain.
  *
- *  \return             Amplitude value associated with the polynomial when
+ *  \return             Magnitude value associated with the polynomial when
  *                      evaluated successful, else GSL_POSINF or GSL_NEGINF.
  *                      Use the functions gsl_isinf() or gsl_finite() for
  *                      result checking.
@@ -300,24 +303,24 @@ double filterResponsePoly (double omega, const MATHPOLY *poly)
 
 
 /* FUNCTION *******************************************************************/
-/** Computes the amplitude of a time-discrete system at a given frequency in
+/** Computes the magnitude of a time-discrete system at a given frequency in
  *  \e Z domain.
  *
  *  \param f            Frequency point in Hz.
  *  \param pFilter      Representation of time-discrete system.
  *
- *  \return             Amplitude value when successful evaluated, else
+ *  \return             Magnitude value when successful evaluated, else
  *                      GSL_POSINF or GSL_NEGINF. Use the functions gsl_isinf()
  *                      or gsl_finite() for result checking.
  ******************************************************************************/
-double filterResponseAmplitude (double f, const FLTCOEFF* pFilter)
+double filterResponseMagnitude (double f, const FLTCOEFF* pFilter)
 {
     double omega = 2.0 * M_PI * f / pFilter->f0;
 
     return mathTryDiv (filterResponsePoly (omega, &pFilter->num),
                        filterResponsePoly (omega, &pFilter->den));
 
-} /* filterResponseAmplitude() */
+} /* filterResponseMagnitude() */
 
 
 /* FUNCTION *******************************************************************/
@@ -330,20 +333,20 @@ double filterResponseAmplitude (double f, const FLTCOEFF* pFilter)
  *  \param f            Frequency point in Hz.
  *  \param pFilter      Representation of time-discrete system.
  *
- *  \return             Amplitude value when successful evaluated, else
+ *  \return             Magnitude value when successful evaluated, else
  *                      GSL_POSINF or GSL_NEGINF. Use the functions gsl_isinf()
  *                      or gsl_finite() for result checking.
  ******************************************************************************/
 double filterResponseAttenuation (double f, FLTCOEFF* pFilter)
 {
-    double amplitude = filterResponseAmplitude(f, pFilter);
+    double magnitude = filterResponseMagnitude (f, pFilter);
 
-    if (gsl_finite (amplitude))
+    if (gsl_finite (magnitude))
     {
-        return -20.0 * log10 (amplitude);
+        return -20.0 * log10 (magnitude);
     } /* if */
 
-    return amplitude;
+    return magnitude;
 } /* filterResponseAttenuation() */
 
 
@@ -440,11 +443,11 @@ double filterResponseChar (double f, FLTCOEFF* pFilter)
 {
     double result;
 
-    double amplitude = filterResponseAmplitude (f, pFilter);
+    double magnitude = filterResponseMagnitude (f, pFilter);
 
-    if (gsl_finite (amplitude))
+    if (gsl_finite (magnitude))
     {
-        result = mathTryDiv(1.0, amplitude * amplitude);
+        result = mathTryDiv(1.0, magnitude * magnitude);
 
         if (gsl_finite (result))
         {

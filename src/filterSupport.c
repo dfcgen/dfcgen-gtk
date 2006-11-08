@@ -4,13 +4,16 @@
  *           Filter support functions.
  *
  * \author   Copyright (c) Ralf Hoppe
- * \version  $Header: /home/cvs/dfcgen-gtk/src/filterSupport.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/src/filterSupport.c,v 1.3 2006-11-08 17:31:42 ralf Exp $
  *
  *
  * \see
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2006/11/04 18:26:27  ralf
+ * Further work (near 0.1 now)
+ *
  * Revision 1.1.1.1  2006/09/11 15:52:19  ralf
  * Initial CVS import
  *
@@ -316,11 +319,11 @@ int normFilterCoeffs (FLTCOEFF *pFilter)
 
 
 /* FUNCTION *******************************************************************/
-/** Normalizes the amplitude of a filter. The function trys to normalize the
- *  transfer ratio (filter amplitude) at a given frequency. To perform that, it
+/** Normalizes the magnitude of a filter. The function trys to normalize the
+ *  transfer ratio (filter magnitude) at a given frequency. To perform that, it
  *  first modifies the denominator coefficients such that \f$den_0=1\f$ is
  *  ensured. At the second step it re-calculates the numerator coefficients in
- *  a way, that the amplitude response at the reference frequency is unity (1).
+ *  a way, that the magnitude response at the reference frequency is unity (1).
  *
  *  \param pFilter      Pointer to filter.
  *  \param f            Frequency (normalization point).
@@ -337,9 +340,9 @@ int normFilterCoeffs (FLTCOEFF *pFilter)
  *                        FLTERR_CRITICAL macro from filterSupport.h to check
  *                        this condition.
  ******************************************************************************/
-int normFilterAmplitude (FLTCOEFF *pFilter, double f, double refgain)
+int normFilterMagnitude (FLTCOEFF *pFilter, double f, double refgain)
 {
-    double amplitude;
+    double magnitude;
 
     int i, err = normFilterCoeffs (pFilter);
 
@@ -348,16 +351,16 @@ int normFilterAmplitude (FLTCOEFF *pFilter, double f, double refgain)
         return err;
     } /* if */
 
-    amplitude = filterResponseAmplitude (f, pFilter);
+    magnitude = filterResponseMagnitude (f, pFilter);
 
-    if (gsl_isinf(amplitude))                       /* amplitude singularity? */
+    if (gsl_isinf(magnitude))                       /* magnitude singularity? */
     {
         return ERANGE;
     } /* if */
 
-    amplitude = mathTryDiv(refgain, amplitude);
+    magnitude = mathTryDiv(refgain, magnitude);
 
-    if (gsl_isinf(amplitude))
+    if (gsl_isinf(magnitude))
     {
         return (ERANGE);
     } /* if */
@@ -365,11 +368,11 @@ int normFilterAmplitude (FLTCOEFF *pFilter, double f, double refgain)
 
     for (i = 0; i <= pFilter->num.degree; i++)  /* scale all numerator coeffs */
     {
-        pFilter->num.coeff[i] *= amplitude;
+        pFilter->num.coeff[i] *= magnitude;
     } /* for */
 
     return filterCheck(pFilter);
-} /* normFilterAmplitude() */
+} /* normFilterMagnitude() */
 
 
 
