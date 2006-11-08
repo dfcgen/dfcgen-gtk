@@ -4,13 +4,16 @@
  *           Description.
  *
  * \author   Copyright (c) Ralf Hoppe
- * \version  $Header: /home/cvs/dfcgen-gtk/include/filterSupport.h,v 1.2 2006-11-04 18:28:27 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/include/filterSupport.h,v 1.3 2006-11-08 17:59:50 ralf Exp $
  *
  *
  * \see
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2006/11/04 18:28:27  ralf
+ * Further work (near 0.1 now)
+ *
  * Revision 1.1.1.1  2006/09/11 15:52:21  ralf
  * Initial CVS import
  *
@@ -134,11 +137,11 @@ extern "C" {
 
 
 /* FUNCTION *******************************************************************/
-/** Normalizes the amplitude of a filter. The function trys to normalize the
- *  transfer ratio (filter amplitude) at a given frequency. To perform that, it
+/** Normalizes the magnitude of a filter. The function trys to normalize the
+ *  transfer ratio (filter magnitude) at a given frequency. To perform that, it
  *  first modifies the denominator coefficients such that \f$den_0=1\f$ is
  *  ensured. At the second step it re-calculates the numerator coefficients in
- *  a way, that the amplitude response at the reference frequency is unity (1).
+ *  a way, that the magnitude response at the reference frequency is unity (1).
  *
  *  \param pFilter      Pointer to filter.
  *  \param f            Frequency (normalization point).
@@ -155,7 +158,7 @@ extern "C" {
  *                        FLTERR_CRITICAL macro from filterSupport.h to check
  *                        this condition.
  ******************************************************************************/
-    int normFilterAmplitude (FLTCOEFF *pFilter, double f, double refgain);
+    int normFilterMagnitude (FLTCOEFF *pFilter, double f, double refgain);
 
 
 #ifdef  __cplusplus

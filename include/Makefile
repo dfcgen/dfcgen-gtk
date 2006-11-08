@@ -37,7 +37,9 @@ POST_UNINSTALL = :
 build_triplet = i686-pc-linux-gnu
 host_triplet = i686-pc-linux-gnu
 subdir = include
-DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
+DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
+	AUTHORS COPYING ChangeLog INSTALL NEWS TODO config.guess \
+	config.sub ltmain.sh mkinstalldirs
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
 	$(top_srcdir)/configure.in
@@ -214,7 +216,11 @@ dfcgen_gtk_include_DATA = \
 	support.h\
 	dialogSupport.h\
 	responsePlot.h\
-	responseDlg.h
+	responseDlg.h\
+	linFirDesignDlg.h\
+	editDlg.h\
+	rootsPlot.h\
+	doxygen.h
 
 EXTRA_DIST = $(dfcgen_gtk_include_DATA)
 all: all-am

@@ -4,11 +4,14 @@
  *           Digital filter response plotter.
  *
  * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/include/responsePlot.h,v 1.1.1.1 2006-09-11 15:52:21 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/include/responsePlot.h,v 1.2 2006-11-08 17:59:49 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2006/09/11 15:52:21  ralf
+ * Initial CVS import
+ *
  *
  *
  ******************************************************************************/
@@ -38,7 +41,7 @@ extern "C" {
  */
 typedef enum
 {
-    RESPONSE_TYPE_AMPLITUDE = 0,                      /**< amplitude response */
+    RESPONSE_TYPE_MAGNITUDE = 0,                      /**< magnitude response */
     RESPONSE_TYPE_ATTENUATION = 1,                           /**< attenuation */
     RESPONSE_TYPE_CHAR = 2,                      /**< characteristic function */
     RESPONSE_TYPE_PHASE = 3,                              /**< phase response */

@@ -4,11 +4,14 @@
  *           Interface to Linear IIR Filter interpolation functions.
  *
  * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/include/linFirFilter.h,v 1.2 2006-11-04 18:28:27 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/include/linFirFilter.h,v 1.3 2006-11-08 17:59:49 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2006/11/04 18:28:27  ralf
+ * Further work (near 0.1 now)
+ *
  * Revision 1.1.1.1  2006/09/11 15:52:21  ralf
  * Initial CVS import
  *
@@ -96,7 +99,7 @@ typedef struct
 
 /* FUNCTION *******************************************************************/
 /** Generates a linear FIR filter. The cutoff frequency always is assumed to be
- *  the 3dB point of amplitude response.
+ *  the 3dB point of magnitude response.
  *
  *  \param pDesign      Pointer to linear FIR filter design data.
  *  \param pFilter      Pointer to buffer which gets the generated filter.

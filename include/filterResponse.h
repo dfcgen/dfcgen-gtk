@@ -4,11 +4,14 @@
  *           Filter response functions.
  *
  * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/include/filterResponse.h,v 1.2 2006-11-04 18:28:27 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/include/filterResponse.h,v 1.3 2006-11-08 17:59:49 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2006/11/04 18:28:27  ralf
+ * Further work (near 0.1 now)
+ *
  * Revision 1.1.1.1  2006/09/11 15:52:21  ralf
  * Initial CVS import
  *
@@ -63,7 +66,7 @@ typedef struct
 
 
 /* FUNCTION *******************************************************************/
-/** Evaluates absolute amplitude associated with a polynomial in \e Z domain.
+/** Evaluates absolute magnitude associated with a polynomial in \e Z domain.
  *  The function returns the absolute value of the following polynomial:
     \f[
     H(z)=a_0+a_1 z^{-1}+a_2 z^{-2}+\cdots a_n z^{-n}
@@ -74,7 +77,7 @@ typedef struct
  *  \param omega        Frequency ratio \f$2\pi f/f_0\f$.
  *  \param poly         Pointer to polynomial coefficients in \e Z domain.
  *
- *  \return             Amplitude value associated with the polynomial when
+ *  \return             Magnitude value associated with the polynomial when
  *                      evaluated successful, else GSL_POSINF or GSL_NEGINF.
  *                      Use the functions gsl_isinf() or gsl_finite() for
  *                      result checking.
@@ -83,17 +86,17 @@ typedef struct
 
 
 /* FUNCTION *******************************************************************/
-/** Computes the amplitude of a time-discrete system at a given frequency in
+/** Computes the magnitude of a time-discrete system at a given frequency in
  *  \e Z domain.
  *
  *  \param f            Frequency point in Hz.
  *  \param pFilter      Representation of time-discrete system.
  *
- *  \return             Amplitude value when successful evaluated, else
+ *  \return             Magnitude value when successful evaluated, else
  *                      GSL_POSINF or GSL_NEGINF. Use the functions gsl_isinf()
  *                      or gsl_finite() for result checking.
  ******************************************************************************/
-    double filterResponseAmplitude (double f, const FLTCOEFF *pFilter);
+    double filterResponseMagnitude (double f, const FLTCOEFF *pFilter);
 
 
 
@@ -107,7 +110,7 @@ typedef struct
  *  \param f            Frequency point in Hz.
  *  \param pFilter      Representation of time-discrete system.
  *
- *  \return             Amplitude value when successful evaluated, else
+ *  \return             Magnitude value when successful evaluated, else
  *                      GSL_POSINF or GSL_NEGINF. Use the functions gsl_isinf()
  *                      or gsl_finite() for result checking.
  ******************************************************************************/

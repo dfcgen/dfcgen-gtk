@@ -4,11 +4,14 @@
  *           Interface to Standard IIR Filter approximation functions.
  *
  * \author   Copyright (c) Ralf Hoppe
- * \version  $Header: /home/cvs/dfcgen-gtk/include/stdIirFilter.h,v 1.2 2006-11-04 18:28:27 ralf Exp $
+ * \version  $Header: /home/cvs/dfcgen-gtk/include/stdIirFilter.h,v 1.3 2006-11-08 17:59:50 ralf Exp $
  *
  *
  * History:
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2006/11/04 18:28:27  ralf
+ * Further work (near 0.1 now)
+ *
  * Revision 1.1.1.1  2006/09/11 15:52:21  ralf
  * Initial CVS import
  *
@@ -108,7 +111,7 @@ typedef struct
 
 /* FUNCTION *******************************************************************/
 /** Generates an IIR filter from standard approximations. The cutoff frequency
- *  always is assumed to be the 3dB point of amplitude response.
+ *  always is assumed to be the 3dB point of magnitude response.
  *
  *  Detailed description.
  *

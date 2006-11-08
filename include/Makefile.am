@@ -32,6 +32,10 @@ dfcgen_gtk_include_DATA = \
 	support.h\
 	dialogSupport.h\
 	responsePlot.h\
-	responseDlg.h
+	responseDlg.h\
+	linFirDesignDlg.h\
+	editDlg.h\
+	rootsPlot.h\
+	doxygen.h
 
 EXTRA_DIST = $(dfcgen_gtk_include_DATA)
