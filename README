@@ -1,7 +1,59 @@
+What is dfcgen-gtk?
+
+    DFCGEN, the Digital Filter Coefficients Generator, is a FREEWARE
+    tool/program, which may assist you in the design of digital filters. It
+    supports the engineer in analysis and synthesis of linear time-invariant
+    time-discrete (LTI) systems from the theoretical point of view.  It
+    performs generation of system transfer function coefficients in the Z-domain
+    based on the type and the specific parameters of a chosen system.
+
+    It supports:
+
+    * Linear FIR systems of various characteristics with windowing functions as
+      Hamming, Hanning, Blackman or Kaiser window
+
+    * Standard IIR filters like Cauer, Chebyshev, Butterworth and Bessel
+
+    * Various systems of free degree as e.g. Integrator, Hilbert transformer,
+      Comb filter etc.
+
+    * Predefined systems with determined coefficients (and degree) as fitting
+      filters, Differentiators
+
+    * Frequency transformation into high-pass, band-pass and band-stop
+
+    * Edit of coefficients (change, delete, round)
+
+    * Pole/Zero Analysis
+
+    * Graphical visualisation of system characteristics (plots) as magnitude
+      response, phase response, attenuation, discrimination, group delay, phase
+      delay, impulse response, step response
+
+    * In plots: zoom, lin./log. and auto-scaling
+
+    * Save and load of the defined filter
 
 
-Differences wrt. dfcgen v1.x:
 
-Bugfixes:
-- axis label assignment does not work as expected (sometimes too less grid
-  points and labels)
+What do I need to run dfcgen-gtk?
+
+    A Unix-like system (including Windows with cygwin) with the following
+    libraries installed:
+    * GNU Scientific Library (GSL) 1.6 or higher (libgsl)
+    * GIMP Toolkit 2 (GTK+) 2.8 (with printing support 2.10) or higher
+
+
+
+What do I need to compile dfcgen-gtk?
+
+    You need the standard development tools for C/C++, e.g.
+    * compiler (gcc, g++, cpp)
+    * autotools (autoconf, automake, libtool)
+    * make, m4
+    and header files of (development) packages as
+    * libstdc
+    * libgsl0-dev
+    * GTK+/GDK (and all dependent packages)
+
+

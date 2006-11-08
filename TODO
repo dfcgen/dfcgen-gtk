@@ -1,0 +1,98 @@
+* User Interface
+The following improvements shall ensure similiar GUI features as are available
+in old Win3.x version.
+
+  - cairoPlot2d
+    Make axisX.start and axisX.stop positions dependent of precision
+
+  - createAxisLabel
+    Parametrize margin by precision
+
+  - treeSelectionCallback
+    Process double-clicks (see the tree-view tutorial on how to make this)
+
+  - responseWinCreate
+    Restore size of drawing area from last session 
+
+  - filterResponseTimeNew
+    Allow user break 
+
+
+* Filter Design
+Improvements on algorithms currently implemented
+
+  - linFirFilterGen
+    Correct the lowpass design cutoff frequency (see Bessel lowpass) when
+    performing frequency transformations (depends on characteristic too,
+    significant on perfect lowpass).
+
+  - ftrHighpass
+    Handle odd degree
+
+
+* Stability
+
+  - linFirFilterGen
+    Implement semantic checks on bandwidth, center and cutoff frequency
+
+  - stdIirFilterGen
+    Implement sematic checks on bandwidth, center and cutoff frequency
+
+  - linFirFilterGen
+    Use fpsetround()?
+
+  - mathMisc.c
+    Implement a generic math. error handler
+
+  - ftrBandstop
+    Handle GSL_POSINF for call to filterResponsePoly() 
+
+
+* Maintainability
+
+  - mathPolyCoeffs2Roots
+    Try to avoid mixing error codes from gsl_errno.h and errno.h 
+
+  - linFirDesignDlgApply
+    Share code with IIR design dialog
+
+
+* Style/Comments
+
+  - genCosine2System
+    Give formula
+
+  - chebyT
+    Improve function description by the help of LaTeX
+
+  - timeResponseProcNext
+    Describe algo used here 
+
+
+* Optimization
+
+  - mainDlgCreate
+    Reduce number of variables used
+
+  - responseWidget
+    Try to move some of these data into responsePlot.c
+
+
+* Testing
+
+  - plotPhase
+    Check phase response of linear FIR filters and improve the graph layout
+
+
+* New Features
+
+  - New filter class ARBITRARY
+    Support of arbitrary frequency specification by Parks-McClellan algorithm
+
+  - Printing
+    Print support (requires GTK 2.10)
+
+  - Export
+    More export formats for filter coefficients and plots
+
+

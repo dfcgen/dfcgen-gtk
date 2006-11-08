@@ -1,0 +1,21 @@
+What's new in version 0.1?
+----------------------------
+
+All and nothing. 'dfcgen-gtk' is a GTK+ port of my old Win3.X program, called
+Digital Filter Coefficients Generator (DFCGEN).
+
+
+Differences to DFCGEN/Win v1.x
+------------------------------
+
+* Bugfixes
+  - axis label assignment does not work as expected (sometimes too less grid
+    points and labels)
+
+* Unsupported (not implemented in version 0.1)
+  - numeric roots display
+  - viewing mathematical functions
+  - printing
+  - multiple document interface (MDI)
+  - command line arguments
+  - online help
