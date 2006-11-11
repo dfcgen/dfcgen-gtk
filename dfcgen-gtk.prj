@@ -66,12 +66,12 @@ project.source.target=dfcgen-gtk
 project.has.gettext=1
 project.gui.command=glade-2 $(top.proj.dir)/$(project.name).glade
 project.programming.language=C
-project.excluded.modules=intl
+project.excluded.modules=intl tmp debian DEBIAN
 
 project.config.extra.modules.before=
 project.config.extra.modules.after=
 project.config.blocked=0
-project.config.disable.overwriting=0 0 0 0 0 0 0 0 1 
+project.config.disable.overwriting=1 1 0 0 0 0 0 0 1 
 
 project.menu.entry=dfcgen-gtk Version 0.1
 project.menu.group=Applications
@@ -99,36 +99,36 @@ preferences.indent.closing=0
 module.include.name=include
 module.include.type=
 module.include.files=\
-	gui.h\
+	base.h\
+	cairoPlot.h\
+	cfgSettings.h\
 	designDlg.h\
 	dfcProject.h\
-	filterSupport.h\
-	mathPoly.h\
-	stdIirFilter.h\
-	mainDlg.h\
-	helpDlg.h\
 	dfcgen.h\
-	filterResponse.h\
-	responseWin.h\
-	base.h\
-	mathMisc.h\
-	mathFuncs.h\
-	cairoPlot.h\
-	fileDlg.h\
-	cfgSettings.h\
-	stdIirDesignDlg.h\
-	miscDesignDlg.h\
-	projectFile.h\
-	miscFilter.h\
-	linFirFilter.h\
-	support.h\
 	dialogSupport.h\
-	responsePlot.h\
-	responseDlg.h\
-	linFirDesignDlg.h\
+	doxygen.h\
 	editDlg.h\
+	fileDlg.h\
+	filterResponse.h\
+	filterSupport.h\
+	gui.h\
+	helpDlg.h\
+	linFirDesignDlg.h\
+	linFirFilter.h\
+	mainDlg.h\
+	mathFuncs.h\
+	mathMisc.h\
+	mathPoly.h\
+	miscDesignDlg.h\
+	miscFilter.h\
+	projectFile.h\
+	responseDlg.h\
+	responsePlot.h\
+	responseWin.h\
 	rootsPlot.h\
-	doxygen.h
+	stdIirDesignDlg.h\
+	stdIirFilter.h\
+	support.h
 
 module.source.name=src
 module.source.type=
