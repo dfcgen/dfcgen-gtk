@@ -5,17 +5,12 @@
 
 SUBDIRS = po include src pixmaps data doc
 
-dfcgen_gtkdocdir = ${prefix}/doc/dfcgen-gtk
-dfcgen_gtkdoc_DATA = \
-	README\
-	COPYING\
-	AUTHORS\
-	ChangeLog\
-	INSTALL\
-	NEWS\
-	TODO
+dfcgen_gtkdocdir = ${prefix}/share/gtk-doc/dfcgen-gtk
+dfcgen_gtkdoc_DATA =
 
 EXTRA_DIST = $(dfcgen_gtkdoc_DATA)
+
+
 
 # Copy all the spec files. Of cource, only one is actually used.
 dist-hook:

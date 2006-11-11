@@ -7,35 +7,35 @@
 dfcgen_gtk_includedir = $(pkgincludedir)
 
 dfcgen_gtk_include_DATA = \
-	gui.h\
+	base.h\
+	cairoPlot.h\
+	cfgSettings.h\
 	designDlg.h\
 	dfcProject.h\
-	filterSupport.h\
-	mathPoly.h\
-	stdIirFilter.h\
-	mainDlg.h\
-	helpDlg.h\
 	dfcgen.h\
-	filterResponse.h\
-	responseWin.h\
-	base.h\
-	mathMisc.h\
-	mathFuncs.h\
-	cairoPlot.h\
-	fileDlg.h\
-	cfgSettings.h\
-	stdIirDesignDlg.h\
-	miscDesignDlg.h\
-	projectFile.h\
-	miscFilter.h\
-	linFirFilter.h\
-	support.h\
 	dialogSupport.h\
-	responsePlot.h\
-	responseDlg.h\
-	linFirDesignDlg.h\
+	doxygen.h\
 	editDlg.h\
+	fileDlg.h\
+	filterResponse.h\
+	filterSupport.h\
+	gui.h\
+	helpDlg.h\
+	linFirDesignDlg.h\
+	linFirFilter.h\
+	mainDlg.h\
+	mathFuncs.h\
+	mathMisc.h\
+	mathPoly.h\
+	miscDesignDlg.h\
+	miscFilter.h\
+	projectFile.h\
+	responseDlg.h\
+	responsePlot.h\
+	responseWin.h\
 	rootsPlot.h\
-	doxygen.h
+	stdIirDesignDlg.h\
+	stdIirFilter.h\
+	support.h
 
 EXTRA_DIST = $(dfcgen_gtk_include_DATA)

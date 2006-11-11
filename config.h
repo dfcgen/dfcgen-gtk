@@ -7,11 +7,11 @@
 /* #undef HAVE_STPCPY */
 /* #undef HAVE_LIBSM */
 #define PACKAGE_LOCALE_DIR "/usr/local/share/locale"
-#define PACKAGE_DOC_DIR "/usr/local/doc/dfcgen-gtk"
-#define PACKAGE_DATA_DIR "/usr/local/share"
-#define PACKAGE_PIXMAPS_DIR "/usr/local/share/pixmaps"
-#define PACKAGE_HELP_DIR "/usr/local/share/help"
-#define PACKAGE_MENU_DIR "/usr/local/share"
+#define PACKAGE_DOC_DIR "/usr/local/share/doc/dfcgen-gtk"
+#define PACKAGE_DATA_DIR "/usr/local/share/dfcgen-gtk"
+#define PACKAGE_PIXMAPS_DIR "/usr/local/share/dfcgen-gtk/pixmaps"
+#define PACKAGE_HELP_DIR "/usr/local/share/dfcgen-gtk/help"
+#define PACKAGE_MENU_DIR "/usr/local/share/dfcgen-gtk"
 #define PACKAGE_SOURCE_DIR "/home/ralf/prj/dfcgen-gtk"
 #define GETTEXT_PACKAGE "dfcgen-gtk"
 

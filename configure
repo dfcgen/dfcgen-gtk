@@ -23723,8 +23723,8 @@ else
   packageprefix=${prefix}
 fi
 
-packagedatadir=share
-packagedocdir=doc/${PACKAGE}
+packagedatadir=share/${PACKAGE}
+packagedocdir=share/doc/${PACKAGE}
 
 packagepixmapsdir=${packagedatadir}/pixmaps
 packagehelpdir=${packagedatadir}/help

@@ -111,22 +111,22 @@ MAINTAINER_MODE_TRUE =
 MAKEINFO = ${SHELL} /home/ralf/prj/dfcgen-gtk/missing --run makeinfo
 MKINSTALLDIRS = ./mkinstalldirs
 MSGFMT = /usr/bin/msgfmt
-NO_PREFIX_PACKAGE_DATA_DIR = share
-NO_PREFIX_PACKAGE_DOC_DIR = doc/dfcgen-gtk
-NO_PREFIX_PACKAGE_HELP_DIR = share/help
-NO_PREFIX_PACKAGE_MENU_DIR = share
-NO_PREFIX_PACKAGE_PIXMAPS_DIR = share/pixmaps
+NO_PREFIX_PACKAGE_DATA_DIR = share/dfcgen-gtk
+NO_PREFIX_PACKAGE_DOC_DIR = share/doc/dfcgen-gtk
+NO_PREFIX_PACKAGE_HELP_DIR = share/dfcgen-gtk/help
+NO_PREFIX_PACKAGE_MENU_DIR = share/dfcgen-gtk
+NO_PREFIX_PACKAGE_PIXMAPS_DIR = share/dfcgen-gtk/pixmaps
 OBJEXT = o
 PACKAGE = dfcgen-gtk
 PACKAGE_BUGREPORT = 
 PACKAGE_CFLAGS = -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include  
-PACKAGE_DATA_DIR = /usr/local/share
-PACKAGE_DOC_DIR = /usr/local/doc/dfcgen-gtk
-PACKAGE_HELP_DIR = /usr/local/share/help
+PACKAGE_DATA_DIR = /usr/local/share/dfcgen-gtk
+PACKAGE_DOC_DIR = /usr/local/share/doc/dfcgen-gtk
+PACKAGE_HELP_DIR = /usr/local/share/dfcgen-gtk/help
 PACKAGE_LIBS = -lgtk-x11-2.0 -latk-1.0 -lgdk-x11-2.0 -lgdk_pixbuf-2.0 -lm -lpangocairo-1.0 -lfontconfig -lXinerama -lXi -lXrandr -lXext -lXcursor -lXfixes -lpango-1.0 -lcairo -lgobject-2.0 -lgmodule-2.0 -lglib-2.0 -lXrender -lX11 -ldl  
-PACKAGE_MENU_DIR = /usr/local/share
+PACKAGE_MENU_DIR = /usr/local/share/dfcgen-gtk
 PACKAGE_NAME = 
-PACKAGE_PIXMAPS_DIR = /usr/local/share/pixmaps
+PACKAGE_PIXMAPS_DIR = /usr/local/share/dfcgen-gtk/pixmaps
 PACKAGE_STRING = 
 PACKAGE_TARNAME = 
 PACKAGE_VERSION = $(VERSION)
@@ -189,36 +189,36 @@ sysconfdir = ${prefix}/etc
 target_alias = 
 dfcgen_gtk_includedir = $(pkgincludedir)
 dfcgen_gtk_include_DATA = \
-	gui.h\
+	base.h\
+	cairoPlot.h\
+	cfgSettings.h\
 	designDlg.h\
 	dfcProject.h\
-	filterSupport.h\
-	mathPoly.h\
-	stdIirFilter.h\
-	mainDlg.h\
-	helpDlg.h\
 	dfcgen.h\
-	filterResponse.h\
-	responseWin.h\
-	base.h\
-	mathMisc.h\
-	mathFuncs.h\
-	cairoPlot.h\
-	fileDlg.h\
-	cfgSettings.h\
-	stdIirDesignDlg.h\
-	miscDesignDlg.h\
-	projectFile.h\
-	miscFilter.h\
-	linFirFilter.h\
-	support.h\
 	dialogSupport.h\
-	responsePlot.h\
-	responseDlg.h\
-	linFirDesignDlg.h\
+	doxygen.h\
 	editDlg.h\
+	fileDlg.h\
+	filterResponse.h\
+	filterSupport.h\
+	gui.h\
+	helpDlg.h\
+	linFirDesignDlg.h\
+	linFirFilter.h\
+	mainDlg.h\
+	mathFuncs.h\
+	mathMisc.h\
+	mathPoly.h\
+	miscDesignDlg.h\
+	miscFilter.h\
+	projectFile.h\
+	responseDlg.h\
+	responsePlot.h\
+	responseWin.h\
 	rootsPlot.h\
-	doxygen.h
+	stdIirDesignDlg.h\
+	stdIirFilter.h\
+	support.h
 
 EXTRA_DIST = $(dfcgen_gtk_include_DATA)
 all: all-am

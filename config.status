@@ -578,16 +578,16 @@ s,@PKG_CONFIG@,/usr/bin/pkg-config,;t t
 s,@ac_pt_PKG_CONFIG@,/usr/bin/pkg-config,;t t
 s,@PACKAGE_CFLAGS@,-I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include  ,;t t
 s,@PACKAGE_LIBS@,-lgtk-x11-2.0 -latk-1.0 -lgdk-x11-2.0 -lgdk_pixbuf-2.0 -lm -lpangocairo-1.0 -lfontconfig -lXinerama -lXi -lXrandr -lXext -lXcursor -lXfixes -lpango-1.0 -lcairo -lgobject-2.0 -lgmodule-2.0 -lglib-2.0 -lXrender -lX11 -ldl  ,;t t
-s,@NO_PREFIX_PACKAGE_DATA_DIR@,share,;t t
-s,@PACKAGE_DATA_DIR@,/usr/local/share,;t t
-s,@NO_PREFIX_PACKAGE_DOC_DIR@,doc/dfcgen-gtk,;t t
-s,@PACKAGE_DOC_DIR@,/usr/local/doc/dfcgen-gtk,;t t
-s,@NO_PREFIX_PACKAGE_PIXMAPS_DIR@,share/pixmaps,;t t
-s,@PACKAGE_PIXMAPS_DIR@,/usr/local/share/pixmaps,;t t
-s,@NO_PREFIX_PACKAGE_HELP_DIR@,share/help,;t t
-s,@PACKAGE_HELP_DIR@,/usr/local/share/help,;t t
-s,@NO_PREFIX_PACKAGE_MENU_DIR@,share,;t t
-s,@PACKAGE_MENU_DIR@,/usr/local/share,;t t
+s,@NO_PREFIX_PACKAGE_DATA_DIR@,share/dfcgen-gtk,;t t
+s,@PACKAGE_DATA_DIR@,/usr/local/share/dfcgen-gtk,;t t
+s,@NO_PREFIX_PACKAGE_DOC_DIR@,share/doc/dfcgen-gtk,;t t
+s,@PACKAGE_DOC_DIR@,/usr/local/share/doc/dfcgen-gtk,;t t
+s,@NO_PREFIX_PACKAGE_PIXMAPS_DIR@,share/dfcgen-gtk/pixmaps,;t t
+s,@PACKAGE_PIXMAPS_DIR@,/usr/local/share/dfcgen-gtk/pixmaps,;t t
+s,@NO_PREFIX_PACKAGE_HELP_DIR@,share/dfcgen-gtk/help,;t t
+s,@PACKAGE_HELP_DIR@,/usr/local/share/dfcgen-gtk/help,;t t
+s,@NO_PREFIX_PACKAGE_MENU_DIR@,share/dfcgen-gtk,;t t
+s,@PACKAGE_MENU_DIR@,/usr/local/share/dfcgen-gtk,;t t
 s,@LIBOBJS@,,;t t
 s,@LTLIBOBJS@,,;t t
 CEOF
@@ -947,11 +947,11 @@ CEOF
 t clr
 : clr
 ${ac_dA}PACKAGE_LOCALE_DIR${ac_dB}PACKAGE_LOCALE_DIR${ac_dC}"/usr/local/share/locale"${ac_dD}
-${ac_dA}PACKAGE_DATA_DIR${ac_dB}PACKAGE_DATA_DIR${ac_dC}"/usr/local/share"${ac_dD}
-${ac_dA}PACKAGE_DOC_DIR${ac_dB}PACKAGE_DOC_DIR${ac_dC}"/usr/local/doc/dfcgen-gtk"${ac_dD}
-${ac_dA}PACKAGE_PIXMAPS_DIR${ac_dB}PACKAGE_PIXMAPS_DIR${ac_dC}"/usr/local/share/pixmaps"${ac_dD}
-${ac_dA}PACKAGE_HELP_DIR${ac_dB}PACKAGE_HELP_DIR${ac_dC}"/usr/local/share/help"${ac_dD}
-${ac_dA}PACKAGE_MENU_DIR${ac_dB}PACKAGE_MENU_DIR${ac_dC}"/usr/local/share"${ac_dD}
+${ac_dA}PACKAGE_DATA_DIR${ac_dB}PACKAGE_DATA_DIR${ac_dC}"/usr/local/share/dfcgen-gtk"${ac_dD}
+${ac_dA}PACKAGE_DOC_DIR${ac_dB}PACKAGE_DOC_DIR${ac_dC}"/usr/local/share/doc/dfcgen-gtk"${ac_dD}
+${ac_dA}PACKAGE_PIXMAPS_DIR${ac_dB}PACKAGE_PIXMAPS_DIR${ac_dC}"/usr/local/share/dfcgen-gtk/pixmaps"${ac_dD}
+${ac_dA}PACKAGE_HELP_DIR${ac_dB}PACKAGE_HELP_DIR${ac_dC}"/usr/local/share/dfcgen-gtk/help"${ac_dD}
+${ac_dA}PACKAGE_MENU_DIR${ac_dB}PACKAGE_MENU_DIR${ac_dC}"/usr/local/share/dfcgen-gtk"${ac_dD}
 ${ac_dA}PACKAGE_SOURCE_DIR${ac_dB}PACKAGE_SOURCE_DIR${ac_dC}"/home/ralf/prj/dfcgen-gtk"${ac_dD}
 CEOF
   sed -f $tmp/defines.sed $tmp/in >$tmp/out
@@ -1013,11 +1013,11 @@ CEOF
 t clr
 : clr
 ${ac_uA}PACKAGE_LOCALE_DIR${ac_uB}PACKAGE_LOCALE_DIR${ac_uC}"/usr/local/share/locale"${ac_uD}
-${ac_uA}PACKAGE_DATA_DIR${ac_uB}PACKAGE_DATA_DIR${ac_uC}"/usr/local/share"${ac_uD}
-${ac_uA}PACKAGE_DOC_DIR${ac_uB}PACKAGE_DOC_DIR${ac_uC}"/usr/local/doc/dfcgen-gtk"${ac_uD}
-${ac_uA}PACKAGE_PIXMAPS_DIR${ac_uB}PACKAGE_PIXMAPS_DIR${ac_uC}"/usr/local/share/pixmaps"${ac_uD}
-${ac_uA}PACKAGE_HELP_DIR${ac_uB}PACKAGE_HELP_DIR${ac_uC}"/usr/local/share/help"${ac_uD}
-${ac_uA}PACKAGE_MENU_DIR${ac_uB}PACKAGE_MENU_DIR${ac_uC}"/usr/local/share"${ac_uD}
+${ac_uA}PACKAGE_DATA_DIR${ac_uB}PACKAGE_DATA_DIR${ac_uC}"/usr/local/share/dfcgen-gtk"${ac_uD}
+${ac_uA}PACKAGE_DOC_DIR${ac_uB}PACKAGE_DOC_DIR${ac_uC}"/usr/local/share/doc/dfcgen-gtk"${ac_uD}
+${ac_uA}PACKAGE_PIXMAPS_DIR${ac_uB}PACKAGE_PIXMAPS_DIR${ac_uC}"/usr/local/share/dfcgen-gtk/pixmaps"${ac_uD}
+${ac_uA}PACKAGE_HELP_DIR${ac_uB}PACKAGE_HELP_DIR${ac_uC}"/usr/local/share/dfcgen-gtk/help"${ac_uD}
+${ac_uA}PACKAGE_MENU_DIR${ac_uB}PACKAGE_MENU_DIR${ac_uC}"/usr/local/share/dfcgen-gtk"${ac_uD}
 ${ac_uA}PACKAGE_SOURCE_DIR${ac_uB}PACKAGE_SOURCE_DIR${ac_uC}"/home/ralf/prj/dfcgen-gtk"${ac_uD}
 s,^[	 ]*#[	 ]*undef[	 ][	 ]*[a-zA-Z_][a-zA-Z_0-9]*,/* & */,
 CEOF
