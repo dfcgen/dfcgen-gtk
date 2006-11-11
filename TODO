@@ -1,101 +1,113 @@
-* User Interface
-The following improvements shall ensure similiar GUI features as are available
-in old Win3.x version.
+* User interface
+  The following improvements shall ensure similiar GUI features as are available
+  in old Win3.x version.
 
-  - cairoPlot2d
+  - Function: cairoPlot2d
+    Think about transition to double coordinates in all functions below
+    cairoPlot2d.
     Make axisX.start and axisX.stop positions dependent of precision
 
-  - createAxisLabel
+  - Function: createAxisLabel
     Parametrize margin by precision
 
-  - treeSelectionCallback
+  - Function: treeSelectionCallback
     Process double-clicks (see the tree-view tutorial on how to make this)
 
-  - responseWinCreate
+  - Function: responseWinCreate
     Restore size of drawing area from last session 
 
-  - filterResponseTimeNew
-    Allow user break 
+  - Function: filterResponseTimeNew
+    Allow user break
+
+  - Feature: Predefined filters
+    Improve description (and translation) of predefined filters located in
+    PACKAGE_DATA_DIR
 
 
-* Filter Design
-Improvements on algorithms currently implemented
+* Filter design
+  Improvements on algorithms currently implemented
 
-  - linFirFilterGen
+  - Function: linFirFilterGen
     Correct the lowpass design cutoff frequency (see Bessel lowpass) when
     performing frequency transformations (depends on characteristic too,
     significant on perfect lowpass).
 
-  - ftrHighpass
+  - Function: ftrHighpass
     Handle odd degree
 
 
 * Stability
 
-  - linFirFilterGen
+  - Function: linFirFilterGen
     Implement semantic checks on bandwidth, center and cutoff frequency
 
-  - stdIirFilterGen
+  - Function: stdIirFilterGen
     Implement sematic checks on bandwidth, center and cutoff frequency
 
-  - linFirFilterGen
+  - Function: linFirFilterGen
     Use fpsetround()?
 
-  - mathMisc.c
+  - File: mathMisc.c
     Implement a generic math. error handler
 
-  - ftrBandstop
+  - Function: ftrBandstop
     Handle GSL_POSINF for call to filterResponsePoly() 
+
+  - Function: plotPhase
+    Check phase response of linear FIR filters and improve the graph layout
 
 
 * Maintainability
 
-  - mathPolyCoeffs2Roots
+  - Function: mathPolyCoeffs2Roots
     Try to avoid mixing error codes from gsl_errno.h and errno.h 
 
-  - linFirDesignDlgApply
+  - Function: linFirDesignDlgApply
     Share code with IIR design dialog
 
 
-* Style/Comments
+* Source style/comments
 
-  - genCosine2System
+  - Function: genCosine2System
     Give formula
 
-  - chebyT
+  - Function: chebyT
     Improve function description by the help of LaTeX
 
-  - timeResponseProcNext
+  - Function: timeResponseProcNext
     Describe algo used here 
 
 
 * Optimization
 
-  - mainDlgCreate
+  - Function: mainDlgCreate
     Reduce number of variables used
 
-  - responseWidget
+  - Function: responseWidget
     Try to move some of these data into responsePlot.c
 
 
-* Testing
+* Installation
 
-  - plotPhase
-    Check phase response of linear FIR filters and improve the graph layout
+  - Feature: automace/autoconf
+    Revise all automake/autoconf input files
 
 
-* New Features
+* New features
 
-  - New filter class ARBITRARY
+  - Feature: New filter class ARBITRARY
     Support of arbitrary frequency specification by Parks-McClellan algorithm
 
-  - Printing
+  - Feature: Printing
     Print support (requires GTK 2.10)
 
-  - Export
+  - Feature: Export
     More export formats for filter coefficients and plots
 
 
-  - Response Plot
+  - Feature: Response Plot
     Display coordinate when mouse moves over graph area
+
+  - Feature: Command line interface (CLI)
+    Implementation of command line options
 
