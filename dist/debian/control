@@ -1,0 +1,17 @@
+Source: dfcgen-gtk
+Section: electronics
+Priority: optional
+Maintainer: Ralf Hoppe <ralf.hoppe@ieee.org>
+Build-Depends: debhelper, autotools-dev, libc6-dev, libgsl0-dev (>= 1.6), libgtk2.0-dev (>= 2.8)
+Standards-Version: 3.6.1
+
+Package: dfcgen-gtk
+Architecture: i386
+Depends: libc6, libgsl0 (>= 1.6), libgtk2.0-0 (>= 2.8)
+Description: Digital Filter Coefficients Generator (DFCGEN) GTK+
+    DFCGEN, the Digital Filter Coefficients Generator, is a freeware
+    program, which assists the engineer in the design of digital filters.
+    It supports the engineer in analysis and synthesis of linear time-invariant
+    time-discrete (LTI) systems from the theoretical point of view. It
+    performs generation of system transfer function coefficients in the Z-domain
+    based on the type and the specific parameters of a chosen system.
