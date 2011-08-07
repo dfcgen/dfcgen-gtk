@@ -1,22 +1,27 @@
+## -*- Makefile -*-
+##
+## Copyright (c) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+##
+## Version:  $Header$
+##
 ## Process this file with automake to produce Makefile.in
-## Created by Anjuta - will be overwritten
-## If you don't want it to overwrite it,
-## 	Please disable it in the Anjuta project configuration
+##
+
+ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = po include src pixmaps data doc
 
-dfcgen_gtkdocdir = ${prefix}/share/gtk-doc/dfcgen-gtk
-dfcgen_gtkdoc_DATA =
+doc_DATA = \
+	README\
+	COPYING\
+	AUTHORS\
+	ChangeLog\
+	INSTALL\
+	NEWS
 
-EXTRA_DIST = $(dfcgen_gtkdoc_DATA)
+EXTRA_DIST = config.rpath  $(doc_DATA)
 
 
-
-# Copy all the spec files. Of cource, only one is actually used.
-dist-hook:
-	for specfile in *.spec; do \
-		if test -f $$specfile; then \
-			cp -p $$specfile $(distdir); \
-		fi \
-	done
-
+# Remove doc directory on uninstall
+uninstall-local:
+	-rm -r $(docdir)
