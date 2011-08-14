@@ -3,18 +3,8 @@
  * \file
  *           Standard IIR filter dialog functions.
  *
- * \author   Copyright (c) Ralf Hoppe
+ * \author   Copyright (C) 2006, 2011 Ralf Hoppe
  * \version  $Header: /home/cvs/dfcgen-gtk/src/stdIirDesignDlg.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
- *
- *
- * \see
- *
- * History:
- * $Log: not supported by cvs2svn $
- * Revision 1.1.1.1  2006/09/11 15:52:20  ralf
- * Initial CVS import
- *
- *
  *
  ******************************************************************************/
 
