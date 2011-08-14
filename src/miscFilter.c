@@ -6,19 +6,8 @@
  * \note     Includes raw filters (filters without a design, except \f$f_{Sample}\f$).
  *
  *
- * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Header: /home/cvs/dfcgen-gtk/src/miscFilter.c,v 1.3 2006-11-08 17:31:42 ralf Exp $
- *
- *
- * History:
- * $Log: not supported by cvs2svn $
- * Revision 1.2  2006/11/04 18:26:27  ralf
- * Further work (near 0.1 now)
- *
- * Revision 1.1.1.1  2006/09/11 15:52:19  ralf
- * Initial CVS import
- *
- *
  *
  ******************************************************************************/
 
