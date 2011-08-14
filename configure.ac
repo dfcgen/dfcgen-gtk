@@ -7,14 +7,16 @@ dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl Note: This file uses pkg-config and associated M4 macro PKG_CHECK_MODULES().
-dnl       So it runs only on systems, where pkg-config is available (mostly all
-dnl       Linux distributions). Also note that Anjuta only supports automake
-dnl       via pkg-config.
+dnl       So it runs only on systems, where pkg-config is available, mostly all
+dnl       Linux distributions. On Ubuntu 10.04 LTS (Lucid Lynx) the version of
+dnl       Autoconf is 2.65 (AC_USE_SYSTEM_EXTENSIONS was introduced in v2.60).
 
-AC_INIT([dfcgen-gtk], [0.2], [ralf.hoppe@ieee.org])
+AC_PREREQ(2.65)
+
+AC_INIT([dfcgen-gtk],[0.2],[ralf.hoppe@ieee.org])
 AC_CONFIG_HEADERS([config.h])
 
-AM_INIT_AUTOMAKE([foreign -Wall]) # automake options
+AM_INIT_AUTOMAKE([foreign -Wall]) dnl automake options
 AM_MAINTAINER_MODE
 
 AC_CONFIG_MACRO_DIR([m4])
@@ -28,17 +30,20 @@ AC_CONFIG_FILES([Makefile
                  doc/Makefile])
 
 dnl Because Anjuta does not understand the third and fourth parameter of
-dnl AC_INIT(), the package URL is declared this way.
+dnl AC_INIT, the package URL is declared this way.
 AC_DEFINE([PACKAGE_URL], ["http://home.arcor.de/dfcgen"], [package homepage])
 AC_DEFINE([PACKAGE_AUTHOR], ["Ralf Hoppe"], [package author])
 AC_DEFINE([PACKAGE_ICON], ["dfcgen.png"], [package icon])
 
+dnl Checks for programs (gcc)
+dnl LT_INIT
 AC_PROG_CC
+
 
 dnl Define _GNU_SOURCE to enable header file extensions on GNU systems (macro
 dnl AC_GNU_SOURCE is obsolete). Notice the ordering: after ‘AC_PROG_CC’ but
 dnl before ‘AM_GNU_GETTEXT’, most likely very close to the ‘AC_PROG_CC’
-dnl invocation (see gettext manual 13.4.5)
+dnl invocation.
 AC_USE_SYSTEM_EXTENSIONS
 
 
@@ -69,10 +74,6 @@ dnl       Debian control file "./dist/debian/control".
 PKG_CHECK_MODULES(PACKAGE, [gtk+-2.0 >= 2.12 gdk-2.0 gsl >= 1.10])
 AC_SUBST([PACKAGE_CFLAGS])
 AC_SUBST([PACKAGE_LIBS])
-
-
-dnl Checks for programs
-AC_PROG_LIBTOOL
 
 
 dnl Checks for libraries
