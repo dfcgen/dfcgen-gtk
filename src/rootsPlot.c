@@ -3,16 +3,8 @@
  * \file
  *           Roots plot functions.
  *
- * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Header: /home/cvs/dfcgen-gtk/src/rootsPlot.c,v 1.2 2006-11-08 17:31:42 ralf Exp $
- *
- *
- * History:
- * $Log: not supported by cvs2svn $
- * Revision 1.1  2006/11/04 18:24:25  ralf
- * Initial revision
- *
- *
  *
  ******************************************************************************/
 
