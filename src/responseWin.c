@@ -3,19 +3,8 @@
  * \file
  *           Digital filter response window creation and callbacks.
  *
- * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Header: /home/cvs/dfcgen-gtk/src/responseWin.c,v 1.3 2006-11-08 17:31:42 ralf Exp $
- *
- *
- * History:
- * $Log: not supported by cvs2svn $
- * Revision 1.2  2006/11/04 18:26:27  ralf
- * Further work (near 0.1 now)
- *
- * Revision 1.1.1.1  2006/09/11 15:52:19  ralf
- * Initial CVS import
- *
- *
  *
  ******************************************************************************/
 
@@ -335,7 +324,7 @@ static void responseWinCreate (RESPONSE_WIN *pDesc)
     btnPrint = gtk_button_new_from_stock ("gtk-print");
     gtk_box_pack_end (GTK_BOX (hbox), btnPrint, FALSE, FALSE, 6);
 
-#if !GTK_CHECK_VERSION(2, 10, 0)            /* print support requires GTK 2.10 */
+#if 1 || !GTK_CHECK_VERSION(2, 10, 0)            /* print support requires GTK 2.10 */
     gtk_widget_set_sensitive (GTK_WIDGET(btnPrint), FALSE);
 #endif
 
