@@ -3,19 +3,8 @@
  * \file
  *           File menu dialogs.
  *
- * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (c) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Header: /home/cvs/dfcgen-gtk/src/fileDlg.c,v 1.3 2006-11-08 17:31:42 ralf Exp $
- *
- *
- * History:
- * $Log: not supported by cvs2svn $
- * Revision 1.2  2006/11/04 18:26:27  ralf
- * Further work (near 0.1 now)
- *
- * Revision 1.1.1.1  2006/09/11 15:52:20  ralf
- * Initial CVS import
- *
- *
  *
  ******************************************************************************/
 
@@ -350,7 +339,7 @@ void fileDlgSaveAsActivate (GtkWidget* srcWidget, gpointer user_data)
  ******************************************************************************/
 void fileDlgPrintActivate (GtkMenuItem* menuitem, gpointer user_data)
 {
-#if GTK_CHECK_VERSION(2, 10, 0)            /* print support requires GTK 2.10 */
+#if 0 && GTK_CHECK_VERSION(2, 10, 0)            /* print support requires GTK 2.10 */
     GtkPrintOperationResult result;
 
     GtkPrintOperation* print = gtk_print_operation_new ();
