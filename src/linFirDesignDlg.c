@@ -3,13 +3,8 @@
  * \file
  *           Linear FIR filter dialog functions.
  *
- * \author   Copyright (c) Ralf Hoppe
+ * \author   Copyright (C) 2006, 2011 Ralf Hoppe
  * \version  $Header: /home/cvs/dfcgen-gtk/src/linFirDesignDlg.c,v 1.1 2006-11-04 18:24:25 ralf Exp $
- *
- *
- * History:
- * $Log: not supported by cvs2svn $
- *
  *
  ******************************************************************************/
 
