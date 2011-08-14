@@ -1,23 +1,10 @@
 /******************************************************************************/
 /**
  * \file
- *           Description.
+ *           Filter support functions.
  *
- * \author   Copyright (c) Ralf Hoppe
+ * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Header: /home/cvs/dfcgen-gtk/include/filterSupport.h,v 1.3 2006-11-08 17:59:50 ralf Exp $
- *
- *
- * \see
- *
- * History:
- * $Log: not supported by cvs2svn $
- * Revision 1.2  2006/11/04 18:28:27  ralf
- * Further work (near 0.1 now)
- *
- * Revision 1.1.1.1  2006/09/11 15:52:21  ralf
- * Initial CVS import
- *
- *
  *
  ******************************************************************************/
 

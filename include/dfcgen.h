@@ -4,15 +4,7 @@
  *              Digital Filter Coefficients Generator common types.
  * \version     $Header: /home/cvs/dfcgen-gtk/include/dfcgen.h,v 1.2 2006-11-04 18:28:27 ralf Exp $
  *
- * \author      Copyright (c) Ralf Hoppe
- *
- *
- * History:
- * $Log: not supported by cvs2svn $
- * Revision 1.1.1.1  2006/09/11 15:52:21  ralf
- * Initial CVS import
- *
- *
+ * \author      Copyright (C) 2006, 2011 Ralf Hoppe
  *
  ******************************************************************************/
 

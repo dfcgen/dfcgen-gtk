@@ -3,7 +3,7 @@
  * \file
  *           Additional doxygen sections (no code).
  *
- * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Header: /home/cvs/dfcgen-gtk/include/doxygen.h,v 1.1 2006-11-04 18:28:48 ralf Exp $
  *
  * \page        Configure
@@ -22,9 +22,6 @@
  *
  *
  * \todo        Correct the e-mail address
- *
- * History:
- * $Log: not supported by cvs2svn $
  *
  ******************************************************************************/
 

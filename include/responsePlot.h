@@ -3,16 +3,8 @@
  * \file
  *           Digital filter response plotter.
  *
- * \author   Copyright (c) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Header: /home/cvs/dfcgen-gtk/include/responsePlot.h,v 1.2 2006-11-08 17:59:49 ralf Exp $
- *
- *
- * History:
- * $Log: not supported by cvs2svn $
- * Revision 1.1.1.1  2006/09/11 15:52:21  ralf
- * Initial CVS import
- *
- *
  *
  ******************************************************************************/
 
