@@ -2,22 +2,12 @@
 /**
  * \file
  *           Main dialog elements (right, bottom of window) handling.
- * \author   Copyright (c) 2006 Ralf Hoppe
+ * \author   Copyright (C) 2006, 2011 Ralf Hoppe
  *
  * \version  $Header: /home/cvs/dfcgen-gtk/src/mainDlg.c,v 1.3 2006-11-08 17:31:42 ralf Exp $
  *
- *
  * \note     Parts of code taken over from \e glade in interface.c, which itself
  *           isn't a project file.
- *
- * $Log: not supported by cvs2svn $
- * Revision 1.2  2006/11/04 18:26:27  ralf
- * Further work (near 0.1 now)
- *
- * Revision 1.1.1.1  2006/09/11 15:52:19  ralf
- * Initial CVS import
- *
- *
  *
  ******************************************************************************/
 
@@ -750,7 +740,7 @@ GtkWidget* mainDlgCreate (void)
     menuItem = gtk_image_menu_item_new_from_stock ("gtk-print", accel_group);
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
 
-#if GTK_CHECK_VERSION(2, 10, 0)            /* print support requires GTK 2.10 */
+#if 0 && GTK_CHECK_VERSION(2, 10, 0)            /* print support requires GTK 2.10 */
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (fileDlgPrintActivate),
                       NULL);
