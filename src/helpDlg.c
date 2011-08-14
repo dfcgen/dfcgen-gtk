@@ -3,15 +3,8 @@
  * \file
  *           Dialogs from the Help menu.
  *
- * \author   Copyright (c) Ralf Hoppe
+ * \author   Copyright (C) 2006, 2011 Ralf Hoppe
  * \version  $Header: /home/cvs/dfcgen-gtk/src/helpDlg.c,v 1.1.1.1 2006-09-11 15:52:19 ralf Exp $
- *
- *
- * \see
- *
- * History:
- * $Log: not supported by cvs2svn $
- *
  *
  ******************************************************************************/
 
@@ -81,7 +74,7 @@ void helpDlgMenuActivate (GtkMenuItem* menuitem, gpointer user_data)
     gtk_about_dialog_set_version (GTK_ABOUT_DIALOG (dialogAbout), VERSION);
     gtk_about_dialog_set_name (GTK_ABOUT_DIALOG (dialogAbout), PACKAGE);
     gtk_about_dialog_set_copyright (GTK_ABOUT_DIALOG (dialogAbout), _("Copyright (c) 2006 " PACKAGE_AUTHOR));
-    gtk_about_dialog_set_website (GTK_ABOUT_DIALOG (dialogAbout), PACKAGE_WEBSITE);
+    gtk_about_dialog_set_website (GTK_ABOUT_DIALOG (dialogAbout), PACKAGE_URL);
     gtk_about_dialog_set_authors (GTK_ABOUT_DIALOG (dialogAbout), authors);
     gtk_about_dialog_set_documenters (GTK_ABOUT_DIALOG (dialogAbout), documenters);
     gtk_about_dialog_set_translator_credits (GTK_ABOUT_DIALOG (dialogAbout), translators);
