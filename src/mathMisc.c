@@ -3,18 +3,10 @@
  * \file
  *           Miscellaneous mathematical functions and macros.
  *
- * \author   Copyright (c) Ralf Hoppe
+ * \author   Copyright (C) 2006, 2011 Ralf Hoppe
  * \version  $Header: /home/cvs/dfcgen-gtk/src/mathMisc.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
  *
- *
  *  \todo               Implement a generic error handler
- *
- * History:
- * $Log: not supported by cvs2svn $
- * Revision 1.1.1.1  2006/09/11 15:52:19  ralf
- * Initial CVS import
- *
- *
  *
  ******************************************************************************/
 
