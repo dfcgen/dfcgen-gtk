@@ -16,9 +16,7 @@ AC_PREREQ(2.65)
 AC_INIT([dfcgen-gtk],[0.2],[ralf.hoppe@ieee.org])
 AC_CONFIG_HEADERS([config.h])
 
-AM_INIT_AUTOMAKE([foreign -Wall]) dnl automake options
-AM_MAINTAINER_MODE
-
+AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([src/main.c])
 AC_CONFIG_FILES([Makefile
@@ -28,6 +26,10 @@ AC_CONFIG_FILES([Makefile
                  pixmaps/Makefile
                  data/Makefile
                  doc/Makefile])
+
+AM_INIT_AUTOMAKE([foreign -Wall]) dnl automake options
+AM_MAINTAINER_MODE
+
 
 dnl Because Anjuta does not understand the third and fourth parameter of
 dnl AC_INIT, the package URL is declared this way.
