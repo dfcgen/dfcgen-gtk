@@ -1,16 +1,30 @@
+## -*- Makefile -*-
+##
+## Copyright (c) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+##
+## Version:  $Header$
+##
 ## Process this file with automake to produce Makefile.in
+##
 
-## Created by Anjuta - will be overwritten
-## If you don't want it to overwrite it,
-## 	Please disable it in the Anjuta project configuration
+AM_CPPFLAGS = \
+	-DPACKAGE_LOCALE_DIR=\""$(localedir)"\" \
+	-DPACKAGE_DATA_DIR=\""$(datadir)"\" \
+	-DPACKAGE_PIXMAPS_DIR=\""$(pkgdatadir)/pixmaps"\" \
+	-I../include \
+	@PACKAGE_CFLAGS@
 
-INCLUDES = \
-	$(PACKAGE_CFLAGS)\
-	 -I../include
 
-AM_CFLAGS =\
-	 -DHAVE_CONFIG_H\
-	 -Wall -Wuninitialized -Wmissing-prototypes
+# Additional CFLAGS
+AM_CFLAGS = \
+	 -Wall \
+	 -Wuninitialized \
+	 -Wmissing-prototypes
+
+
+# Use PACKAGE_LIBS from PKG_CHECK_MODULES (pkg-config)
+AM_LDFLAGS = @PACKAGE_LIBS@
+
 
 bin_PROGRAMS = dfcgen-gtk
 
@@ -42,9 +56,3 @@ dfcgen_gtk_SOURCES = \
 	linFirDesignDlg.c\
 	linFirFilter.c\
 	rootsPlot.c
-
-dfcgen_gtk_LDFLAGS = 
-
-dfcgen_gtk_LDADD =  \
-	$(PACKAGE_LIBS)
-

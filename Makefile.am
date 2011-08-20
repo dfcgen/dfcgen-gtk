@@ -14,12 +14,10 @@ SUBDIRS = po include src pixmaps data doc
 doc_DATA = \
 	README\
 	COPYING\
-	AUTHORS\
 	ChangeLog\
-	INSTALL\
-	NEWS
+	INSTALL
 
-EXTRA_DIST = config.rpath  $(doc_DATA)
+EXTRA_DIST = $(doc_DATA)
 
 
 # Remove doc directory on uninstall

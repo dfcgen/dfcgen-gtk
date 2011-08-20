@@ -1,12 +1,13 @@
+## -*- Makefile -*-
+##
+## Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+##
+## Version:  $Header$
+##
 ## Process this file with automake to produce Makefile.in
+##
 
-## Created by Anjuta - will be overwritten
-## If you don't want it to overwrite it,
-## 	Please disable it in the Anjuta project configuration
-
-dfcgen_gtk_includedir = $(pkgincludedir)
-
-dfcgen_gtk_include_DATA = \
+noinst_HEADERS = \
 	base.h\
 	cairoPlot.h\
 	cfgSettings.h\
@@ -37,5 +38,3 @@ dfcgen_gtk_include_DATA = \
 	stdIirDesignDlg.h\
 	stdIirFilter.h\
 	support.h
-
-EXTRA_DIST = $(dfcgen_gtk_include_DATA)

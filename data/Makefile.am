@@ -1,12 +1,13 @@
+## -*- Makefile -*-
+##
+## Copyright (c) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+##
+## Version:  $Header$
+##
 ## Process this file with automake to produce Makefile.in
+##
 
-## Created by Anjuta - will be overwritten
-## If you don't want it to overwrite it,
-## 	Please disable it in the Anjuta project configuration
-
-dfcgen_gtk_datadir = $(prefix)/@NO_PREFIX_PACKAGE_DATA_DIR@/@PACKAGE@
-
-dfcgen_gtk_data_DATA = \
+dist_data_DATA = \
 	differentiator1.dfc\
 	differentiator2.dfc\
 	integrator_38rule.dfc\
@@ -20,5 +21,3 @@ dfcgen_gtk_data_DATA = \
 	fitting7_poly4.dfc\
 	fitting9_poly2.dfc\
 	fitting9_poly4.dfc
-
-EXTRA_DIST = $(dfcgen_gtk_data_DATA)

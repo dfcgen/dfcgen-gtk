@@ -1,12 +1,15 @@
+## -*- Makefile -*-
+##
+## Copyright (c) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+##
+## Version:  $Header$
+##
 ## Process this file with automake to produce Makefile.in
+##
 
-## Created by Anjuta - will be overwritten
-## If you don't want it to overwrite it,
-## 	Please disable it in the Anjuta project configuration
+pixmapsdir = $(pkgdatadir)/pixmaps
 
-dfcgen_gtk_pixmapsdir = $(prefix)/@NO_PREFIX_PACKAGE_PIXMAPS_DIR@
-
-dfcgen_gtk_pixmaps_DATA = \
+dist_pixmaps_DATA = \
 	dfcgen.png\
 	attenuation.png\
 	charfunc.png\
@@ -17,4 +20,3 @@ dfcgen_gtk_pixmaps_DATA = \
 	step.png\
 	amplitude.png
 
-EXTRA_DIST = $(dfcgen_gtk_pixmaps_DATA)
