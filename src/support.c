@@ -129,6 +129,7 @@ create_pixbuf                          (const gchar     *filename)
   return pixbuf;
 }
 
+#if 0 /* FIXME */
 /* This is used to set ATK action descriptions. */
 void
 glade_set_atk_action_description       (AtkAction       *action,
@@ -145,3 +146,4 @@ glade_set_atk_action_description       (AtkAction       *action,
     }
 }
 
+#endif
