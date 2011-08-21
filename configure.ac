@@ -27,7 +27,9 @@ AC_CONFIG_FILES([Makefile
                  data/Makefile
                  doc/Makefile])
 
-AM_INIT_AUTOMAKE([foreign -Wall]) dnl automake options
+dnl Automake options: we are not strictly GNU compatible (foreign),
+dnl because the following files are missing: NEWS, AUTHORS, ABOUT-NLS
+AM_INIT_AUTOMAKE([-Wall foreign])
 AM_MAINTAINER_MODE
 
 
