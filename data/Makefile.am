@@ -2,12 +2,12 @@
 ##
 ## Copyright (c) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
 ##
-## Version:  $Header$
+## Version:  $Id$
 ##
 ## Process this file with automake to produce Makefile.in
 ##
 
-dist_data_DATA = \
+dist_pkgdata_DATA = \
 	differentiator1.dfc\
 	differentiator2.dfc\
 	integrator_38rule.dfc\
