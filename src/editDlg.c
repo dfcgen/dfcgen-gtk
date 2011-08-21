@@ -4,7 +4,7 @@
  *           \e Edit dialog(s).
  *
  * \author   Copyright (c) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/src/editDlg.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
+ * \version  $Id$
  *
  ******************************************************************************/
 

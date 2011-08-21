@@ -4,7 +4,7 @@
  *           Dialogs from the Help menu.
  *
  * \author   Copyright (C) 2006, 2011 Ralf Hoppe
- * \version  $Header: /home/cvs/dfcgen-gtk/src/helpDlg.c,v 1.1.1.1 2006-09-11 15:52:19 ralf Exp $
+ * \version  $Id$
  *
  ******************************************************************************/
 

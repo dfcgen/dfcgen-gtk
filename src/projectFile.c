@@ -12,7 +12,7 @@
  *           in the \e C locale for LC_NUMERIC.
  *
  * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/src/projectFile.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
+ * \version  $Id$
  *
  ******************************************************************************/
 

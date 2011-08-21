@@ -4,7 +4,7 @@
  *           Dialog helper functions.
  *
  * \author   Copyright (c) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/src/dialogSupport.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
+ * \version  $Id$
  *
  ******************************************************************************/
 

@@ -4,7 +4,7 @@
  *           Standard IIR filter dialog functions.
  *
  * \author   Copyright (C) 2006, 2011 Ralf Hoppe
- * \version  $Header: /home/cvs/dfcgen-gtk/src/stdIirDesignDlg.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
+ * \version  $Id$
  *
  ******************************************************************************/
 

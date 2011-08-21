@@ -4,7 +4,7 @@
  *           Standard IIR filter coefficients generator.
  *
  * \author   Copyright (C) 2006, 2011 Ralf Hoppe
- * \version  $Header: /home/cvs/dfcgen-gtk/src/stdIirFilter.c,v 1.3 2006-11-08 17:31:42 ralf Exp $
+ * \version  $Id$
  *
  ******************************************************************************/
 

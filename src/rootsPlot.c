@@ -4,7 +4,7 @@
  *           Roots plot functions.
  *
  * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/src/rootsPlot.c,v 1.2 2006-11-08 17:31:42 ralf Exp $
+ * \version  $Id$
  *
  ******************************************************************************/
 

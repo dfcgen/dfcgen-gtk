@@ -7,7 +7,7 @@
  *           in the "C" locale for LC_NUMERIC.
  *
  * \author   Copyright (c) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/src/cfgSettings.c,v 1.3 2006-11-08 17:31:42 ralf Exp $
+ * \version  $Id$
  *
  ******************************************************************************/
 

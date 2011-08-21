@@ -4,7 +4,7 @@
  *           Linear FIR filter coefficients generator.
  *
  * \author   Copyright (C) 2006, 2011 Ralf Hoppe
- * \version  $Header: /home/cvs/dfcgen-gtk/src/linFirFilter.c,v 1.2 2006-11-08 17:31:42 ralf Exp $
+ * \version  $Id$
  *
  ******************************************************************************/
 

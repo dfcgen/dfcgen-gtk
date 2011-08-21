@@ -8,7 +8,7 @@
  *           or to libxml is possible, but need a lot of work.
  *
  * \author   Copyright (c) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/src/dfcProject.c,v 1.3 2006-11-08 17:31:42 ralf Exp $
+ * \version  $Id$
  *
  ******************************************************************************/
 

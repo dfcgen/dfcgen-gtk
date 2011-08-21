@@ -6,7 +6,7 @@
  * \note     Includes raw filters (filters without a design).
  *
  * \author   Copyright (C) 2006, 2011 Ralf Hoppe
- * \version  $Header: /home/cvs/dfcgen-gtk/src/miscDesignDlg.c,v 1.2 2006-11-04 18:26:27 ralf Exp $
+ * \version  $Id$
  *
  ******************************************************************************/
 
