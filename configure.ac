@@ -1,8 +1,8 @@
 dnl -*- Autoconf -*-
 dnl
-dnl Copyright (c) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+dnl Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
 dnl
-dnl Version:  $Header$
+dnl Version:  $Id$
 dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl

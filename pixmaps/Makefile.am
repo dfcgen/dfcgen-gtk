@@ -2,7 +2,7 @@
 ##
 ## Copyright (c) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
 ##
-## Version:  $Header$
+## Version:  $Id$
 ##
 ## Process this file with automake to produce Makefile.in
 ##
