@@ -4,7 +4,7 @@
  *           Filter support functions.
  *
  * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/include/filterSupport.h,v 1.3 2006-11-08 17:59:50 ralf Exp $
+ * \version  $Id$
  *
  ******************************************************************************/
 

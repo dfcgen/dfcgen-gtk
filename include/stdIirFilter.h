@@ -3,8 +3,8 @@
  * \file
  *           Interface to Standard IIR Filter approximation functions.
  *
- * \author   Copyright (C) 2006 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/include/stdIirFilter.h,v 1.3 2006-11-08 17:59:50 ralf Exp $
+ * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \version  $Id$
  *
  ******************************************************************************/
 

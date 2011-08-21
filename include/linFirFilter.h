@@ -4,7 +4,7 @@
  *           Interface to Linear IIR Filter interpolation functions.
  *
  * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/include/linFirFilter.h,v 1.3 2006-11-08 17:59:49 ralf Exp $
+ * \version  $Id$
  *
  ******************************************************************************/
 

@@ -6,7 +6,7 @@
  * \note     Includes raw filters (filters without a design, except \f$f_{Sample}\f$).
  *
  * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/include/miscDesignDlg.h,v 1.2 2006-11-04 18:28:27 ralf Exp $
+ * \version  $Id$
  *
  ******************************************************************************/
 

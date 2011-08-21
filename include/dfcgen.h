@@ -2,7 +2,7 @@
 /**
  * \file
  *              Digital Filter Coefficients Generator common types.
- * \version     $Header: /home/cvs/dfcgen-gtk/include/dfcgen.h,v 1.2 2006-11-04 18:28:27 ralf Exp $
+ * \version     $Id$
  *
  * \author      Copyright (C) 2006, 2011 Ralf Hoppe
  *

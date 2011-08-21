@@ -4,7 +4,7 @@
  *           Digital filter response window creation and callbacks.
  *
  * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/include/responseWin.h,v 1.1.1.1 2006-09-11 15:52:21 ralf Exp $
+ * \version  $Id$
  *
  ******************************************************************************/
 

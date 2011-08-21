@@ -4,7 +4,7 @@
  *           Design dialogs handler.
  *
  * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/include/designDlg.h,v 1.2 2007-09-22 17:51:51 ralf Exp $
+ * \version  $Id$
  *
  ******************************************************************************/
 

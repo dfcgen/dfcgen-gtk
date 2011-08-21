@@ -4,7 +4,7 @@
  *           Additional doxygen sections (no code).
  *
  * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Header: /home/cvs/dfcgen-gtk/include/doxygen.h,v 1.1 2006-11-04 18:28:48 ralf Exp $
+ * \version  $Id$
  *
  * \page        Configure
  *              See output of \c configure \c --help
