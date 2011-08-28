@@ -1,6 +1,6 @@
 ## -*- Makefile -*-
 ##
-## Copyright (c) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+## Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
 ##
 ## Version:  $Id$
 ##
@@ -23,3 +23,23 @@ EXTRA_DIST = $(doc_DATA)
 # Remove doc directory on uninstall
 uninstall-local:
 	-rm -r $(docdir)
+
+
+# Maintainer rule for building a Debian package
+dist_debian_tmpdir="dist/$(distdir)"
+
+dist-debian: dist
+	mkdir -p dist
+	mv -f $(distdir).* dist
+	cd dist && gunzip -c $(distdir).tar.gz | tar xf -
+	cp -Rf dist/debian $(dist_debian_tmpdir)
+	rm -Rf $(dist_debian_tmpdir)/debian/.svn
+	cd $(dist_debian_tmpdir) && dpkg-buildpackage -rfakeroot
+	rm -Rf $(dist_debian_tmpdir)
+
+
+maintainer-clean-local:
+	rm -Rf dist/$(distdir)
+
+
+.PHONY: dist-debian
