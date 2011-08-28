@@ -35,6 +35,9 @@ dist-debian: dist
 	cp -Rf dist/debian $(dist_debian_tmpdir)
 	rm -Rf $(dist_debian_tmpdir)/debian/.svn
 	cd $(dist_debian_tmpdir) && dpkg-buildpackage -rfakeroot
+	@echo '--------------------------------------------------------------------'
+	@dpkg-parsechangelog -l./dist/debian/changelog
+	@echo '--------------------------------------------------------------------'
 	rm -Rf $(dist_debian_tmpdir)
 
 
