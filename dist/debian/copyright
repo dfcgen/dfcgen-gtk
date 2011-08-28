@@ -1,15 +1,40 @@
-This package was debianized by Ralf Hoppe <ralf.hoppe@ieee.org> on
-Fri, 10 Nov 2006 21:25:10 +0100.
+This work was packaged for Debian by:
 
-It was downloaded from http://www.dfcgen.org
+    Ralf Hoppe <ralf.hoppe@ieee.org> on Sun, 21 Aug 2011 15:28:26 +0200
 
-Copyright Holder: Ralf Hoppe <ralf.hoppe@ieee.org>
+It was downloaded from:
+
+    http://home.arcor.de/dfcgen
+
+Upstream Author(s):
+
+    Ralf Hoppe <ralf.hoppe@ieee.org>
+
+Copyright:
+
+    Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
 
 License:
 
-This software is copyright (c) 2006 by Ralf Hoppe. You are free to
-distribute this software under the terms of the GNU General Public
-License.
+   This package is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License version 2 as
+   published by the Free Software Foundation.
+
+    This package is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this package; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+On Debian systems, the complete text of the GNU General
+Public License version 2 can be found in `/usr/share/common-licenses/GPL-2'.
+
+The Debian packaging is:
+
+    Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
 
        GNU GENERAL PUBLIC LICENSE
 
