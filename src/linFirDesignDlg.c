@@ -453,7 +453,7 @@ void linFirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
 
 
     /* degree spin-button */
-    spinAdjust = gtk_adjustment_new (1, FLT_DEGREE_MIN, FLT_DEGREE_MAX, 1, 10, 10);
+    spinAdjust = gtk_adjustment_new (1, FLT_DEGREE_MIN, FLT_DEGREE_MAX, 1, 10, 0);
     widget = gtk_spin_button_new (GTK_ADJUSTMENT (spinAdjust), 1, 0);
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
     gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 0, 1,

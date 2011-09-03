@@ -124,7 +124,7 @@ static GtkWidget* createSettingsDlg (const CFG_DESKTOP* pPrefs)
     gtk_table_set_row_spacings (GTK_TABLE (table), 6);
     gtk_table_set_col_spacings (GTK_TABLE (table), 12);
 
-    spinAdjust = gtk_adjustment_new (pPrefs->outprec, 1, DBL_DIG, 1, 1, 1);
+    spinAdjust = gtk_adjustment_new (pPrefs->outprec, 1, DBL_DIG, 1, 1, 0);
     widget = gtk_spin_button_new (GTK_ADJUSTMENT (spinAdjust), 1, 0);
     gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 0, 1,
                       (GtkAttachOptions) (GTK_FILL),

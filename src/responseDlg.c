@@ -364,7 +364,7 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (0), 0, 0);
 
-    adjustment = gtk_adjustment_new (0, 0, RESPONSE_DLG_SPIN_MAX, 1, 10, 10);
+    adjustment = gtk_adjustment_new (0, 0, RESPONSE_DLG_SPIN_MAX, 1, 10, 0);
     widget = gtk_spin_button_new (GTK_ADJUSTMENT (adjustment), 1, 0);
     gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 4, 5,
                       (GtkAttachOptions) (GTK_FILL),
