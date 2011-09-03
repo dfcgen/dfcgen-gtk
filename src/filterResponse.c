@@ -3,7 +3,7 @@
  * \file
  *           Filter response functions.
  *
- * \author   Copyright (c) Ralf Hoppe
+ * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org> 
  * \version  $Id$
  *
  ******************************************************************************/

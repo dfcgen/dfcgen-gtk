@@ -73,7 +73,7 @@ void helpDlgMenuActivate (GtkMenuItem* menuitem, gpointer user_data)
     gtk_window_set_destroy_with_parent (GTK_WINDOW (dialogAbout), TRUE);
     gtk_about_dialog_set_version (GTK_ABOUT_DIALOG (dialogAbout), VERSION);
     gtk_about_dialog_set_name (GTK_ABOUT_DIALOG (dialogAbout), PACKAGE);
-    gtk_about_dialog_set_copyright (GTK_ABOUT_DIALOG (dialogAbout), _("Copyright (c) 2006 " PACKAGE_AUTHOR));
+    gtk_about_dialog_set_copyright (GTK_ABOUT_DIALOG (dialogAbout), _("Copyright (C) 2006, 2011 " PACKAGE_AUTHOR));
     gtk_about_dialog_set_website (GTK_ABOUT_DIALOG (dialogAbout), PACKAGE_URL);
     gtk_about_dialog_set_authors (GTK_ABOUT_DIALOG (dialogAbout), authors);
     gtk_about_dialog_set_documenters (GTK_ABOUT_DIALOG (dialogAbout), documenters);

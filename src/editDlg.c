@@ -3,7 +3,7 @@
  * \file
  *           \e Edit dialog(s).
  *
- * \author   Copyright (c) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
  *
  ******************************************************************************/
