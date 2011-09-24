@@ -544,7 +544,9 @@ int cfgFlushSettings ()
     /* First write application group
      */
     g_key_file_set_comment (keyFile, NULL, NULL,
-                            PACKAGE ", " VERSION " session settings (UTF-8 coded)", NULL);
+                            " -*- mode: conf; coding: utf-8 -*-\n"
+                            " " PACKAGE " " VERSION " session settings (UTF-8 coded)",
+                            NULL);
 
     g_key_file_set_string (keyFile, CFG_GROUP_APPLICATION, CFG_KEY_APPNAME, PACKAGE);
     g_key_file_set_string (keyFile, CFG_GROUP_APPLICATION, CFG_KEY_APPVERSION, VERSION);
