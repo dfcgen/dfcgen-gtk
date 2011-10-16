@@ -17,7 +17,7 @@
 #include "responseWin.h"
 
 #include <errno.h>
-#include <string.h>
+#include <string.h> /* memcpy() */
 
 
 /* GLOBAL CONSTANT DEFINITIONS ************************************************/
@@ -311,7 +311,7 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     axisName = g_strdup_printf ("<b>%s '%s'</b>", _("Axis"),
                                 gettext (pDiag->x.name));
     label = gtk_label_new (axisName);
-    g_free (axisName);
+    FREE (axisName);
     gtk_frame_set_label_widget (GTK_FRAME (frame), label);
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
 
@@ -419,7 +419,7 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     axisName = g_strdup_printf ("<b>%s '%s'</b>", _("Axis"),
                                 gettext (pDiag->y.name));
     label = gtk_label_new (axisName);
-    g_free (axisName);
+    FREE (axisName);
     gtk_frame_set_label_widget (GTK_FRAME (frame), label);
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
 
