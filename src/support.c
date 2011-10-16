@@ -9,7 +9,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <string.h>
 #include <stdio.h>
 
 #include <gtk/gtk.h>
@@ -69,7 +68,7 @@ find_pixmap_file                       (const gchar     *filename)
                                          G_DIR_SEPARATOR_S, filename);
       if (g_file_test (pathname, G_FILE_TEST_EXISTS))
         return pathname;
-      g_free (pathname);
+      FREE (pathname);
       elem = elem->next;
     }
   return NULL;
@@ -95,7 +94,7 @@ create_pixmap                          (GtkWidget       *widget,
     }
 
   pixmap = gtk_image_new_from_file (pathname);
-  g_free (pathname);
+  FREE (pathname);
   return pixmap;
 }
 
@@ -125,7 +124,7 @@ create_pixbuf                          (const gchar     *filename)
                pathname, error->message);
       g_error_free (error);
     }
-  g_free (pathname);
+  FREE (pathname);
   return pixbuf;
 }
 
@@ -141,7 +140,7 @@ glade_set_atk_action_description       (AtkAction       *action,
   n_actions = atk_action_get_n_actions (action);
   for (i = 0; i < n_actions; i++)
     {
-      if (!strcmp (atk_action_get_name (action, i), action_name))
+      if (!g_strcmp0 (atk_action_get_name (action, i), action_name))
         atk_action_set_description (action, i, description);
     }
 }
