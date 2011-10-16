@@ -1,15 +1,14 @@
-# -*- po-mode -*-
-#
-# DFCGEN-GTK German Translations
-# Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
-# This file is distributed under the same license as the dfcgen-gtk package.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Ralf Hoppe
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: dfcgen-gtk 0.2\n"
 "Report-Msgid-Bugs-To: ralf.hoppe@ieee.org\n"
-"POT-Creation-Date: 2011-08-16 22:52+0200\n"
+"POT-Creation-Date: 2011-10-09 18:51+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/support.c:93 src/support.c:117
+#: src/support.c:92 src/support.c:116
 #, c-format
 msgid "Couldn't find pixmap file: %s"
 msgstr ""
@@ -130,107 +129,107 @@ msgstr ""
 msgid "_File"
 msgstr ""
 
-#: src/mainDlg.c:761
+#: src/mainDlg.c:763
 msgid "_Edit"
 msgstr ""
 
-#: src/mainDlg.c:767 src/editDlg.c:314
+#: src/mainDlg.c:769 src/editDlg.c:313
 msgid "Project Info"
 msgstr ""
 
-#: src/mainDlg.c:774
+#: src/mainDlg.c:776
 msgid "Coefficient(s)"
 msgstr ""
 
-#: src/mainDlg.c:804
+#: src/mainDlg.c:806
 msgid "_View"
 msgstr ""
 
-#: src/mainDlg.c:810
+#: src/mainDlg.c:812
 msgid "_Magnitude Response"
 msgstr ""
 
-#: src/mainDlg.c:816
+#: src/mainDlg.c:818
 msgid "_Attenuation"
 msgstr ""
 
-#: src/mainDlg.c:822
+#: src/mainDlg.c:824
 msgid "_Characteristic Function"
 msgstr ""
 
-#: src/mainDlg.c:828
+#: src/mainDlg.c:830
 msgid "_Phase Response"
 msgstr ""
 
-#: src/mainDlg.c:834
+#: src/mainDlg.c:836
 msgid "Phase _Delay"
 msgstr ""
 
-#: src/mainDlg.c:840
+#: src/mainDlg.c:842
 msgid "_Group Delay"
 msgstr ""
 
-#: src/mainDlg.c:846
+#: src/mainDlg.c:848
 msgid "_Impulse Response"
 msgstr ""
 
-#: src/mainDlg.c:852
+#: src/mainDlg.c:854
 msgid "_Step Response"
 msgstr ""
 
-#: src/mainDlg.c:858
+#: src/mainDlg.c:860
 msgid "_Help"
 msgstr ""
 
-#: src/mainDlg.c:924
+#: src/mainDlg.c:926
 msgid "<b>_Class</b>"
 msgstr ""
 
-#: src/mainDlg.c:930
+#: src/mainDlg.c:932
 msgid "Class of filter (or system)"
 msgstr ""
 
-#: src/mainDlg.c:945
+#: src/mainDlg.c:947
 msgid "Help"
 msgstr ""
 
-#: src/mainDlg.c:952
+#: src/mainDlg.c:954
 msgid "Apply input data"
 msgstr ""
 
-#: src/mainDlg.c:968
+#: src/mainDlg.c:970
 msgid "<b>Roots</b>"
 msgstr ""
 
-#: src/mainDlg.c:987
+#: src/mainDlg.c:989
 msgid "Denominator coefficients"
 msgstr ""
 
-#: src/mainDlg.c:999
+#: src/mainDlg.c:1001
 msgid "Numerator coefficients"
 msgstr ""
 
-#: src/mainDlg.c:1001
+#: src/mainDlg.c:1003
 msgid "<b>Numerator</b>"
 msgstr ""
 
-#: src/mainDlg.c:1009
+#: src/mainDlg.c:1011
 msgid "<b>Denominator</b>"
 msgstr ""
 
-#: src/mainDlg.c:1176
+#: src/mainDlg.c:1178
 msgid ""
 "Filter generation has dropped some (near zero) coefficients, but the filter "
 "is still valid."
 msgstr ""
 
-#: src/mainDlg.c:1232 src/fileDlg.c:86 src/fileDlg.c:91
+#: src/mainDlg.c:1238 src/fileDlg.c:89 src/fileDlg.c:94
 #: src/dialogSupport.c:131
 msgid "<i>Unknown</i>"
 msgstr ""
 
 #: src/helpDlg.c:76
-msgid "Copyright (c) 2006 "
+msgid "Copyright (C) 2006, 2011 "
 msgstr ""
 
 #: src/responseWin.c:93 src/responseWin.c:107 src/responseWin.c:121
@@ -296,41 +295,46 @@ msgid ""
 "ordinate to circumvant this situation.</small>"
 msgstr ""
 
-#: src/fileDlg.c:94
+#: src/fileDlg.c:97
 #, c-format
 msgid ""
 "<b>Title</b>: %s\n"
 "<b>Author</b>: %s"
 msgstr ""
 
-#: src/fileDlg.c:142
+#: src/fileDlg.c:145
 msgid "Project files (*"
 msgstr ""
 
-#: src/fileDlg.c:147
+#: src/fileDlg.c:150
 msgid "All files (*)"
 msgstr ""
 
-#: src/fileDlg.c:201
+#: src/fileDlg.c:205
 msgid "Load project file"
 msgstr ""
 
-#: src/fileDlg.c:224
+#: src/fileDlg.c:228
 #, c-format
 msgid "Error loading project file '%s'."
 msgstr ""
 
-#: src/fileDlg.c:255 src/fileDlg.c:319
+#: src/fileDlg.c:259 src/fileDlg.c:323
 #, c-format
 msgid "Error saving project file '%s'."
 msgstr ""
 
-#: src/fileDlg.c:279
+#: src/fileDlg.c:283
 msgid "Save project file"
 msgstr ""
 
-#: src/fileDlg.c:295
+#: src/fileDlg.c:299
 msgid "Untitled"
+msgstr ""
+
+#: src/fileDlg.c:374
+#, c-format
+msgid "Error printing: %s"
 msgstr ""
 
 #: src/responseDlg.c:161
@@ -451,64 +455,64 @@ msgstr ""
 msgid "Units"
 msgstr ""
 
-#: src/editDlg.c:107
+#: src/editDlg.c:106
 msgid " Settings"
 msgstr ""
 
-#: src/editDlg.c:132
+#: src/editDlg.c:131
 msgid ""
 "The number of digits following the decimal point of a floating point number"
 msgstr ""
 
-#: src/editDlg.c:137
+#: src/editDlg.c:136
 msgid "Output _Precision"
 msgstr ""
 
-#: src/editDlg.c:149
+#: src/editDlg.c:148
 msgid "Frequency unit to be used for in-/output"
 msgstr ""
 
-#: src/editDlg.c:163
+#: src/editDlg.c:162
 msgid "_Frequency Unit"
 msgstr ""
 
-#: src/editDlg.c:175
+#: src/editDlg.c:174
 msgid "Time unit to be used for in-/output"
 msgstr ""
 
-#: src/editDlg.c:190
+#: src/editDlg.c:189
 msgid "_Time Unit"
 msgstr ""
 
-#: src/editDlg.c:197
+#: src/editDlg.c:196
 msgid "_In-/Output"
 msgstr ""
 
-#: src/editDlg.c:205
+#: src/editDlg.c:204
 msgid "RFU"
 msgstr ""
 
-#: src/editDlg.c:338
+#: src/editDlg.c:337
 msgid "Author of filter/system"
 msgstr ""
 
-#: src/editDlg.c:347
+#: src/editDlg.c:346
 msgid "_Author"
 msgstr ""
 
-#: src/editDlg.c:366
+#: src/editDlg.c:365
 msgid "Project title"
 msgstr ""
 
-#: src/editDlg.c:369
+#: src/editDlg.c:368
 msgid "_Title"
 msgstr ""
 
-#: src/editDlg.c:386
+#: src/editDlg.c:385
 msgid "Project description"
 msgstr ""
 
-#: src/editDlg.c:396
+#: src/editDlg.c:395
 msgid "_Description"
 msgstr ""
 
@@ -607,11 +611,11 @@ msgstr ""
 msgid "Cutoff frequency"
 msgstr ""
 
-#: src/stdIirDesignDlg.c:428 src/miscDesignDlg.c:175 src/linFirDesignDlg.c:435
+#: src/stdIirDesignDlg.c:428 src/miscDesignDlg.c:173 src/linFirDesignDlg.c:435
 msgid "Sample frequency"
 msgstr ""
 
-#: src/stdIirDesignDlg.c:433 src/miscDesignDlg.c:163 src/linFirDesignDlg.c:440
+#: src/stdIirDesignDlg.c:433 src/miscDesignDlg.c:161 src/linFirDesignDlg.c:440
 msgid "f<sub>_Sample</sub>"
 msgstr ""
 
@@ -619,7 +623,7 @@ msgstr ""
 msgid "Degree of filter"
 msgstr ""
 
-#: src/stdIirDesignDlg.c:459 src/miscDesignDlg.c:187 src/linFirDesignDlg.c:466
+#: src/stdIirDesignDlg.c:459 src/miscDesignDlg.c:185 src/linFirDesignDlg.c:466
 msgid "_Degree"
 msgstr ""
 
@@ -647,11 +651,11 @@ msgstr ""
 msgid "Angle"
 msgstr ""
 
-#: src/miscDesignDlg.c:66
+#: src/miscDesignDlg.c:64
 msgid "Hilbert transformer (FIR)"
 msgstr ""
 
-#: src/miscDesignDlg.c:67
+#: src/miscDesignDlg.c:65
 msgid ""
 "A <i>Hilbert</i> transformer is a 90° phase shifter with the impulse "
 "response g(t)=<sup>1</sup>/<sub>ϖt</sub>. The approximation is based on "
@@ -659,11 +663,11 @@ msgid ""
 "H(f)=-j sgn(f)."
 msgstr ""
 
-#: src/miscDesignDlg.c:70
+#: src/miscDesignDlg.c:68
 msgid "Perfect Integrator (FIR)"
 msgstr ""
 
-#: src/miscDesignDlg.c:71
+#: src/miscDesignDlg.c:69
 msgid ""
 "A perfect integrator has the <i>Heaviside</i> unit step function as it&apos;"
 "s impulse response. The approximation is based on <i>Fourier</i> series "
@@ -671,11 +675,11 @@ msgid ""
 "H(f)=½δ(f)+<sup>1</sup>/<sub>j2ϖf</sub>."
 msgstr ""
 
-#: src/miscDesignDlg.c:74
+#: src/miscDesignDlg.c:72
 msgid "Perfect Differentiator (FIR)"
 msgstr ""
 
-#: src/miscDesignDlg.c:75
+#: src/miscDesignDlg.c:73
 msgid ""
 "A perfect differentiator has the <i>Dirac</i> impulse as it&apos;s impulse "
 "response.  The approximation is based on <i>Fourier</i> series expansion of "
@@ -683,11 +687,11 @@ msgid ""
 "H(f)=j2ϖf."
 msgstr ""
 
-#: src/miscDesignDlg.c:78
+#: src/miscDesignDlg.c:76
 msgid "Comb filter (FIR)"
 msgstr ""
 
-#: src/miscDesignDlg.c:79
+#: src/miscDesignDlg.c:77
 msgid ""
 "The comb filter is a computational physical model of a single discrete echo. "
 "It has the transfer function:\n"
@@ -695,11 +699,11 @@ msgid ""
 "and thus a linear phase."
 msgstr ""
 
-#: src/miscDesignDlg.c:82
+#: src/miscDesignDlg.c:80
 msgid "Moving average (FIR)"
 msgstr ""
 
-#: src/miscDesignDlg.c:83
+#: src/miscDesignDlg.c:81
 msgid ""
 "The moving average filter (also called digital window integrator or sinc "
 "filter) is an approximation of the impulse response of the ideal lowpass. As "
@@ -707,11 +711,11 @@ msgid ""
 "H(z)=1+z<sup>-1</sup>+z<sup>-2</sup>+...+z<sup>-n</sup>."
 msgstr ""
 
-#: src/miscDesignDlg.c:86
+#: src/miscDesignDlg.c:84
 msgid "Moving average (IIR)"
 msgstr ""
 
-#: src/miscDesignDlg.c:87
+#: src/miscDesignDlg.c:85
 msgid ""
 "The moving average filter (also called digital window integrator or sinc "
 "filter) is an approximation of the impulse response of the ideal lowpass. As "
@@ -719,42 +723,42 @@ msgid ""
 "H(z)=(1-z<sup>-n</sup>)/(1-z<sup>-1</sup>)."
 msgstr ""
 
-#: src/miscDesignDlg.c:90
+#: src/miscDesignDlg.c:88
 msgid "Exponential average (IIR)"
 msgstr ""
 
-#: src/miscDesignDlg.c:91
+#: src/miscDesignDlg.c:89
 msgid ""
 "The exponential average lowpass approximates a first order (analog RC-) "
 "lowpass. The transfer function is:\n"
 "H(z)=1/[n-(n-1)z<sup>-1</sup>]."
 msgstr ""
 
-#: src/miscDesignDlg.c:158
+#: src/miscDesignDlg.c:156
 msgid "<b>_Type</b>"
 msgstr ""
 
-#: src/miscDesignDlg.c:199
+#: src/miscDesignDlg.c:197
 msgid "Degree of system"
 msgstr ""
 
-#: src/miscDesignDlg.c:220
+#: src/miscDesignDlg.c:218
 msgid "<i>Description</i>"
 msgstr ""
 
-#: src/miscDesignDlg.c:441
+#: src/miscDesignDlg.c:439
 #, c-format
 msgid "Could not load predefined filter(s) from '%s'"
 msgstr ""
 
-#: src/miscDesignDlg.c:500
+#: src/miscDesignDlg.c:498
 msgid ""
 "For this digital system only a limited set of design data is available. Thus "
 "the <i>Type</i> box and <i>Description</i> field will not reflect the "
 "original design (but still the coefficients)."
 msgstr ""
 
-#: src/miscDesignDlg.c:646
+#: src/miscDesignDlg.c:644
 #, c-format
 msgid "Could not load predefined filter from '%s'"
 msgstr ""
@@ -838,4 +842,38 @@ msgstr ""
 
 #: src/rootsPlot.c:300
 msgid "Im(z)"
+msgstr ""
+
+#: src/filterPrint.c:134
+#, c-format
+msgid "Page %d / %d"
+msgstr ""
+
+#: src/filterPrint.c:161
+#, c-format
+msgid "<b>Title: </b>%s"
+msgstr ""
+
+#: src/filterPrint.c:168
+#, c-format
+msgid "<b>Author: </b>%s"
+msgstr ""
+
+#: src/filterPrint.c:175
+#, c-format
+msgid "<b>Description: </b>%s"
+msgstr ""
+
+#: src/filterPrint.c:188
+msgid "<b>Coefficients:</b>"
+msgstr ""
+
+#: src/filterPrint.c:193
+#, c-format
+msgid "Numerator (%d)"
+msgstr ""
+
+#: src/filterPrint.c:198
+#, c-format
+msgid "Denominator (%d)"
 msgstr ""

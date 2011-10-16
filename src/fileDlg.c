@@ -17,7 +17,9 @@
 #include "projectFile.h"
 #include "dfcProject.h"
 #include "mainDlg.h"
-
+#if GTK_CHECK_VERSION(2, 10, 0)           /* print support requires GTK 2.10 */
+#include "filterPrint.h"
+#endif
 #include <errno.h>
 
 
@@ -42,6 +44,7 @@ static char* filename = NULL;                   /**< Current project filename */
 
 
 /* LOCAL FUNCTION DECLARATIONS ************************************************/
+
 
 static void previewUpdate (GtkFileChooser *chooser, gpointer labelWidget);
 static GtkWidget* createFileDialog (const gchar *title, GtkWindow *parent,
@@ -96,7 +99,7 @@ static void previewUpdate (GtkFileChooser *chooser, gpointer labelWidget)
                 gtk_file_chooser_set_preview_widget_active(chooser, TRUE);
                 gtk_label_set_markup (GTK_LABEL (labelWidget), buf);
 
-                prjFileFree (&info);                     /* free project info */
+                prjFileFree (&info);                    /* free project info */
                 FREE (buf);
 
                 return;
@@ -157,6 +160,7 @@ static GtkWidget* createFileDialog (const gchar *title, GtkWindow *parent,
 
     return dialog;
 } /* createFileDialog() */
+
 
 
 /* EXPORTED FUNCTION DEFINITIONS **********************************************/
@@ -331,45 +335,52 @@ void fileDlgSaveAsActivate (GtkWidget* srcWidget, gpointer user_data)
 /** \e Activate event callback emitted when the \e Print menuitem is selected
  *  from \e File menu.
  *
- *  \param menuitem     The menu item object which received the signal (Print).
- *  \param user_data    User data set when the signal handler was connected (unused).
+ *  \param[in] srcWidget \e File \e Save \e As widget (GtkMenuItem on event
+ *                      \e activate or GtkToolButton on event \e clicked),
+ *                      which causes this call.
+ *  \param[in] ref      User data set when the signal handler was connected (unused).
  *
- *  \todo               Parametrization of gtk_print_operation_set_print_settings()
- *                      and gtk_print_operation_set_default_page_setup().
  ******************************************************************************/
-void fileDlgPrintActivate (GtkMenuItem* menuitem, gpointer user_data)
+void fileDlgPrintActivate (GtkWidget* srcWidget, gpointer ref)
 {
-#if 0 && GTK_CHECK_VERSION(2, 10, 0)            /* print support requires GTK 2.10 */
+
+#if GTK_CHECK_VERSION(2, 10, 0)           /* print support requires GTK 2.10 */
+    static GtkPrintSettings *settings = NULL;
+
+
+    GError *error;
     GtkPrintOperationResult result;
 
+    GtkWidget *widget, *topWidget = gtk_widget_get_toplevel (srcWidget);
     GtkPrintOperation* print = gtk_print_operation_new ();
 
-    gtk_print_operation_set_print_settings (print, NULL);
+    gtk_print_operation_set_print_settings (print, settings);
     gtk_print_operation_set_default_page_setup (print, NULL);
   
-    g_signal_connect (print, "begin-print", G_CALLBACK (begin_print), &data);
-    g_signal_connect (print, "draw-page", G_CALLBACK (draw_page), &data);
+    g_signal_connect (print, "begin-print", G_CALLBACK (filterPrintCoeffsInit), NULL);
+    g_signal_connect (print, "draw-page", G_CALLBACK (filterPrintCoeffsDo), NULL);
  
     result = gtk_print_operation_run (print,
                                       GTK_PRINT_OPERATION_ACTION_PRINT_DIALOG,
                                       NULL, NULL);
- 
     switch (result)
     {
         case GTK_PRINT_OPERATION_RESULT_ERROR:
-            error_dialog = gtk_message_dialog_new (GTK_WINDOW (parent),
-                                                   GTK_DIALOG_DESTROY_WITH_PARENT,
-                                                   GTK_MESSAGE_ERROR,
-                                                   GTK_BUTTONS_CLOSE,
-                                                   "Error printing file '%s'",
-                                                   error->message);
-            g_signal_connect (error_dialog, "response", 
+            gtk_print_operation_get_error (print, &error);
+            widget = gtk_message_dialog_new (GTK_WINDOW (topWidget),
+                                             GTK_DIALOG_DESTROY_WITH_PARENT,
+                                             GTK_MESSAGE_ERROR,
+                                             GTK_BUTTONS_CLOSE,
+                                             _("Error printing: %s"),
+                                             error->message);
+            g_signal_connect (widget, "response", 
                               G_CALLBACK (gtk_widget_destroy), NULL);
-            gtk_widget_show (error_dialog);
+            gtk_widget_show (widget);
             g_error_free (error);
-            break;
+            break; /* GTK_PRINT_OPERATION_RESULT_ERROR */
 
-        case GTK_PRINT_OPERATION_RESULT_APPLY:
+
+        case GTK_PRINT_OPERATION_RESULT_APPLY:   /* store the print settings */
             if (settings != NULL)
             {
                 g_object_unref (settings);
@@ -377,8 +388,12 @@ void fileDlgPrintActivate (GtkMenuItem* menuitem, gpointer user_data)
 
             settings = g_object_ref (gtk_print_operation_get_print_settings (print));
             break;
+
+        default: /* FIXME: GTK_PRINT_OPERATION_RESULT_CANCEL */
+            break;
     } /* switch */
 
+    g_object_unref(print);
 #endif
 
 } /* fileDlgPrintActivate() */

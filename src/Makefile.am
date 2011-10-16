@@ -29,30 +29,31 @@ AM_LDFLAGS = @PACKAGE_LIBS@
 bin_PROGRAMS = dfcgen-gtk
 
 dfcgen_gtk_SOURCES = \
-	support.c\
-	main.c\
-	designDlg.c\
-	mainDlg.c\
-	dfcProject.c\
-	filterResponse.c\
-	filterSupport.c\
-	mathPoly.c\
-	stdIirFilter.c\
-	helpDlg.c\
-	responseWin.c\
-	mathMisc.c\
-	mathFuncs.c\
-	cairoPlot.c\
-	fileDlg.c\
-	cfgSettings.c\
-	responseDlg.c\
-	editDlg.c\
-	stdIirDesignDlg.c\
-	miscDesignDlg.c\
-	projectFile.c\
-	miscFilter.c\
-	dialogSupport.c\
-	responsePlot.c\
-	linFirDesignDlg.c\
-	linFirFilter.c\
-	rootsPlot.c
+	support.c \
+	main.c \
+	designDlg.c \
+	mainDlg.c \
+	dfcProject.c \
+	filterResponse.c \
+	filterSupport.c \
+	mathPoly.c \
+	stdIirFilter.c \
+	helpDlg.c \
+	responseWin.c \
+	mathMisc.c \
+	mathFuncs.c \
+	cairoPlot.c \
+	fileDlg.c \
+	cfgSettings.c \
+	responseDlg.c \
+	editDlg.c \
+	stdIirDesignDlg.c \
+	miscDesignDlg.c \
+	projectFile.c \
+	miscFilter.c \
+	dialogSupport.c \
+	responsePlot.c \
+	linFirDesignDlg.c \
+	linFirFilter.c \
+	rootsPlot.c \
+	filterPrint.c
