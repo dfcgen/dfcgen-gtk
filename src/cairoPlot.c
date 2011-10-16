@@ -191,7 +191,7 @@ static int drawErrorMsg (cairo_t* cr, PLOT_DIAG *pDiag, int errcode)
         drawLayout (cr, layout,
                     pDiag->area.x - 10 + (pDiag->area.width - PANGO_PIXELS (rect.width)) / 2,
                     pDiag->area.y - 10 + (pDiag->area.height - PANGO_PIXELS (rect.height)) / 2);
-        g_free (message);
+        FREE (message);
     } /* if */
 
     return errcode;
