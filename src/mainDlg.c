@@ -286,7 +286,7 @@ static BOOL mainDlgCoeffEdit (GtkWidget *topWidget, FLTCOEFF *pFilter,
 
     BOOL ret = dlgPopupDouble (_("Change coefficient"),
                                _("_New"), intro, poly->coeff + index);
-    g_free (intro);
+    FREE (intro);
 
     return ret;
 } /* mainDlgCoeffEdit() */
@@ -711,36 +711,36 @@ GtkWidget* mainDlgCreate (void)
     menuContainer = gtk_menu_new ();
     gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuMainItem), menuContainer);
 
-    menuItem = gtk_image_menu_item_new_from_stock ("gtk-new", accel_group);
+    menuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_NEW, accel_group);
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (fileDlgNewActivate),
                       NULL);
 
-    menuItem = gtk_image_menu_item_new_from_stock ("gtk-open", accel_group);
+    menuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_OPEN, accel_group);
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (fileDlgOpenActivate),
                       NULL);
 
-    menuItem = gtk_image_menu_item_new_from_stock ("gtk-save", accel_group);
+    menuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_SAVE, accel_group);
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (fileDlgSaveActivate),
                       NULL);
     GLADE_HOOKUP_OBJECT (topWidget, menuItem, "menuItemFileSave");
 
-    menuItem = gtk_image_menu_item_new_from_stock ("gtk-save-as", accel_group);
+    menuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_SAVE_AS, accel_group);
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (fileDlgSaveAsActivate),
                       NULL);
     GLADE_HOOKUP_OBJECT (topWidget, menuItem, "menuItemFileSaveAs");
 
-    menuItem = gtk_image_menu_item_new_from_stock ("gtk-print", accel_group);
+    menuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_PRINT, accel_group);
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
 
-#if 0 && GTK_CHECK_VERSION(2, 10, 0)            /* print support requires GTK 2.10 */
+#if GTK_CHECK_VERSION(2, 10, 0)           /* print support requires GTK 2.10 */
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (fileDlgPrintActivate),
                       NULL);
@@ -748,11 +748,13 @@ GtkWidget* mainDlgCreate (void)
     gtk_widget_set_sensitive (GTK_WIDGET(menuItem), FALSE);
 #endif
 
+    GLADE_HOOKUP_OBJECT (topWidget, menuItem, "menuItemFilePrint");
+
     widget = gtk_separator_menu_item_new ();
     gtk_container_add (GTK_CONTAINER (menuContainer), widget);
     gtk_widget_set_sensitive (widget, FALSE);
 
-    menuItem = gtk_image_menu_item_new_from_stock ("gtk-quit", accel_group);
+    menuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_QUIT, accel_group);
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (mainDlgQuit),
@@ -766,7 +768,7 @@ GtkWidget* mainDlgCreate (void)
 
     menuItem = gtk_image_menu_item_new_with_mnemonic (_("Project Info"));
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
-    widget = gtk_image_new_from_stock ("gtk-info", GTK_ICON_SIZE_MENU);
+    widget = gtk_image_new_from_stock (GTK_STOCK_INFO, GTK_ICON_SIZE_MENU);
     gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menuItem), widget);
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (editDlgInfoActivate), NULL);
@@ -796,7 +798,7 @@ GtkWidget* mainDlgCreate (void)
     gtk_container_add (GTK_CONTAINER (menuContainer), widget);
     gtk_widget_set_sensitive (widget, FALSE);
 
-    menuItem = gtk_image_menu_item_new_from_stock ("gtk-preferences", accel_group);
+    menuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_PREFERENCES, accel_group);
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (editDlgSettingsActivate), NULL);
@@ -861,10 +863,10 @@ GtkWidget* mainDlgCreate (void)
     menuContainer = gtk_menu_new ();
     gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuMainItem), menuContainer);
 
-    menuItem = gtk_image_menu_item_new_from_stock ("gtk-help", accel_group);
+    menuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_HELP, accel_group);
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
 
-    menuItem = gtk_image_menu_item_new_from_stock ("gtk-about", accel_group);
+    menuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_ABOUT, accel_group);
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (helpDlgMenuActivate),
@@ -877,20 +879,20 @@ GtkWidget* mainDlgCreate (void)
     toolitem1 = (GtkWidget*) gtk_tool_item_new ();
     gtk_container_add (GTK_CONTAINER (toolbarMain), toolitem1);
 
-    btnOpen = (GtkWidget*) gtk_tool_button_new_from_stock ("gtk-open");
+    btnOpen = (GtkWidget*) gtk_tool_button_new_from_stock (GTK_STOCK_OPEN);
     gtk_container_add (GTK_CONTAINER (toolbarMain), btnOpen);
     g_signal_connect ((gpointer) btnOpen, "clicked",
                       G_CALLBACK (fileDlgOpenActivate),
                       NULL);
 
-    btnSave = (GtkWidget*) gtk_tool_button_new_from_stock ("gtk-save");
+    btnSave = (GtkWidget*) gtk_tool_button_new_from_stock (GTK_STOCK_SAVE);
     gtk_container_add (GTK_CONTAINER (toolbarMain), btnSave);
     g_signal_connect ((gpointer) btnSave, "clicked",
                       G_CALLBACK (fileDlgSaveActivate),
                       NULL);
     GLADE_HOOKUP_OBJECT (topWidget, btnSave, "toolBtnSave");
 
-    btnNew = (GtkWidget*) gtk_tool_button_new_from_stock ("gtk-new");
+    btnNew = (GtkWidget*) gtk_tool_button_new_from_stock (GTK_STOCK_NEW);
     gtk_container_add (GTK_CONTAINER (toolbarMain), btnNew);
     g_signal_connect ((gpointer) btnNew, "clicked",
                       G_CALLBACK (fileDlgNewActivate), NULL);
@@ -898,7 +900,7 @@ GtkWidget* mainDlgCreate (void)
     widget = (GtkWidget*) gtk_separator_tool_item_new ();
     gtk_container_add (GTK_CONTAINER (toolbarMain), widget);
 
-    btnPreferences = (GtkWidget*) gtk_tool_button_new_from_stock ("gtk-preferences");
+    btnPreferences = (GtkWidget*) gtk_tool_button_new_from_stock (GTK_STOCK_PREFERENCES);
     gtk_container_add (GTK_CONTAINER (toolbarMain), btnPreferences);
     g_signal_connect ((gpointer) btnPreferences, "clicked",
                       G_CALLBACK (editDlgSettingsActivate), NULL);
@@ -906,7 +908,7 @@ GtkWidget* mainDlgCreate (void)
     separatortoolitem2 = (GtkWidget*) gtk_separator_tool_item_new ();
     gtk_container_add (GTK_CONTAINER (toolbarMain), separatortoolitem2);
 
-    btnExit = (GtkWidget*) gtk_tool_button_new_from_stock ("gtk-quit");
+    btnExit = (GtkWidget*) gtk_tool_button_new_from_stock (GTK_STOCK_QUIT);
     gtk_container_add (GTK_CONTAINER (toolbarMain), btnExit);
 
     hbox1 = gtk_hbox_new (FALSE, 0);
@@ -939,12 +941,12 @@ GtkWidget* mainDlgCreate (void)
     gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox1), GTK_BUTTONBOX_SPREAD);
     gtk_box_set_spacing (GTK_BOX (hbuttonbox1), 12);
 
-    btnHelp = gtk_button_new_from_stock ("gtk-help");
+    btnHelp = gtk_button_new_from_stock (GTK_STOCK_HELP);
     gtk_container_add (GTK_CONTAINER (hbuttonbox1), btnHelp);
     GTK_WIDGET_SET_FLAGS (btnHelp, GTK_CAN_DEFAULT);
     gtk_tooltips_set_tip (tooltips, btnHelp, _("Help"), NULL);
 
-    btnApply = gtk_button_new_from_stock ("gtk-apply");
+    btnApply = gtk_button_new_from_stock (GTK_STOCK_APPLY);
     gtk_container_add (GTK_CONTAINER (hbuttonbox1), btnApply);
     GTK_WIDGET_SET_FLAGS (btnApply, GTK_CAN_DEFAULT);
     g_signal_connect ((gpointer) btnApply, "clicked",
@@ -1119,7 +1121,7 @@ void mainDlgUpdatePrjInfo ()
     {
         if (pInfo->author == NULL)
         {
-            msg = g_strdup ("");      /* prepare unconditional g_free() later */
+            msg = g_strdup ("");      /* prepare unconditional FREE() later */
         } /* if */
         else
         {
@@ -1140,7 +1142,7 @@ void mainDlgUpdatePrjInfo ()
 
     prjInfoMsgId = gtk_statusbar_push (GTK_STATUSBAR (statusbar),
                                        prjInfoContextId, msg);
-    g_free (msg);
+    FREE (msg);
 } /* mainDlgUpdatePrjInfo() */
 
 
@@ -1184,6 +1186,10 @@ BOOL mainDlgUpdateFilter (int err)
         gtk_widget_set_sensitive (lookup_widget (topWidget, "toolBtnSave"), valid);
         gtk_widget_set_sensitive (lookup_widget (topWidget, "menuItemFileSave"), valid);
         gtk_widget_set_sensitive (lookup_widget (topWidget, "menuItemFileSaveAs"), valid);
+
+#if GTK_CHECK_VERSION(2, 10, 0)           /* print support requires GTK 2.10 */
+        gtk_widget_set_sensitive (lookup_widget (topWidget, "menuItemFilePrint"), valid);
+#endif
 
         storeNum = GTK_LIST_STORE (gtk_tree_view_get_model (treeNumerator));
         storeDen = GTK_LIST_STORE (gtk_tree_view_get_model (treeDenominator));
@@ -1234,8 +1240,8 @@ void mainDlgUpdateAll (const char* filename)
 
         tmp = g_strdup_printf ("%s: %s", PACKAGE, utf8name);
         gtk_window_set_title (GTK_WINDOW (topWidget), tmp);
-        g_free (utf8name);
-        g_free (tmp);
+        FREE (utf8name);
+        FREE (tmp);
 
         return;
     } /* if */
