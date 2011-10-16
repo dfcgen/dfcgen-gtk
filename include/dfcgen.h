@@ -86,12 +86,12 @@ typedef struct
  */
 typedef struct
 {
-    double f0;                                          /**< Sample frequency */
-    MATHPOLY num;              /**< Numerator polynomial coefficients & roots */
-    MATHPOLY den;            /**< Denominator polynomial coefficients & roots */
-    double factor;       /**< Transfer function factor applied to roots product.
-                              If this member has value 0.0 then no valid roots
-                              representation is available. */
+    double f0;                                         /**< Sample frequency */
+    MATHPOLY num;            /**< Numerator polynomial coefficients \& roots */
+    MATHPOLY den;           /**< Denominator polynomial coefficients & roots */
+    double factor;      /**< Transfer function factor applied to roots product.
+                             If this member has value 0.0 then no valid roots
+                             representation is available. */
 } FLTCOEFF;
 
 
