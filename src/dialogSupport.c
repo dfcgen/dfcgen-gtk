@@ -177,7 +177,7 @@ BOOL dlgGetDouble (GtkWidget* topWidget, const char *ename,
 
     str = gtk_entry_get_text (GTK_ENTRY (entry));
     errno = 0;
-    result = strtod (str, &tail);
+    result = g_strtod (str, &tail);
 
     if ((errno == 0) && (tail != str) && (*tail == '\0'))
     {
