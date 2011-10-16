@@ -21,8 +21,6 @@
 #include "miscFilter.h"
 #include "miscDesignDlg.h"
 
-#include <string.h>
-
 
 /* GLOBAL CONSTANT DEFINITIONS ************************************************/
 
@@ -268,7 +266,7 @@ static void updateLayout (GtkWidget *topWidget, GtkWidget *combo, int index)
 
     widget = lookup_widget (topWidget, MISCDLG_EXPANDER_DESC);
 
-    if ((desc != NULL) && (strlen (desc) > 0)) /* show description if available */
+    if ((desc != NULL) && (g_utf8_strlen (desc, -1) > 0)) /* show description if available */
     {
         gtk_label_set_markup (GTK_LABEL (lookup_widget (topWidget, MISCDLG_LABEL_DESC)),
                               gettext (desc));

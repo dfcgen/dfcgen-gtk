@@ -24,8 +24,8 @@
 #include "projectFile.h"
 
 #include <stdio.h>
-#include <string.h>
 #include <errno.h>
+#include <string.h> /* memset() */
 
 
 /* GLOBAL CONSTANT DEFINITIONS ************************************************/
@@ -538,7 +538,7 @@ static int attrStringHandler (GMarkupParseContext *ctx, PRJF_TAG_DESC *pTag,
                       sizeof (PRJF_ATTRN_LANG)))
         {
             if ((locvec[0] != NULL) &&                     /* language match? */
-                (!strcmp (locvec[0], *attrv)))
+                (!g_strcmp0 (locvec[0], *attrv)))
             {
                 str = (char **)(pTag->data);
 

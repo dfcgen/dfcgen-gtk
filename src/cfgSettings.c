@@ -19,8 +19,8 @@
 #include <glib.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <errno.h>
+#include <string.h> /* memcpy() */
 
 #include <gsl/gsl_const.h>
 
@@ -258,17 +258,17 @@ static void cfgReadUnit (GKeyFile *keyFile, const gchar *group, const gchar *key
     {
         for (i = 0; i < N_ELEMENTS (units); i++)
         {
-            if (strcmp (unitName, units[i].name) == 0)              /* found? */
+            if (g_strcmp0 (unitName, units[i].name) == 0)          /* found? */
             {
                 pUnit->name = units[i].name;
                 pUnit->multiplier = units[i].multiplier;
 
-                g_free (unitName);
+                FREE (unitName);
                 return;
             } /* if */
         } /* for */
 
-        g_free (unitName);
+        FREE (unitName);
     } /* if */
 } /* cfgReadUnit() */
 
@@ -348,7 +348,7 @@ static void cfgReadDouble (GKeyFile *keyFile, const gchar *group, const gchar *k
             *pResult = result;
         } /* if */
 
-        g_free (str);
+        FREE (str);
     } /* if */
     else
     {
