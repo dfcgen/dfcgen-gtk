@@ -19,7 +19,6 @@
 #include "mainDlg.h"
 #include "editDlg.h"
 
-#include <string.h>
 #include <gsl/gsl_const.h>
 
 
@@ -251,7 +250,7 @@ static int searchUnit (PLOT_UNIT units[], int size, const char* unitName)
 
     for (i = 0; i < size; i++)
     {
-        if (strcmp (unitName, units[i].name) == 0)                  /* found? */
+        if (g_strcmp0 (unitName, units[i].name) == 0)              /* found? */
         {
             return i;
         } /* for */
@@ -377,7 +376,7 @@ static GtkWidget* createInfoDlg (const DFCPRJ_INFO *pInfo)
     gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 2, 3,
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
-    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (widget), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (widget), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
     gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (widget), GTK_SHADOW_IN);
 
     entry = gtk_text_view_new ();
@@ -443,9 +442,9 @@ static char *dupInfoStr (const char* info)
 
     g_strstrip (newinfo);          /* remove leading and trailing whitespaces */
 
-    if (strlen (newinfo) == 0)
+    if (g_utf8_strlen (newinfo, -1) == 0)
     {
-        g_free (newinfo);
+        FREE (newinfo);
         newinfo = NULL;
     } /* if */
 
@@ -547,7 +546,7 @@ void editDlgInfoActivate (GtkWidget* widget, gpointer user_data)
                 tmp = gtk_text_buffer_get_text (buffer, &start, &stop, FALSE);
 
                 info.desc = dupInfoStr (tmp);              /* set description */
-                g_free (tmp);
+                FREE (tmp);
                 dfcPrjSetInfo (&info);                            /* save all */
                 mainDlgUpdatePrjInfo ();
                 break;
