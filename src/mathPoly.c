@@ -14,7 +14,7 @@
 #include "mathPoly.h"
 #include "mathMisc.h"
 
-#include <string.h>
+#include <string.h> /* memcpy() */
 
 
 /* GLOBAL CONSTANT DEFINITIONS ************************************************/

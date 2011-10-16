@@ -15,8 +15,6 @@
 
 #include "mathMisc.h"
 
-#include <string.h>
-
 
 
 /* GLOBAL CONSTANT DEFINITIONS ************************************************/

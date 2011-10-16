@@ -15,7 +15,7 @@
 #include "filterSupport.h"
 #include "filterResponse.h"
 
-#include <string.h>
+#include <string.h> /* memcpy() */
 
 
 /* GLOBAL CONSTANT DEFINITIONS ************************************************/

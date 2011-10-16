@@ -14,7 +14,7 @@
 #include "mathMisc.h"
 #include "filterResponse.h"
 
-#include <string.h>
+#include <string.h> /* memset() */
 
 
 /* GLOBAL CONSTANT DEFINITIONS ************************************************/

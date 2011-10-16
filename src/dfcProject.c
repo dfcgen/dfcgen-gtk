@@ -19,7 +19,7 @@
 #include "projectFile.h"
 #include "filterSupport.h"
 
-#include <string.h>
+#include <string.h> /* memcpy(), memset() */
 
 
 /* GLOBAL CONSTANT DEFINITIONS ************************************************/
