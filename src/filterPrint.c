@@ -1,9 +1,9 @@
-/******************************************************************************/
+/********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
  * \file     filterPrint.c
  * \brief    Filter print functions.
  *
- * \author   Copyright (C) 2011 Ralf Hoppe <ralf.hoppe@ieee.org> 
+ * \author   Copyright (C) 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org> 
  * \version  $Id$
  *
  ******************************************************************************/
@@ -22,6 +22,7 @@
 #if GTK_CHECK_VERSION(2, 10, 0)           /* print support requires GTK 2.10 */
 
 
+
 /* GLOBAL CONSTANT DEFINITIONS ************************************************/
 
 
@@ -31,7 +32,7 @@
 /* LOCAL TYPE DECLARATIONS ****************************************************/
 
 
-/** \brief Internal context for a print job
+/** \brief Internal context for a coefficients print job
  */
 typedef struct
 {
@@ -43,20 +44,37 @@ typedef struct
     int pgwidth;                                          /**< width of page */
     int lmargin;                                            /**< left margin */
     int maxwidth;                                            /**< max. width */
-} FILTERPRINT_CONTEXT;
+} FILTERPRINT_COEFF_CONTEXT;
+
+
+/** \brief Internal context for a response print job
+ *  \note  This structure is not used in the sense of a context. Instead
+ *         it's purpose is to map two parameters to one variable,
+ *         which then can be used as a single pointer to an event
+ *         callback function.
+ */
+typedef struct
+{
+    RESPONSE_TYPE type;                                   /**< response type */
+    PLOT_DIAG diag;                                       /**< response plot */
+} FILTERPRINT_RESPONSE_CONTEXT;
 
 
 
-/* LOCAL CONSTANT DEFINITIONS *************************************************/
+/* LOCAL CONSTANT DEFINITIONS ************************************************/
 
 
-/* LOCAL VARIABLE DEFINITIONS *************************************************/
+/* LOCAL VARIABLE DEFINITIONS ************************************************/
 
-static FILTERPRINT_CONTEXT filterPrintCtx;
+static FILTERPRINT_COEFF_CONTEXT filterPrintCoeffCtx;
 
 
 
 /* LOCAL MACRO DEFINITIONS ****************************************************/
+
+
+#define FILTER_PRINT_LMARGIN(pgwidth) ((pgwidth) / 10)
+
 
 
 /* LOCAL FUNCTION DECLARATIONS ************************************************/
@@ -64,6 +82,11 @@ static FILTERPRINT_CONTEXT filterPrintCtx;
 static int filterPrintf (GtkPrintContext *ctx, BOOL doprint,
                          int maxwidth, const gchar* format, ...);
 static int filterPrintPageHeader (GtkPrintContext *ctx, BOOL doprint, int pgno);
+static void filterPrintCoeffsInit (GtkPrintOperation *op, GtkPrintContext *ctx, gpointer ref);
+static void filterPrintCoeffsDo (GtkPrintOperation *op, GtkPrintContext *ctx, int pgno, gpointer ref);
+static void filterPrintResponseInit (GtkPrintOperation *op, GtkPrintContext *ctx, gpointer ref);
+static void filterPrintResponseDo (GtkPrintOperation *op, GtkPrintContext *ctx, int pgno, gpointer ref);
+static void filterPrintDo (GtkWidget* topWidget, GtkPrintOperation* print);
 
 
 /* LOCAL FUNCTION DEFINITIONS *************************************************/
@@ -92,8 +115,8 @@ static int filterPrintf (GtkPrintContext *ctx, BOOL doprint,
     PangoRectangle rect = {.height = 0};
     PangoLayout *layout = gtk_print_context_create_pango_layout (ctx);
 
-    va_start(args, format);
-    text = g_strdup_vprintf(format, args);
+    va_start (args, format);
+    text = g_strdup_vprintf (format, args);
 
     pango_layout_set_alignment (layout, PANGO_ALIGN_LEFT);
     pango_layout_set_indent (layout, -maxwidth / 10 * PANGO_SCALE); /* hanging indent */
@@ -104,13 +127,13 @@ static int filterPrintf (GtkPrintContext *ctx, BOOL doprint,
     if (doprint)
     {
         pango_cairo_show_layout (
-            gtk_print_context_get_cairo_context(ctx), layout);
+            gtk_print_context_get_cairo_context (ctx), layout);
     } /* if */
 
     FREE (text);
     g_object_unref (layout);
 
-    return (PANGO_PIXELS(rect.height) + 1); /* some more space */
+    return (PANGO_PIXELS (rect.height) + 1); /* some more space */
 } /* filterPrintf() */
 
 
@@ -139,9 +162,9 @@ static int filterPrintPageHeader (GtkPrintContext *ctx, BOOL doprint, int pgno)
     /* start with the page number (use default font)
      */
     pango_layout_set_alignment (layout, PANGO_ALIGN_CENTER);
-    text = g_strdup_printf (_("Page %d / %d"), pgno + 1, filterPrintCtx.pages);
+    text = g_strdup_printf (_("Page %d / %d"), pgno + 1, filterPrintCoeffCtx.pages);
     pango_layout_set_text (layout, text, -1);
-    cairo_move_to (cr, filterPrintCtx.pgwidth / 2, 0);
+    cairo_move_to (cr, filterPrintCoeffCtx.pgwidth / 2, 0);
 
     if (doprint)
     {
@@ -149,7 +172,7 @@ static int filterPrintPageHeader (GtkPrintContext *ctx, BOOL doprint, int pgno)
     } /* if */
 
     pango_layout_get_extents (layout, NULL, &rect);
-    lheight = PANGO_PIXELS(rect.height) + 1;     /* some more space per line */
+    lheight = PANGO_PIXELS (rect.height) + 1;     /* some more space per line */
     yoffset = 2 * lheight;
     FREE (text);
     g_object_unref (layout);
@@ -160,26 +183,26 @@ static int filterPrintPageHeader (GtkPrintContext *ctx, BOOL doprint, int pgno)
         int maxwidth2;                        /* half of the printable width */
 
         DFCPRJ_INFO* info = dfcPrjGetInfo ();
-        FLTCOEFF* pFilter = dfcPrjGetFilter();
+        FLTCOEFF* pFilter = dfcPrjGetFilter ();
 
         if (g_utf8_strlen (info->title, -1) > 0)   /* project title defined? */
         {
-            cairo_move_to (cr, filterPrintCtx.lmargin, yoffset);
-            yoffset += filterPrintf (ctx, doprint, filterPrintCtx.maxwidth,
+            cairo_move_to (cr, filterPrintCoeffCtx.lmargin, yoffset);
+            yoffset += filterPrintf (ctx, doprint, filterPrintCoeffCtx.maxwidth,
                                      _("<b>Title: </b>%s"), info->title);
         } /* if */
 
         if (g_utf8_strlen (info->author, -1) > 0)         /* author defined? */
         {
-            cairo_move_to (cr, filterPrintCtx.lmargin, yoffset);
-            yoffset += filterPrintf (ctx, doprint, filterPrintCtx.maxwidth,
+            cairo_move_to (cr, filterPrintCoeffCtx.lmargin, yoffset);
+            yoffset += filterPrintf (ctx, doprint, filterPrintCoeffCtx.maxwidth,
                                      _("<b>Author: </b>%s"), info->author);
         } /* if */
 
         if (g_utf8_strlen (info->desc, -1) > 0)    /* description available? */
         {
-            cairo_move_to (cr, filterPrintCtx.lmargin, yoffset);
-            yoffset += filterPrintf (ctx, doprint, filterPrintCtx.maxwidth,
+            cairo_move_to (cr, filterPrintCoeffCtx.lmargin, yoffset);
+            yoffset += filterPrintf (ctx, doprint, filterPrintCoeffCtx.maxwidth,
                                      _("<b>Description: </b>%s"), info->desc);
         } /* if */
 
@@ -188,22 +211,22 @@ static int filterPrintPageHeader (GtkPrintContext *ctx, BOOL doprint, int pgno)
             yoffset += lheight;            /* then add some additional space */
         } /* if */
 
-        cairo_move_to (cr, filterPrintCtx.lmargin, yoffset);
+        cairo_move_to (cr, filterPrintCoeffCtx.lmargin, yoffset);
 
         /* finally the coefficients list header
          */
         if (pFilter != NULL)                 /* sanity (should never happen) */
         {
-            yoffset += filterPrintf (ctx, doprint, filterPrintCtx.maxwidth,
+            yoffset += filterPrintf (ctx, doprint, filterPrintCoeffCtx.maxwidth,
                                      _("<b>Coefficients:</b>")) + lheight / 2;
-            maxwidth2 = filterPrintCtx.maxwidth / 2;
+            maxwidth2 = filterPrintCoeffCtx.maxwidth / 2;
 
-            cairo_move_to (cr, filterPrintCtx.lmargin, yoffset);
+            cairo_move_to (cr, filterPrintCoeffCtx.lmargin, yoffset);
             (void)filterPrintf (ctx, doprint, maxwidth2,
                                 _("Numerator (%d)"),
                                 pFilter->num.degree + 1);
 
-            cairo_move_to (cr, (filterPrintCtx.lmargin + filterPrintCtx.pgwidth) / 2, yoffset);
+            cairo_move_to (cr, (filterPrintCoeffCtx.lmargin + filterPrintCoeffCtx.pgwidth) / 2, yoffset);
             yoffset += filterPrintf (ctx, doprint, maxwidth2,
                                      _("Denominator (%d)"),
                                      pFilter->den.degree + 1) + lheight / 4;
@@ -215,7 +238,61 @@ static int filterPrintPageHeader (GtkPrintContext *ctx, BOOL doprint, int pgno)
 
 
 
-/* EXPORTED FUNCTION DEFINITIONS **********************************************/
+/* FUNCTION *******************************************************************/
+/** \brief Common part of print functions and wrapper of
+ *         gtk_print_operation_run().
+ *
+ *  \param[in] topWidget Top widget associated with the \c GtkToolButton widget
+ *                       which has caused the \e clicked event.
+ *  \param[in] print     GTK print context.
+ *
+ ******************************************************************************/
+static void filterPrintDo (GtkWidget* topWidget, GtkPrintOperation* print)
+{
+    static GtkPrintSettings *settings = NULL;
+
+    GtkWidget* widget;
+    GError *error;
+    GtkPrintOperationResult result;
+
+    gtk_print_operation_set_print_settings (print, settings);
+    gtk_print_operation_set_default_page_setup (print, NULL);
+
+    result = gtk_print_operation_run (print,
+                                      GTK_PRINT_OPERATION_ACTION_PRINT_DIALOG,
+                                      NULL, NULL);
+    switch (result)
+    {
+        case GTK_PRINT_OPERATION_RESULT_ERROR:
+            gtk_print_operation_get_error (print, &error);
+            widget = gtk_message_dialog_new (GTK_WINDOW (topWidget),
+                                             GTK_DIALOG_DESTROY_WITH_PARENT,
+                                             GTK_MESSAGE_ERROR,
+                                             GTK_BUTTONS_CLOSE,
+                                             _("Error printing: %s"),
+                                             error->message);
+            g_signal_connect (widget, "response", 
+                              G_CALLBACK (gtk_widget_destroy), NULL);
+            gtk_widget_show (widget);
+            g_error_free (error);
+            break; /* GTK_PRINT_OPERATION_RESULT_ERROR */
+
+
+        case GTK_PRINT_OPERATION_RESULT_APPLY:   /* store the print settings */
+            if (settings != NULL)
+            {
+                g_object_unref (settings);
+            } /* if */
+
+            settings = g_object_ref (gtk_print_operation_get_print_settings (print));
+            break;
+
+        default: /* GTK_PRINT_OPERATION_RESULT_CANCEL */
+            break;
+    } /* switch */
+
+} /* filterPrintDo() */
+
 
 
 /* FUNCTION *******************************************************************/
@@ -233,21 +310,21 @@ static int filterPrintPageHeader (GtkPrintContext *ctx, BOOL doprint, int pgno)
  * \param[in] ref       user data set when the signal handler was connected
  *
  ******************************************************************************/
-void filterPrintCoeffsInit (GtkPrintOperation *op, GtkPrintContext *ctx, gpointer ref)
+static void filterPrintCoeffsInit (GtkPrintOperation *op, GtkPrintContext *ctx, gpointer ref)
 {
     int yofs1, yofs2;
 
-    FLTCOEFF* pFilter = dfcPrjGetFilter();
+    FLTCOEFF* pFilter = dfcPrjGetFilter ();
 
     gtk_print_operation_set_use_full_page (op, FALSE); /* set cairo transform */
     gtk_print_operation_set_unit (op, GTK_UNIT_PIXEL);
 
-    filterPrintCtx.icoeff = 0;           /* reset index of first coefficient */
-    filterPrintCtx.pages = 1;                        /* defaults to one page */
-    filterPrintCtx.pgwidth = (int) gtk_print_context_get_width (ctx);
-    filterPrintCtx.lmargin = filterPrintCtx.pgwidth / 10;
-    filterPrintCtx.maxwidth = filterPrintCtx.pgwidth - filterPrintCtx.lmargin;
-    filterPrintCtx.lines = filterPrintCtx.lines1 = filterPrintCtx.lines2 = 0;
+    filterPrintCoeffCtx.icoeff = 0;           /* reset index of first coefficient */
+    filterPrintCoeffCtx.pages = 1;                        /* defaults to one page */
+    filterPrintCoeffCtx.pgwidth = (int) gtk_print_context_get_width (ctx);
+    filterPrintCoeffCtx.lmargin = FILTER_PRINT_LMARGIN (filterPrintCoeffCtx.pgwidth);
+    filterPrintCoeffCtx.maxwidth = filterPrintCoeffCtx.pgwidth - filterPrintCoeffCtx.lmargin;
+    filterPrintCoeffCtx.lines = filterPrintCoeffCtx.lines1 = filterPrintCoeffCtx.lines2 = 0;
 
     yofs1 = filterPrintPageHeader (ctx, FALSE, 0);       /* 1st page y-start */
     yofs2 = filterPrintPageHeader (ctx, FALSE, 1);       /* 2nd page y-start */
@@ -276,15 +353,15 @@ void filterPrintCoeffsInit (GtkPrintOperation *op, GtkPrintContext *ctx, gpointe
             yofs2 = pgheight;
         } /* if */
 
-        filterPrintCtx.lines = MAX (pFilter->num.degree, pFilter->den.degree) + 1;
-        filterPrintCtx.lines1 = (pgheight - yofs1) / lheight;
-        filterPrintCtx.lines2 = (pgheight - yofs2) / lheight;
+        filterPrintCoeffCtx.lines = MAX (pFilter->num.degree, pFilter->den.degree) + 1;
+        filterPrintCoeffCtx.lines1 = (pgheight - yofs1) / lheight;
+        filterPrintCoeffCtx.lines2 = (pgheight - yofs2) / lheight;
 
-        filterPrintCtx.pages = (filterPrintCtx.lines - filterPrintCtx.lines1 +
-                                filterPrintCtx.lines2 - 1) / filterPrintCtx.lines2 + 1;
+        filterPrintCoeffCtx.pages = (filterPrintCoeffCtx.lines - filterPrintCoeffCtx.lines1 +
+                                filterPrintCoeffCtx.lines2 - 1) / filterPrintCoeffCtx.lines2 + 1;
     } /* if */
 
-    gtk_print_operation_set_n_pages (op, filterPrintCtx.pages);
+    gtk_print_operation_set_n_pages (op, filterPrintCoeffCtx.pages);
 } /* filterPrintCoeffsInit() */
 
 
@@ -302,45 +379,45 @@ void filterPrintCoeffsInit (GtkPrintOperation *op, GtkPrintContext *ctx, gpointe
  * \param[in] ref       user data set when the signal handler was connected
  *
  ******************************************************************************/
-void filterPrintCoeffsDo (GtkPrintOperation *op, GtkPrintContext *ctx, int pgno, gpointer ref)
+static void filterPrintCoeffsDo (GtkPrintOperation *op, GtkPrintContext *ctx, int pgno, gpointer ref)
 {
-    FLTCOEFF* pFilter = dfcPrjGetFilter();
-    cairo_t* cr = gtk_print_context_get_cairo_context(ctx);
+    FLTCOEFF* pFilter = dfcPrjGetFilter ();
+    cairo_t* cr = gtk_print_context_get_cairo_context (ctx);
     int yoffset = filterPrintPageHeader (ctx, TRUE, pgno);
 
-    cairo_move_to (cr, filterPrintCtx.lmargin, yoffset);
+    cairo_move_to (cr, filterPrintCoeffCtx.lmargin, yoffset);
 
     if (pFilter != NULL)
     {
         int i;
 
-        int maxwidth2 = filterPrintCtx.maxwidth / 2;
-        int pglines = (pgno == 0) ? filterPrintCtx.lines1 : filterPrintCtx.lines2;
+        int maxwidth2 = filterPrintCoeffCtx.maxwidth / 2;
+        int pglines = (pgno == 0) ? filterPrintCoeffCtx.lines1 : filterPrintCoeffCtx.lines2;
 
         for (i = 0;
-             (i < pglines) && (filterPrintCtx.icoeff < filterPrintCtx.lines);
-             ++i, ++filterPrintCtx.icoeff)
+             (i < pglines) && (filterPrintCoeffCtx.icoeff < filterPrintCoeffCtx.lines);
+             ++i, ++filterPrintCoeffCtx.icoeff)
         {
             int dy = 0;
 
-            if (filterPrintCtx.icoeff <= pFilter->num.degree)
+            if (filterPrintCoeffCtx.icoeff <= pFilter->num.degree)
             {
-                cairo_move_to (cr, filterPrintCtx.lmargin, yoffset);
+                cairo_move_to (cr, filterPrintCoeffCtx.lmargin, yoffset);
                 dy = filterPrintf (ctx, TRUE, maxwidth2,
                                    "z<sup>-%d</sup>  -&gt;  %.*G",
-                                   filterPrintCtx.icoeff,
-                                   cfgGetDesktopPrefs()->outprec,
-                                   pFilter->num.coeff[filterPrintCtx.icoeff]);
+                                   filterPrintCoeffCtx.icoeff,
+                                   cfgGetDesktopPrefs ()->outprec,
+                                   pFilter->num.coeff[filterPrintCoeffCtx.icoeff]);
             } /* if */
 
-            if (filterPrintCtx.icoeff <= pFilter->den.degree)
+            if (filterPrintCoeffCtx.icoeff <= pFilter->den.degree)
             {
-                cairo_move_to (cr, (filterPrintCtx.lmargin + filterPrintCtx.pgwidth) / 2, yoffset);
+                cairo_move_to (cr, (filterPrintCoeffCtx.lmargin + filterPrintCoeffCtx.pgwidth) / 2, yoffset);
                 dy = MAX(dy, filterPrintf (ctx, TRUE, maxwidth2,
                                            "z<sup>-%d</sup>  -&gt;  %.*G",
-                                           filterPrintCtx.icoeff,
-                                           cfgGetDesktopPrefs()->outprec,
-                                           pFilter->den.coeff[filterPrintCtx.icoeff]));
+                                           filterPrintCoeffCtx.icoeff,
+                                           cfgGetDesktopPrefs ()->outprec,
+                                           pFilter->den.coeff[filterPrintCoeffCtx.icoeff]));
             } /* if */
 
             yoffset += dy;
@@ -354,13 +431,130 @@ void filterPrintCoeffsDo (GtkPrintOperation *op, GtkPrintContext *ctx, int pgno,
 
 
 
+/* FUNCTION *******************************************************************/
+/** \brief Callback function for the \e begin-print event.
+ *
+ *  The \e begin-print event is emitted after the user has finished changing
+ *  print settings in the dialog, before the actual rendering starts. A typical
+ *  use for \e begin-print is to use the parameters from the \c GtkPrintContext
+ *  and paginate the document accordingly, and then set the number of pages
+ *  with \c gtk_print_operation_set_n_pages().
+ *
+ *
+ * \param[in] op        the GtkPrintOperation on which the signal was emitted
+ * \param[in] ctx       the GtkPrintContext for the current operation
+ * \param[in] ref       user data set when the signal handler was connected
+ *
+ ******************************************************************************/
+static void filterPrintResponseInit (GtkPrintOperation *op, GtkPrintContext *ctx, gpointer ref)
+{
+    gtk_print_operation_set_use_full_page (op, FALSE);
+    gtk_print_operation_set_unit (op, GTK_UNIT_PIXEL); /* set cairo transform */
+
+    gtk_print_operation_set_n_pages (op, 1);
+} /* filterPrintResponseInit() */
+
+
+
+/* FUNCTION *******************************************************************/
+/** \brief Callback function for the \e draw-page event.
+ *
+ *  This function (signal handler for \e draw-page) is called for every page
+ *  that is printed. It renders the page onto the cairo context of page.
+ *
+ * \param[in] op        the GtkPrintOperation on which the signal was emitted
+ * \param[in] ctx       the GtkPrintContext for the current operation
+ * \param[in] pgno      the number of the currently printed page 
+ * \param[in] ref       reference pointer to response plot context
+ *                      ::FILTERPRINT_RESPONSE_CONTEXT
+ *
+ ******************************************************************************/
+static void filterPrintResponseDo (GtkPrintOperation *op, GtkPrintContext *ctx,
+                                   int pgno, gpointer ref)
+{
+    FLTCOEFF* pFilter = dfcPrjGetFilter ();
+
+    if (pFilter != NULL)
+    {
+        FILTERPRINT_RESPONSE_CONTEXT* response = (FILTERPRINT_RESPONSE_CONTEXT*)ref;
+        PLOT_DIAG* pDiag = &response->diag;                           /* shortcut */
+        cairo_t* cr = gtk_print_context_get_cairo_context (ctx);
+
+        pDiag->area.y = 0;  /* set size of plot area */
+        pDiag->area.height = gtk_print_context_get_height (ctx) / 2;
+        pDiag->area.width = gtk_print_context_get_width (ctx);
+        pDiag->area.x = FILTER_PRINT_LMARGIN (pDiag->area.width);
+        pDiag->area.width -= pDiag->area.x;
+
+        (void)responsePlotDraw (cr, response->type, pDiag);
+    } /* if */
+
+} /* filterPrintResponseDo() */
+
+
+
+/* EXPORTED FUNCTION DEFINITIONS **********************************************/
+
+
+
+/* FUNCTION *******************************************************************/
+/** \brief Response plot print function.
+ *
+ *  \param[in] topWidget Top widget associated with the \c GtkToolButton widget
+ *                       which has caused the \e clicked event.
+ *  \param[in] pDiag     Pointer to plot diag of associated response \p type.
+ *  \param[in] type     ::RESPONSE_TYPE which identifies what response to print.
+ *
+ ******************************************************************************/
+void filterPrintResponse (GtkWidget* topWidget, const PLOT_DIAG* pDiag,
+                          RESPONSE_TYPE type)
+{
+    FILTERPRINT_RESPONSE_CONTEXT response = {.diag = *pDiag, .type = type};
+    GtkPrintOperation* print = gtk_print_operation_new ();
+
+    g_signal_connect (print, "begin-print",
+                      G_CALLBACK (filterPrintResponseInit), NULL);
+    g_signal_connect (print, "draw-page",
+                      G_CALLBACK (filterPrintResponseDo), &response);
+ 
+    filterPrintDo (topWidget, print);
+    g_object_unref (print);
+
+} /* filterPrintResponse() */
+
+
+
+/* FUNCTION *******************************************************************/
+/** \brief Coefficients print function.
+ *
+ *  \note  The signature of this function was chosen in a way that it is usual
+ *         as \e clicked event callback (when a print menuitem/button is pressed).
+ *
+ *  \param[in] srcWidget \c GtkMenuItem on event \e activate or \c GtkToolButton
+ *                      on event \e clicked, which causes this call.
+ *  \param[in] user_data Pointer to user data (unused).
+ *
+ ******************************************************************************/
+void filterPrintCoeffs (GtkWidget* srcWidget, gpointer user_data)
+{
+    GtkPrintOperation* print = gtk_print_operation_new ();
+
+    g_signal_connect (print, "begin-print",
+                      G_CALLBACK (filterPrintCoeffsInit), NULL);
+    g_signal_connect (print, "draw-page",
+                      G_CALLBACK (filterPrintCoeffsDo), NULL);
+
+    filterPrintDo (gtk_widget_get_toplevel (srcWidget), print);
+    g_object_unref (print);
+
+} /* filterPrintCoeffs() */
+
 
 #else
 
 static int filterPrintDummy = 0; /* empty source files are not allowed */
 
 #endif  /* GTK_CHECK_VERSION(2, 10, 0) */
-
 
 
 /******************************************************************************/
