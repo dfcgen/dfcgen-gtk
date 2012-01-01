@@ -23,6 +23,8 @@
     Improve description (and translation) of predefined filters located in
     PACKAGE_DATA_DIR
 
+  - Feature: GTK-Help
+    Implement GTK help, based on DocBook 5
 
 * Filter design
   Improvements on algorithms currently implemented
@@ -65,6 +67,8 @@
   - Function: linFirDesignDlgApply
     Share code with IIR design dialog
 
+  - Environment: Transition from Anjuta to Eclipse CDT
+
 
 * Source style/comments
 
@@ -87,23 +91,13 @@
     Try to move some of these data into responsePlot.c
 
 
-* Installation
-
-  - Feature: automace/autoconf
-    Revise all automake/autoconf input files
-
-
 * New features
 
   - Feature: New filter class ARBITRARY
     Support of arbitrary frequency specification by Parks-McClellan algorithm
 
-  - Feature: Printing
-    Print support (requires GTK 2.10)
-
   - Feature: Export
     More export formats for filter coefficients and plots
-
 
   - Feature: Response Plot
     Display coordinate when mouse moves over graph area

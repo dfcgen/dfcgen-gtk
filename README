@@ -32,4 +32,6 @@ What is dfcgen-gtk?
 
     * In plots: zoom, lin./log. and auto-scaling
 
+    * Printing of coefficients and response plots
+
     * Save and load of the defined filter
