@@ -1,9 +1,9 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file
+ * \file     doxygen.h
  *           Additional doxygen sections (no code).
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
  *
  * \page        Configure
@@ -16,6 +16,7 @@
  *              - Defining \c DEBUG gives more verbose error messages at the command
  *                line and enables additional checks
  *              - \c make \c dist in root directory generates a distribution package
+ *              - \c make \c dist-debian in root directory builds a Debian package
  *              - \c make \c update-po in \e po directory updates the
  *                strings list in file \e de.po
  *              - \c make \c all in \e po directory builds the \e mo file(s)
