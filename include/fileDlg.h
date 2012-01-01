@@ -90,19 +90,6 @@ extern "C" {
 
 
 
-/* FUNCTION *******************************************************************/
-/** \e Activate event callback emitted when the \e Print menuitem is selected
- *  from \e File menu.
- *
- *  \param srcWidget    \e File \e Save \e As widget (GtkMenuItem on event
- *                      \e activate or GtkToolButton on event \e clicked),
- *                      which causes this call.
- *  \param user_data    User data set when the signal handler was connected (unused).
- *
- ******************************************************************************/
-    void fileDlgPrintActivate (GtkWidget* srcWidget, gpointer user_data);
-
-
 #ifdef  __cplusplus
 }
 #endif
