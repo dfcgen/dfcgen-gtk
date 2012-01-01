@@ -1,3 +1,12 @@
+dfcgen-gtk (0.2-1) unstable; urgency=medium
+
+  * Migration to Ubuntu 10.04 (Lucid Lynx) respective Debian 5.0
+  * Coefficients and response plot printing implemented (supported
+    from GTK 2.10 upward)
+
+
+ -- Ralf Hoppe <ralf.hoppe@ieee.org>  Sat, 01 Jan 2012 18:26:00 +0200
+
 dfcgen-gtk (0.1-1) unstable; urgency=low
 
   * Initial release.
