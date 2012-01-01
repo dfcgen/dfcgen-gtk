@@ -14,6 +14,8 @@
 #include <gtk/gtk.h>
 
 #include "support.h"
+#include "base.h"    /* FREE() */
+
 
 GtkWidget*
 lookup_widget                          (GtkWidget       *widget,
