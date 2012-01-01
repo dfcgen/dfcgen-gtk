@@ -1208,12 +1208,12 @@ int cairoPlot2d(cairo_t* cr, PLOT_DIAG *pDiag)
 
     if (pDiag->y.name != NULL)
     {
-        axisY.start += 3 * height / 2;    /* reserve space for name of y-axis */
+        axisY.start += 5 * height / 2;   /* reserve space for name of y-axis */
     } /* if */
 
     if (pDiag->x.name != NULL)
-    {                                     /* reserve space for name of x-axis */
-        axisY.stop -= 3 * height / 2;   /* expand by height + 1/2 extra space */
+    {                                    /* reserve space for name of x-axis */
+        axisY.stop -= 3 * height / 2;  /* expand by height + 1/2 extra space */
     } /* if */
 
     if ((axisX.stop > axisX.start) && (axisY.stop > axisY.start))
@@ -1289,8 +1289,11 @@ int cairoPlot2d(cairo_t* cr, PLOT_DIAG *pDiag)
 
             if (axisY.layout != NULL)
             {
+                /* put the name of y-axis 2.5 times the line height up the axis
+                 * starting point (so regarding subscripts in the axis name)
+                 */
                 drawLayout (cr, axisY.layout, axisX.start - axisY.width / 2,
-                            axisY.stop - 2 * height);
+                            axisY.stop - 5 * height / 2);
             } /* if */
 
 
