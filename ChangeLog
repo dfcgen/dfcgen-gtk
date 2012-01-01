@@ -1,0 +1,158 @@
+2012-01-01  Ralf Hoppe  <ralf.hoppe@ieee.org>
+
+	* COPYING, README, TODO, aclocal.m4, ChangeLog, dist/debian/changelog:
+	* Makefile.in, config.h.in, configure, dfcgen-gtk.glade:
+	* doc/Makefile.in, data/Makefile.in, pixmaps/Makefile.in:
+	* po/de.po, po/de.gmo, po/dfcgen-gtk.pot: Release of version 0.2 on Ubuntu 10.04 Lucid Lynx.
+
+	* include/fileDlg.h, include/filterPrint.h, include/mainDlg.h, include/Makefile.am, include/Makefile.in:
+	* src/fileDlg.c, src/filterPrint.c, src/responseWin.c, src/mainDlg.c, src/Makefile.am, src/Makefile.in:
+	Support for coefficients and response plot printing.
+
+	* src/cairoPlot.c (cairoPlot2d): Bugfix with respect to the position of y-axis name.
+
+	* doc/Doxyfile: Doxygen 1.7 update
+
+2011-10-16  Ralf Hoppe  <ralf.hoppe@ieee.org>
+
+	* src/dialogSupport.c (dlgGetDouble):
+	Function g_strtod() used instead of strtod().
+
+	* include/fileDlg.h, include/filterPrint.h, src/filterPrint.c, src/fileDlg.c (fileDlgPrintActivate):
+	* po/POTFILES.in, po/de.gmo, po/de.po, po/dfcgen-gtk.pot:
+	* src/Makefile.am:
+	Project info and coefficients printing implemented (supported
+	starting with GTK 2.10), inclusive German translations.
+
+	* src/cfgSettings.c (cfgReadUnit):
+	* src/editDlg.c (cfgFlushSettings, dupInfoStr):
+	* src/projectFile.c (attrStringHandler):
+	* src/miscDesignDlg (updateLayout):
+	String functions of GLib used, instead of <string.h>.
+
+	* src/editDlg.c (createInfoDlg): Scrolling policy of project
+	description GtkTextView widget changed to GTK_POLICY_ALWAYS in
+	y-direction.
+
+2011-09-24  Ralf Hoppe  <ralf.hoppe@ieee.org>
+
+	* src/cfgSettings.c (cfgFlushSettings): Added a comment to
+	configuration file, which forces Emacs conf-mode.
+
+2011-09-03  Ralf Hoppe  <ralf.hoppe@ieee.org>
+
+	* src/editDlg.c (createSettingsDlg):
+	* src/linFirDesignDlg.c (linFirDesignDlgCreate):
+	* src/miscDesignDlg.c (createDialog):
+	* src/responseDlg.c (responseDlgCreate):
+	* src/stdIirDesignDlg.c (stdIirDesignDlgCreate):
+	* src/stdIirDesignDlg.c (stdIirDesignDlgCreate): Warning regarding
+	a non-zero page size within gtk_adjustment_new() for a GtkSpinButton
+	fixed.
+
+2011-08-28  Ralf Hoppe  <ralf.hoppe@ieee.org>
+
+	* Makefile.am (dist-debian): Maintainer target for Debian package build added.
+
+	* COPYING: Introduction added.
+
+	* README: Package dependies and compile preconditions removed.
+
+2011-08-21  Ralf Hoppe  <ralf.hoppe@ieee.org>
+
+	* stamp.po: Added to version control, because part of distribution.
+
+2011-08-20  Ralf Hoppe  <ralf.hoppe@ieee.org>
+
+	* po/de.po: Update of line numbers and file header (msgmerge).
+
+	* configure.ac: AC_CONFIG_AUX_DIR([build-aux]) used.
+
+	* Makefile.am: AUTHORS and NEWS removed from doc_DATA (not part of project anymore)
+
+	* src/Makefile.am, include/Makefile.am, data/Makefile.am, pixmaps/Makefile.am, doc/Makefile.am:
+	Migration from Anjuta Version 1 structure to a regular Automake structure.
+
+	* src/support.c (glade_set_atk_action_description): Commented out, because unused.
+
+2011-08-16  Ralf Hoppe  <ralf.hoppe@ieee.org>
+
+	* config.sub, config.guess, depcomp, install-sh, missing, config.rpath:
+	Moved to new directory 'build-aux'.
+
+	* ltmain.sh: Removed (libtool not used in this project).
+
+	* AUTHORS, NEWS: Removed (Automake strictness 'foreign' does not require this file).
+
+2011-08-14  Ralf Hoppe  <ralf.hoppe@ieee.org>
+
+	* src/helpDlg.c: Define PACKAGE_WEBSITE renamed to PACKAGE_URL.
+
+	* src/mainDlg.c, src/fileDlg.c, src/responseWin.c:
+	Bugfix for conditional compile of print support.
+
+	* include/base.h, include/cairoPlot.h, include/cfgSettings.h, include/designDlg.h:
+	* include/dfcProject.h, include/dfcgen.h, include/dialogSupport.h, include/doxygen.h:
+	* include/editDlg.h, include/fileDlg.h, include/filterResponse.h, include/filterSupport.h:
+	* include/gui.h, include/helpDlg.h, include/linFirDesignDlg.h, include/linFirFilter.h:
+	* include/mainDlg.h, include/mathFuncs.h, include/mathMisc.h, include/mathPoly.h:
+	* include/miscDesignDlg.h, include/miscFilter.h, include/projectFile.h, include/responseDlg.h:
+	* include/responsePlot.h, include/responseWin.h, include/rootsPlot.h, include/stdIirDesignDlg.h:
+	* include/stdIirFilter.h:
+	* src/cairoPlot.c, src/cfgSettings.c, src/designDlg.c, src/dfcProject.c, src/dialogSupport.c:
+	* src/editDlg.c, src/fileDlg.c, src/filterResponse.c, src/filterSupport.c, src/helpDlg.c:
+	* src/linFirDesignDlg.c, src/linFirFilter.c, src/mainDlg.c, src/mathFuncs.c, src/mathMisc.c:
+	* src/mathPoly.c, src/miscDesignDlg.c, src/miscFilter.c, src/projectFile.c, src/responseWin.c:
+	* src/responsePlot.c, src/responseDlg.c, src/rootsPlot.c, src/stdIirDesignDlg.c, src/stdIirFilter.c:
+	Update of file header (cvs2svn, copyright).
+
+	* configure.ac: 53
+	- AC_PROG_LIBTOOL removed
+	- AC_PREREQ(2.65) added for Ubuntu 10.04 LTS (Lucid Lynx)
+	- some minor comment changes
+
+2011-08-12  Ralf Hoppe  <ralf.hoppe@ieee.org>
+
+	* config.rpath: New file (needed by the AM_GNU_GETTEXT autoconf/gettext macro).
+	* po/POTFILES.in, po/LINGUAS: New file (with gettext-0.17).
+	* po/ChangeLog: Removed (merged with ChangeLog at root).
+
+	* config.h, config.log, config.status, stamp-h1, libtool, Makefile:
+	* data/Makefile, doc/Makefile, include/Makefile, src/Makefile, pixmaps/Makefile, po/Makefile:
+	* po/Makefile.in, po/POTFILES: Removed (generated by configure).
+
+	* dfcgen-gtk.prj: Removed (Anjuta version 1, obsolete).
+	* autogen.sh: Removed (performed by autoreconf).
+	* acinclude.m4: Removed (should not be used for new packages, see GNU Automake manual).
+	* acconfig.h: Removed (not really needed, see GNU Autoconf manual).
+	* mkinstalldirs: Removed (not needed anymore, was only for old gettext versions).
+	* description-pak: Removed (because only Debian packaging supported, but this was for RPM's).
+	* setup-gettext: Removed (not needed anymore by gettext).
+
+2011-08-07  Ralf Hoppe  <ralf.hoppe@ieee.org>
+
+	* configure.in: Removed.
+	* configure.ac: 30 Upgrade to automake-1.11 and autoconf-2.65.
+	* Makefile.am: 31 Upgrade to automake-1.11 and autoconf-2.65.
+	* po/Makevars: New file, from gettext-0.17.
+
+2011-08-07  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* m4/gettext.m4: New file, from gettext-0.17.
+	* m4/iconv.m4: New file, from gettext-0.17.
+	* m4/lib-ld.m4: New file, from gettext-0.17.
+	* m4/lib-link.m4: New file, from gettext-0.17.
+	* m4/lib-prefix.m4: New file, from gettext-0.17.
+	* m4/nls.m4: New file, from gettext-0.17.
+	* m4/po.m4: New file, from gettext-0.17.
+	* m4/progtest.m4: New file, from gettext-0.17.
+	* Makefile.am (EXTRA_DIST): Add config.rpath.
+	* po/Makefile.in.in: Upgrade to gettext-0.17.
+	* po/Rules-quot: New file, from gettext-0.17.
+	* po/boldquot.sed: New file, from gettext-0.17.
+	* po/en@boldquot.header: New file, from gettext-0.17.
+	* po/en@quot.header: New file, from gettext-0.17.
+	* po/insert-header.sin: New file, from gettext-0.17.
+	* po/quot.sed: New file, from gettext-0.17.
+	* po/remove-potcdate.sin: New file, from gettext-0.17.
+
