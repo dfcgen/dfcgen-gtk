@@ -3,7 +3,7 @@
  * \file
  *           Main dialog management.
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
  *
  ******************************************************************************/
@@ -58,15 +58,12 @@ extern "C" {
 
 
 /* FUNCTION *******************************************************************/
-/** Updates the main filter dialog from current project if there is no error
- *  passed in. If there is an critical error (coded as from function filterCheck(),
- *  then it displays an error box. If FLTERR_WARNING (err) indicates loss of
- *  coefficients then a warning will be shown.
+/** Adjustment of main filter dialog from a new project (may be read from file
+ *  before).
  *
- *  \param err      Error indicator with coding as from filterCheck().
+ *  \param filename     Associated filename in filesystem coding, or NULL to
+ *                      reset.
  *
- *  \return         Returns TRUE if the error is not FLTERR_CRITICAL(),
- *                  else FALSE.
  ******************************************************************************/
     void mainDlgUpdateAll (const char* filename);
 

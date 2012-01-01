@@ -1,26 +1,31 @@
 /******************************************************************************/
 /**
- * \file     filterPrint.h
+ * \file
  * \brief    Filter print functions.
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
  *
  ******************************************************************************/
 
 
-#if GTK_CHECK_VERSION(2, 10, 0) && !defined(FILTER_PRINT_H)
+#ifndef FILTER_PRINT_H
 #define FILTER_PRINT_H
 
 
 /* INCLUDE FILES **************************************************************/
 
 #include "dfcgen.h"
+#include "cairoPlot.h"    /* PLOT_DIAG */
+#include "responsePlot.h" /* RESPONSE_TYPE */
 
 
 #ifdef  __cplusplus
 extern "C" {
 #endif
+
+
+#if GTK_CHECK_VERSION(2, 10, 0)
 
 
 /* GLOBAL TYPE DECLARATIONS ***************************************************/
@@ -39,38 +44,34 @@ extern "C" {
 
 
 /* FUNCTION *******************************************************************/
-/** \brief Callback function for the \e begin-print event.
+/** \brief Response plot print function.
  *
- *  The \e begin-print event is emitted after the user has finished changing
- *  print settings in the dialog, before the actual rendering starts. A typical
- *  use for \e begin-print is to use the parameters from the \c GtkPrintContext
- *  and paginate the document accordingly, and then set the number of pages
- *  with \c gtk_print_operation_set_n_pages().
- *
- *
- * \param[in] op        the GtkPrintOperation on which the signal was emitted
- * \param[in] ctx       the GtkPrintContext for the current operation
- * \param[in] ref       user data set when the signal handler was connected
+ *  \param[in] topWidget Top widget associated with the \c GtkToolButton widget
+ *                       which has caused the \e clicked event.
+ *  \param[in] pDiag     Pointer to plot diag of associated response \p type.
+ *  \param[in] type     ::RESPONSE_TYPE which identifies what response to print.
  *
  ******************************************************************************/
-    void filterPrintCoeffsInit (GtkPrintOperation *op, GtkPrintContext *ctx, gpointer ref);
+    void filterPrintResponse (GtkWidget* topWidget, const PLOT_DIAG* pDiag,
+                              RESPONSE_TYPE type);
 
 
 
 /* FUNCTION *******************************************************************/
-/** \brief Callback function for the \e draw-page event.
+/** \brief Coefficients print function.
  *
- *  This function (signal handler for \e draw-page) is called for every page
- *  that is printed. It renders the page onto the cairo context of page.
+ *  \note  The signature of this function was chosen in a way that it is usual
+ *         as \e clicked event callback (when a print menuitem/button is pressed).
  *
- * \param[in] op        the GtkPrintOperation on which the signal was emitted
- * \param[in] ctx       the GtkPrintContext for the current operation
- * \param[in] pgno      the number of the currently printed page 
- * \param[in] ref       user data set when the signal handler was connected
+ *  \param[in] srcWidget \c GtkMenuItem on event \e activate or \c GtkToolButton
+ *                       on event \e clicked, which causes this call.
+ *  \param[in] user_data Pointer to user data (unused).
  *
  ******************************************************************************/
-    void filterPrintCoeffsDo (GtkPrintOperation *op, GtkPrintContext *ctx, int pgno, gpointer ref);
+    void filterPrintCoeffs (GtkWidget* srcWidget, gpointer user_data);
 
+
+#endif /* GTK_CHECK_VERSION() */
 
 
 #ifdef  __cplusplus
