@@ -1,6 +1,6 @@
 ## -*- Makefile -*-
 ##
-## Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+## Copyright (C) 2006, 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
 ##
 ## Version:  $Id$
 ##
@@ -37,4 +37,5 @@ noinst_HEADERS = \
 	rootsPlot.h\
 	stdIirDesignDlg.h\
 	stdIirFilter.h\
+	filterPrint.h\
 	support.h
