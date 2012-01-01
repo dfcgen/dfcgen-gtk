@@ -1,15 +1,15 @@
 # -*- mode: po; coding: utf-8 -*-
 #
 # DFCGEN-GTK German Translations
-# Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+# Copyright (C) 2006, 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
 # This file is distributed under the same license as the dfcgen-gtk package.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: dfcgen-gtk 0.2\n"
 "Report-Msgid-Bugs-To: ralf.hoppe@ieee.org\n"
-"POT-Creation-Date: 2011-10-09 18:51+0200\n"
-"PO-Revision-Date: 2011-10-09 19:56+0200\n"
+"POT-Creation-Date: 2012-01-01 15:42+0100\n"
+"PO-Revision-Date: 2012-01-01 15:51+0100\n"
 "Last-Translator: Ralf Hoppe <ralf.hoppe@ieee.org>\n"
 "Language-Team: Ralf Hoppe\n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: de_DE.UTF-8\n"
 
-#: src/support.c:92 src/support.c:116
+#: src/support.c:94 src/support.c:118
 #, c-format
 msgid "Couldn't find pixmap file: %s"
 msgstr "Konnte pixmap file: %s nicht finden"
@@ -53,37 +53,37 @@ msgstr ""
 "erzeugen. Bitte prüfen Sie die Werte für den Grad, die Abtastfrequenz sowie "
 "alle weiteren Parameter."
 
-#: src/mainDlg.c:123
+#: src/mainDlg.c:124
 msgid "Change"
 msgstr "Ändern"
 
-#: src/mainDlg.c:124
+#: src/mainDlg.c:125
 msgid "Edit a single coefficient"
 msgstr "Einen einzelnen Koeffizienten ändern"
 
-#: src/mainDlg.c:127
+#: src/mainDlg.c:128
 msgid "Multiply"
 msgstr "Multiplizieren"
 
-#: src/mainDlg.c:128
+#: src/mainDlg.c:129
 msgid "Multiply all coefficients with a constant"
 msgstr "Alle Koeffizienten mit einer Konstante multiplizieren"
 
-#: src/mainDlg.c:131
+#: src/mainDlg.c:132
 msgid "Round"
 msgstr "Runden"
 
-#: src/mainDlg.c:132
+#: src/mainDlg.c:133
 msgid "Round all coefficients"
 msgstr "Alle Koeffizienten runden"
 
-#: src/mainDlg.c:173
+#: src/mainDlg.c:174
 msgid "The current filter/system has not been saved. Are you sure to quit now?"
 msgstr ""
 "Das aktuelle Filter/System wurde noch nicht gespeichert. Wollen Sie trotzdem "
 "beenden?"
 
-#: src/mainDlg.c:284
+#: src/mainDlg.c:285
 #, c-format
 msgid ""
 "Changes coefficient of tap z<sup>-%d</sup> in the selected list to a new "
@@ -91,35 +91,35 @@ msgid ""
 msgstr ""
 "Ändert den Koeffizient von Abzweig z<sup>-%d</sup> in der ausgewählten Liste"
 
-#: src/mainDlg.c:287
+#: src/mainDlg.c:288
 msgid "Change coefficient"
 msgstr "Koeffizient ändern"
 
-#: src/mainDlg.c:288
+#: src/mainDlg.c:289
 msgid "_New"
 msgstr "_Neu"
 
 # Tooltip
-#: src/mainDlg.c:316
+#: src/mainDlg.c:317
 msgid "Multiply coefficients"
 msgstr "Koeffizient modifizieren"
 
-#: src/mainDlg.c:317
+#: src/mainDlg.c:318
 msgid "_Factor"
 msgstr "_Faktor"
 
-#: src/mainDlg.c:318
+#: src/mainDlg.c:319
 msgid "Multiplies all coefficients in the selected list with the given factor."
 msgstr ""
 "Multipliziert alle Koeffizienten in der ausgewählten Liste mit dem "
 "eingegebenen Faktor."
 
-#: src/mainDlg.c:358
+#: src/mainDlg.c:359
 msgid "Do you really want to round all coefficients in the selected list?"
 msgstr ""
 "Wollen Sie wirklich alle Koeffizienten in der ausgewählten Liste runden?"
 
-#: src/mainDlg.c:411
+#: src/mainDlg.c:412
 msgid ""
 "Cannot implement such a filter. Maybe the result of such an operation leads "
 "to vanishing coefficients at all."
@@ -127,7 +127,7 @@ msgstr ""
 "Kann ein solches Filter nicht erzeugen. Möglicherweise führt die Operation "
 "zu einem Ergebnis, in dem alle Koeffizienten annähernd Null sind."
 
-#: src/mainDlg.c:425
+#: src/mainDlg.c:426
 msgid ""
 "Cannot perform the desired operation. It seems that all the memory is "
 "exhausted."
@@ -135,113 +135,113 @@ msgstr ""
 "Kann die gewünschte Operation nicht ausführen. Es scheint, als ob Ihr "
 "Hauptspeicher nicht ausreicht."
 
-#: src/mainDlg.c:571
+#: src/mainDlg.c:572
 msgid "Tap"
 msgstr "Abzw."
 
-#: src/mainDlg.c:582
+#: src/mainDlg.c:583
 msgid "Coefficient"
 msgstr "Koeffizient"
 
-#: src/mainDlg.c:708
+#: src/mainDlg.c:709
 msgid "_File"
 msgstr "_Datei"
 
-#: src/mainDlg.c:763
+#: src/mainDlg.c:764
 msgid "_Edit"
 msgstr "_Bearbeiten"
 
-#: src/mainDlg.c:769 src/editDlg.c:313
+#: src/mainDlg.c:770 src/editDlg.c:313
 msgid "Project Info"
 msgstr "Projektinfo"
 
-#: src/mainDlg.c:776
+#: src/mainDlg.c:777
 msgid "Coefficient(s)"
 msgstr "Koeffizient(en)"
 
-#: src/mainDlg.c:806
+#: src/mainDlg.c:807
 msgid "_View"
 msgstr "_Ansicht"
 
-#: src/mainDlg.c:812
+#: src/mainDlg.c:813
 msgid "_Magnitude Response"
 msgstr "_Amplitudengang"
 
-#: src/mainDlg.c:818
+#: src/mainDlg.c:819
 msgid "_Attenuation"
 msgstr "_Dämpfung"
 
-#: src/mainDlg.c:824
+#: src/mainDlg.c:825
 msgid "_Characteristic Function"
 msgstr "D_rosselung"
 
-#: src/mainDlg.c:830
+#: src/mainDlg.c:831
 msgid "_Phase Response"
 msgstr "_Phasengang"
 
-#: src/mainDlg.c:836
+#: src/mainDlg.c:837
 msgid "Phase _Delay"
 msgstr "Phasen_laufzeit"
 
-#: src/mainDlg.c:842
+#: src/mainDlg.c:843
 msgid "_Group Delay"
 msgstr "_Gruppenlaufzeit"
 
-#: src/mainDlg.c:848
+#: src/mainDlg.c:849
 msgid "_Impulse Response"
 msgstr "_Impulsantwort"
 
-#: src/mainDlg.c:854
+#: src/mainDlg.c:855
 msgid "_Step Response"
 msgstr "_Sprungantwort"
 
-#: src/mainDlg.c:860
+#: src/mainDlg.c:861
 msgid "_Help"
 msgstr "_Hilfe"
 
 # Label for filter class combobox
-#: src/mainDlg.c:926
+#: src/mainDlg.c:927
 msgid "<b>_Class</b>"
 msgstr "<b>_Klasse</b>"
 
 # Tooltip
-#: src/mainDlg.c:932
+#: src/mainDlg.c:933
 msgid "Class of filter (or system)"
 msgstr "Filterklasse"
 
 # Tooltip for help button
-#: src/mainDlg.c:947
+#: src/mainDlg.c:948
 msgid "Help"
 msgstr "Hilfe"
 
 # Tooltip
-#: src/mainDlg.c:954
+#: src/mainDlg.c:955
 msgid "Apply input data"
 msgstr "Eingabe anwenden"
 
-#: src/mainDlg.c:970
+#: src/mainDlg.c:971
 msgid "<b>Roots</b>"
 msgstr "<b>Wurzeln</b>"
 
 # Tooltip
-#: src/mainDlg.c:989
+#: src/mainDlg.c:990
 msgid "Denominator coefficients"
 msgstr "Nennerkoeffizienten"
 
 # Tooltip
-#: src/mainDlg.c:1001
+#: src/mainDlg.c:1002
 msgid "Numerator coefficients"
 msgstr "Zählerkoeffizienten"
 
-#: src/mainDlg.c:1003
+#: src/mainDlg.c:1004
 msgid "<b>Numerator</b>"
 msgstr "<b>Zähler</b>"
 
-#: src/mainDlg.c:1011
+#: src/mainDlg.c:1012
 msgid "<b>Denominator</b>"
 msgstr "<b>Nenner</b>"
 
-#: src/mainDlg.c:1178
+#: src/mainDlg.c:1179
 msgid ""
 "Filter generation has dropped some (near zero) coefficients, but the filter "
 "is still valid."
@@ -252,71 +252,76 @@ msgstr ""
 
 # Displayed if title, author or filename (may be a conversion error from filesystem
 # into UTF-8 coding) are unknown.
-#: src/mainDlg.c:1238 src/fileDlg.c:89 src/fileDlg.c:94
+#: src/mainDlg.c:1239 src/fileDlg.c:89 src/fileDlg.c:94
 #: src/dialogSupport.c:131
 msgid "<i>Unknown</i>"
 msgstr "<i>Unbekannt</i>"
 
 #: src/helpDlg.c:76
-msgid "Copyright (C) 2006, 2011 "
-msgstr "Copyright (C) 2006, 2011"
+msgid "Copyright (C) 2006, 2011, 2012 "
+msgstr "Copyright (C) 2006, 2011, 2012"
 
 # f means the physical unit Frequency
-#: src/responseWin.c:93 src/responseWin.c:107 src/responseWin.c:121
-#: src/responseWin.c:135 src/responseWin.c:149 src/responseWin.c:163
+#: src/responseWin.c:92 src/responseWin.c:102 src/responseWin.c:112
+#: src/responseWin.c:122 src/responseWin.c:132 src/responseWin.c:142
 msgid "<b>f</b>"
 msgstr "<b>f</b>"
 
-# Physical symbol for transfer function H(f)
-#: src/responseWin.c:96
-msgid "<b>H</b>"
-msgstr "<b>H</b>"
+# magnitude response H(f)
+#: src/responseWin.c:93
+msgid "<b>H(f)</b>"
+msgstr "<b>f</b>"
 
-# f means the physical unit Frequency
-#: src/responseWin.c:110
-msgid "<b>A</b>"
-msgstr "<b>A</b>"
+# attenuation
+#: src/responseWin.c:103
+msgid "<b>A(f)</b>"
+msgstr "<b>f</b>"
 
-#: src/responseWin.c:124
-msgid "<b>D</b>"
-msgstr "<b>D</b>"
+# characteristic function
+#: src/responseWin.c:113
+msgid "<b>D(f)</b>"
+msgstr "<b>f</b>"
 
-# f means the physical unit Frequency
-#: src/responseWin.c:138
-msgid "<b>B</b>"
-msgstr "<b>B</b>"
+# phase response
+#: src/responseWin.c:123
+msgid "<b>B(f)</b>"
+msgstr "<b>f</b>"
 
-#: src/responseWin.c:152
-msgid "<b>T<sub>p</sub></b>"
+# phase delay
+#: src/responseWin.c:133
+msgid "<b>T<sub>p</sub>(f)</b>"
 msgstr "<b>T<sub>p</sub></b>"
 
-#: src/responseWin.c:166
-msgid "<b>T<sub>g</sub></b>"
+# group delay
+#: src/responseWin.c:143
+msgid "<b>T<sub>g</sub>(f)</b>"
 msgstr "<b>T<sub>g</sub></b>"
 
 # t means the physical unit Time
-#: src/responseWin.c:177 src/responseWin.c:191
+#: src/responseWin.c:152 src/responseWin.c:162
 msgid "<b>t</b>"
 msgstr "<b>t</b>"
 
-#: src/responseWin.c:180
-msgid "<b>h</b>"
-msgstr "<b>h</b>"
+# step response
+#: src/responseWin.c:153
+msgid "<b>h(t)</b>"
+msgstr "<b>t</b>"
 
-#: src/responseWin.c:194
-msgid "<b>g</b>"
-msgstr "<b>g</b>"
+# impulse response
+#: src/responseWin.c:163
+msgid "<b>g(t)</b>"
+msgstr "<b>t</b>"
 
-#: src/responseWin.c:332
+#: src/responseWin.c:327
 msgid "Print this response plot"
 msgstr "Diagramm drucken"
 
 # Tooltip
-#: src/responseWin.c:337
+#: src/responseWin.c:332
 msgid "Set response plot preferences"
 msgstr "Plot Einstellungen"
 
-#: src/responseWin.c:434
+#: src/responseWin.c:429
 #, c-format
 msgid "%d Points"
 msgstr "%d Stützwerte"
@@ -346,8 +351,7 @@ msgstr ""
 "<b>Autor</b>: %s"
 
 #: src/fileDlg.c:145
-#, fuzzy
-msgid "Project files (*.dfc)"
+msgid "Project files (*"
 msgstr "Projektdateien (*.dfc)"
 
 #: src/fileDlg.c:150
@@ -375,11 +379,6 @@ msgstr "Projektdatei speichern"
 #: src/fileDlg.c:299
 msgid "Untitled"
 msgstr "Unbenannt"
-
-#: src/fileDlg.c:374
-#, c-format
-msgid "Error printing: %s"
-msgstr "Fehler beim Drucken: %s"
 
 #: src/responseDlg.c:161
 #, c-format
@@ -925,48 +924,41 @@ msgstr "Re(z)"
 msgid "Im(z)"
 msgstr "Im(z)"
 
-#: src/filterPrint.c:134
+#: src/filterPrint.c:165
 #, c-format
 msgid "Page %d / %d"
 msgstr "Seite %d / %d"
 
-#: src/filterPrint.c:161
+#: src/filterPrint.c:192
 #, c-format
 msgid "<b>Title: </b>%s"
 msgstr "<b>Titel: </b>%s"
 
-#: src/filterPrint.c:168
+#: src/filterPrint.c:199
 #, c-format
 msgid "<b>Author: </b>%s"
 msgstr "<b>Autor: </b>%s"
 
-#: src/filterPrint.c:175
+#: src/filterPrint.c:206
 #, c-format
 msgid "<b>Description: </b>%s"
 msgstr "<b>Beschreibung: </b>%s"
 
-#: src/filterPrint.c:188
+#: src/filterPrint.c:221
 msgid "<b>Coefficients:</b>"
 msgstr "<b>Koeffizienten: </b>"
 
-#: src/filterPrint.c:193
+#: src/filterPrint.c:226
 #, c-format
 msgid "Numerator (%d)"
 msgstr "Zähler (%d)"
 
-#: src/filterPrint.c:198
+#: src/filterPrint.c:231
 #, c-format
 msgid "Denominator (%d)"
 msgstr "Nenner (%d)"
 
-#~ msgid "z<sup>-%d</sup>  -&gt;  %.*G"
-#~ msgstr "z<sup>-%d</sup>  -&gt;  %.*G"
-
-#~ msgid "<b>x-Axis</b>"
-#~ msgstr "x-Achse"
-
-#~ msgid "<b>y-Axis</b>"
-#~ msgstr "y-Achse"
-
-#~ msgid "f<sub>Sample</sub>"
-#~ msgstr "Abtastfr."
+#: src/filterPrint.c:272
+#, c-format
+msgid "Error printing: %s"
+msgstr "Fehler beim Drucken: %s"

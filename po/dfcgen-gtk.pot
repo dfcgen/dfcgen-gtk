@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: dfcgen-gtk 0.2\n"
 "Report-Msgid-Bugs-To: ralf.hoppe@ieee.org\n"
-"POT-Creation-Date: 2011-10-09 18:51+0200\n"
+"POT-Creation-Date: 2012-01-01 15:42+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/support.c:92 src/support.c:116
+#: src/support.c:94 src/support.c:118
 #, c-format
 msgid "Couldn't find pixmap file: %s"
 msgstr ""
@@ -46,242 +46,242 @@ msgid ""
 "other design parameters."
 msgstr ""
 
-#: src/mainDlg.c:123
+#: src/mainDlg.c:124
 msgid "Change"
 msgstr ""
 
-#: src/mainDlg.c:124
+#: src/mainDlg.c:125
 msgid "Edit a single coefficient"
 msgstr ""
 
-#: src/mainDlg.c:127
+#: src/mainDlg.c:128
 msgid "Multiply"
 msgstr ""
 
-#: src/mainDlg.c:128
+#: src/mainDlg.c:129
 msgid "Multiply all coefficients with a constant"
 msgstr ""
 
-#: src/mainDlg.c:131
+#: src/mainDlg.c:132
 msgid "Round"
 msgstr ""
 
-#: src/mainDlg.c:132
+#: src/mainDlg.c:133
 msgid "Round all coefficients"
 msgstr ""
 
-#: src/mainDlg.c:173
+#: src/mainDlg.c:174
 msgid "The current filter/system has not been saved. Are you sure to quit now?"
 msgstr ""
 
-#: src/mainDlg.c:284
+#: src/mainDlg.c:285
 #, c-format
 msgid ""
 "Changes coefficient of tap z<sup>-%d</sup> in the selected list to a new "
 "value."
 msgstr ""
 
-#: src/mainDlg.c:287
+#: src/mainDlg.c:288
 msgid "Change coefficient"
 msgstr ""
 
-#: src/mainDlg.c:288
+#: src/mainDlg.c:289
 msgid "_New"
 msgstr ""
 
-#: src/mainDlg.c:316
+#: src/mainDlg.c:317
 msgid "Multiply coefficients"
 msgstr ""
 
-#: src/mainDlg.c:317
+#: src/mainDlg.c:318
 msgid "_Factor"
 msgstr ""
 
-#: src/mainDlg.c:318
+#: src/mainDlg.c:319
 msgid "Multiplies all coefficients in the selected list with the given factor."
 msgstr ""
 
-#: src/mainDlg.c:358
+#: src/mainDlg.c:359
 msgid "Do you really want to round all coefficients in the selected list?"
 msgstr ""
 
-#: src/mainDlg.c:411
+#: src/mainDlg.c:412
 msgid ""
 "Cannot implement such a filter. Maybe the result of such an operation leads "
 "to vanishing coefficients at all."
 msgstr ""
 
-#: src/mainDlg.c:425
+#: src/mainDlg.c:426
 msgid ""
 "Cannot perform the desired operation. It seems that all the memory is "
 "exhausted."
 msgstr ""
 
-#: src/mainDlg.c:571
+#: src/mainDlg.c:572
 msgid "Tap"
 msgstr ""
 
-#: src/mainDlg.c:582
+#: src/mainDlg.c:583
 msgid "Coefficient"
 msgstr ""
 
-#: src/mainDlg.c:708
+#: src/mainDlg.c:709
 msgid "_File"
 msgstr ""
 
-#: src/mainDlg.c:763
+#: src/mainDlg.c:764
 msgid "_Edit"
 msgstr ""
 
-#: src/mainDlg.c:769 src/editDlg.c:313
+#: src/mainDlg.c:770 src/editDlg.c:313
 msgid "Project Info"
 msgstr ""
 
-#: src/mainDlg.c:776
+#: src/mainDlg.c:777
 msgid "Coefficient(s)"
 msgstr ""
 
-#: src/mainDlg.c:806
+#: src/mainDlg.c:807
 msgid "_View"
 msgstr ""
 
-#: src/mainDlg.c:812
+#: src/mainDlg.c:813
 msgid "_Magnitude Response"
 msgstr ""
 
-#: src/mainDlg.c:818
+#: src/mainDlg.c:819
 msgid "_Attenuation"
 msgstr ""
 
-#: src/mainDlg.c:824
+#: src/mainDlg.c:825
 msgid "_Characteristic Function"
 msgstr ""
 
-#: src/mainDlg.c:830
+#: src/mainDlg.c:831
 msgid "_Phase Response"
 msgstr ""
 
-#: src/mainDlg.c:836
+#: src/mainDlg.c:837
 msgid "Phase _Delay"
 msgstr ""
 
-#: src/mainDlg.c:842
+#: src/mainDlg.c:843
 msgid "_Group Delay"
 msgstr ""
 
-#: src/mainDlg.c:848
+#: src/mainDlg.c:849
 msgid "_Impulse Response"
 msgstr ""
 
-#: src/mainDlg.c:854
+#: src/mainDlg.c:855
 msgid "_Step Response"
 msgstr ""
 
-#: src/mainDlg.c:860
+#: src/mainDlg.c:861
 msgid "_Help"
 msgstr ""
 
-#: src/mainDlg.c:926
+#: src/mainDlg.c:927
 msgid "<b>_Class</b>"
 msgstr ""
 
-#: src/mainDlg.c:932
+#: src/mainDlg.c:933
 msgid "Class of filter (or system)"
 msgstr ""
 
-#: src/mainDlg.c:947
+#: src/mainDlg.c:948
 msgid "Help"
 msgstr ""
 
-#: src/mainDlg.c:954
+#: src/mainDlg.c:955
 msgid "Apply input data"
 msgstr ""
 
-#: src/mainDlg.c:970
+#: src/mainDlg.c:971
 msgid "<b>Roots</b>"
 msgstr ""
 
-#: src/mainDlg.c:989
+#: src/mainDlg.c:990
 msgid "Denominator coefficients"
 msgstr ""
 
-#: src/mainDlg.c:1001
+#: src/mainDlg.c:1002
 msgid "Numerator coefficients"
 msgstr ""
 
-#: src/mainDlg.c:1003
+#: src/mainDlg.c:1004
 msgid "<b>Numerator</b>"
 msgstr ""
 
-#: src/mainDlg.c:1011
+#: src/mainDlg.c:1012
 msgid "<b>Denominator</b>"
 msgstr ""
 
-#: src/mainDlg.c:1178
+#: src/mainDlg.c:1179
 msgid ""
 "Filter generation has dropped some (near zero) coefficients, but the filter "
 "is still valid."
 msgstr ""
 
-#: src/mainDlg.c:1238 src/fileDlg.c:89 src/fileDlg.c:94
+#: src/mainDlg.c:1239 src/fileDlg.c:89 src/fileDlg.c:94
 #: src/dialogSupport.c:131
 msgid "<i>Unknown</i>"
 msgstr ""
 
 #: src/helpDlg.c:76
-msgid "Copyright (C) 2006, 2011 "
+msgid "Copyright (C) 2006, 2011, 2012 "
 msgstr ""
 
-#: src/responseWin.c:93 src/responseWin.c:107 src/responseWin.c:121
-#: src/responseWin.c:135 src/responseWin.c:149 src/responseWin.c:163
+#: src/responseWin.c:92 src/responseWin.c:102 src/responseWin.c:112
+#: src/responseWin.c:122 src/responseWin.c:132 src/responseWin.c:142
 msgid "<b>f</b>"
 msgstr ""
 
-#: src/responseWin.c:96
-msgid "<b>H</b>"
+#: src/responseWin.c:93
+msgid "<b>H(f)</b>"
 msgstr ""
 
-#: src/responseWin.c:110
-msgid "<b>A</b>"
+#: src/responseWin.c:103
+msgid "<b>A(f)</b>"
 msgstr ""
 
-#: src/responseWin.c:124
-msgid "<b>D</b>"
+#: src/responseWin.c:113
+msgid "<b>D(f)</b>"
 msgstr ""
 
-#: src/responseWin.c:138
-msgid "<b>B</b>"
+#: src/responseWin.c:123
+msgid "<b>B(f)</b>"
 msgstr ""
 
-#: src/responseWin.c:152
-msgid "<b>T<sub>p</sub></b>"
+#: src/responseWin.c:133
+msgid "<b>T<sub>p</sub>(f)</b>"
 msgstr ""
 
-#: src/responseWin.c:166
-msgid "<b>T<sub>g</sub></b>"
+#: src/responseWin.c:143
+msgid "<b>T<sub>g</sub>(f)</b>"
 msgstr ""
 
-#: src/responseWin.c:177 src/responseWin.c:191
+#: src/responseWin.c:152 src/responseWin.c:162
 msgid "<b>t</b>"
 msgstr ""
 
-#: src/responseWin.c:180
-msgid "<b>h</b>"
+#: src/responseWin.c:153
+msgid "<b>h(t)</b>"
 msgstr ""
 
-#: src/responseWin.c:194
-msgid "<b>g</b>"
+#: src/responseWin.c:163
+msgid "<b>g(t)</b>"
 msgstr ""
 
-#: src/responseWin.c:332
+#: src/responseWin.c:327
 msgid "Print this response plot"
 msgstr ""
 
-#: src/responseWin.c:337
+#: src/responseWin.c:332
 msgid "Set response plot preferences"
 msgstr ""
 
-#: src/responseWin.c:434
+#: src/responseWin.c:429
 #, c-format
 msgid "%d Points"
 msgstr ""
@@ -330,11 +330,6 @@ msgstr ""
 
 #: src/fileDlg.c:299
 msgid "Untitled"
-msgstr ""
-
-#: src/fileDlg.c:374
-#, c-format
-msgid "Error printing: %s"
 msgstr ""
 
 #: src/responseDlg.c:161
@@ -844,36 +839,41 @@ msgstr ""
 msgid "Im(z)"
 msgstr ""
 
-#: src/filterPrint.c:134
+#: src/filterPrint.c:165
 #, c-format
 msgid "Page %d / %d"
 msgstr ""
 
-#: src/filterPrint.c:161
+#: src/filterPrint.c:192
 #, c-format
 msgid "<b>Title: </b>%s"
 msgstr ""
 
-#: src/filterPrint.c:168
+#: src/filterPrint.c:199
 #, c-format
 msgid "<b>Author: </b>%s"
 msgstr ""
 
-#: src/filterPrint.c:175
+#: src/filterPrint.c:206
 #, c-format
 msgid "<b>Description: </b>%s"
 msgstr ""
 
-#: src/filterPrint.c:188
+#: src/filterPrint.c:221
 msgid "<b>Coefficients:</b>"
 msgstr ""
 
-#: src/filterPrint.c:193
+#: src/filterPrint.c:226
 #, c-format
 msgid "Numerator (%d)"
 msgstr ""
 
-#: src/filterPrint.c:198
+#: src/filterPrint.c:231
 #, c-format
 msgid "Denominator (%d)"
+msgstr ""
+
+#: src/filterPrint.c:272
+#, c-format
+msgid "Error printing: %s"
 msgstr ""
