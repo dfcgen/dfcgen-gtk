@@ -3,8 +3,8 @@
  * \file
  *           Basic types, constants and macros.
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $$id$
+ * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \version  $Id$
  *
  *
  ******************************************************************************/
