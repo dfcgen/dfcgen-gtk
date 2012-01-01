@@ -3,7 +3,7 @@
  * \file
  *           Interface to dialog functions of \e Edit menu.
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
  *
  ******************************************************************************/
@@ -42,7 +42,7 @@ extern "C" {
 /** \e Activate event callback emitted when the \e Settings menuitem is selected
  *  from \e Edit menu.
  *
- *  \param srcWidget    \e Edit \e Settings widget (GtkMenuItem on event
+ *  \param widget       \e Edit \e Settings widget (GtkMenuItem on event
  *                      \e activate or GtkToolButton on event \e clicked),
  *                      which causes this call.
  *  \param user_data    User data set when the signal handler was connected (unused).
