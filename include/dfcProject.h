@@ -3,7 +3,7 @@
  * \file
  *           \e dfcgen filter project management.
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
  *
  ******************************************************************************/
@@ -111,7 +111,7 @@ typedef struct
 /* FUNCTION *******************************************************************/
 /** Sets new project information data.
  *
- *  \param pFilter      Pointer to new project info.
+ *  \param pInfo      Pointer to new project info.
  *
  ******************************************************************************/
     void dfcPrjSetInfo (DFCPRJ_INFO *pInfo);
