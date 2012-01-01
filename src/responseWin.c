@@ -3,7 +3,7 @@
  * \file
  *           Digital filter response window creation and callbacks.
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
  *
  ******************************************************************************/
@@ -14,6 +14,7 @@
 #include "responsePlot.h"
 #include "responseWin.h"
 #include "responseDlg.h"
+#include "filterPrint.h" /* filterPrintResponse() */
 #include "cfgSettings.h"
 #include "mathFuncs.h"
 
@@ -64,7 +65,8 @@ static gboolean exposeHandler (GtkWidget *widget, GdkEventExpose *event, gpointe
 static BOOL responseWinExpose (RESPONSE_WIN* pDesc);
 static void responseWinDrawAreaMapped (GtkWidget* widget, gpointer user_data);
 static void responseWinDrawAreaDestroy (GtkObject* object, gpointer user_data);
-static void responseWinBtnProperties (GtkButton *button, gpointer user_data);
+static void responseWinBtnPropActivate (GtkButton *button, gpointer user_data);
+static void responseWinBtnPrintActivate (GtkWidget* srcWidget, gpointer user_data);
 static gboolean responseWinKeyPress (GtkWidget *widget, GdkEventKey *event,
                                      gpointer user_data);
 static gboolean responseWinButtonPress (GtkWidget* widget, GdkEventButton* event, gpointer user_data);
@@ -80,8 +82,6 @@ static PLOT_UNIT plotUnitDeg = {"°", 1.0};          /**< Constant degree unit *
 
 
 /** All predefined response plots (partially intialized).
- *
- *  \todo Try to move some of these data here into responsePlot.c
  */
 static RESPONSE_WIN responseWidget[RESPONSE_TYPE_SIZE] =
 {
@@ -89,112 +89,80 @@ static RESPONSE_WIN responseWidget[RESPONSE_TYPE_SIZE] =
         RESPONSE_TYPE_MAGNITUDE,                                      /* type */
         "amplitude.png",                                          /* iconFile */
         {                                                             /* diag */
-            {                                                            /* x */
-                N_("<b>f</b>"),                                /* name, pUnit */
-            },
-            {                                                            /* y */
-                N_("<b>H</b>")                                 /* name, pUnit */
-            },
-            &responseWidget[RESPONSE_TYPE_MAGNITUDE], /* pData (backward ptr) */
-            RESPONSE_WIN_GRAPH_THICKNESS,                  /* graph thickness */
+            .x = {.name = N_("<b>f</b>")},
+            .y = {.name = N_("<b>H(f)</b>")},
+            .pData = &responseWidget[RESPONSE_TYPE_MAGNITUDE], /* pData (backward ptr) */
+            .thickness = RESPONSE_WIN_GRAPH_THICKNESS,    /* graph thickness */
         },
     },
     {
         RESPONSE_TYPE_ATTENUATION,
         "attenuation.png",                                        /* iconFile */
         {                                                             /* diag */
-            {                                                            /* x */
-                N_("<b>f</b>")                                 /* name, pUnit */
-            },
-            {                                                            /* y */
-                N_("<b>A</b>"), &plotUnitDB                    /* name, pUnit */
-            },
-            &responseWidget[RESPONSE_TYPE_ATTENUATION], /* pData (backward ptr) */
-            RESPONSE_WIN_GRAPH_THICKNESS,                  /* graph thickness */
+            .x = {.name = N_("<b>f</b>")},
+            .y = {.name = N_("<b>A(f)</b>"), .pUnit = &plotUnitDB},
+            .pData = &responseWidget[RESPONSE_TYPE_ATTENUATION], /* pData (backward ptr) */
+            .thickness = RESPONSE_WIN_GRAPH_THICKNESS,    /* graph thickness */
         },
     },
     {
         RESPONSE_TYPE_CHAR,
         "charfunc.png",                                           /* iconFile */
         {                                                             /* diag */
-            {                                                            /* x */
-                N_("<b>f</b>")                                 /* name, pUnit */
-            },
-            {                                                            /* y */
-                N_("<b>D</b>")                                 /* name, pUnit */
-            },
-            &responseWidget[RESPONSE_TYPE_CHAR],      /* pData (backward ptr) */
-            RESPONSE_WIN_GRAPH_THICKNESS,                  /* graph thickness */
+            .x = {.name = N_("<b>f</b>")},
+            .y = {.name = N_("<b>D(f)</b>")},
+            .pData = &responseWidget[RESPONSE_TYPE_CHAR], /* pData (backward ptr) */
+            .thickness = RESPONSE_WIN_GRAPH_THICKNESS,    /* graph thickness */
         },
     },
     {
         RESPONSE_TYPE_PHASE,
         "phase.png",                                              /* iconFile */
         {                                                             /* diag */
-            {                                                            /* x */
-                N_("<b>f</b>")                                 /* name, pUnit */
-            },
-            {                                                            /* y */
-                N_("<b>B</b>"), &plotUnitDeg                   /* name, pUnit */
-            },
-            &responseWidget[RESPONSE_TYPE_PHASE],     /* pData (backward ptr) */
-            RESPONSE_WIN_GRAPH_THICKNESS,                  /* graph thickness */
+            .x = {.name = N_("<b>f</b>")},
+            .y = {.name = N_("<b>B(f)</b>"), .pUnit = &plotUnitDeg},
+            .pData = &responseWidget[RESPONSE_TYPE_PHASE], /* pData (backward ptr) */
+            .thickness = RESPONSE_WIN_GRAPH_THICKNESS,    /* graph thickness */
         },
     },
     {
         RESPONSE_TYPE_DELAY,
         "phasedelay.png",                                         /* iconFile */
         {                                                             /* diag */
-            {                                                            /* x */
-                N_("<b>f</b>")                                 /* name, pUnit */
-            },
-            {                                                            /* y */
-                N_("<b>T<sub>p</sub></b>")                     /* name, pUnit */
-            },
-            &responseWidget[RESPONSE_TYPE_DELAY],     /* pData (backward ptr) */
-            RESPONSE_WIN_GRAPH_THICKNESS,                  /* graph thickness */
+            .x = {.name = N_("<b>f</b>")},
+            .y = {.name = N_("<b>T<sub>p</sub>(f)</b>")},
+            .pData = &responseWidget[RESPONSE_TYPE_DELAY], /* pData (backward ptr) */
+            .thickness = RESPONSE_WIN_GRAPH_THICKNESS,    /* graph thickness */
         }
     },
     {
         RESPONSE_TYPE_GROUP,
         "grpdelay.png",                                           /* iconFile */
         {                                                             /* diag */
-            {                                                            /* x */
-                N_("<b>f</b>")                                 /* name, pUnit */
-            },
-            {                                                            /* y */
-                N_("<b>T<sub>g</sub></b>")                     /* name, pUnit */
-            },
-            &responseWidget[RESPONSE_TYPE_GROUP],     /* pData (backward ptr) */
-            RESPONSE_WIN_GRAPH_THICKNESS,                  /* graph thickness */
+            .x = {.name = N_("<b>f</b>")},
+            .y = {.name = N_("<b>T<sub>g</sub>(f)</b>")},
+            .pData = &responseWidget[RESPONSE_TYPE_GROUP], /* pData (backward ptr) */
+            .thickness = RESPONSE_WIN_GRAPH_THICKNESS,    /* graph thickness */
         }
     },
     {
         RESPONSE_TYPE_IMPULSE,
         "impulse.png",                                            /* iconFile */
         {                                                             /* diag */
-            {                                                            /* x */
-                N_("<b>t</b>")                                 /* name, pUnit */
-            },
-            {                                                            /* y */
-                N_("<b>h</b>")                                 /* name, pUnit */
-            },
-            &responseWidget[RESPONSE_TYPE_IMPULSE],   /* pData (backward ptr) */
-            RESPONSE_WIN_GRAPH_THICKNESS,                  /* graph thickness */
+            .x = {.name = N_("<b>t</b>")},
+            .y = {.name = N_("<b>h(t)</b>")},
+            .pData = &responseWidget[RESPONSE_TYPE_IMPULSE], /* pData (backward ptr) */
+            .thickness = RESPONSE_WIN_GRAPH_THICKNESS,    /* graph thickness */
         },
     },
     {
         RESPONSE_TYPE_STEP,
         "step.png",                                               /* iconFile */
         {                                                             /* diag */
-            {                                                            /* x */
-                N_("<b>t</b>")                                 /* name, pUnit */
-            },
-            {                                                            /* y */
-                N_("<b>g</b>")                                 /* name, pUnit */
-            },
-            &responseWidget[RESPONSE_TYPE_STEP],      /* pData (backward ptr) */
-            RESPONSE_WIN_GRAPH_THICKNESS,                  /* graph thickness */
+            .x = {.name = N_("<b>t</b>")},
+            .y = {.name = N_("<b>g(t)</b>")},
+            .pData = &responseWidget[RESPONSE_TYPE_STEP], /* pData (backward ptr) */
+            .thickness = RESPONSE_WIN_GRAPH_THICKNESS,    /* graph thickness */
         }
     }
 }; /* responseWidget[] */
@@ -256,6 +224,29 @@ static void cancelZoomMode (RESPONSE_WIN *pDesc)
     gdk_gc_set_values (RESPONSE_WIN_ZOOM_GC(pDesc->draw), &pDesc->original,
                        GDK_GC_FUNCTION);
 } /* cancelZoomMode() */
+
+
+#if GTK_CHECK_VERSION(2, 10, 0)            /* print support requires GTK 2.10 */
+
+/* FUNCTION *******************************************************************/
+/** \e Clicked event callback emitted when a print menuitem/button is pressed.
+ *
+ *  \param[in] srcWidget \c GtkToolButton on event \e clicked, which causes
+ *                       this call.
+
+ *  \param user_data    Pointer to response description (::RESPONSE_WIN) as
+ *                      supplied to function g_signal_connect().
+ *
+ ******************************************************************************/
+static void responseWinBtnPrintActivate (GtkWidget* srcWidget, gpointer user_data)
+{
+    RESPONSE_WIN* pDesc = (RESPONSE_WIN*)user_data;
+
+    filterPrintResponse (gtk_widget_get_toplevel (srcWidget), &pDesc->diag, pDesc->type);
+
+} /* responseWinBtnPrintActivate() */
+
+#endif /* GTK_CHECK_VERSION(2, 10, 0) */
 
 
 
@@ -324,7 +315,11 @@ static void responseWinCreate (RESPONSE_WIN *pDesc)
     btnPrint = gtk_button_new_from_stock ("gtk-print");
     gtk_box_pack_end (GTK_BOX (hbox), btnPrint, FALSE, FALSE, 6);
 
-#if 1 || !GTK_CHECK_VERSION(2, 10, 0)            /* print support requires GTK 2.10 */
+#if GTK_CHECK_VERSION(2, 10, 0)            /* print support requires GTK 2.10 */
+    g_signal_connect ((gpointer) btnPrint, "clicked",
+                      G_CALLBACK (responseWinBtnPrintActivate),
+                      pDesc);
+#else
     gtk_widget_set_sensitive (GTK_WIDGET(btnPrint), FALSE);
 #endif
 
@@ -361,7 +356,7 @@ static void responseWinCreate (RESPONSE_WIN *pDesc)
                       G_CALLBACK (responseWinDrawAreaMapped),
                       pDesc);
     g_signal_connect ((gpointer) btnSettings, "clicked",
-                      G_CALLBACK (responseWinBtnProperties),
+                      G_CALLBACK (responseWinBtnPropActivate),
                       pDesc);
 
 
@@ -513,7 +508,7 @@ static void responseWinDrawAreaMapped (GtkWidget* widget, gpointer user_data)
  *                      as supplied to function g_signal_connect().
  *
  ******************************************************************************/
-static void responseWinBtnProperties (GtkButton *button, gpointer user_data)
+static void responseWinBtnPropActivate (GtkButton *button, gpointer user_data)
 {
     gint result;
 
@@ -548,7 +543,7 @@ static void responseWinBtnProperties (GtkButton *button, gpointer user_data)
 
     gtk_widget_destroy (dialog);
 
-} /* responseWinBtnProperties */
+} /* responseWinBtnPropActivate */
 
 
 /* EXPORTED FUNCTION DEFINITIONS **********************************************/

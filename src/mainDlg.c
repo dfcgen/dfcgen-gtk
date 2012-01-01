@@ -2,7 +2,7 @@
 /**
  * \file
  *           Main dialog elements (right, bottom of window) handling.
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe
+ * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe
  *
  * \version  $Id$
  *
@@ -27,6 +27,7 @@
 #include "rootsPlot.h"
 #include "responseWin.h"
 #include "filterSupport.h"
+#include "filterPrint.h"   /* filterPrintCoeffs() */
 #include "dialogSupport.h"
 
 
@@ -742,7 +743,7 @@ GtkWidget* mainDlgCreate (void)
 
 #if GTK_CHECK_VERSION(2, 10, 0)           /* print support requires GTK 2.10 */
     g_signal_connect ((gpointer) menuItem, "activate",
-                      G_CALLBACK (fileDlgPrintActivate),
+                      G_CALLBACK (filterPrintCoeffs),
                       NULL);
 #else
     gtk_widget_set_sensitive (GTK_WIDGET(menuItem), FALSE);
