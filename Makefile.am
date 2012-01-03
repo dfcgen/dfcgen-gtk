@@ -1,6 +1,6 @@
 ## -*- Makefile -*-
 ##
-## Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+## Copyright (C) 2006, 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
 ##
 ## Version:  $Id$
 ##
@@ -15,7 +15,9 @@ doc_DATA = \
 	README\
 	COPYING\
 	ChangeLog\
-	INSTALL
+	INSTALL\
+	dfcgen-gtk.desktop
+
 
 EXTRA_DIST = $(doc_DATA)
 
@@ -38,11 +40,11 @@ dist-debian: dist
 	@echo '--------------------------------------------------------------------'
 	@dpkg-parsechangelog -l./dist/debian/changelog
 	@echo '--------------------------------------------------------------------'
-	rm -Rf $(dist_debian_tmpdir)
+	-rm -Rf $(dist_debian_tmpdir)
 
 
 maintainer-clean-local:
-	rm -Rf dist/$(distdir)
+	-rm -Rf $(dist_debian_tmpdir)
 
 
 .PHONY: dist-debian
