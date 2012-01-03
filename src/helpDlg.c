@@ -72,13 +72,13 @@ void helpDlgMenuActivate (GtkMenuItem* menuitem, gpointer user_data)
     dialogAbout = gtk_about_dialog_new ();
     gtk_window_set_destroy_with_parent (GTK_WINDOW (dialogAbout), TRUE);
     gtk_about_dialog_set_version (GTK_ABOUT_DIALOG (dialogAbout), VERSION);
-    gtk_about_dialog_set_name (GTK_ABOUT_DIALOG (dialogAbout), PACKAGE);
+    gtk_about_dialog_set_program_name (GTK_ABOUT_DIALOG (dialogAbout), PACKAGE);
     gtk_about_dialog_set_copyright (GTK_ABOUT_DIALOG (dialogAbout), _("Copyright (C) 2006, 2011, 2012 " PACKAGE_AUTHOR));
     gtk_about_dialog_set_website (GTK_ABOUT_DIALOG (dialogAbout), PACKAGE_URL);
     gtk_about_dialog_set_authors (GTK_ABOUT_DIALOG (dialogAbout), authors);
     gtk_about_dialog_set_documenters (GTK_ABOUT_DIALOG (dialogAbout), documenters);
     gtk_about_dialog_set_translator_credits (GTK_ABOUT_DIALOG (dialogAbout), translators);
-    gtk_widget_show(GTK_WIDGET(dialogAbout));   /* inserted call (glade bug?) */
+    gtk_widget_show(GTK_WIDGET(dialogAbout));
 
     /* Store pointers to all widgets, for use by lookup_widget(). */
     GLADE_HOOKUP_OBJECT_NO_REF (dialogAbout, dialogAbout, "dialogAbout");
