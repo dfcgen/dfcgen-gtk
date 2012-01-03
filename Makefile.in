@@ -253,7 +253,8 @@ doc_DATA = \
 	README\
 	COPYING\
 	ChangeLog\
-	INSTALL
+	INSTALL\
+	dfcgen-gtk.desktop
 
 EXTRA_DIST = $(doc_DATA)
 
@@ -783,10 +784,10 @@ dist-debian: dist
 	@echo '--------------------------------------------------------------------'
 	@dpkg-parsechangelog -l./dist/debian/changelog
 	@echo '--------------------------------------------------------------------'
-	rm -Rf $(dist_debian_tmpdir)
+	-rm -Rf $(dist_debian_tmpdir)
 
 maintainer-clean-local:
-	rm -Rf dist/$(distdir)
+	-rm -Rf $(dist_debian_tmpdir)
 
 .PHONY: dist-debian
 

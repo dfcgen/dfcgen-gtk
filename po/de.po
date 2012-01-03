@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: dfcgen-gtk 0.2\n"
 "Report-Msgid-Bugs-To: ralf.hoppe@ieee.org\n"
 "POT-Creation-Date: 2012-01-01 15:42+0100\n"
-"PO-Revision-Date: 2012-01-01 15:51+0100\n"
+"PO-Revision-Date: 2012-01-01 20:18+0100\n"
 "Last-Translator: Ralf Hoppe <ralf.hoppe@ieee.org>\n"
 "Language-Team: Ralf Hoppe\n"
 "MIME-Version: 1.0\n"
@@ -270,32 +270,32 @@ msgstr "<b>f</b>"
 # magnitude response H(f)
 #: src/responseWin.c:93
 msgid "<b>H(f)</b>"
-msgstr "<b>f</b>"
+msgstr "<b>H(f)</b>"
 
 # attenuation
 #: src/responseWin.c:103
 msgid "<b>A(f)</b>"
-msgstr "<b>f</b>"
+msgstr "<b>A(f)</b>"
 
 # characteristic function
 #: src/responseWin.c:113
 msgid "<b>D(f)</b>"
-msgstr "<b>f</b>"
+msgstr "<b>D(f)</b>"
 
 # phase response
 #: src/responseWin.c:123
 msgid "<b>B(f)</b>"
-msgstr "<b>f</b>"
+msgstr "<b>B(f)</b>"
 
 # phase delay
 #: src/responseWin.c:133
 msgid "<b>T<sub>p</sub>(f)</b>"
-msgstr "<b>T<sub>p</sub></b>"
+msgstr "<b>T<sub>p</sub>(f)</b>"
 
 # group delay
 #: src/responseWin.c:143
 msgid "<b>T<sub>g</sub>(f)</b>"
-msgstr "<b>T<sub>g</sub></b>"
+msgstr "<b>T<sub>g</sub>(f)</b>"
 
 # t means the physical unit Time
 #: src/responseWin.c:152 src/responseWin.c:162
@@ -305,12 +305,12 @@ msgstr "<b>t</b>"
 # step response
 #: src/responseWin.c:153
 msgid "<b>h(t)</b>"
-msgstr "<b>t</b>"
+msgstr "<b>h(t)</b>"
 
 # impulse response
 #: src/responseWin.c:163
 msgid "<b>g(t)</b>"
-msgstr "<b>t</b>"
+msgstr "<b>g(t)</b>"
 
 #: src/responseWin.c:327
 msgid "Print this response plot"

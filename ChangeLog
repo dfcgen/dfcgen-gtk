@@ -1,3 +1,12 @@
+2012-01-03  Ralf Hoppe  <ralf.hoppe@ieee.org>
+
+	* dist/debian/postinst, dist/debian/prerm:
+	Added post-install and pre-rm script for Gnome desktop files
+
+	* dist/debian/control: Section changed and Homepage added.
+
+	* Makefile.am: File dfcgen-gtk.desktop added to doc directory.
+
 2012-01-01  Ralf Hoppe  <ralf.hoppe@ieee.org>
 
 	* COPYING, README, TODO, aclocal.m4, ChangeLog, dist/debian/changelog:
