@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# -*- mode: shell-script -*-
+#
+# Copyright (C) 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
+#
+# post deinstallation script of the dfcgen-gtk Debian package
+#
+set +e
+
+if [ -n $XDG_DATA_DIRS ]; then
+    xdg-icon-resource uninstall --mode system --size 32 dfcgen-gtk.png
+    xdg-desktop-menu uninstall --mode system dfcgen-gtk.desktop
+fi
+
+# do not indicate any error
+set -e
+exit 0
