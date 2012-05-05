@@ -1,0 +1,5 @@
+Numerator (z^-0 - z^-$PRJ:FILTER:NUM:DEGREE$)
+$PRJ:FILTER:NUM:COEFF$
+
+Denominator (z^-0 - z^-$PRJ:FILTER:DEN:DEGREE$)
+$PRJ:FILTER:DEN:COEFF$
