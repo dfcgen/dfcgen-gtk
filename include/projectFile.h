@@ -6,7 +6,7 @@
  * \note     All double values written to a \e dfcgen project file are formated
  *           in the "C" locale for LC_NUMERIC.
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
  *
  ******************************************************************************/
@@ -28,6 +28,15 @@ extern "C" {
 
 /* GLOBAL TYPE DECLARATIONS ***************************************************/
 
+/** Export types, to be used with function prjFileExport().
+ */
+    typedef enum
+    {
+        PRJFILE_EXPORT_PLAIN,                        /**< plain text (*.txt) */
+        PRJFILE_EXPORT_MATLAB,                        /**< MATLAB file (*.m) */
+        PRJFILE_EXPORT_CLANG,                              /* "C" file (*.c) */
+    } PRJFILE_EXPORT_TYPE;
+
 
 /* GLOBAL CONSTANT DECLARATIONS ***********************************************/
 
@@ -41,6 +50,20 @@ extern "C" {
 
 
 /* EXPORTED FUNCTIONS *********************************************************/
+
+
+/* FUNCTION *******************************************************************/
+/** Exports a filter project to a file.
+ *
+ *  \param type         Export type.
+ *  \param filename     Filename of file (inclusive path).
+ *  \param pProject     Pointer to project data.
+ *
+ *  \return             Zero on succes, else an error number from errno.h.
+ ******************************************************************************/
+    int prjFileExport (PRJFILE_EXPORT_TYPE type, const char *filename,
+                       DFCPRJ_FILTER *pProject);
+
 
 
 /* FUNCTION *******************************************************************/
