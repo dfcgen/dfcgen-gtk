@@ -5,7 +5,7 @@
  *
  * \note     Includes raw filters (filters without a design).
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe
+ * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe
  * \version  $Id$
  *
  ******************************************************************************/
@@ -41,10 +41,10 @@ typedef struct
 
 /* LOCAL CONSTANT DEFINITIONS *************************************************/
 
-#if DEBUG
-#define MISCDLG_FILTER_DATAPATH ".." G_DIR_SEPARATOR_S "data"
+#ifdef TEST
+#define MISCDLG_FILTER_DATAPATH ".." G_DIR_SEPARATOR_S "data" G_DIR_SEPARATOR_S "filters"
 #else
-#define MISCDLG_FILTER_DATAPATH PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE
+#define MISCDLG_FILTER_DATAPATH PACKAGE_FILTERS_DIR
 #endif
 
 #define MISCDLG_WIDGET_MAIN     "miscDesignDlgMain"
@@ -125,8 +125,6 @@ static GtkWidget* createDialog (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     GtkWidget *label, *expander, *combo, *widget;
     GtkObject *spinAdjustment;
 
-    GtkTooltips *tooltips = gtk_tooltips_new ();
-
     miscDesignDlgMain = gtk_frame_new (NULL);             /* create the frame */
     gtk_box_pack_start (GTK_BOX (boxDesignDlg), miscDesignDlgMain, TRUE, TRUE, 0);
     gtk_container_set_border_width (GTK_CONTAINER (miscDesignDlgMain), 6);
@@ -170,7 +168,7 @@ static GtkWidget* createDialog (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     gtk_table_attach (GTK_TABLE (miscDesignDlgTable), widget, 1, 2, 2, 3,
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (0), 0, 0);
-    gtk_tooltips_set_tip (tooltips, widget, _("Sample frequency"), NULL);
+    gtk_widget_set_tooltip_text (widget, _("Sample frequency"));
     gtk_entry_set_width_chars (GTK_ENTRY (widget), GUI_ENTRY_WIDTH_CHARS);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
     GLADE_HOOKUP_OBJECT (topWidget, widget, MISCDLG_ENTRY_SAMPLE);
@@ -194,7 +192,7 @@ static GtkWidget* createDialog (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     gtk_table_attach (GTK_TABLE (miscDesignDlgTable), widget, 1, 2, 1, 2,
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (0), 0, 0);
-    gtk_tooltips_set_tip (tooltips, widget, _("Degree of system"), NULL);
+    gtk_widget_set_tooltip_text (widget, _("Degree of system"));
     gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (widget), TRUE);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
     GLADE_HOOKUP_OBJECT (topWidget, widget, MISCDLG_SPIN_DEGREE);
