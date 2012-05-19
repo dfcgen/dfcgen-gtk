@@ -52,36 +52,35 @@
  ******************************************************************************/
 void helpDlgMenuActivate (GtkMenuItem* menuitem, gpointer user_data)
 {
-    GtkWidget *dialogAbout;
+    static const gchar *authors[] = {PACKAGE_AUTHOR, NULL};
 
-    const gchar *authors[] =
-    {
-        PACKAGE_AUTHOR,
-        NULL
-    };
+#ifdef TODO
+    static const gchar *documenters[] = {PACKAGE_AUTHOR, NULL};
+#endif
 
-    const gchar *documenters[] =
-    {
-        PACKAGE_AUTHOR,
-        NULL
-    };
+    GdkPixbuf* pixbuf = create_pixbuf (PACKAGE_ICON);
+    GtkWidget* dialogAbout = gtk_about_dialog_new ();
 
-    /* TRANSLATORS: Replace this string with your names, one name per line. */
-    gchar *translators = PACKAGE_AUTHOR;
-
-    dialogAbout = gtk_about_dialog_new ();
     gtk_window_set_destroy_with_parent (GTK_WINDOW (dialogAbout), TRUE);
     gtk_about_dialog_set_version (GTK_ABOUT_DIALOG (dialogAbout), VERSION);
     gtk_about_dialog_set_program_name (GTK_ABOUT_DIALOG (dialogAbout), PACKAGE);
-    gtk_about_dialog_set_copyright (GTK_ABOUT_DIALOG (dialogAbout), _("Copyright (C) 2006, 2011, 2012 " PACKAGE_AUTHOR));
+    gtk_about_dialog_set_copyright (GTK_ABOUT_DIALOG (dialogAbout), PACKAGE_COPYRIGHT);
     gtk_about_dialog_set_website (GTK_ABOUT_DIALOG (dialogAbout), PACKAGE_URL);
     gtk_about_dialog_set_authors (GTK_ABOUT_DIALOG (dialogAbout), authors);
+#ifdef TODO
     gtk_about_dialog_set_documenters (GTK_ABOUT_DIALOG (dialogAbout), documenters);
-    gtk_about_dialog_set_translator_credits (GTK_ABOUT_DIALOG (dialogAbout), translators);
-    gtk_widget_show(GTK_WIDGET(dialogAbout));
+#endif
+    gtk_about_dialog_set_translator_credits (GTK_ABOUT_DIALOG (dialogAbout),
+                                             _("translator-credits"));
 
-    /* Store pointers to all widgets, for use by lookup_widget(). */
-    GLADE_HOOKUP_OBJECT_NO_REF (dialogAbout, dialogAbout, "dialogAbout");
+    if (pixbuf != NULL)
+    {
+        gtk_about_dialog_set_logo (GTK_ABOUT_DIALOG (dialogAbout), pixbuf);
+        gdk_pixbuf_unref (pixbuf);
+    } /* if */
+
+    (void) gtk_dialog_run (GTK_DIALOG (dialogAbout));
+    gtk_widget_destroy (dialogAbout);
 
 } /* helpDlgMenuActivate() */
 

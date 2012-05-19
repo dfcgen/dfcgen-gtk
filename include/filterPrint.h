@@ -3,7 +3,7 @@
  * \file
  * \brief    Filter print functions.
  *
- * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011-2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
  *
  ******************************************************************************/
@@ -24,8 +24,6 @@
 extern "C" {
 #endif
 
-
-#if GTK_CHECK_VERSION(2, 10, 0)
 
 
 /* GLOBAL TYPE DECLARATIONS ***************************************************/
@@ -70,8 +68,6 @@ extern "C" {
  ******************************************************************************/
     void filterPrintCoeffs (GtkWidget* srcWidget, gpointer user_data);
 
-
-#endif /* GTK_CHECK_VERSION() */
 
 
 #ifdef  __cplusplus

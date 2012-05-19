@@ -6,7 +6,7 @@
  * \note     All double values written to the configuration file are formated
  *           in the "C" locale for LC_NUMERIC.
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
  *
  ******************************************************************************/
@@ -196,17 +196,6 @@ static CFG_RESPONSE_SETTINGS respSet[RESPONSE_TYPE_SIZE] =
 
 
 
-#if !GLIB_CHECK_VERSION(2, 12, 0) /* g_key_file_set_double() requires GLib 2.12 */
-
-#define g_key_file_set_double(file, group, key, value)          \
-{                                                               \
-    char _buf[128];                                             \
-    g_ascii_dtostr (_buf, sizeof (_buf), value);                \
-    g_key_file_set_value (file, group, key, _buf);              \
-}
-
-#endif
-
 
 /* LOCAL FUNCTION DECLARATIONS ************************************************/
 
@@ -315,12 +304,8 @@ static void cfgReadInteger (GKeyFile *keyFile, const gchar *group, const gchar *
 static void cfgReadDouble (GKeyFile *keyFile, const gchar *group, const gchar *key,
                            double *pResult)
 {
-    double result;
-
     GError *error = NULL;                                  /* preset required */
-
-#if GLIB_CHECK_VERSION(2, 12, 0) /* g_key_file_get_double() requires GLib 2.12 */
-    result = g_key_file_get_double(keyFile, group, key, &error);
+    double result = g_key_file_get_double(keyFile, group, key, &error);
 
     if (error == NULL)
     {
@@ -331,32 +316,6 @@ static void cfgReadDouble (GKeyFile *keyFile, const gchar *group, const gchar *k
         g_error_free(error);
     } /* else */
 
-
-#else  /* GLib version less than 2.12 */
-
-    char *str = g_key_file_get_string (keyFile, group, key, &error);
-
-    if (error == NULL)
-    {
-        ASSERT(str != NULL);
-
-        errno = 0;
-        result = g_ascii_strtod (str, NULL);
-
-        if (errno == 0)
-        {
-            *pResult = result;
-        } /* if */
-
-        FREE (str);
-    } /* if */
-    else
-    {
-        g_error_free(error);
-    } /* else */
-
-#endif
-                                                                                \
 } /* cfgReadDouble() */
 
 

@@ -3,7 +3,7 @@
  * \file     filterPrint.c
  * \brief    Filter print functions.
  *
- * \author   Copyright (C) 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org> 
+ * \author   Copyright (C) 2011-2012 Ralf Hoppe <ralf.hoppe@ieee.org> 
  * \version  $Id$
  *
  ******************************************************************************/
@@ -17,9 +17,6 @@
 #include "cfgSettings.h" /* cfgGetDesktopPrefs() */
 
 #include "filterPrint.h"
-
-
-#if GTK_CHECK_VERSION(2, 10, 0)           /* print support requires GTK 2.10 */
 
 
 
@@ -549,12 +546,6 @@ void filterPrintCoeffs (GtkWidget* srcWidget, gpointer user_data)
 
 } /* filterPrintCoeffs() */
 
-
-#else
-
-static int filterPrintDummy = 0; /* empty source files are not allowed */
-
-#endif  /* GTK_CHECK_VERSION(2, 10, 0) */
 
 
 /******************************************************************************/
