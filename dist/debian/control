@@ -5,7 +5,7 @@
 # Copyright (C) 2006, 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
 #
 Source: dfcgen-gtk
-Section: contrib/electronics
+Section: electronics
 Priority: extra
 Maintainer: Ralf Hoppe <ralf.hoppe@ieee.org>
 Build-Depends: debhelper (>= 7), autotools-dev, libc6-dev, libgsl0-dev (>= 1.10), libgtk2.0-dev (>= 2.12)
@@ -32,7 +32,7 @@ Architecture: i386
 # Ubuntu 8.04 (Hardy) => libgtk2.0-0 2.12, libgsl0ldbl 1.10
 # Ubuntu 10.04 (Lucid) => libgtk2.0-0 2.20, libgsl0ldbl 1.13
 Depends: libc6, libgsl0ldbl (>= 1.10), libgtk2.0-0 (>= 2.12)
-Homepage: http://home.arcor.de/dfcgen/
+Homepage: http://www.dfcgen.de
 Description: Digital Filter Coefficients Generator (DFCGEN) GTK+
     DFCGEN, the Digital Filter Coefficients Generator, is a free program,
     which assists the engineer in the design of digital filters. It supports
