@@ -1,7 +1,7 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file
- *           Project file handling.
+ * \file     projectFile.c
+ * \brief    Project file handling.
  *
  * \note     The \e dfcgen filter project file functions implemented here are
  *           very closely related to the \e GLib XML support functions.
@@ -9,9 +9,9 @@
  *           some rework.
  *
  * \note     All double values written to a \e dfcgen project file are formated
- *           in the \e C locale for LC_NUMERIC.
+ *           in the \e C locale for LC_CTYPE.
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011-2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
  *
  ******************************************************************************/
@@ -22,10 +22,12 @@
 #include "dfcProject.h"
 #include "filterSupport.h"
 #include "projectFile.h"
+#include "cfgSettings.h" /* cfgGetDesktopPrefs() */
 
 #include <stdio.h>
 #include <errno.h>
 #include <string.h> /* memset() */
+#include <locale.h> /* setlocale() */
 
 
 /* GLOBAL CONSTANT DEFINITIONS ************************************************/
@@ -135,9 +137,36 @@ struct _PRJF_TAG_DESC
 };
 
 
+/** Keyword identifier in an export template file.
+ *
+ *  \attention Do not change because used as index.
+ */
+typedef enum
+{
+    PRJF_IDKEY_INVALID = -1,                            /**< invalid keyword */
+    PRJF_IDKEY_NUM_DEGREE = 0,                         /**< numerator degree */
+    PRJF_IDKEY_NUM_EXPONENT = 1,                     /**< numerator exponent */
+    PRJF_IDKEY_NUM_COEFF = 2,                     /**< numerator coefficient */
+    PRJF_IDKEY_DEN_DEGREE = 3,                       /**< denominator degree */
+    PRJF_IDKEY_DEN_EXPONENT = 4,                   /**< denominator exponent */
+    PRJF_IDKEY_DEN_COEFF = 5,                   /**< denominator coefficient */
+
+    PRJF_IDKEY_SIZE
+} PRJF_IDKEY;
+
+
+
 /* LOCAL CONSTANT DEFINITIONS *************************************************/
 
-#define PRJF_IDTAG_INFO_END     PRJF_IDTAG_DESCRIPTION       /**< End of header */
+#ifdef TEST
+#define PRJF_TEMPLATES_DATAPATH ".." G_DIR_SEPARATOR_S "data" G_DIR_SEPARATOR_S "templates" G_DIR_SEPARATOR_S
+#else
+#define PRJF_TEMPLATES_DATAPATH PACKAGE_TEMPLATES_DIR G_DIR_SEPARATOR_S
+#endif
+
+#define PRJF_TEMPLATES_BASENAME "export"       /**< Basename of export files */
+
+#define PRJF_IDTAG_INFO_END     PRJF_IDTAG_DESCRIPTION    /**< End of header */
 #define PRJF_TAGFLAG_ALL        (PRJF_TAGFLAG_MISC | PRJF_TAGFLAG_STDIIR | PRJF_TAGFLAG_LINFIR)
 
 #define PRJF_TAG_AUTHOR         "author"
@@ -174,14 +203,16 @@ struct _PRJF_TAG_DESC
 
 /* LOCAL FUNCTION DECLARATIONS ************************************************/
 
+static PRJF_IDKEY exportLookupTemplateKeyword (gchar* keyword);
+static gint exportConvertCoeff (char* buffer, gint bufsize, gdouble val);
 static void writeMarkupText (FILE *f, char *lang, char *tag, char *text);
-static void writeFrequTransf(FILE *f, double cutoff, FTRDESIGN *ftr);
-static void writePolyCoeffs(FILE *f, MATHPOLY *poly);
+static void writeFrequTransf (FILE *f, double cutoff, FTRDESIGN *ftr);
+static void writePolyCoeffs (FILE *f, MATHPOLY *poly);
 static void writeMiscFltDesign (FILE *f, MISCFLT_DESIGN *pDesign);
-static void writeStdIirDesign(FILE *f, STDIIR_DESIGN *pDesign);
+static void writeStdIirDesign (FILE *f, STDIIR_DESIGN *pDesign);
 static void writeLinFirDesign (FILE *f, LINFIR_DESIGN *pDesign);
 static void readProject (const char *filename, unsigned flags, GError **err);
-static int writeProject(FILE *f, DFCPRJ_FILTER *prj);
+static int writeProject (FILE *f, DFCPRJ_FILTER *prj);
 static int tagStringHandler (GMarkupParseContext *ctx, PRJF_TAG_DESC *pTag,
                              DFCPRJ_FILTER *prj, char *text);
 static int tagIntHandler (GMarkupParseContext *ctx, PRJF_TAG_DESC *pTag,
@@ -1144,7 +1175,281 @@ static void readProject (const char *filename, unsigned flags, GError **err)
 
 
 
+/* FUNCTION *******************************************************************/
+/** \brief  Performs a template file keyword lookup and returns the associated
+ *          identifier.
+ *
+ *  \param[in] keyword  Template file keyword to search for.
+ *
+ *  \return    Keyword identifier from ::PRJF_IDKEY (if unkown keyword the
+ *             value PRJF_IDKEY::PRJF_IDKEY_INVALID.
+ *
+ ******************************************************************************/
+static PRJF_IDKEY exportLookupTemplateKeyword (gchar* keyword)
+{
+    static gchar* s_templKeywordList[] =
+    {
+        "PRJ:FILTER:NUM:DEGREE", /* PRJF_IDKEY_NUM_DEGREE: numerator degree */
+        "PRJ:FILTER:NUM:EXPONENT", /* PRJF_IDKEY_NUM_EXPONENT: numerator exponent */
+        "PRJ:FILTER:NUM:COEFF", /* PRJF_IDKEY_NUM_COEFF: numerator coefficient */
+        "PRJ:FILTER:DEN:DEGREE", /* PRJF_IDKEY_DEN_DEGREE: denominator degree */
+        "PRJ:FILTER:DEN:EXPONENT", /* PRJF_IDKEY_DEN_EXPONENT: denominator exponent */
+        "PRJ:FILTER:DEN:COEFF" /* PRJF_IDKEY_DEN_COEFF: denominator coefficient */
+    };
+
+    PRJF_IDKEY i = 0;
+
+    while (i < N_ELEMENTS (s_templKeywordList))
+    {
+        if (g_strcmp0 (keyword, s_templKeywordList[i]) == 0)
+        {
+            return i;
+        } /* if */
+
+        ++i;
+    } /* while */
+
+    return PRJF_IDKEY_INVALID;
+} /* exportLookupTemplateKeyword() */
+
+
+
+/* FUNCTION *******************************************************************/
+/** \brief  Writes a \c double value as string to a buffer, always using '.' as
+ *          decimal point (does not regard the current locale).
+ *
+ *  \param[out] buffer  Pointer to buffer to use (should be at least of size \c G_ASCII_DTOSTR_BUF_SIZE).
+ *  \param[in]  bufsize Size of this buffer.
+ *  \param[in]  val     \c double value to be converted.
+ *
+ *  \return    Number of (printable) characters written. This value should be
+ *             less then \p bufsize at success (see return value of C99 function
+ *             snprintf() for details).
+ *
+ ******************************************************************************/
+static gint exportConvertCoeff (char* buffer, gint bufsize, gdouble val)
+{
+    if (bufsize < G_ASCII_DTOSTR_BUF_SIZE)
+    {
+        return G_ASCII_DTOSTR_BUF_SIZE; /* indicate error (as snprintf() does) */
+    } /* if */
+
+    g_ascii_dtostr (buffer, bufsize, val);
+
+    return (strlen (buffer));
+} /* exportConvertCoeff() */
+
+
+
 /* EXPORTED FUNCTION DEFINITIONS **********************************************/
+
+
+
+/* FUNCTION *******************************************************************/
+/** Exports a filter project to a file.
+ *
+ *  \param type         Export type.
+ *  \param filename     Filename of file (inclusive path).
+ *  \param pProject     Pointer to project data.
+ *
+ *  \return             Zero on succes, else an error number from errno.h.
+ *  \todo               Create and use an export precision (for coefficients)
+ *                      instead of using the output precision.
+ *
+ ******************************************************************************/
+int prjFileExport (PRJFILE_EXPORT_TYPE type, const char *filename, DFCPRJ_FILTER *pProject)
+{
+    char inbuf[128]; /* FIXME */
+    char outbuf[128];
+    char* templname;                                    /* template filename */
+    FILE *templfile;                                        /* template file */
+    FILE *exportfile;
+
+    MATHPOLY* poly = NULL;            /* numerator or denominator polynomial */
+    int repcnt = 0;      /* repeat counter for a line (index of coefficient) */
+    int err = 0;
+    BOOL doReadTemplateLines = TRUE;              /* no END OF FILE so far ? */
+
+    switch (type)
+    {
+        case PRJFILE_EXPORT_CLANG:
+            templname = PRJF_TEMPLATES_DATAPATH PRJF_TEMPLATES_BASENAME ".c";
+            break;
+
+        case PRJFILE_EXPORT_MATLAB:
+            templname = PRJF_TEMPLATES_DATAPATH PRJF_TEMPLATES_BASENAME ".m";
+            break;
+
+        case PRJFILE_EXPORT_PLAIN:
+        default:
+            templname = PRJF_TEMPLATES_DATAPATH PRJF_TEMPLATES_BASENAME ".txt";
+            break;
+    } /* switch */
+
+
+    templfile = fopen (templname, "r");
+
+    if (templfile == NULL)
+    {
+        DEBUG_LOG ("Cannot read template file '%s'", templname);
+        return errno;
+    } /* if */
+
+
+    exportfile = fopen (filename, "w");
+
+    if (exportfile == NULL)
+    {
+        (void) fclose (templfile);
+        DEBUG_LOG ("Cannot create export file '%s'", filename);
+        return errno;
+    } /* if */
+
+
+    /* read line-by-line from template file
+     */
+    while ((err == 0) && doReadTemplateLines)
+    {
+        char* inptr = inbuf;
+        char* outptr = outbuf;
+
+        if ((poly == NULL) ||                         /* non-repeating line? */
+            ((poly != NULL) && (repcnt > poly->degree)))   /* enough repeat? */
+        {
+            repcnt = 0;                        /* clear repeat count of line */
+            poly = NULL;                         /* reset polynomial pointer */
+
+            if (fgets (inbuf, sizeof (inbuf), templfile) == NULL)
+            {
+                doReadTemplateLines = FALSE;                  /* end of file */
+                inbuf[0] = '\0';                             /* nothing read */
+            } /* if */
+        } /* if */
+
+
+        while ((err == 0) && (*inptr != '\0'))       /* scan the read buffer */
+        {
+            if (*inptr == '$')              /* replacement token delimiter ? */
+            {
+                char* eptr = ++inptr;           /* pointer to closing dollar */
+
+                while ((*eptr != '$') && (*eptr != '\0'))
+                {
+                    ++eptr;
+                } /* while */
+
+                if (*eptr == '\0')
+                {
+                    DEBUG_LOG ("No matching dollar found in template file");
+                    err = EILSEQ; /* no matching dollar found (or buffer truncated) */
+                } /* if */
+                else                                       /* so far so good */
+                {
+                    gint written = 0;             /* number of bytes written */
+                    gint bufsize = outbuf + sizeof (outbuf) - outptr;
+
+                    *eptr = '\0';
+
+                    switch (exportLookupTemplateKeyword (inptr))
+                    {
+                        case PRJF_IDKEY_NUM_DEGREE:
+                            written = g_snprintf (outptr, bufsize, "%d",
+                                                  pProject->filter.num.degree);
+                            break; /* PRJF_IDKEY_NUM_DEGREE */
+
+                        case PRJF_IDKEY_NUM_EXPONENT:
+                            poly = &pProject->filter.num;
+                            written = g_snprintf (outptr, bufsize, "%d", -repcnt);
+                            break; /* PRJF_IDKEY_NUM_EXPONENT */
+
+                        case PRJF_IDKEY_NUM_COEFF:
+                            poly = &pProject->filter.num;
+                            written = exportConvertCoeff (outptr, bufsize,
+                                                        poly->coeff[repcnt]);
+                            break; /* PRJF_IDKEY_NUM_COEFF */
+
+                        case PRJF_IDKEY_DEN_DEGREE:
+                            written = g_snprintf (outptr, bufsize, "%d",
+                                                  pProject->filter.den.degree);
+                            break; /* PRJF_IDKEY_DEN_DEGREE */
+
+                        case PRJF_IDKEY_DEN_EXPONENT:
+                            poly = &pProject->filter.den;
+                            written = g_snprintf (outptr, bufsize, "%d", -repcnt);
+                            break; /* PRJF_IDKEY_DEN_EXPONENT */
+
+                        case PRJF_IDKEY_DEN_COEFF:
+                            poly = &pProject->filter.den;
+                            written = exportConvertCoeff (outptr, bufsize,
+                                                        poly->coeff[repcnt]);
+                            break; /* PRJF_IDKEY_DEN_COEFF */
+
+
+                        case PRJF_IDKEY_INVALID:                    /* error */
+                        default:                               /* unknown ID */
+                            DEBUG_LOG ("Unknown keyword in template file");
+                            break;
+                    } /* switch */
+
+                    if ((written >= 0) && (written < bufsize))   /* success? */
+                    {
+                        DEBUG_LOG ("Replacing keyword '%s' by '%s'", inptr, outptr);
+                        outptr += written;
+                    } /* if */
+                    else
+                    {
+                        if (err == 0)
+                        {
+                            DEBUG_LOG ("Conversion error during keyword replacement");
+                            err = EFBIG;
+                        } /* if */
+                    } /* else */
+
+                    *eptr = '$';   /* restore old character at eptr position */
+                    inptr = eptr;       /* skip the keyword in template file */
+                } /* else */
+            } /* if */
+            else
+            {
+                *outptr = *inptr;
+                ++outptr;
+            } /* else */
+
+            ++inptr;
+        } /* while */
+
+
+        if (err == 0)
+        {
+            *outptr = '\0';
+
+            if (fputs (outbuf, exportfile) < 0)
+            {
+                err = errno;
+                DEBUG_LOG ("File write error at export");
+            } /* if */
+            else
+            {
+                if (poly != NULL)
+                {
+                    ++repcnt;
+                } /* if */
+            } /* else */
+        } /* if */
+
+    } /* while */
+
+
+    (void) fclose (templfile);
+
+    if (fclose (exportfile) != 0)
+    {
+        err = errno;
+    } /* if */
+
+    return err;
+} /* prjFileExport() */
+
 
 
 /* FUNCTION *******************************************************************/
@@ -1163,7 +1468,7 @@ int prjFileWrite (const char *filename, DFCPRJ_FILTER *pProject)
 
     if (f == NULL)
     {
-        DEBUG_LOG ("Cannot create project file");
+        DEBUG_LOG ("Cannot create project file '%s'", filename);
         return errno;
     } /* if */
 
@@ -1199,7 +1504,7 @@ void prjFileRead (const char *filename, DFCPRJ_FILTER *pProject, GError **err)
 
     if (*err == NULL)
     {
-        DEBUG_LOG ("Project file successfully read");
+        DEBUG_LOG ("Project file '%s' successfully read", filename);
 
         if ((mathPolyMallocRoots (&tmpPrj.filter.num) == 0) &&
             (mathPolyMallocRoots (&tmpPrj.filter.den) == 0) &&
@@ -1239,7 +1544,7 @@ void prjFileScan (const char *filename, DFCPRJ_INFO *pInfo, GError **err)
 
     if (*err == NULL)
     {
-        DEBUG_LOG ("Project file successfully scaned");
+        DEBUG_LOG ("Project file '%s' successfully scaned", filename);
         *pInfo = tmpPrj.info;
     } /* if */
 } /* prjFileScan() */
