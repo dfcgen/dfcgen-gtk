@@ -1,9 +1,9 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file
+ * \file     fileDlg.h
  *           Interface to dialog functions of \e File menu.
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011-2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
  *
  ******************************************************************************/
@@ -87,6 +87,20 @@ extern "C" {
  *
  ******************************************************************************/
     void fileDlgSaveAsActivate (GtkWidget* srcWidget, gpointer user_data);
+
+
+
+/* FUNCTION *******************************************************************/
+/** \e Activate event callback emitted when the \e Export menuitem is
+ *  selected from \e File menu.
+ *
+ *  \param srcWidget    \e File \e Export widget (GtkMenuItem on event
+ *                      \e activate or GtkToolButton on event \e clicked),
+ *                      which causes this call.
+ *  \param user_data    User data set when the signal handler was connected (unused).
+ *
+ ******************************************************************************/
+    void fileDlgExportActivate (GtkWidget* srcWidget, gpointer user_data);
 
 
 

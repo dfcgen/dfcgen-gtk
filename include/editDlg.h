@@ -3,7 +3,7 @@
  * \file
  *           Interface to dialog functions of \e Edit menu.
  *
- * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011-2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
  *
  ******************************************************************************/
