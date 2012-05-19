@@ -1,6 +1,6 @@
 ## -*- Makefile -*-
 ##
-## Copyright (c) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+## Copyright (c) 2006, 2011-2012 Ralf Hoppe <ralf.hoppe@ieee.org>
 ##
 ## Version:  $Id$
 ##
@@ -9,17 +9,15 @@
 
 AM_CPPFLAGS = \
 	-DPACKAGE_LOCALE_DIR=\""$(localedir)"\" \
-	-DPACKAGE_DATA_DIR=\""$(datadir)"\" \
+	-DPACKAGE_FILTERS_DIR=\""$(pkgdatadir)/filters"\" \
+	-DPACKAGE_TEMPLATES_DIR=\""$(pkgdatadir)/templates"\" \
 	-DPACKAGE_PIXMAPS_DIR=\""$(pkgdatadir)/pixmaps"\" \
-	-I../include \
+	-I"$(top_srcdir)/include" \
 	@PACKAGE_CFLAGS@
 
 
 # Additional CFLAGS
-AM_CFLAGS = \
-	 -Wall \
-	 -Wuninitialized \
-	 -Wmissing-prototypes
+AM_CFLAGS =
 
 
 # Use PACKAGE_LIBS from PKG_CHECK_MODULES (pkg-config)

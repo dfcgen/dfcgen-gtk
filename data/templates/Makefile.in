@@ -84,6 +84,7 @@ AWK = @AWK@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
+COPYRIGHT_HOLDER = @COPYRIGHT_HOLDER@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CYGPATH_W = @CYGPATH_W@
@@ -122,6 +123,7 @@ MSGFMT_015 = @MSGFMT_015@
 MSGMERGE = @MSGMERGE@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
+PACKAGE_AUTHOR = @PACKAGE_AUTHOR@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_CFLAGS = @PACKAGE_CFLAGS@
 PACKAGE_LIBS = @PACKAGE_LIBS@
@@ -193,7 +195,9 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 templatesdir = $(pkgdatadir)/templates
 dist_templates_DATA = \
-	export.txt
+	export.txt\
+	export.c\
+	export.m
 
 all: all-am
 
@@ -397,8 +401,6 @@ uninstall-am: uninstall-dist_templatesDATA
 	pdf-am ps ps-am uninstall uninstall-am \
 	uninstall-dist_templatesDATA
 
-	export.c
-	export.m
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

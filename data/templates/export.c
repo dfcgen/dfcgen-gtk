@@ -15,7 +15,7 @@ dfcoeff_t numerator[$PRJ:FILTER:NUM:DEGREE$ + 1] =
 };
 
 
-dfcoeff_t denominator[$PRJ:FILTER:DEN:DEGREE$] =
+dfcoeff_t denominator[$PRJ:FILTER:DEN:DEGREE$ + 1] =
 {
     $PRJ:FILTER:DEN:COEFF$, /* z^{$PRJ:FILTER:DEN:EXPONENT$} */
 };

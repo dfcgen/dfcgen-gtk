@@ -3,7 +3,7 @@
  * \file
  *           \e dfcgen filter project management.
  *
- * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011-2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
  *
  ******************************************************************************/
@@ -29,25 +29,25 @@ extern "C" {
 
 /** \e dfcgen project info data.
  */
-typedef struct
-{
-    char *author;                   /**< Pointer to author name (may be NULL) */
-    char *title;                   /**< Pointer to project name (may be NULL) */
-    char *desc;             /**< Pointer to project description (may be NULL) */
-} DFCPRJ_INFO;
+    typedef struct
+    {
+        char *author;              /**< Pointer to author name (may be NULL) */
+        char *title;              /**< Pointer to project name (may be NULL) */
+        char *desc;        /**< Pointer to project description (may be NULL) */
+    } DFCPRJ_INFO;
 
 
 
 /** \e dfcgen project.
  */
-typedef struct
-{
-    DFCPRJ_INFO info;                              /**< Project info (header) */
-    FLTCLASS fltcls;                                        /**< Filter class */
-    DESIGNDLG design;                         /**< Filter design data (union) */
-    FLTCOEFF filter;                            /**< Coefficients in Z domain */
-    unsigned flags;                   /**< Flags, e.g. DFCPRJ_FLAG_SUPERSEDED */
-} DFCPRJ_FILTER;
+    typedef struct
+    {
+        DFCPRJ_INFO info;                         /**< Project info (header) */
+        FLTCLASS fltcls;                                   /**< Filter class */
+        DESIGNDLG design;                    /**< Filter design data (union) */
+        FLTCOEFF filter;                       /**< Coefficients in Z domain */
+        unsigned flags;              /**< Flags, e.g. DFCPRJ_FLAG_SUPERSEDED */
+    } DFCPRJ_FILTER;
 
 
 
@@ -145,8 +145,18 @@ typedef struct
  *
  *  \return             Pointer to project info.
  ******************************************************************************/
-DFCPRJ_INFO* dfcPrjGetInfo (void);
+    DFCPRJ_INFO* dfcPrjGetInfo (void);
 
+
+
+/* FUNCTION *******************************************************************/
+/** Exports the current filter project to a file.
+ *
+ *  \param filename     Filename of file (inclusive path).
+ *
+ *  \return             Zero on succes, else an error number from errno.h.
+ ******************************************************************************/
+    int dfcPrjExport (char *filename);
 
 
 /* FUNCTION *******************************************************************/

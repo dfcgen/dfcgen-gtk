@@ -1,6 +1,6 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file
+ * \file     mainDlg.c
  *           Main dialog elements (right, bottom of window) handling.
  * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe
  *
@@ -52,8 +52,8 @@ typedef BOOL (* MAINDLG_COEFF_OPERATION) (GtkWidget *top, FLTCOEFF *pFilter,
  */
 typedef struct
 {
-    GtkWidget *btn;
-    GtkWidget *menu;
+    GtkWidget *btn;             /**< \c GtkButton associated with this action */
+    GtkWidget *menu;          /**< \c GtkMenuItem associated with this action */
     MAINDLG_COEFF_OPERATION op;
     char *text;                    /**< Menuitem text (describing the action) */
     char *stockimg;
@@ -82,11 +82,11 @@ typedef enum
 
 static void mainDlgDestroy (GtkObject* object, gpointer user_data);
 static void mainDlgQuit (GtkWidget* widget, gpointer user_data);
-static BOOL mainDlgCoeffEdit (GtkWidget *topWidget, FLTCOEFF *pFilter,
+static BOOL mainDlgCoeffEdit (GtkWidget *widget, FLTCOEFF *pFilter,
                               MATHPOLY *poly, int index);
-static BOOL mainDlgCoeffsRound (GtkWidget *topWidget, FLTCOEFF *pFilter,
+static BOOL mainDlgCoeffsRound (GtkWidget *widget, FLTCOEFF *pFilter,
                                 MATHPOLY *poly, int index);
-static BOOL mainDlgCoeffsFactor (GtkWidget *topWidget, FLTCOEFF *pFilter,
+static BOOL mainDlgCoeffsFactor (GtkWidget *widget, FLTCOEFF *pFilter,
                                  MATHPOLY *poly, int index);
 static void allowCoeffActions (BOOL active);
 static int getSelectedCoeff (GtkTreeSelection *selection);
@@ -122,15 +122,15 @@ static MAINDLG_COEFF_ACTION mainDlgCoeffBtn[] =
 {
     {
         NULL, NULL, mainDlgCoeffEdit, N_("Change"),
-        "gtk-edit", N_("Edit a single coefficient")
+        GTK_STOCK_EDIT, N_("Edit a single coefficient")
     },
     {
         NULL, NULL, mainDlgCoeffsFactor, N_("Multiply"),
-        "gtk-fullscreen", N_("Multiply all coefficients with a constant")
+        GTK_STOCK_FULLSCREEN, N_("Multiply all coefficients with a constant")
     },
     {
         NULL, NULL, mainDlgCoeffsRound, N_("Round"),
-        "gtk-convert", N_("Round all coefficients")
+        GTK_STOCK_CONVERT, N_("Round all coefficients")
     }
 };
 
@@ -168,14 +168,14 @@ static void mainDlgQuit (GtkWidget* widget, gpointer user_data)
 
     if ((dfcPrjGetFilter() != NULL) && !(dfcPrjGetFlags() & DFCPRJ_FLAG_SAVED))
     {
-        GtkWidget *widget = gtk_message_dialog_new_with_markup (
+        GtkWidget *warn = gtk_message_dialog_new_with_markup (
             GTK_WINDOW (topWidget), GTK_DIALOG_DESTROY_WITH_PARENT,
             GTK_MESSAGE_WARNING, GTK_BUTTONS_YES_NO,
             _("The current filter/system has not been saved. Are you sure to"
               " quit now?"));
 
-        ack = gtk_dialog_run (GTK_DIALOG (widget));
-        gtk_widget_destroy (widget);
+        ack = gtk_dialog_run (GTK_DIALOG (warn));
+        gtk_widget_destroy (warn);
     } /* if */
 
     if (ack == GTK_RESPONSE_YES)
@@ -268,7 +268,7 @@ static MATHPOLY *getSelectedPoly (FLTCOEFF* pFilter, int *pIndex)
 /** Operation which is performed when the \e Edit button is clicked (called from
  *  function mainDlgCoeffAction(), type is MAINDLG_COEFF_OPERATION).
  *
- *  \param topWidget    Topwidget reference.
+ *  \param widget       Widget that has emitted the "activate" signal.
  *  \param pFilter      Pointer to filter which is currently displayed in the
  *                      GtkTreeView coefficients list.
  *  \param poly         Pointer to selected coefficients (\p pFilter->num or
@@ -278,7 +278,7 @@ static MATHPOLY *getSelectedPoly (FLTCOEFF* pFilter, int *pIndex)
  *  \return             TRUE if the operation was really performed, else
  *                      FALSE (means no coefficient has changed).
  ******************************************************************************/
-static BOOL mainDlgCoeffEdit (GtkWidget *topWidget, FLTCOEFF *pFilter,
+static BOOL mainDlgCoeffEdit (GtkWidget *widget, FLTCOEFF *pFilter,
                               MATHPOLY *poly, int index)
 {
     char *intro =
@@ -298,7 +298,7 @@ static BOOL mainDlgCoeffEdit (GtkWidget *topWidget, FLTCOEFF *pFilter,
 /** Operation which is performed when the \e Factor button is clicked (called
  *  from function mainDlgCoeffAction(), type is MAINDLG_COEFF_OPERATION).
  *
- *  \param topWidget    Topwidget reference.
+ *  \param widget       Widget that has emitted the "activate" signal.
  *  \param pFilter      Pointer to filter which is currently displayed in the
  *                      GtkTreeView coefficients list.
  *  \param poly         Pointer to selected coefficients (\p pFilter->num or
@@ -308,7 +308,7 @@ static BOOL mainDlgCoeffEdit (GtkWidget *topWidget, FLTCOEFF *pFilter,
  *  \return             TRUE if the operation was really performed, else
  *                      FALSE (means no coefficient has changed).
  ******************************************************************************/
-static BOOL mainDlgCoeffsFactor (GtkWidget *topWidget, FLTCOEFF *pFilter,
+static BOOL mainDlgCoeffsFactor (GtkWidget *widget, FLTCOEFF *pFilter,
                                  MATHPOLY *poly, int index)
 {
     int i;
@@ -336,7 +336,13 @@ static BOOL mainDlgCoeffsFactor (GtkWidget *topWidget, FLTCOEFF *pFilter,
 /** Operation which is performed when the \e Round button is clicked (called
  *  from function mainDlgCoeffAction(), type is MAINDLG_COEFF_OPERATION).
  *
- *  \param topWidget    Topwidget reference.
+ *  \attention          If the "activate" signal comes from a \c GtkButton
+ *                      then the reference in \p widget cannot be passed to
+ *                      gtk_message_dialog_new(), because this reference must
+ *                      be of type GTK_WINDOW (but GTK_BUTTON is not inherited
+ *                      from GTK_WINDOW).
+ *
+ *  \param widget       Widget that has emitted the "activate" signal.
  *  \param pFilter      Pointer to filter which is currently displayed in the
  *                      GtkTreeView coefficients list.
  *  \param poly         Pointer to selected coefficients (\p pFilter->num or
@@ -346,7 +352,7 @@ static BOOL mainDlgCoeffsFactor (GtkWidget *topWidget, FLTCOEFF *pFilter,
  *  \return             TRUE if the operation was really performed, else
  *                      FALSE (means no coefficient has changed).
  ******************************************************************************/
-static BOOL mainDlgCoeffsRound (GtkWidget *topWidget, FLTCOEFF *pFilter,
+static BOOL mainDlgCoeffsRound (GtkWidget *widget, FLTCOEFF *pFilter,
                                 MATHPOLY *poly, int index)
 {
     int i;
@@ -379,15 +385,15 @@ static BOOL mainDlgCoeffsRound (GtkWidget *topWidget, FLTCOEFF *pFilter,
 
 /* FUNCTION *******************************************************************/
 /** This function is called if a coefficients button (\e Edit, \e Factor,
- *  \e Round) was clicked.
+ *  \e Round) or the associated menu item was clicked
  *
- *  \param widget       Button that was clicked.
+ *  \param widget       \c GtkButton that was clicked.
  *  \param user_data    User data as passed to function g_signal_connect. Here
  *                      it is a pointer to the button descriptor in array
  *                      mainDlgCoeffBtn.
  *
  ******************************************************************************/
-static void mainDlgCoeffAction (GtkButton *widget, gpointer user_data)
+static void mainDlgCoeffAction (GtkWidget *widget, gpointer user_data)
 {
     int index, result;
     FLTCOEFF tmp;
@@ -401,14 +407,14 @@ static void mainDlgCoeffAction (GtkButton *widget, gpointer user_data)
     {
         if (filterDuplicate (&tmp, pFilter) == 0)        /* make temp. filter */
         {
-            if (pAction->op (topWidget, &tmp, poly, index))     /* performed? */
+            if (pAction->op (widget, &tmp, poly, index))       /* performed? */
             {
                 result = filterCheck (&tmp);             /* check realization */
 
                 if (FLTERR_CRITICAL (result))
                 {
                     filterFree(&tmp);
-                    dlgError (topWidget,
+                    dlgError (widget,
                               _("Cannot implement such a filter."
                                 " Maybe the result of such an operation"
                                 " leads to vanishing coefficients at all."));
@@ -422,7 +428,7 @@ static void mainDlgCoeffAction (GtkButton *widget, gpointer user_data)
         } /* if */
         else
         {
-            dlgError (topWidget,
+            dlgError (widget,
                       _("Cannot perform the desired operation."
                         " It seems that all the memory is exhausted."));
         } /* else */
@@ -680,7 +686,6 @@ GtkWidget* mainDlgCreate (void)
     GtkWidget *hbuttonbox3;
     GtkRequisition size;
 
-    GtkTooltips *tooltips = gtk_tooltips_new ();
     GtkAccelGroup *accel_group = gtk_accel_group_new ();
 
     topWidget = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -738,17 +743,21 @@ GtkWidget* mainDlgCreate (void)
                       NULL);
     GLADE_HOOKUP_OBJECT (topWidget, menuItem, "menuItemFileSaveAs");
 
-    menuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_PRINT, accel_group);
+    menuItem = gtk_separator_menu_item_new ();             /* separator line */
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
 
-#if GTK_CHECK_VERSION(2, 10, 0)           /* print support requires GTK 2.10 */
+    menuItem = gtk_menu_item_new_with_mnemonic (_("_Export"));
+    gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
+    g_signal_connect ((gpointer) menuItem, "activate",
+                      G_CALLBACK (fileDlgExportActivate),
+                      NULL);
+    GLADE_HOOKUP_OBJECT (topWidget, menuItem, "menuItemFileExport");
+
+    menuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_PRINT, accel_group);
+    gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (filterPrintCoeffs),
                       NULL);
-#else
-    gtk_widget_set_sensitive (GTK_WIDGET(menuItem), FALSE);
-#endif
-
     GLADE_HOOKUP_OBJECT (topWidget, menuItem, "menuItemFilePrint");
 
     widget = gtk_separator_menu_item_new ();
@@ -864,8 +873,10 @@ GtkWidget* mainDlgCreate (void)
     menuContainer = gtk_menu_new ();
     gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuMainItem), menuContainer);
 
+#ifdef TODO
     menuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_HELP, accel_group);
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
+#endif
 
     menuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_ABOUT, accel_group);
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
@@ -930,7 +941,7 @@ GtkWidget* mainDlgCreate (void)
 
     eventbox2 = gtk_event_box_new ();
     gtk_box_pack_start (GTK_BOX (hbox3), eventbox2, FALSE, TRUE, 0);
-    gtk_tooltips_set_tip (tooltips, eventbox2, _("Class of filter (or system)"), NULL);
+    gtk_widget_set_tooltip_text (eventbox2, _("Class of filter (or system)"));
 
     comboFilterClass = gtk_combo_box_new_text ();
     gtk_container_add (GTK_CONTAINER (eventbox2), comboFilterClass);
@@ -945,14 +956,14 @@ GtkWidget* mainDlgCreate (void)
     btnHelp = gtk_button_new_from_stock (GTK_STOCK_HELP);
     gtk_container_add (GTK_CONTAINER (hbuttonbox1), btnHelp);
     GTK_WIDGET_SET_FLAGS (btnHelp, GTK_CAN_DEFAULT);
-    gtk_tooltips_set_tip (tooltips, btnHelp, _("Help"), NULL);
+    gtk_widget_set_tooltip_text (btnHelp, _("Help"));
 
     btnApply = gtk_button_new_from_stock (GTK_STOCK_APPLY);
     gtk_container_add (GTK_CONTAINER (hbuttonbox1), btnApply);
     GTK_WIDGET_SET_FLAGS (btnApply, GTK_CAN_DEFAULT);
     g_signal_connect ((gpointer) btnApply, "clicked",
                       G_CALLBACK (designDlgApply), comboFilterClass);
-    gtk_tooltips_set_tip (tooltips, btnApply, _("Apply input data"), NULL);
+    gtk_widget_set_tooltip_text (btnApply, _("Apply input data"));
 
     boxFilterDlg = gtk_vbox_new (FALSE, 0);
     gtk_box_pack_start (GTK_BOX (hbox1), boxFilterDlg, TRUE, TRUE, 0);
@@ -986,8 +997,7 @@ GtkWidget* mainDlgCreate (void)
 
     treeDenominator = createCoeffListTreeView (&treeNumerator);
     gtk_container_add (GTK_CONTAINER (scrolledwindow2), GTK_WIDGET (treeDenominator));
-    gtk_tooltips_set_tip (tooltips, GTK_WIDGET (treeDenominator),
-                          _("Denominator coefficients"), NULL);
+    gtk_widget_set_tooltip_text (GTK_WIDGET (treeDenominator), _("Denominator coefficients"));
 
     scrolledwindow1 = gtk_scrolled_window_new (NULL, NULL);
     gtk_table_attach (GTK_TABLE (table6), scrolledwindow1, 0, 1, 1, 2,
@@ -998,8 +1008,7 @@ GtkWidget* mainDlgCreate (void)
 
     treeNumerator = createCoeffListTreeView (&treeDenominator);
     gtk_container_add (GTK_CONTAINER (scrolledwindow1), GTK_WIDGET (treeNumerator));
-    gtk_tooltips_set_tip (tooltips, GTK_WIDGET (treeNumerator),
-                          _("Numerator coefficients"), NULL);
+    gtk_widget_set_tooltip_text (GTK_WIDGET (treeNumerator), _("Numerator coefficients"));
 
     label = gtk_label_new (_("<b>Numerator</b>"));
     gtk_table_attach (GTK_TABLE (table6), label, 0, 1, 0, 1,
@@ -1029,8 +1038,7 @@ GtkWidget* mainDlgCreate (void)
         pAction->btn = gtk_button_new ();
         gtk_container_add (GTK_CONTAINER (hbuttonbox3), pAction->btn);
         gtk_widget_set_sensitive (pAction->btn, FALSE);
-        gtk_tooltips_set_tip (tooltips, pAction->btn,
-                              gettext (pAction->tooltip), NULL);
+        gtk_widget_set_tooltip_text (pAction->btn, gettext (pAction->tooltip));
         widget = gtk_image_new_from_stock (pAction->stockimg,
                                            GTK_ICON_SIZE_BUTTON);
         gtk_container_add (GTK_CONTAINER (pAction->btn), widget);
@@ -1076,7 +1084,6 @@ GtkWidget* mainDlgCreate (void)
     GLADE_HOOKUP_OBJECT (topWidget, scrolledwindow1, "scrolledwindow1");
     GLADE_HOOKUP_OBJECT (topWidget, scrolledwindow2, "scrolledwindow2");
     GLADE_HOOKUP_OBJECT (topWidget, hbuttonbox3, "hbuttonbox3");
-    GLADE_HOOKUP_OBJECT_NO_REF (topWidget, tooltips, "tooltips");
 
     gtk_window_add_accel_group (GTK_WINDOW (topWidget), accel_group);
     gtk_widget_show_all (topWidget);
@@ -1187,10 +1194,8 @@ BOOL mainDlgUpdateFilter (int err)
         gtk_widget_set_sensitive (lookup_widget (topWidget, "toolBtnSave"), valid);
         gtk_widget_set_sensitive (lookup_widget (topWidget, "menuItemFileSave"), valid);
         gtk_widget_set_sensitive (lookup_widget (topWidget, "menuItemFileSaveAs"), valid);
-
-#if GTK_CHECK_VERSION(2, 10, 0)           /* print support requires GTK 2.10 */
+        gtk_widget_set_sensitive (lookup_widget (topWidget, "menuItemFileExport"), valid);
         gtk_widget_set_sensitive (lookup_widget (topWidget, "menuItemFilePrint"), valid);
-#endif
 
         storeNum = GTK_LIST_STORE (gtk_tree_view_get_model (treeNumerator));
         storeDen = GTK_LIST_STORE (gtk_tree_view_get_model (treeDenominator));

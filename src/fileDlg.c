@@ -1,9 +1,9 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file
+ * \file     fileDlg.c
  *           File menu dialogs.
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011-2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
  *
  ******************************************************************************/
@@ -17,9 +17,8 @@
 #include "projectFile.h"
 #include "dfcProject.h"
 #include "mainDlg.h"
-#if GTK_CHECK_VERSION(2, 10, 0)           /* print support requires GTK 2.10 */
 #include "filterPrint.h"
-#endif
+
 #include <errno.h>
 
 
@@ -37,7 +36,8 @@
 
 /* LOCAL VARIABLE DEFINITIONS *************************************************/
 
-static char* filename = NULL;                   /**< Current project filename */
+static char* dfcPrjFileName = NULL;            /**< Current project filename */
+static char* dfcExportFileName = NULL;             /**< Last export filename */
 
 
 /* LOCAL MACRO DEFINITIONS ****************************************************/
@@ -133,6 +133,7 @@ static GtkWidget* createFileDialog (const gchar *title, GtkWindow *parent,
                                     const gchar *btn2, GtkResponseType resp2)
 {
     GtkFileFilter* filter;
+    gchar* str;
 
     GtkWidget* preview = gtk_label_new (NULL);
     GtkWidget* dialog = gtk_file_chooser_dialog_new (title, parent, action,
@@ -142,7 +143,9 @@ static GtkWidget* createFileDialog (const gchar *title, GtkWindow *parent,
     gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (dialog), TRUE);
 
     filter = gtk_file_filter_new ();
-    gtk_file_filter_set_name (filter, gettext ("Project files (*" PRJFILE_NAME_SUFFIX ")"));
+    str = g_strdup_printf (_("Project files (*%s)"), PRJFILE_NAME_SUFFIX);
+    gtk_file_filter_set_name (filter, str);
+    FREE (str);
     gtk_file_filter_add_pattern (filter, "*" PRJFILE_NAME_SUFFIX);
     gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
 
@@ -176,10 +179,10 @@ static GtkWidget* createFileDialog (const gchar *title, GtkWindow *parent,
  ******************************************************************************/
 void fileDlgNewActivate (GtkMenuItem* menuitem, gpointer user_data)
 {
-    if (filename != NULL)
+    if (dfcPrjFileName != NULL)
     {
-        FREE (filename);
-        filename = NULL;
+        FREE (dfcPrjFileName);
+        dfcPrjFileName = NULL;
     } /* if */
 
     dfcPrjFree (NULL);
@@ -208,6 +211,8 @@ void fileDlgOpenActivate (GtkWidget* srcWidget, gpointer user_data)
                                           GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                           GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT);
 
+    gtk_file_chooser_set_show_hidden (GTK_FILE_CHOOSER (dialog), FALSE);
+
     if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
     {
         char *fname = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
@@ -215,12 +220,12 @@ void fileDlgOpenActivate (GtkWidget* srcWidget, gpointer user_data)
 
         if (err == NULL)
         {
-            if (filename != NULL)
+            if (dfcPrjFileName != NULL)
             {
-                FREE (filename);
+                FREE (dfcPrjFileName);
             } /* if */
 
-            filename = fname;        /* store as current name (for next save) */
+            dfcPrjFileName = fname; /* store as current name (for next save) */
             mainDlgUpdateAll (fname);
         } /* if */
         else
@@ -248,15 +253,15 @@ void fileDlgOpenActivate (GtkWidget* srcWidget, gpointer user_data)
  ******************************************************************************/
 void fileDlgSaveActivate (GtkWidget* srcWidget, gpointer user_data)
 {
-    if (filename != NULL)                       /* associated filename known? */
+    if (dfcPrjFileName != NULL)                /* associated filename known? */
     {
-        if (dfcPrjSave (filename) == 0)                           /* success? */
+        if (dfcPrjSave (dfcPrjFileName) == 0)                    /* success? */
         {
             return;
         } /* if */
 
         dlgErrorFile (gtk_widget_get_toplevel (srcWidget),
-                      _("Error saving project file '%s'."), filename, NULL);
+                      _("Error saving project file '%s'."), dfcPrjFileName, NULL);
     } /* if */
 
 
@@ -278,29 +283,32 @@ void fileDlgSaveActivate (GtkWidget* srcWidget, gpointer user_data)
  ******************************************************************************/
 void fileDlgSaveAsActivate (GtkWidget* srcWidget, gpointer user_data)
 {
-    gchar* fname = NULL;
+    gchar* fname;
+
     GtkWidget *topWidget = gtk_widget_get_toplevel (srcWidget);
     GtkWidget* dialog = createFileDialog (_("Save project file"),
                                           GTK_WINDOW (topWidget),
                                           GTK_FILE_CHOOSER_ACTION_SAVE,
                                           GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                           GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT);
-    if (filename != NULL)
+    if (dfcPrjFileName == NULL)
+    {                                  /* FIXME: add "untitled.dfc" to de.po */
+        gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (dialog),
+                                           gettext ("untitled" PRJFILE_NAME_SUFFIX));
+    } /* if */
+    else
     {
-        fname = g_filename_to_utf8 (filename, -1, NULL, NULL, NULL);
+        fname = g_filename_to_utf8 (dfcPrjFileName, -1, NULL, NULL, NULL);
 
         if (fname != NULL)
         {
             gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (dialog), fname);
             FREE (fname);
         } /* if */
-        else
-        {
-            gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (dialog), _("Untitled"));
-        } /* else */
-    } /* if */
+    } /* else */
 
     gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (dialog), TRUE);
+    gtk_file_chooser_set_show_hidden (GTK_FILE_CHOOSER (dialog), FALSE);
 
     if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
     {
@@ -311,12 +319,12 @@ void fileDlgSaveAsActivate (GtkWidget* srcWidget, gpointer user_data)
          */
         if (dfcPrjSave (fname) == 0)                              /* success? */
         {
-            if (filename != NULL)
+            if (dfcPrjFileName != NULL)
             {
-                FREE (filename);
+                FREE (dfcPrjFileName);
             } /* if */
 
-            filename = fname;        /* store as current name (for next save) */
+            dfcPrjFileName = fname;        /* store as current name (for next save) */
         } /* if */
         else
         {
@@ -328,6 +336,111 @@ void fileDlgSaveAsActivate (GtkWidget* srcWidget, gpointer user_data)
     gtk_widget_destroy (dialog);
 
 } /* fileDlgSaveAsActivate() */
+
+
+
+
+/* FUNCTION *******************************************************************/
+/** \e Activate event callback emitted when the \e Save \e As menuitem is
+ *  selected from \e File menu.
+ *
+ *  \param srcWidget    \e File \e Save \e As widget (GtkMenuItem on event
+ *                      \e activate or GtkToolButton on event \e clicked),
+ *                      which causes this call.
+ *  \param user_data    User data set when the signal handler was connected (unused).
+ *
+ ******************************************************************************/
+void fileDlgExportActivate (GtkWidget* srcWidget, gpointer user_data)
+{
+    gchar* fname;
+    GtkWidget *widget;
+    GtkFileFilter* filter;
+
+    GtkWidget* dialog =
+        gtk_file_chooser_dialog_new (_("Export coefficients"),
+                                     GTK_WINDOW (gtk_widget_get_toplevel (srcWidget)),
+                                     GTK_FILE_CHOOSER_ACTION_SAVE,
+                                     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                                     GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL);
+
+    gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (dialog), TRUE);
+
+    widget = gtk_label_new (_("<b>Choose the file extension according to your preferred format:</b>\n\n"
+                              "<tt>\t*.txt\t->\t</tt>plain text\n"
+                              "<tt>\t*.c\t\t->\t</tt>\"C\" language\n"
+                              "<tt>\t*.m\t\t->\t</tt>MATLAB script"));
+
+    gtk_label_set_use_markup (GTK_LABEL (widget), TRUE);
+    gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (dialog), widget);
+
+    filter = gtk_file_filter_new ();
+    gtk_file_filter_set_name (filter, _("All files (*)"));
+    gtk_file_filter_add_pattern (filter, "*");
+    gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
+
+    filter = gtk_file_filter_new ();
+    gtk_file_filter_set_name (filter, _("Plain (*.txt)"));
+    gtk_file_filter_add_pattern (filter, "*.txt");
+    gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
+
+    filter = gtk_file_filter_new ();
+    gtk_file_filter_set_name (filter, _("MATLAB (*.m)"));
+    gtk_file_filter_add_pattern (filter, "*.m");
+    gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
+
+    filter = gtk_file_filter_new ();
+    gtk_file_filter_set_name (filter, _("C (*.c)"));
+    gtk_file_filter_add_pattern (filter, "*.c");
+    gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
+
+
+    if (dfcExportFileName == NULL)
+    {
+        gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (dialog), _("untitled.txt"));
+    } /* if */
+    else
+    {
+        fname = g_filename_to_utf8 (dfcExportFileName, -1, NULL, NULL, NULL);
+
+        if (fname != NULL)
+        {
+            gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (dialog), fname);
+            FREE (fname);
+        } /* if */
+    } /* if */
+
+    gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (dialog), TRUE);
+    gtk_file_chooser_set_show_hidden (GTK_FILE_CHOOSER (dialog), FALSE);
+
+    if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
+    {
+        fname = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
+
+        /* Use fname directly because it is coded in filesystem coding (must
+         * not be UTF-8).
+         */
+        if (dfcPrjExport (fname) == 0)                           /* success? */
+        {
+            if (dfcExportFileName != NULL)
+            {
+                FREE (dfcExportFileName);
+            } /* if */
+
+            dfcExportFileName = fname;   /* store as current (for next save) */
+        } /* if */
+        else
+        {
+            dlgErrorFile (gtk_widget_get_toplevel (srcWidget),
+                          _("Error exporting to file '%s'."),
+                          fname, NULL);
+            FREE (fname);
+        } /* else */
+    } /* if */
+
+    gtk_widget_destroy (dialog);
+
+} /* fileDlgExportActivate() */
+
 
 
 

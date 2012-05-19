@@ -7,7 +7,7 @@
  *           to the \e GLib XML support functions. Adoption to other platforms
  *           or to libxml is possible, but need a lot of work.
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
  *
  ******************************************************************************/
@@ -19,6 +19,7 @@
 #include "projectFile.h"
 #include "filterSupport.h"
 
+#include <errno.h>
 #include <string.h> /* memcpy(), memset() */
 
 
@@ -121,6 +122,43 @@ DFCPRJ_INFO* dfcPrjGetInfo ()
 {
     return &project.info;
 } /* dfcPrjGetInfo() */
+
+
+
+/* FUNCTION *******************************************************************/
+/** Exports the current filter project to a file.
+ *
+ *  \param filename     Filename of file (inclusive path).
+ *
+ *  \return             Zero on succes, else an error number from errno.h.
+ ******************************************************************************/
+int dfcPrjExport (char *filename)
+{
+    PRJFILE_EXPORT_TYPE type;
+
+    if (g_str_has_suffix (filename, ".txt"))
+    {
+        type = PRJFILE_EXPORT_PLAIN;
+    } /* if */
+    else
+    {
+        if (g_str_has_suffix (filename, ".m"))
+        {
+            type = PRJFILE_EXPORT_MATLAB;
+        } /* if */
+        else
+        {
+            if (!g_str_has_suffix (filename, ".c"))
+            {
+                return ENOTSUP;                 /* unsupported export format */
+            } /* if */
+
+            type = PRJFILE_EXPORT_CLANG;
+        } /* else */
+    } /* else */
+
+    return (prjFileExport (type, filename, &project));
+} /* dfcPrjExport() */
 
 
 
