@@ -1,6 +1,6 @@
 /******************************************************************************/
 /**
- * \file
+ * \file     mathPoly.c
  *           Polynomial functions.
  *
  * \author   Copyright (C) 2006, 2011 Ralf Hoppe

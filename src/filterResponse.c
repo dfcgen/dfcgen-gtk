@@ -3,7 +3,7 @@
  * \file
  *           Filter response functions.
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org> 
+ * \author   Copyright (C) 2006, 2011-2012 Ralf Hoppe <ralf.hoppe@ieee.org> 
  * \version  $Id$
  *
  ******************************************************************************/
@@ -189,12 +189,12 @@ static double evalPolyGroupZ(double omega, const MATHPOLY *poly)
 /* FUNCTION *******************************************************************/
 /** Returns the next input sample for a time response.
  *
- *  \param time         Time in seconds.
+ *  \param xtime        Time in seconds.
  *  \param sig          The signal for which the next sample shall be returned.
  *
  *  \return             Sample value associated with passed signal and time.
  ******************************************************************************/
-static double timeResponseGetNext (double time, FLTSIGNAL sig)
+static double timeResponseGetNext (double xtime, FLTSIGNAL sig)
 {
     switch (sig)
     {
@@ -202,7 +202,7 @@ static double timeResponseGetNext (double time, FLTSIGNAL sig)
             return 1.0;
 
         case FLTSIGNAL_DIRAC:
-            return (time == 0.0) ? 1.0 : 0.0;
+            return (xtime == 0.0) ? 1.0 : 0.0;
 
         case FLTSIGNAL_USER:
         default:
@@ -474,7 +474,7 @@ FLTRESP_TIME_WORKSPACE* filterResponseTimeNew (double start, double stop,
                                                FLTSIGNAL type, const FLTCOEFF* pFilter)
 {
     FLTRESP_TIME_WORKSPACE *pWorkspace;
-    double time, t0;
+    double xtime, t0;
 
     if ((start * pFilter->f0 > FLTRESP_TIME_SAMPLES_LIMIT) ||
         ((stop - start) * pFilter->f0 > FLTRESP_TIME_SAMPLES_LIMIT))
@@ -523,20 +523,20 @@ FLTRESP_TIME_WORKSPACE* filterResponseTimeNew (double start, double stop,
     pWorkspace->curTime = 0.0;
     t0 = 1.0 / pFilter->f0;
 
-    while (pWorkspace->curTime < start)    /* process all samples up to start */
+    while (pWorkspace->curTime < start)   /* process all samples up to start */
     {
         timeResponseProcNext (pWorkspace);
         pWorkspace->curTime += t0;
     } /* while */
 
 
-    time = pWorkspace->curTime;           /* hold current time as start value */
+    xtime = pWorkspace->curTime;         /* hold current time as start value */
     pWorkspace->samples = 0;
 
-    while (time <= stop)             /* count number of samples up to the end */
+    while (xtime <= stop)           /* count number of samples up to the end */
     {
         ++pWorkspace->samples;
-        time += t0;
+        xtime += t0;
     } /* while */
 
     return pWorkspace;

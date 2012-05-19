@@ -1,9 +1,9 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file
+ * \file     dialogSupport.c
  *           Dialog helper functions.
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
  *
  ******************************************************************************/
@@ -57,13 +57,15 @@ static void dlgEntryNumericError (GtkWidget* entry, double vmin, double vmax);
  ******************************************************************************/
 static void dlgEntryNumericError (GtkWidget* entry, double vmin, double vmax)
 {
+    GList* list;
+
     GtkWidget* topWidget = gtk_widget_get_toplevel (entry);
 
     gtk_widget_grab_focus (entry);
 
     /* Get list of mnemonic labels for GtkEntry
      */
-    GList* list = gtk_widget_list_mnemonic_labels (entry);
+    list = gtk_widget_list_mnemonic_labels (entry);
     ASSERT (g_list_first (list)->data != NULL);     /* required by GUI design */
 
     dlgError (topWidget,
