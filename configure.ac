@@ -1,6 +1,6 @@
 dnl -*- Autoconf -*-
 dnl
-dnl Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+dnl Copyright (C) 2006, 2011-2012 Ralf Hoppe <ralf.hoppe@ieee.org>
 dnl
 dnl Version:  $Id$
 dnl
@@ -13,7 +13,7 @@ dnl       Autoconf is 2.65 (AC_USE_SYSTEM_EXTENSIONS was introduced in v2.60).
 
 AC_PREREQ(2.65)
 
-AC_INIT([dfcgen-gtk],[0.2],[ralf.hoppe@ieee.org])
+AC_INIT([dfcgen-gtk],[0.3],[ralf.hoppe@ieee.org])
 AC_CONFIG_HEADERS([config.h])
 
 AC_CONFIG_AUX_DIR([build-aux])
@@ -23,8 +23,10 @@ AC_CONFIG_FILES([Makefile
                  po/Makefile.in
                  include/Makefile
                  src/Makefile
-                 pixmaps/Makefile
                  data/Makefile
+                 data/pixmaps/Makefile
+                 data/filters/Makefile
+                 data/templates/Makefile
                  doc/Makefile])
 
 dnl Automake options: we are not strictly GNU compatible (foreign),
@@ -33,11 +35,64 @@ AM_INIT_AUTOMAKE([-Wall foreign])
 AM_MAINTAINER_MODE
 
 
+CFLAGS_LANG="-std=c99"
+CFLAGS_WARN="-Wall -Wundef -Wshadow \
+-Wdeclaration-after-statement \
+-Wpointer-arith -Wcast-align \
+-Wmissing-prototypes -Wmissing-declarations \
+-Wredundant-decls"
+
+# The most conservative approach is to use the i568 (pentium) architecture
+# specification. This architecture is compatible with both CPU vendors, Intel
+# and AMD (see the GCC manual for other alternatives).
+CFLAGS_MACHINE="-march=i586"
+
+# -g  => include debug info
+# -pg => include code for gprof (GNU profiler)
+# -O0 => no optimization
+CFLAGS_DEBUG="-g -pg -O0 -fstack-protector-all -UNDEBUG"
+# CFLAGS_DEBUG="-O3 -funroll-loops -fstack-protector-all -UNDEBUG"
+CFLAGS_NDEBUG="-O3 -funroll-loops -DNDEBUG -DG_DISABLE_ASSERT"
+
+
+
+dnl Set CFLAGS before calling AC_PROG_CC, else default values are set. For
+dnl target specific flags use AM_CFLAGS in Makefile.am. Notice that CFLAGS
+dnl overwrites AM_CFLAGS (caused by order of evaluation in Makefile.am), so
+dnl use AM_CFLAGS only to specify additional flags.
+CFLAGS="$CFLAGS $CFLAGS_MACHINE $CFLAGS_LANG $CFLAGS_WARN"
+
+AC_MSG_CHECKING(whether to enable debugging)
+AC_ARG_ENABLE([debug],
+              [AS_HELP_STRING([--enable-debug], [enable debugging (default=no)])],
+              [
+                  if test "x$enable_debug" = "xyes"; then
+                     AC_DEFINE([DEBUG], [1],
+                               [Defined if '--enable-debug' was passed to configure.])
+                     CFLAGS="$CFLAGS $CFLAGS_DEBUG"
+                  else
+                     CFLAGS="$CFLAGS $CFLAGS_NDEBUG"
+                  fi
+
+                  AC_MSG_RESULT($enable_debug)
+              ],
+              [
+                  CFLAGS="$CFLAGS $CFLAGS_NDEBUG"
+                  AC_MSG_RESULT(no)
+              ])
+
+
 dnl Because Anjuta does not understand the third and fourth parameter of
 dnl AC_INIT, the package URL is declared this way.
-AC_DEFINE([PACKAGE_URL], ["http://home.arcor.de/dfcgen"], [package homepage])
-AC_DEFINE([PACKAGE_AUTHOR], ["Ralf Hoppe"], [package author])
-AC_DEFINE([PACKAGE_ICON], ["dfcgen.png"], [package icon])
+AC_DEFINE(PACKAGE_URL, ["http://www.dfcgen.de"], [package homepage])
+
+dnl Additional Substitutions and Defines
+AC_SUBST(PACKAGE_AUTHOR, ["Ralf Hoppe"])
+AC_SUBST(COPYRIGHT_HOLDER, ["Copyright (C) 2006, 2011-2012 $PACKAGE_AUTHOR"])
+AC_DEFINE_UNQUOTED(PACKAGE_AUTHOR, ["$PACKAGE_AUTHOR"], [package author])
+AC_DEFINE_UNQUOTED(PACKAGE_COPYRIGHT, ["$COPYRIGHT_HOLDER"], [copyright holder])
+AC_DEFINE(PACKAGE_ICON, ["dfcgen.png"], [package icon])
+
 
 dnl Checks for programs (gcc)
 dnl LT_INIT
