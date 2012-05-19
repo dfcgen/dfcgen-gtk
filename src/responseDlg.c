@@ -3,7 +3,7 @@
  * \file
  *           Response settings/properties dialog.
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011-2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
  *
  ******************************************************************************/
@@ -241,20 +241,20 @@ static void autoScalingChanged (GtkCheckButton* button, gpointer user_data)
  ******************************************************************************/
 static void colorItemChanged (GtkComboBox *combobox, gpointer user_data)
 {
-    int index = gtk_combo_box_get_active(combobox);
+    int idx = gtk_combo_box_get_active(combobox);
     GtkColorSelection *colorsel = GTK_COLOR_SELECTION (
         lookup_widget (GTK_WIDGET (combobox), RESPONSE_DLG_COLOR_SELECT));
 
-    if (index < 0)
+    if (idx < 0)
     {
-        index = 0;                       /* set any, in case nothing selected */
+        idx = 0;                        /* set any, in case nothing selected */
     } /* if */
 
 
     gtk_color_selection_get_current_color (
         colorsel, &responseDlgColorVals[responseDlgColorItem]);
-    responseDlgColorItem = index;          /* remind last selected color item */
-    gtk_color_selection_set_current_color (colorsel, &responseDlgColorVals[index]);
+    responseDlgColorItem = idx;           /* remind last selected color item */
+    gtk_color_selection_set_current_color (colorsel, &responseDlgColorVals[idx]);
 
 } /* colorItemChanged() */
 
@@ -280,7 +280,6 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     GtkObject *adjustment;
     char *axisName;
 
-    GtkTooltips *tooltips = gtk_tooltips_new ();
     GtkWidget *responseDlg = gtk_dialog_new ();
 
     /* Some generic and global layout settings first
@@ -331,7 +330,7 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 0, 1,
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (0), 0, 0);
-    gtk_tooltips_set_tip (tooltips, widget, _("Start of x-axis interval"), NULL);
+    gtk_widget_set_tooltip_text (widget, _("Start of x-axis interval"));
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
     gtk_entry_set_width_chars (GTK_ENTRY (widget), RESPONSE_DLG_WIDTH_CHARS);
     GLADE_HOOKUP_OBJECT (responseDlg, widget, RESPONSE_DLG_ENTRY_STARTX);
@@ -351,7 +350,7 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 1, 2,
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (0), 0, 0);
-    gtk_tooltips_set_tip (tooltips, widget, _("End of x-axis interval"), NULL);
+    gtk_widget_set_tooltip_text (widget, _("End of x-axis interval"));
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
     gtk_entry_set_width_chars (GTK_ENTRY (widget), RESPONSE_DLG_WIDTH_CHARS);
     GLADE_HOOKUP_OBJECT (responseDlg, widget, RESPONSE_DLG_ENTRY_STOPX);
@@ -369,7 +368,7 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 4, 5,
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (0), 0, 0);
-    gtk_tooltips_set_tip (tooltips, widget, _("The number of samples to be used (0 = all)"), NULL);
+    gtk_widget_set_tooltip_text (widget, _("The number of samples to be used (0 = all)"));
     gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (widget), TRUE);
     GLADE_HOOKUP_OBJECT (responseDlg, widget, RESPONSE_DLG_SPIN_SAMPLES);
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
@@ -439,7 +438,7 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 0, 1,
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (0), 0, 0);
-    gtk_tooltips_set_tip (tooltips, widget, _("Start of y-axis interval"), NULL);
+    gtk_widget_set_tooltip_text (widget, _("Start of y-axis interval"));
     gtk_widget_set_sensitive (widget, FALSE);
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
     gtk_entry_set_width_chars (GTK_ENTRY (widget), RESPONSE_DLG_WIDTH_CHARS);
@@ -459,7 +458,7 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 1, 2,
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (0), 0, 0);
-    gtk_tooltips_set_tip (tooltips, widget, _("End of y-axis interval"), NULL);
+    gtk_widget_set_tooltip_text (widget, _("End of y-axis interval"));
     gtk_widget_set_sensitive (widget, FALSE);
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
     gtk_entry_set_width_chars (GTK_ENTRY (widget), RESPONSE_DLG_WIDTH_CHARS);
@@ -498,7 +497,8 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
                          &pDiag->y);
 
     widget = gtk_check_button_new_with_mnemonic (_("Autoscaling"));
-    gtk_tooltips_set_tip (tooltips, widget, _("Autoscaling of y-axis with respect to minimum and maximum values in interval"), NULL);
+    gtk_widget_set_tooltip_text (widget, _("Autoscaling of y-axis with respect"
+                                           " to minimum and maximum values in interval"));
     gtk_table_attach (GTK_TABLE (table), widget, 1, 3, 4, 5,
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (0), 0, 0);
@@ -561,7 +561,7 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 0, 1,
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (GTK_FILL), 0, 0);
-    gtk_tooltips_set_tip (tooltips, widget, _("Style of graph"), NULL);
+    gtk_widget_set_tooltip_text (widget, _("Style of graph"));
 
     box = gtk_combo_box_new_text ();
     gtk_container_add (GTK_CONTAINER (widget), box);
@@ -577,7 +577,7 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 1, 2,
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (GTK_FILL), 0, 0);
-    gtk_tooltips_set_tip (tooltips, widget, _("Choose the color item to be changed, then modify the color"), NULL);
+    gtk_widget_set_tooltip_text (widget, _("Choose the color item to be changed, then modify the color"));
 
     box = gtk_combo_box_new_text ();
     gtk_container_add (GTK_CONTAINER (widget), box);

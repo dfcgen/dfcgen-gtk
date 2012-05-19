@@ -3,7 +3,7 @@
  * \file
  *           Linear FIR filter dialog functions.
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe
+ * \author   Copyright (C) 2006, 2011-2012 Ralf Hoppe
  * \version  $Id$
  *
  ******************************************************************************/
@@ -233,7 +233,6 @@ void linFirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
 
     GSList *firTypeRadioGroup = NULL;
     GSList *dspWinRadioGroup = NULL;
-    GtkTooltips *tooltips = GTK_TOOLTIPS(g_object_get_data(G_OBJECT(topWidget), "tooltips"));
 
     linFirDesignDlgMain = gtk_table_new (2, 2, FALSE);
     gtk_box_pack_start (GTK_BOX (boxDesignDlg), linFirDesignDlgMain, TRUE, TRUE, 0);
@@ -301,8 +300,7 @@ void linFirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     gtk_table_attach (GTK_TABLE (table), widget, 1, 3, 0, 1,
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (0), 0, 0);
-    gtk_tooltips_set_tip (tooltips, widget,
-                          _("Type of frequency transformation"), NULL);
+    gtk_widget_set_tooltip_text (widget, _("Type of frequency transformation"));
 
     label = gtk_label_new_with_mnemonic (_("_Type"));
     gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
@@ -325,7 +323,7 @@ void linFirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 2, 3,
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (0), 0, 0);
-    gtk_tooltips_set_tip (tooltips, widget, _("Bandwidth"), NULL);
+    gtk_widget_set_tooltip_text (widget, _("Bandwidth"));
     gtk_entry_set_width_chars (GTK_ENTRY (widget), GUI_ENTRY_WIDTH_CHARS);
     GLADE_HOOKUP_OBJECT (topWidget, widget, LINFIRDLG_ENTRY_BANDW);
 
@@ -349,9 +347,8 @@ void linFirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 1, 2,
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (0), 0, 0);
-    gtk_tooltips_set_tip (tooltips, widget,
-                          _("Cutoff frequency (highpass) or center"
-                            " frequency (bandpass, bandstop)"), NULL);
+    gtk_widget_set_tooltip_text (widget, _("Cutoff frequency (highpass) or center"
+                                           " frequency (bandpass, bandstop)"));
     gtk_entry_set_width_chars (GTK_ENTRY (widget), GUI_ENTRY_WIDTH_CHARS);
     GLADE_HOOKUP_OBJECT (topWidget, widget, LINFIRDLG_ENTRY_CENTER);
 
@@ -375,10 +372,10 @@ void linFirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 3, 4,
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (0), 0, 0);
-    gtk_tooltips_set_tip (tooltips, widget,
-                          _("Check this if the center frequency shall be the"
-                            " geometric mean between both cutoff frequencies"
-                            " (otherwise it is the arithmetic mean)."), NULL);
+    gtk_widget_set_tooltip_text (widget,
+                                 _("Check this if the center frequency shall be the"
+                                   " geometric mean between both cutoff frequencies"
+                                   " (otherwise it is the arithmetic mean)."));
     GLADE_HOOKUP_OBJECT (topWidget, widget, LINFIRDLG_CHKBTN_GEOMETRIC);
 
     /* Reference Lowpass
@@ -409,7 +406,7 @@ void linFirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 2, 3,
                       (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
     gtk_entry_set_width_chars (GTK_ENTRY (widget), GUI_ENTRY_WIDTH_CHARS);
-    gtk_tooltips_set_tip (tooltips, widget, _("Cutoff frequency"), NULL);
+    gtk_widget_set_tooltip_text (widget, _("Cutoff frequency"));
     GLADE_HOOKUP_OBJECT (topWidget, widget, LINFIRDLG_ENTRY_CUTOFF);
 
     label = gtk_label_new (NULL);
@@ -432,7 +429,7 @@ void linFirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 1, 2,
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (0), 0, 0);
-    gtk_tooltips_set_tip (tooltips, widget, _("Sample frequency"), NULL);
+    gtk_widget_set_tooltip_text (widget, _("Sample frequency"));
     gtk_entry_set_width_chars (GTK_ENTRY (widget), GUI_ENTRY_WIDTH_CHARS);
     GLADE_HOOKUP_OBJECT (topWidget, widget, LINFIRDLG_ENTRY_SAMPLE);
 
@@ -459,7 +456,7 @@ void linFirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 0, 1,
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (0), 0, 0);
-    gtk_tooltips_set_tip (tooltips, widget, _("Degree of filter"), NULL);
+    gtk_widget_set_tooltip_text (widget, _("Degree of filter"));
     gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (widget), TRUE);
     GLADE_HOOKUP_OBJECT (topWidget, widget, LINFIRDLG_SPIN_DEGREE);
 
@@ -516,7 +513,7 @@ void linFirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
                       (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                       (GtkAttachOptions) (0), 0, 0);
     gtk_widget_set_sensitive (widget, FALSE);
-    gtk_tooltips_set_tip (tooltips, widget, _("Parameter of Kaiser window"), NULL);
+    gtk_widget_set_tooltip_text (widget, _("Parameter of Kaiser window"));
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
     gtk_entry_set_width_chars (GTK_ENTRY (widget), GUI_ENTRY_WIDTH_CHARS);
     GLADE_HOOKUP_OBJECT (topWidget, widget, LINFIRDLG_ENTRY_KAISER);
@@ -585,8 +582,8 @@ void linFirDesignDlgPreset (GtkWidget *topWidget, const LINFIR_DESIGN *pDesign,
     dlgSetDouble (topWidget, LINFIRDLG_ENTRY_SAMPLE,      /* sample frequency */
                   pPrefs->frequUnit.multiplier, pFilter->f0);
 
-    gtk_combo_box_set_active(GTK_COMBO_BOX (lookup_widget (topWidget, LINFIRDLG_COMBO_FTR)),
-                                            pDesign->ftr.type);  /* transform */
+    gtk_combo_box_set_active (GTK_COMBO_BOX (lookup_widget (topWidget, LINFIRDLG_COMBO_FTR)),
+                              pDesign->ftr.type);  /* transform */
 
     if (ftrEntry[pDesign->ftr.type][0])
     {
@@ -718,12 +715,16 @@ int linFirDesignDlgApply (GtkWidget *topWidget, const CFG_DESKTOP* pPrefs)
         dlgGetDouble (topWidget, LINFIRDLG_ENTRY_SAMPLE, FLT_SAMPLE_MIN,
                       FLT_SAMPLE_MAX, pPrefs->frequUnit.multiplier, &filter.f0))
     {
-        design.ftr.type = gtk_combo_box_get_active(GTK_COMBO_BOX (combo));
+        gint idx = gtk_combo_box_get_active (GTK_COMBO_BOX (combo));
 
-        if (design.ftr.type < 0)
+        if (idx < 0)
         {
-            design.ftr.type = 0;         /* set any, in case nothing selected */
+            design.ftr.type = FTR_NON;  /* set none, in case nothing selected */
         } /* if */
+        else
+        {
+            design.ftr.type = idx;
+        } /* else */
 
 
         if (ftrEntry[design.ftr.type][0]) /* lowpass cutoff frequency required? */

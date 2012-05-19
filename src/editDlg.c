@@ -3,7 +3,7 @@
  * \file
  *           \e Edit dialog(s).
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
  *
  ******************************************************************************/
@@ -99,8 +99,6 @@ static GtkWidget* createSettingsDlg (const CFG_DESKTOP* pPrefs)
     GtkWidget *settingsDlg, *widget, *label, *box, *table, *notebook;
     GtkObject *spinAdjust;
 
-    GtkTooltips *tooltips = gtk_tooltips_new ();
-
     settingsDlg = gtk_dialog_new ();
     gtk_container_set_border_width (GTK_CONTAINER (settingsDlg), 6);
     gtk_window_set_title (GTK_WINDOW (settingsDlg), _(PACKAGE " Settings"));
@@ -128,7 +126,7 @@ static GtkWidget* createSettingsDlg (const CFG_DESKTOP* pPrefs)
     gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 0, 1,
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (0), 0, 0);
-    gtk_tooltips_set_tip (tooltips, widget, _("The number of digits following the decimal point of a floating point number"), NULL);
+    gtk_widget_set_tooltip_text (widget, _("The number of digits following the decimal point of a floating point number"));
     gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (widget), TRUE);
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
     GLADE_HOOKUP_OBJECT (settingsDlg, widget, EDITSETDLG_SPIN_PREC);
@@ -144,8 +142,7 @@ static GtkWidget* createSettingsDlg (const CFG_DESKTOP* pPrefs)
     gtk_table_attach (GTK_TABLE (table), box, 1, 2, 1, 2,
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (GTK_FILL), 0, 0);
-    gtk_tooltips_set_tip (tooltips, box,
-                          _("Frequency unit to be used for in-/output"), NULL);
+    gtk_widget_set_tooltip_text (box, _("Frequency unit to be used for in-/output"));
 
     widget = gtk_combo_box_new_text ();
     gtk_container_add (GTK_CONTAINER (box), widget);
@@ -170,8 +167,7 @@ static GtkWidget* createSettingsDlg (const CFG_DESKTOP* pPrefs)
     gtk_table_attach (GTK_TABLE (table), box, 1, 2, 2, 3,
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (GTK_FILL), 0, 0);
-    gtk_tooltips_set_tip (tooltips, box,
-                          _("Time unit to be used for in-/output"), NULL);
+    gtk_widget_set_tooltip_text (box, _("Time unit to be used for in-/output"));
 
     widget = gtk_combo_box_new_text ();
     gtk_container_add (GTK_CONTAINER (box), widget);
@@ -307,8 +303,6 @@ static GtkWidget* createInfoDlg (const DFCPRJ_INFO *pInfo)
     GtkWidget *dialog, *widget, *entry, *label, *table;
     GdkPixbuf *pixbuf;
 
-    GtkTooltips *tooltips = gtk_tooltips_new ();
-
     dialog = gtk_dialog_new ();
     gtk_window_set_title (GTK_WINDOW (dialog), _("Project Info"));
     gtk_window_set_type_hint (GTK_WINDOW (dialog), GDK_WINDOW_TYPE_HINT_DIALOG);
@@ -334,7 +328,7 @@ static GtkWidget* createInfoDlg (const DFCPRJ_INFO *pInfo)
     gtk_table_attach (GTK_TABLE (table), entry, 1, 2, 0, 1,
                       (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                       (GtkAttachOptions) (0), 0, 0);
-    gtk_tooltips_set_tip (tooltips, entry, _("Author of filter/system"), NULL);
+    gtk_widget_set_tooltip_text (entry, _("Author of filter/system"));
     gtk_entry_set_max_length (GTK_ENTRY (entry), 40);
     gtk_entry_set_activates_default (GTK_ENTRY (entry), TRUE);
     gtk_entry_set_text (GTK_ENTRY (entry),
@@ -362,7 +356,7 @@ static GtkWidget* createInfoDlg (const DFCPRJ_INFO *pInfo)
         gtk_entry_set_text (GTK_ENTRY (entry), pInfo->title);
     } /* if */
 
-    gtk_tooltips_set_tip (tooltips, entry, _("Project title"), NULL);
+    gtk_widget_set_tooltip_text (entry, _("Project title"));
     GLADE_HOOKUP_OBJECT (dialog, entry, EDITINFODLG_ENTRY_TITLE);
 
     label = gtk_label_new_with_mnemonic (_("_Title"));
@@ -382,7 +376,7 @@ static GtkWidget* createInfoDlg (const DFCPRJ_INFO *pInfo)
     entry = gtk_text_view_new ();
     gtk_container_add (GTK_CONTAINER (widget), entry);
     gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (entry), GTK_WRAP_WORD);
-    gtk_tooltips_set_tip (tooltips, entry, _("Project description"), NULL);
+    gtk_widget_set_tooltip_text (entry, _("Project description"));
 
     if (pInfo->desc != NULL)
     {

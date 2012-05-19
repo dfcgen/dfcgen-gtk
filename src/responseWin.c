@@ -226,7 +226,6 @@ static void cancelZoomMode (RESPONSE_WIN *pDesc)
 } /* cancelZoomMode() */
 
 
-#if GTK_CHECK_VERSION(2, 10, 0)            /* print support requires GTK 2.10 */
 
 /* FUNCTION *******************************************************************/
 /** \e Clicked event callback emitted when a print menuitem/button is pressed.
@@ -246,7 +245,7 @@ static void responseWinBtnPrintActivate (GtkWidget* srcWidget, gpointer user_dat
 
 } /* responseWinBtnPrintActivate() */
 
-#endif /* GTK_CHECK_VERSION(2, 10, 0) */
+
 
 
 
@@ -269,8 +268,6 @@ static void responseWinCreate (RESPONSE_WIN *pDesc)
     GtkWidget *hbox;
     GtkWidget *btnSettings, *btnPrint;
     GdkPixbuf *iconPixbuf;
-
-    GtkTooltips *tooltips = gtk_tooltips_new ();
 
     pDesc->topWidget = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
@@ -314,22 +311,17 @@ static void responseWinCreate (RESPONSE_WIN *pDesc)
 
     btnPrint = gtk_button_new_from_stock ("gtk-print");
     gtk_box_pack_end (GTK_BOX (hbox), btnPrint, FALSE, FALSE, 6);
-
-#if GTK_CHECK_VERSION(2, 10, 0)            /* print support requires GTK 2.10 */
     g_signal_connect ((gpointer) btnPrint, "clicked",
                       G_CALLBACK (responseWinBtnPrintActivate),
                       pDesc);
-#else
-    gtk_widget_set_sensitive (GTK_WIDGET(btnPrint), FALSE);
-#endif
 
     GTK_WIDGET_SET_FLAGS (btnPrint, GTK_CAN_DEFAULT);
-    gtk_tooltips_set_tip (tooltips, btnPrint, _("Print this response plot"), NULL);
+    gtk_widget_set_tooltip_text (btnPrint, _("Print this response plot"));
 
     btnSettings = gtk_button_new_from_stock ("gtk-preferences");
     gtk_box_pack_end (GTK_BOX (hbox), btnSettings, FALSE, FALSE, 6);
     GTK_WIDGET_SET_FLAGS (btnSettings, GTK_CAN_DEFAULT);
-    gtk_tooltips_set_tip (tooltips, btnSettings, _("Set response plot preferences"), NULL);
+    gtk_widget_set_tooltip_text (btnSettings, _("Set response plot preferences"));
 
     gtk_widget_add_events (pDesc->topWidget, GDK_KEY_PRESS_MASK);
 
