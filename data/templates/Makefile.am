@@ -10,7 +10,7 @@
 templatesdir = $(pkgdatadir)/templates
 
 dist_templates_DATA = \
-	export.txt
-	export.c
+	export.txt\
+	export.c\
 	export.m
 
