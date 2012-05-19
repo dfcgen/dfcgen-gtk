@@ -38,7 +38,7 @@ lookup_widget                          (GtkWidget       *widget,
 
   found_widget = (GtkWidget*) g_object_get_data (G_OBJECT (widget),
                                                  widget_name);
-#if DEBUG
+#ifdef DEBUG
   if (!found_widget)
     g_warning ("Widget not found: %s", widget_name);
 #endif
