@@ -1,5 +1,5 @@
 # List of source files containing translatable strings.
-# Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+# Copyright (C) 2006, 2011-2012 Ralf Hoppe <ralf.hoppe@ieee.org>
 
 # Source files
 src/support.c
