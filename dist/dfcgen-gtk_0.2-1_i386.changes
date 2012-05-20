@@ -1,0 +1,41 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+Format: 1.8
+Date: Sat, 01 Jan 2012 18:26:00 +0200
+Source: dfcgen-gtk
+Binary: dfcgen-gtk
+Architecture: source i386
+Version: 0.2-1
+Distribution: unstable
+Urgency: medium
+Maintainer: Ralf Hoppe <ralf.hoppe@ieee.org>
+Changed-By: Ralf Hoppe <ralf.hoppe@ieee.org>
+Description: 
+ dfcgen-gtk - Digital Filter Coefficients Generator (DFCGEN) GTK+
+Changes: 
+ dfcgen-gtk (0.2-1) unstable; urgency=medium
+ .
+   * Migration to Ubuntu 10.04 (Lucid Lynx) respective Debian 5.0
+   * Coefficients and response plot printing implemented (supported
+     from GTK 2.10 upward)
+Checksums-Sha1: 
+ 0b93dfb51d4809faeb7e3fcf8df578ee810a5193 785 dfcgen-gtk_0.2-1.dsc
+ c0dc951de0e5900cf81c012e4693ebf885cf0cb4 366224 dfcgen-gtk_0.2-1.tar.gz
+ cf5ffe32cb6e07a5304ed79be04015ce9fada197 130234 dfcgen-gtk_0.2-1_i386.deb
+Checksums-Sha256: 
+ 1970283eef0d01c9ce4f1a5ce3181b83f3f0a1c3744aaf737c73789b49fa1fb8 785 dfcgen-gtk_0.2-1.dsc
+ 40a91218fd62b365aa0ef355f4902eae35895940decc1620068914a10ffbdcb6 366224 dfcgen-gtk_0.2-1.tar.gz
+ 279bd1201735c913f538c2a698579cde5086a6835be4c6fd4304986a252ca1bc 130234 dfcgen-gtk_0.2-1_i386.deb
+Files: 
+ f346b9e6dbb3cbb52251a87cf4d22766 785 contrib/electronics extra dfcgen-gtk_0.2-1.dsc
+ 8e248d0a437c95d8c3593f3f72b29a81 366224 contrib/electronics extra dfcgen-gtk_0.2-1.tar.gz
+ 42c7ef9ed04c4a09db1b07d42e0bb991 130234 contrib/electronics extra dfcgen-gtk_0.2-1_i386.deb
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEARECAAYFAk8DNDQACgkQMWJwxVdCHh7m5QCg/h7+BATVi4YdPQZlNTMaYM7p
+XesAoMtyHRkIjQ7N0KLiMrGVatkuzIbS
+=Gbdr
+-----END PGP SIGNATURE-----
