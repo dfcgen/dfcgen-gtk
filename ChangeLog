@@ -1,3 +1,63 @@
+2012-05-19 Ralf Hoppe  <ralf.hoppe@ieee.org>
+
+	* COPYING, README, TODO, aclocal.m4, ChangeLog, dist/debian/changelog:
+	* Makefile.in, config.h.in, configure:
+	* doc/Doxyfile, doc/Makefile.in:
+	* data/Makefile.in, data/filters/Makefile.in:
+	* data/templates/Makefile.in, data/pixmaps/Makefile.in:
+	* po/POTFILES.in, po/de.po, po/de.gmo, po/dfcgen-gtk.pot:
+	* src/Makefile.in, include/Makefile.in:
+	Release of version 0.3 on Ubuntu 10.04 Lucid Lynx.
+
+2012-05-13 Ralf Hoppe  <ralf.hoppe@ieee.org>
+
+	* src/cfgSettings.c, src/filterPrint.c, src/helpDlg.c:
+	* include/filterPrint.h:
+	GTK versions before 2.12 not supported anymore.
+
+	* src/helpDlg.c: Help sub-menu removed, because no help available.
+
+	* src/editDlg.c, src/linFirDesignDlg.c, src/miscDesignDlg.c:
+	* src/responseDlg.c, src/responseWin.c, src/stdIirDesignDlg.c:
+	No use of GtkTooltips, because obsolete since 2.12.
+
+	* src/fileDlg.c:
+	Do not show hidden files in all file dialogs.
+
+	* src/main.c, src/miscDesignDlg.c, src/projectFile.c:
+	Conditional define for path now associated with TEST, not DEBUG.
+
+	* dist/debian/control, dist/debian/copyright:
+	Homepage changed to www.dfcgen.de.
+
+2012-05-05  Ralf Hoppe  <ralf.hoppe@ieee.org>
+
+	* src/filterResponse.c, src/mathPoly.c, src/dialogSupport.c:
+	Doxygen comments corrected.
+
+2012-04-30  Ralf Hoppe  <ralf.hoppe@ieee.org>
+
+	* data/Makefile.am:
+	* data/templates/Makefile.am:
+	* data/templates/export.txt:
+	* data/templates/export.m:
+	* data/templates/export.c:
+	* src/Makefile.am, src/dfcProject.c, src/projectFile.c:
+	* src/fileDlg.c, src/mainDlg.c, include/dfcProject.h:
+	* po/de.po:
+	Export of coefficients, using template files, implemented.
+
+	* .cproject, .project: Transition to Eclipse.
+
+2012-03-20  Ralf Hoppe  <ralf.hoppe@ieee.org>
+
+	* configure.ac, Makefile.am, data/Makefile.am, src/main.c:
+	- Pixmaps moved to sub-directory data/pixmaps.
+	- Package homepage changed to www.dfcgen.de.
+
+	* configure.ac, include/doxygen.h:
+	New option --enable-debug for configure script, inclusive CFLAGS.
+
 2012-01-03  Ralf Hoppe  <ralf.hoppe@ieee.org>
 
 	* dist/debian/postinst, dist/debian/prerm:
@@ -164,4 +224,3 @@
 	* po/insert-header.sin: New file, from gettext-0.17.
 	* po/quot.sed: New file, from gettext-0.17.
 	* po/remove-potcdate.sin: New file, from gettext-0.17.
-

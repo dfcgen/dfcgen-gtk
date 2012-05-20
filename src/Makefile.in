@@ -87,6 +87,7 @@ AWK = @AWK@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
+COPYRIGHT_HOLDER = @COPYRIGHT_HOLDER@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CYGPATH_W = @CYGPATH_W@
@@ -125,6 +126,7 @@ MSGFMT_015 = @MSGFMT_015@
 MSGMERGE = @MSGMERGE@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
+PACKAGE_AUTHOR = @PACKAGE_AUTHOR@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_CFLAGS = @PACKAGE_CFLAGS@
 PACKAGE_LIBS = @PACKAGE_LIBS@
@@ -196,18 +198,15 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_CPPFLAGS = \
 	-DPACKAGE_LOCALE_DIR=\""$(localedir)"\" \
-	-DPACKAGE_DATA_DIR=\""$(datadir)"\" \
+	-DPACKAGE_FILTERS_DIR=\""$(pkgdatadir)/filters"\" \
+	-DPACKAGE_TEMPLATES_DIR=\""$(pkgdatadir)/templates"\" \
 	-DPACKAGE_PIXMAPS_DIR=\""$(pkgdatadir)/pixmaps"\" \
-	-I../include \
+	-I"$(top_srcdir)/include" \
 	@PACKAGE_CFLAGS@
 
 
 # Additional CFLAGS
-AM_CFLAGS = \
-	 -Wall \
-	 -Wuninitialized \
-	 -Wmissing-prototypes
-
+AM_CFLAGS = 
 
 # Use PACKAGE_LIBS from PKG_CHECK_MODULES (pkg-config)
 AM_LDFLAGS = @PACKAGE_LIBS@

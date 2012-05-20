@@ -35,3 +35,5 @@ What is dfcgen-gtk?
     * Printing of coefficients and response plots
 
     * Save and load of the defined filter
+
+    * Export of coefficients to plain text, "C" language and MATLAB scripts

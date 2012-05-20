@@ -20,8 +20,7 @@
     Allow user break
 
   - Feature: Predefined filters
-    Improve description (and translation) of predefined filters located in
-    PACKAGE_DATA_DIR
+    Improve description (and translation) of predefined filters
 
   - Feature: GTK-Help
     Implement GTK help, based on DocBook 5
@@ -67,8 +66,6 @@
   - Function: linFirDesignDlgApply
     Share code with IIR design dialog
 
-  - Environment: Transition from Anjuta to Eclipse CDT
-
 
 * Source style/comments
 
@@ -96,12 +93,6 @@
   - Feature: New filter class ARBITRARY
     Support of arbitrary frequency specification by Parks-McClellan algorithm
 
-  - Feature: Export
-    More export formats for filter coefficients and plots
-
   - Feature: Response Plot
     Display coordinate when mouse moves over graph area
-
-  - Feature: Command line interface (CLI)
-    Implementation of command line options
 

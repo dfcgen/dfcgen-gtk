@@ -1,3 +1,12 @@
+dfcgen-gtk (0.3-1) unstable; urgency=medium
+
+  * Export of coefficients to MATLAB, C and plain text
+  * Predefined filters moved into a subdirectory
+  * Bugfixes
+
+
+ -- Ralf Hoppe <ralf.hoppe@ieee.org>  Sat, 01 Jan 2012 18:26:00 +0200
+
 dfcgen-gtk (0.2-1) unstable; urgency=medium
 
   * Migration to Ubuntu 10.04 (Lucid Lynx) respective Debian 5.0
