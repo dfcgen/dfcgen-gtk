@@ -3,7 +3,7 @@
  * \file
  *           Mathematical functions.
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
  *
  ******************************************************************************/
@@ -54,7 +54,7 @@ MATH_NORMDBL mathNorm10(double val)
     MATH_NORMDBL norm;
 
     norm.exponent = trunc(log10(fabs(val)));
-    norm.mantissa = val / pow10(norm.exponent);
+    norm.mantissa = val / POW10(norm.exponent);
 
     return norm;
 } /* mathNorm10() */
@@ -69,7 +69,7 @@ MATH_NORMDBL mathNorm10(double val)
  ******************************************************************************/
 double mathDenorm10(MATH_NORMDBL val)
 {
-    return val.mantissa * pow10(val.exponent);
+    return val.mantissa * POW10(val.exponent);
 } /* mathDenorm10() */
 
 
