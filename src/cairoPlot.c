@@ -3,7 +3,7 @@
  * \file
  *           2-dimensional plot on a \e Cairo graphic context.
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
  *
  ******************************************************************************/
@@ -12,6 +12,7 @@
 /* INCLUDE FILES **************************************************************/
 
 #include "gui.h"            /* includes config.h (include before GNU headers) */
+#include "mathFuncs.h"      /* POW10() */
 #include "mathMisc.h"
 #include "mathFuncs.h"
 #include "cairoPlot.h"
@@ -1435,7 +1436,7 @@ double cairoPlotCoordinate (PLOT_AXIS *pAxis, int start, int stop, int coordinat
 
     if (pAxis->flags & PLOT_AXIS_FLAG_LOG)                      /* log. axis? */
     {
-        return pAxis->start * pow10(CLAMP (offset, 0.0,
+        return pAxis->start * POW10(CLAMP (offset, 0.0,
                                            log10 (pAxis->stop / pAxis->start)));
     } /* if */
 
