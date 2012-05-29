@@ -35,7 +35,8 @@ AM_INIT_AUTOMAKE([-Wall foreign])
 AM_MAINTAINER_MODE
 
 
-CFLAGS_LANG="-std=c99"
+CFLAGS_LANG="-std=c99 -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
+
 CFLAGS_WARN="-Wall -Wundef -Wshadow \
 -Wdeclaration-after-statement \
 -Wpointer-arith -Wcast-align \
@@ -135,12 +136,12 @@ AC_SUBST([PACKAGE_CFLAGS])
 AC_SUBST([PACKAGE_LIBS])
 
 
-dnl Checks for libraries
-AC_CHECK_LIB(m,main)
-AC_CHECK_LIB(gtk-x11-2.0,main)
-AC_CHECK_LIB(glib-2.0,g_main_loop_run)
-AC_CHECK_LIB(gslcblas,main)
-AC_CHECK_LIB(gsl,main)
+dnl Check for libraries required by GSL, finally going into LIBS (see also
+dnl http://www.gnu.org/software/gsl/manual/html_node/Autoconf-Macros.html)
+dnl Note: Commented out because all work done by PKG_CHECK_MODULES()
+dnl AC_CHECK_LIB([m],[main])
+dnl AC_CHECK_LIB([gslcblas],[main])
+dnl AC_CHECK_LIB([gsl],[main])
 
 
 dnl Checks for header files
