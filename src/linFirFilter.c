@@ -3,7 +3,7 @@
  * \file
  *           Linear FIR filter coefficients generator.
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe
+ * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe
  * \version  $Id$
  *
  ******************************************************************************/
@@ -12,7 +12,7 @@
 /* INCLUDE FILES **************************************************************/
 
 #include "mathMisc.h"       /* includes config.h (include before GNU headers) */
-#include "mathFuncs.h"
+#include "mathFuncs.h"      /* HYPOT() */
 #include "linFirFilter.h"
 #include "filterSupport.h"
 #include "filterResponse.h"
@@ -457,7 +457,7 @@ static double ftrBandpass (FLTCOEFF *pFilter, double fc, double bw, BOOL geometr
 
     if (geometric)
     {
-        fc = hypot (fc, 0.5 * bw);
+        fc = HYPOT (fc, 0.5 * bw);
     } /* if */
 
     factor = 2 * M_PI * fc / pFilter->f0;
