@@ -3,7 +3,7 @@
  * \file
  *           Design dialogs management.
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
  *
  ******************************************************************************/
@@ -172,7 +172,11 @@ void designDlgBoxRealize(GtkWidget *widget, gpointer user_data)
                                    gettext (dlgDesc[index].name));
     } /* for */
 
-    if (GTK_WIDGET_TOPLEVEL(topWidget))
+#if GTK_CHECK_VERSION (2, 18, 0)
+    if (gtk_widget_is_toplevel (topWidget))                /* new since 2.18 */
+#else
+    if (GTK_WIDGET_TOPLEVEL (topWidget))            /* deprecated since 2.20 */
+#endif
     {
         index = dfcPrjGetDesign(NULL);
 
