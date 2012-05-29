@@ -3,7 +3,7 @@
  * \file
  *           Mathematical functions.
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011-2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
  *
  ******************************************************************************/
@@ -65,17 +65,22 @@ typedef struct
 
 
 
-#ifndef HAVE_HYPOT
-#define hypot(arg) gsl_hypot(arg)
+#ifdef HAVE_HYPOT
+#define HYPOT(x, y) hypot ((x), (y))
+#else
+#define HYPOT(x, y) gsl_hypot ((x), (y))
 #endif
 
-#ifndef HAVE_POW10                                     /* pow10() not exists? */
-#ifdef HAVE_EXP10
-#define pow10(x) exp10(x)        /**< 10 raised to \p x, means \f$y=10^{x}\f$ */
+
+#ifdef HAVE_POW10                                         /* pow10() exists? */
+#define POW10(x) pow10(x)
 #else
-#define pow10(x) pow(10, (x))          /* fallback to (slow) generic function */
-#endif
-#endif
+#ifdef HAVE_EXP10
+#define POW10(x) exp10(x)       /**< 10 raised to \p x, means \f$y=10^{x}\f$ */
+#else
+#define POW10(x) pow(10, (x))         /* fallback to (slow) generic function */
+#endif /* HAVE_EXP10 */
+#endif /* HAVE_POW10 */
 
 
 #ifndef HAVE_TRUNC
