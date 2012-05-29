@@ -17,14 +17,17 @@ AM_CPPFLAGS = \
 
 
 # Additional CFLAGS
-AM_CFLAGS =
+# AM_CFLAGS =
 
-
-# Use PACKAGE_LIBS from PKG_CHECK_MODULES (pkg-config)
-AM_LDFLAGS = @PACKAGE_LIBS@
+# Additional LDFLAGS
+# AM_LDFLAGS =
 
 
 bin_PROGRAMS = dfcgen-gtk
+
+# Use PACKAGE_LIBS from PKG_CHECK_MODULES (pkg-config)
+dfcgen_gtk_LDADD = @PACKAGE_LIBS@
+
 
 dfcgen_gtk_SOURCES = \
 	support.c \
