@@ -150,7 +150,7 @@ int dfcPrjExport (char *filename)
         {
             if (!g_str_has_suffix (filename, ".c"))
             {
-                return ENOTSUP;                 /* unsupported export format */
+                return EINVAL; /* unsupported export format (ENOTSUP not available on WIN32) */
             } /* if */
 
             type = PRJFILE_EXPORT_CLANG;
