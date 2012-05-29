@@ -3,7 +3,7 @@
  * \file
  *           Standard IIR filter coefficients generator.
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe
+ * \author   Copyright (C) 2006, 2011-2012 Ralf Hoppe
  * \version  $Id$
  *
  ******************************************************************************/
@@ -11,7 +11,8 @@
 
 /* INCLUDE FILES **************************************************************/
 
-#include "mathMisc.h"       /* includes config.h (include before GNU headers) */
+#include "mathFuncs.h"      /* HYPOT(), POW10() */
+#include "mathMisc.h"       /* mathTryDiv(), mathDoubleSwap() */
 #include "stdIirFilter.h"
 #include "filterSupport.h"
 
@@ -142,7 +143,7 @@ static double bilinearInv(double fz, double f0)
  ******************************************************************************/
 static double drosselung(double att)
 {
-    return sqrt (pow10 (0.1 * att) - 1.0);
+    return sqrt (POW10 (0.1 * att) - 1.0);
 } /* drosselung() */
 
 
@@ -453,7 +454,7 @@ static double approxChebyStopband (double minAtt, FLTCOEFF *pFilter)
     } /* if */
     else                                                       /* even degree */
     {
-        pFilter->factor = 1.0 / hypot (1.0, maxAmpl);
+        pFilter->factor = 1.0 / HYPOT (1.0, maxAmpl);
     } /* else */
 
     for (i = 0; i < degree / 2; i++)
@@ -907,7 +908,7 @@ int stdIirFilterGen (STDIIR_DESIGN *pDesign, FLTCOEFF *pFilter)
              */
             if (pDesign->ftr.flags & FTRDESIGN_FLAG_CENTER_GEOMETRIC)
             {
-                fc = hypot(pDesign->ftr.fc, 0.5 * pDesign->ftr.bw);
+                fc = HYPOT (pDesign->ftr.fc, 0.5 * pDesign->ftr.bw);
             } /* if */
             else
             {
