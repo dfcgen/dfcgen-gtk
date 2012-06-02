@@ -13,7 +13,14 @@ dnl       Autoconf is 2.65 (AC_USE_SYSTEM_EXTENSIONS was introduced in v2.60).
 
 AC_PREREQ(2.65)
 
-AC_INIT([dfcgen-gtk],[0.3],[ralf.hoppe@ieee.org])
+dnl AC_INIT() defines: PACKAGE_NAME, PACKAGE_TARNAME, PACKAGE_VERSION,
+dnl                    PACKAGE_STRING, PACKAGE_BUGREPORT, PACKAGE_URL
+ 
+AC_INIT([Digital Filter Coefficients Generator (GTK+)], [0.4],
+        [ralf.hoppe@ieee.org],
+        [dfcgen-gtk],
+        [http://www.dfcgen.de])
+
 AC_CONFIG_HEADERS([config.h])
 
 AC_CONFIG_AUX_DIR([build-aux])
@@ -35,7 +42,7 @@ AM_INIT_AUTOMAKE([-Wall foreign])
 AM_MAINTAINER_MODE
 
 
-CFLAGS_LANG="-std=c99 -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
+CFLAGS_LANG="-std=c99"
 
 CFLAGS_WARN="-Wall -Wundef -Wshadow \
 -Wdeclaration-after-statement \
@@ -43,16 +50,13 @@ CFLAGS_WARN="-Wall -Wundef -Wshadow \
 -Wmissing-prototypes -Wmissing-declarations \
 -Wredundant-decls"
 
-# The most conservative approach is to use the i568 (pentium) architecture
-# specification. This architecture is compatible with both CPU vendors, Intel
-# and AMD (see the GCC manual for other alternatives).
-CFLAGS_MACHINE="-march=i586"
 
 # -g  => include debug info
 # -pg => include code for gprof (GNU profiler)
 # -O0 => no optimization
-CFLAGS_DEBUG="-g -pg -O0 -fstack-protector-all -UNDEBUG"
-# CFLAGS_DEBUG="-O3 -funroll-loops -fstack-protector-all -UNDEBUG"
+CFLAGS_DEBUG="-g -pg -O0 -fstack-protector-all -UNDEBUG \
+              -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
+
 CFLAGS_NDEBUG="-O3 -funroll-loops -DNDEBUG -DG_DISABLE_ASSERT"
 
 
@@ -61,7 +65,7 @@ dnl Set CFLAGS before calling AC_PROG_CC, else default values are set. For
 dnl target specific flags use AM_CFLAGS in Makefile.am. Notice that CFLAGS
 dnl overwrites AM_CFLAGS (caused by order of evaluation in Makefile.am), so
 dnl use AM_CFLAGS only to specify additional flags.
-CFLAGS="$CFLAGS $CFLAGS_MACHINE $CFLAGS_LANG $CFLAGS_WARN"
+CFLAGS="$CFLAGS $CFLAGS_LANG $CFLAGS_WARN"
 
 AC_MSG_CHECKING(whether to enable debugging)
 AC_ARG_ENABLE([debug],
@@ -83,16 +87,27 @@ AC_ARG_ENABLE([debug],
               ])
 
 
-dnl Because Anjuta does not understand the third and fourth parameter of
-dnl AC_INIT, the package URL is declared this way.
-AC_DEFINE(PACKAGE_URL, ["http://www.dfcgen.de"], [package homepage])
 
-dnl Additional Substitutions and Defines
+dnl More substitutions on AC_OUPUT() into Makefile(s)
 AC_SUBST(PACKAGE_AUTHOR, ["Ralf Hoppe"])
 AC_SUBST(COPYRIGHT_HOLDER, ["Copyright (C) 2006, 2011-2012 $PACKAGE_AUTHOR"])
+
+AC_SUBST(PACKAGE_PIXMAPS_DIR, [pixmaps])
+AC_SUBST(PACKAGE_FILTERS_DIR, [filters])
+AC_SUBST(PACKAGE_TEMPLATES_DIR, [templates])
+
+dnl Additional defines in config.h
 AC_DEFINE_UNQUOTED(PACKAGE_AUTHOR, ["$PACKAGE_AUTHOR"], [package author])
 AC_DEFINE_UNQUOTED(PACKAGE_COPYRIGHT, ["$COPYRIGHT_HOLDER"], [copyright holder])
 AC_DEFINE(PACKAGE_ICON, ["dfcgen.png"], [package icon])
+
+AC_DEFINE(PACKAGE_PIXMAPS_DIR, ["pixmaps"],
+          [Name of pixmaps sub-directory in PACKAGE_DATA_DIR.])
+AC_DEFINE(PACKAGE_FILTERS_DIR, ["filters"],
+          [Name of filters sub-directory in PACKAGE_DATA_DIR.])
+AC_DEFINE(PACKAGE_TEMPLATES_DIR, ["templates"],
+          [Name of templates sub-directory in PACKAGE_DATA_DIR.])
+
 
 
 dnl Checks for programs (gcc)
@@ -112,7 +127,7 @@ dnl
 dnl Create a GETTEXT_PACKAGE make variable and define (config.h) with the same
 dnl name as the package (see AC_INIT for package name declaration). The define
 dnl is used in main.c for gettext domain binding.
-GETTEXT_PACKAGE=AC_PACKAGE_NAME
+GETTEXT_PACKAGE=AC_PACKAGE_TARNAME
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [GETTEXT package name])
 
@@ -138,6 +153,7 @@ AC_SUBST([PACKAGE_LIBS])
 
 dnl Check for libraries required by GSL, finally going into LIBS (see also
 dnl http://www.gnu.org/software/gsl/manual/html_node/Autoconf-Macros.html)
+dnl
 dnl Note: Commented out because all work done by PKG_CHECK_MODULES()
 dnl AC_CHECK_LIB([m],[main])
 dnl AC_CHECK_LIB([gslcblas],[main])
