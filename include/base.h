@@ -44,24 +44,6 @@ typedef int BOOL;          /**< Boolean data type (TRUE, FALSE are from gLib) */
 /* GLOBAL MACRO DEFINITIONS ***************************************************/
 
 
-/* MACRO **********************************************************************/
-/** Frees the memory pointed to by \p p. If \p p is NULL it simply returns.
- *
- *  \param p            Pointer to allocated memory.
- *
- ******************************************************************************/
-#define FREE(p)                 g_free (p)
-
-
-/* MACRO **********************************************************************/
-/** Allocates \p n bytes of memory. If \p n is 0 it returns NULL.
- *  \param n:           The number of bytes to allocate.
- *
- *  \return             A pointer to the allocated memory.
- ******************************************************************************/
-#define MALLOC(n)               g_malloc (n)
-
-
 #ifdef __GNUC__
 #define ATTRIBUTE(attr)   __attribute__ ((attr))
 #else

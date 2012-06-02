@@ -1,7 +1,7 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file
- *           \e dfcgen configuration settings.
+ * \file     cfgSettings.c
+ * \brief    \e dfcgen configuration settings.
  *
  * \note     All double values written to the configuration file are formated
  *           in the "C" locale for LC_NUMERIC.
@@ -252,12 +252,12 @@ static void cfgReadUnit (GKeyFile *keyFile, const gchar *group, const gchar *key
                 pUnit->name = units[i].name;
                 pUnit->multiplier = units[i].multiplier;
 
-                FREE (unitName);
+                g_free (unitName);
                 return;
             } /* if */
         } /* for */
 
-        FREE (unitName);
+        g_free (unitName);
     } /* if */
 } /* cfgReadUnit() */
 
@@ -467,7 +467,7 @@ void cfgCacheSettings (GtkWidget *widget)
     } /* if */
 
     g_key_file_free (keyFile);
-    FREE (name);
+    g_free (name);
 
 } /* cfgCacheSettings() */
 
@@ -542,7 +542,7 @@ int cfgFlushSettings ()
 
         for (colorIdx = 0; colorIdx < PLOT_COLOR_SIZE; colorIdx++)
         {
-            FREE ((gpointer) colorStr[colorIdx]);
+            g_free ((gpointer) colorStr[colorIdx]);
         } /* for */
 
 

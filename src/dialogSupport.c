@@ -1,7 +1,7 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
  * \file     dialogSupport.c
- *           Dialog helper functions.
+ * \brief    Dialog helper functions.
  *
  * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
@@ -106,7 +106,7 @@ void dlgError (GtkWidget* topWidget, char* format, ...)
     gtk_dialog_run (GTK_DIALOG (dialog));
     gtk_widget_destroy (dialog);
     va_end(args);
-    FREE (msg);
+    g_free (msg);
 } /* dlgError() */
 
 
@@ -148,7 +148,7 @@ void dlgErrorFile (GtkWidget* topWidget, char* format, char *filename, GError *e
     gtk_dialog_run (GTK_DIALOG (dialog));
     gtk_widget_destroy (dialog);
 
-    FREE (utf8name);
+    g_free (utf8name);
 } /* dlgErrorFile() */
 
 

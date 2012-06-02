@@ -1,7 +1,7 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file
- *           Response settings/properties dialog.
+ * \file     responseDlg.c
+ * \brief    Response settings/properties dialog.
  *
  * \author   Copyright (C) 2006, 2011-2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
@@ -310,7 +310,7 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     axisName = g_strdup_printf ("<b>%s '%s'</b>", _("Axis"),
                                 gettext (pDiag->x.name));
     label = gtk_label_new (axisName);
-    FREE (axisName);
+    g_free (axisName);
     gtk_frame_set_label_widget (GTK_FRAME (frame), label);
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
 
@@ -418,7 +418,7 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     axisName = g_strdup_printf ("<b>%s '%s'</b>", _("Axis"),
                                 gettext (pDiag->y.name));
     label = gtk_label_new (axisName);
-    FREE (axisName);
+    g_free (axisName);
     gtk_frame_set_label_widget (GTK_FRAME (frame), label);
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
 

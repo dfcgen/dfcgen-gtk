@@ -1,7 +1,7 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
  * \file     fileDlg.c
- *           File menu dialogs.
+ * \brief    File menu dialogs.
  *
  * \author   Copyright (C) 2006, 2011-2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
@@ -100,13 +100,13 @@ static void previewUpdate (GtkFileChooser *chooser, gpointer labelWidget)
                 gtk_label_set_markup (GTK_LABEL (labelWidget), buf);
 
                 prjFileFree (&info);                    /* free project info */
-                FREE (buf);
+                g_free (buf);
 
                 return;
             } /* if */
         } /* if */
 
-        FREE (fname);
+        g_free (fname);
     } /* if */
 
 
@@ -145,7 +145,7 @@ static GtkWidget* createFileDialog (const gchar *title, GtkWindow *parent,
     filter = gtk_file_filter_new ();
     str = g_strdup_printf (_("Project files (*%s)"), PRJFILE_NAME_SUFFIX);
     gtk_file_filter_set_name (filter, str);
-    FREE (str);
+    g_free (str);
     gtk_file_filter_add_pattern (filter, "*" PRJFILE_NAME_SUFFIX);
     gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
 
@@ -181,7 +181,7 @@ void fileDlgNewActivate (GtkMenuItem* menuitem, gpointer user_data)
 {
     if (dfcPrjFileName != NULL)
     {
-        FREE (dfcPrjFileName);
+        g_free (dfcPrjFileName);
         dfcPrjFileName = NULL;
     } /* if */
 
@@ -222,7 +222,7 @@ void fileDlgOpenActivate (GtkWidget* srcWidget, gpointer user_data)
         {
             if (dfcPrjFileName != NULL)
             {
-                FREE (dfcPrjFileName);
+                g_free (dfcPrjFileName);
             } /* if */
 
             dfcPrjFileName = fname; /* store as current name (for next save) */
@@ -232,7 +232,7 @@ void fileDlgOpenActivate (GtkWidget* srcWidget, gpointer user_data)
         {
             dlgErrorFile (topWidget, _("Error loading project file '%s'."), fname, err),
             g_error_free (err);
-            FREE (fname);
+            g_free (fname);
         } /* if */
     } /* if */
 
@@ -303,7 +303,7 @@ void fileDlgSaveAsActivate (GtkWidget* srcWidget, gpointer user_data)
         if (fname != NULL)
         {
             gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (dialog), fname);
-            FREE (fname);
+            g_free (fname);
         } /* if */
     } /* else */
 
@@ -321,7 +321,7 @@ void fileDlgSaveAsActivate (GtkWidget* srcWidget, gpointer user_data)
         {
             if (dfcPrjFileName != NULL)
             {
-                FREE (dfcPrjFileName);
+                g_free (dfcPrjFileName);
             } /* if */
 
             dfcPrjFileName = fname;        /* store as current name (for next save) */
@@ -329,7 +329,7 @@ void fileDlgSaveAsActivate (GtkWidget* srcWidget, gpointer user_data)
         else
         {
             dlgErrorFile (topWidget, _("Error saving project file '%s'."), fname, NULL);
-            FREE (fname);
+            g_free (fname);
         } /* else */
     } /* if */
 
@@ -405,7 +405,7 @@ void fileDlgExportActivate (GtkWidget* srcWidget, gpointer user_data)
         if (fname != NULL)
         {
             gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (dialog), fname);
-            FREE (fname);
+            g_free (fname);
         } /* if */
     } /* if */
 
@@ -423,7 +423,7 @@ void fileDlgExportActivate (GtkWidget* srcWidget, gpointer user_data)
         {
             if (dfcExportFileName != NULL)
             {
-                FREE (dfcExportFileName);
+                g_free (dfcExportFileName);
             } /* if */
 
             dfcExportFileName = fname;   /* store as current (for next save) */
@@ -433,7 +433,7 @@ void fileDlgExportActivate (GtkWidget* srcWidget, gpointer user_data)
             dlgErrorFile (gtk_widget_get_toplevel (srcWidget),
                           _("Error exporting to file '%s'."),
                           fname, NULL);
-            FREE (fname);
+            g_free (fname);
         } /* else */
     } /* if */
 

@@ -1,7 +1,7 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
  * \file     mainDlg.c
- *           Main dialog elements (right, bottom of window) handling.
+ * \brief    Main dialog elements (right, bottom of window) handling.
  * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe
  *
  * \version  $Id$
@@ -287,7 +287,7 @@ static BOOL mainDlgCoeffEdit (GtkWidget *widget, FLTCOEFF *pFilter,
 
     BOOL ret = dlgPopupDouble (_("Change coefficient"),
                                _("_New"), intro, poly->coeff + index);
-    FREE (intro);
+    g_free (intro);
 
     return ret;
 } /* mainDlgCoeffEdit() */
@@ -1129,7 +1129,7 @@ void mainDlgUpdatePrjInfo ()
     {
         if (pInfo->author == NULL)
         {
-            msg = g_strdup ("");      /* prepare unconditional FREE() later */
+            msg = g_strdup ("");      /* prepare unconditional g_free() later */
         } /* if */
         else
         {
@@ -1150,7 +1150,7 @@ void mainDlgUpdatePrjInfo ()
 
     prjInfoMsgId = gtk_statusbar_push (GTK_STATUSBAR (statusbar),
                                        prjInfoContextId, msg);
-    FREE (msg);
+    g_free (msg);
 } /* mainDlgUpdatePrjInfo() */
 
 
@@ -1246,8 +1246,8 @@ void mainDlgUpdateAll (const char* filename)
 
         tmp = g_strdup_printf ("%s: %s", PACKAGE, utf8name);
         gtk_window_set_title (GTK_WINDOW (topWidget), tmp);
-        FREE (utf8name);
-        FREE (tmp);
+        g_free (utf8name);
+        g_free (tmp);
 
         return;
     } /* if */

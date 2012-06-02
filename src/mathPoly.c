@@ -1,9 +1,9 @@
 /******************************************************************************/
 /**
  * \file     mathPoly.c
- *           Polynomial functions.
+ * \brief    Polynomial functions.
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe
+ * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe
  * \version  $Id$
  *
  ******************************************************************************/
@@ -90,7 +90,7 @@ static double chebyT(double degree, double x)
  ******************************************************************************/
 int mathPolyMallocCoeffs (MATHPOLY *poly)
 {
-    poly->coeff = MALLOC ((1 + poly->degree) * sizeof(poly->coeff[0]));
+    poly->coeff = g_malloc ((1 + poly->degree) * sizeof(poly->coeff[0]));
 
     if (poly->coeff == NULL)
     {
@@ -110,7 +110,7 @@ int mathPolyMallocCoeffs (MATHPOLY *poly)
  ******************************************************************************/
 int mathPolyMallocRoots (MATHPOLY *poly)
 {
-    poly->root = MALLOC (GSL_MAX_INT (1, poly->degree) * sizeof(poly->root[0]));
+    poly->root = g_malloc (GSL_MAX_INT (1, poly->degree) * sizeof(poly->root[0]));
 
     if (poly->root == NULL)
     {
@@ -142,7 +142,7 @@ int mathPolyMalloc (MATHPOLY *poly)
 
     if (ret != 0)
     {
-        FREE (poly->coeff);
+        g_free (poly->coeff);
         poly->coeff = NULL;
     } /* if */
 
@@ -161,13 +161,13 @@ void mathPolyFree(MATHPOLY *poly)
 {
     if (poly->coeff != NULL)
     {
-        FREE (poly->coeff);
+        g_free (poly->coeff);
         poly->coeff = NULL;
     } /* if */
 
     if (poly->root != NULL)
     {
-        FREE (poly->root);
+        g_free (poly->root);
         poly->root = NULL;
     } /* if */
 } /* mathPolyFree() */
@@ -230,7 +230,7 @@ int mathPolyBessel (int degree, double coeff[])
     int ord, i;
     double coeffOld;
 
-    double *polyOld_2 = MALLOC ((1 + degree) * sizeof(coeff[0]));
+    double *polyOld_2 = g_malloc ((1 + degree) * sizeof(coeff[0]));
 
     coeff[0] = 1.0;                        /* B[0] = 1 */
 
@@ -264,7 +264,7 @@ int mathPolyBessel (int degree, double coeff[])
         } /* for */
     } /* for */
 
-    FREE (polyOld_2);
+    g_free (polyOld_2);
 
     return 0;
 } /* mathPolyBessel() */
@@ -473,7 +473,7 @@ int mathPolyRoots2Coeffs(MATHPOLY *poly, double factor)
     int i, k;
     gsl_complex result;
 
-    gsl_complex *cplxPoly = MALLOC ((1 + poly->degree) * sizeof(poly->root[0]));
+    gsl_complex *cplxPoly = g_malloc ((1 + poly->degree) * sizeof(poly->root[0]));
 
     if (cplxPoly == NULL)
     {

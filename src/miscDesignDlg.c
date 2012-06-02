@@ -1,7 +1,7 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file
- *           Miscellaneous FIR/IIR design dialogs.
+ * \file     miscDesignDlg.c
+ * \brief    Miscellaneous FIR/IIR design dialogs.
  *
  * \note     Includes raw filters (filters without a design).
  *
@@ -520,12 +520,12 @@ void miscDesignDlgDestroy (GtkWidget *topWidget)
         for (i = 0; i < rawFilterList->len; i++)
         {
             raw = g_array_index (rawFilterList, MISCDLG_FILTER_DESC, i);
-            FREE (raw.fname);
-            FREE (raw.title);                            /* never can be NULL */
+            g_free (raw.fname);
+            g_free (raw.title);                            /* never can be NULL */
 
             if (raw.desc != NULL)
             {
-                FREE (raw.desc);
+                g_free (raw.desc);
             } /* if */
         } /* for */
 

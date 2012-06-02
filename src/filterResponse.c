@@ -1,7 +1,7 @@
 /******************************************************************************/
 /**
- * \file
- *           Filter response functions.
+ * \file     filterResponse.c
+ * \brief    Filter response functions.
  *
  * \author   Copyright (C) 2006, 2011-2012 Ralf Hoppe <ralf.hoppe@ieee.org> 
  * \version  $Id$
@@ -484,7 +484,7 @@ FLTRESP_TIME_WORKSPACE* filterResponseTimeNew (double start, double stop,
         return NULL;
     } /* if */
 
-    pWorkspace = MALLOC(sizeof(FLTRESP_TIME_WORKSPACE));
+    pWorkspace = g_malloc (sizeof (FLTRESP_TIME_WORKSPACE));
 
     if (pWorkspace == NULL)
     {
@@ -492,21 +492,21 @@ FLTRESP_TIME_WORKSPACE* filterResponseTimeNew (double start, double stop,
     } /* if */
 
     pWorkspace->pInBuf =
-        MALLOC ((1 + pFilter->num.degree) * sizeof(pFilter->num.coeff[0]));
+        g_malloc ((1 + pFilter->num.degree) * sizeof(pFilter->num.coeff[0]));
 
     if (pWorkspace->pInBuf == NULL)
     {
-        FREE (pWorkspace);
+        g_free (pWorkspace);
         return NULL;
     } /* if */
 
     pWorkspace->pOutBuf =
-        MALLOC ((1 + pFilter->den.degree) * sizeof(pFilter->den.coeff[0]));
+        g_malloc ((1 + pFilter->den.degree) * sizeof(pFilter->den.coeff[0]));
 
     if (pWorkspace->pOutBuf == NULL)
     {
-        FREE (pWorkspace->pInBuf);
-        FREE (pWorkspace);
+        g_free (pWorkspace->pInBuf);
+        g_free (pWorkspace);
         return NULL;
     } /* if */
 
@@ -577,9 +577,9 @@ double filterResponseTimeNext (FLTRESP_TIME_WORKSPACE *pWorkspace, double *pTime
  ******************************************************************************/
 void filterResponseTimeFree (FLTRESP_TIME_WORKSPACE *pWorkspace)
 {
-    FREE(pWorkspace->pInBuf);
-    FREE(pWorkspace->pOutBuf);
-    FREE(pWorkspace);
+    g_free(pWorkspace->pInBuf);
+    g_free(pWorkspace->pOutBuf);
+    g_free(pWorkspace);
 
 } /* filterResponseTimeFree() */
 

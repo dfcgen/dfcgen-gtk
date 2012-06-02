@@ -460,7 +460,7 @@ static int tagDegreeHandler (GMarkupParseContext *ctx, PRJF_TAG_DESC *pTag,
 
         if (ret == 0)
         {
-            poly->coeff = MALLOC (((1 + poly->degree) * sizeof(*poly->coeff)));
+            poly->coeff = g_malloc (((1 + poly->degree) * sizeof(*poly->coeff)));
             prjTagsDesc[PRJF_IDTAG_COEFF].data = poly->coeff; /* first coefficient */
 
             if (poly->coeff != NULL)
@@ -569,7 +569,7 @@ static int attrStringHandler (GMarkupParseContext *ctx, PRJF_TAG_DESC *pTag,
 
                 if (*str != NULL)                /* (string) tag found again? */
                 {
-                    FREE (*str);
+                    g_free (*str);
                     *str = NULL;              /* allow strdup on tag contents */
                 } /* if */
             } /* if */
@@ -762,7 +762,7 @@ static void prjFileTextHandler (GMarkupParseContext *ctx, const gchar *text,
 
     str = g_strndup (text, len);         /* convert to zero-terminated string */
     ret = prjTagPtr->contentsHandler (ctx, prjTagPtr, data, str);
-    FREE (str);
+    g_free (str);
 
     if (ret == 0)
     {
@@ -989,7 +989,7 @@ static void writeMarkupText (FILE *f, char *lang, char *tag, char *text)
             fprintf (f, "\t<%s>%s</%s>\n", tag, xmltext, tag);
         } /* else */
 
-        FREE (xmltext);                               /* free escaped strings */
+        g_free (xmltext);                               /* free escaped strings */
     } /* if */
 } /* writeMarkupText() */
 
@@ -1160,7 +1160,7 @@ static void readProject (const char *filename, unsigned flags, GError **err)
             dfcPrjFree (&tmpPrj);
         } /* if */
 
-        FREE (content);
+        g_free (content);
     } /* if */
 
     g_markup_parse_context_free (ctx);
@@ -1566,19 +1566,19 @@ void prjFileFree (DFCPRJ_INFO *pInfo)
 {
     if (pInfo->author != NULL)
     {
-        FREE (pInfo->author);
+        g_free (pInfo->author);
         pInfo->author = NULL;
     } /* if */
 
     if (pInfo->title != NULL)
     {
-        FREE (pInfo->title);
+        g_free (pInfo->title);
         pInfo->title = NULL;
     } /* if */
 
     if (pInfo->desc != NULL)
     {
-        FREE (pInfo->desc);
+        g_free (pInfo->desc);
         pInfo->desc = NULL;
     } /* if */
 } /* prjFileFree() */

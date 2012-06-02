@@ -127,7 +127,7 @@ static int filterPrintf (GtkPrintContext *ctx, BOOL doprint,
             gtk_print_context_get_cairo_context (ctx), layout);
     } /* if */
 
-    FREE (text);
+    g_free (text);
     g_object_unref (layout);
 
     return (PANGO_PIXELS (rect.height) + 1); /* some more space */
@@ -171,7 +171,7 @@ static int filterPrintPageHeader (GtkPrintContext *ctx, BOOL doprint, int pgno)
     pango_layout_get_extents (layout, NULL, &rect);
     lheight = PANGO_PIXELS (rect.height) + 1;     /* some more space per line */
     yoffset = 2 * lheight;
-    FREE (text);
+    g_free (text);
     g_object_unref (layout);
     pango_layout_set_alignment (layout, PANGO_ALIGN_LEFT);
 

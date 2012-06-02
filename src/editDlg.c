@@ -1,7 +1,7 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file
- *           \e Edit dialog(s).
+ * \file     editDlg.c
+ * \brief    \e Edit dialog(s).
  *
  * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
@@ -438,7 +438,7 @@ static char *dupInfoStr (const char* info)
 
     if (g_utf8_strlen (newinfo, -1) == 0)
     {
-        FREE (newinfo);
+        g_free (newinfo);
         newinfo = NULL;
     } /* if */
 
@@ -540,7 +540,7 @@ void editDlgInfoActivate (GtkWidget* widget, gpointer user_data)
                 tmp = gtk_text_buffer_get_text (buffer, &start, &stop, FALSE);
 
                 info.desc = dupInfoStr (tmp);              /* set description */
-                FREE (tmp);
+                g_free (tmp);
                 dfcPrjSetInfo (&info);                            /* save all */
                 mainDlgUpdatePrjInfo ();
                 break;

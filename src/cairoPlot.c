@@ -1,7 +1,7 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file
- *           2-dimensional plot on a \e Cairo graphic context.
+ * \file     cairoPlot.c
+ * \brief    2-dimensional plot on a \e Cairo graphic context.
  *
  * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
@@ -192,7 +192,7 @@ static int drawErrorMsg (cairo_t* cr, PLOT_DIAG *pDiag, int errcode)
         drawLayout (cr, layout,
                     pDiag->area.x - 10 + (pDiag->area.width - PANGO_PIXELS (rect.width)) / 2,
                     pDiag->area.y - 10 + (pDiag->area.height - PANGO_PIXELS (rect.height)) / 2);
-        FREE (message);
+        g_free (message);
     } /* if */
 
     return errcode;
