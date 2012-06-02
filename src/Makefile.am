@@ -8,10 +8,8 @@
 ##
 
 AM_CPPFLAGS = \
-	-DPACKAGE_LOCALE_DIR=\""$(localedir)"\" \
-	-DPACKAGE_FILTERS_DIR=\""$(pkgdatadir)/filters"\" \
-	-DPACKAGE_TEMPLATES_DIR=\""$(pkgdatadir)/templates"\" \
-	-DPACKAGE_PIXMAPS_DIR=\""$(pkgdatadir)/pixmaps"\" \
+	-DPACKAGE_LOCALE_DIR="\"$(localedir)\"" \
+	-DPACKAGE_DATA_DIR="\"$(pkgdatadir)\"" \
 	-I"$(top_srcdir)/include" \
 	@PACKAGE_CFLAGS@
 
