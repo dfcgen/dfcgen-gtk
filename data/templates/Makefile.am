@@ -7,7 +7,7 @@
 ## Process this file with automake to produce Makefile.in
 ##
 
-templatesdir = $(pkgdatadir)/templates
+templatesdir = $(pkgdatadir)/@PACKAGE_TEMPLATES_DIR@
 
 dist_templates_DATA = \
 	export.txt\

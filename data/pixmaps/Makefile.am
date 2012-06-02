@@ -1,13 +1,13 @@
 ## -*- Makefile -*-
 ##
-## Copyright (c) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+## Copyright (c) 2006, 2011-2012 Ralf Hoppe <ralf.hoppe@ieee.org>
 ##
 ## Version:  $Id$
 ##
 ## Process this file with automake to produce Makefile.in
 ##
 
-pixmapsdir = $(pkgdatadir)/pixmaps
+pixmapsdir = $(pkgdatadir)/@PACKAGE_PIXMAPS_DIR@
 
 dist_pixmaps_DATA = \
 	dfcgen.png\
