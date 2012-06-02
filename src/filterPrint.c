@@ -182,25 +182,34 @@ static int filterPrintPageHeader (GtkPrintContext *ctx, BOOL doprint, int pgno)
         DFCPRJ_INFO* info = dfcPrjGetInfo ();
         FLTCOEFF* pFilter = dfcPrjGetFilter ();
 
-        if (g_utf8_strlen (info->title, -1) > 0)   /* project title defined? */
+        if (info->title != NULL)
         {
-            cairo_move_to (cr, filterPrintCoeffCtx.lmargin, yoffset);
-            yoffset += filterPrintf (ctx, doprint, filterPrintCoeffCtx.maxwidth,
-                                     _("<b>Title: </b>%s"), info->title);
+            if (g_utf8_strlen (info->title, -1) > 0)   /* project title defined? */
+            {
+                cairo_move_to (cr, filterPrintCoeffCtx.lmargin, yoffset);
+                yoffset += filterPrintf (ctx, doprint, filterPrintCoeffCtx.maxwidth,
+                                         _("<b>Title: </b>%s"), info->title);
+            } /* if */
         } /* if */
 
-        if (g_utf8_strlen (info->author, -1) > 0)         /* author defined? */
+        if (info->author != NULL)
         {
-            cairo_move_to (cr, filterPrintCoeffCtx.lmargin, yoffset);
-            yoffset += filterPrintf (ctx, doprint, filterPrintCoeffCtx.maxwidth,
-                                     _("<b>Author: </b>%s"), info->author);
+            if (g_utf8_strlen (info->author, -1) > 0)         /* author defined? */
+            {
+                cairo_move_to (cr, filterPrintCoeffCtx.lmargin, yoffset);
+                yoffset += filterPrintf (ctx, doprint, filterPrintCoeffCtx.maxwidth,
+                                         _("<b>Author: </b>%s"), info->author);
+            } /* if */
         } /* if */
 
-        if (g_utf8_strlen (info->desc, -1) > 0)    /* description available? */
+        if (info->desc != NULL)
         {
-            cairo_move_to (cr, filterPrintCoeffCtx.lmargin, yoffset);
-            yoffset += filterPrintf (ctx, doprint, filterPrintCoeffCtx.maxwidth,
-                                     _("<b>Description: </b>%s"), info->desc);
+            if (g_utf8_strlen (info->desc, -1) > 0)    /* description available? */
+            {
+                cairo_move_to (cr, filterPrintCoeffCtx.lmargin, yoffset);
+                yoffset += filterPrintf (ctx, doprint, filterPrintCoeffCtx.maxwidth,
+                                         _("<b>Description: </b>%s"), info->desc);
+            } /* if */
         } /* if */
 
         if (yoffset > 2 * lheight)              /* any project info printed? */
