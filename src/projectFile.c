@@ -158,12 +158,6 @@ typedef enum
 
 /* LOCAL CONSTANT DEFINITIONS *************************************************/
 
-#ifdef TEST
-#define PRJF_TEMPLATES_DATAPATH ".." G_DIR_SEPARATOR_S "data" G_DIR_SEPARATOR_S "templates" G_DIR_SEPARATOR_S
-#else
-#define PRJF_TEMPLATES_DATAPATH PACKAGE_TEMPLATES_DIR G_DIR_SEPARATOR_S
-#endif
-
 #define PRJF_TEMPLATES_BASENAME "export"       /**< Basename of export files */
 
 #define PRJF_IDTAG_INFO_END     PRJF_IDTAG_DESCRIPTION    /**< End of header */
@@ -1259,9 +1253,9 @@ static gint exportConvertCoeff (char* buffer, gint bufsize, gdouble val)
  ******************************************************************************/
 int prjFileExport (PRJFILE_EXPORT_TYPE type, const char *filename, DFCPRJ_FILTER *pProject)
 {
-    char inbuf[128]; /* FIXME */
-    char outbuf[128];
-    char* templname;                                    /* template filename */
+    gchar inbuf[128]; /* FIXME */
+    gchar outbuf[128];
+    gchar* templname;                                   /* template filename */
     FILE *templfile;                                        /* template file */
     FILE *exportfile;
 
@@ -1269,28 +1263,32 @@ int prjFileExport (PRJFILE_EXPORT_TYPE type, const char *filename, DFCPRJ_FILTER
     int repcnt = 0;      /* repeat counter for a line (index of coefficient) */
     int err = 0;
     BOOL doReadTemplateLines = TRUE;              /* no END OF FILE so far ? */
+    gchar* path = getPackageDataSubdirPath (PACKAGE_TEMPLATES_DIR);
 
     switch (type)
     {
         case PRJFILE_EXPORT_CLANG:
-            templname = PRJF_TEMPLATES_DATAPATH PRJF_TEMPLATES_BASENAME ".c";
+            templname = g_build_filename (path, PRJF_TEMPLATES_BASENAME ".c", NULL);
             break;
 
         case PRJFILE_EXPORT_MATLAB:
-            templname = PRJF_TEMPLATES_DATAPATH PRJF_TEMPLATES_BASENAME ".m";
+            templname = g_build_filename (path, PRJF_TEMPLATES_BASENAME ".m", NULL);
             break;
 
         case PRJFILE_EXPORT_PLAIN:
         default:
-            templname = PRJF_TEMPLATES_DATAPATH PRJF_TEMPLATES_BASENAME ".txt";
+            templname = g_build_filename (path, PRJF_TEMPLATES_BASENAME ".txt", NULL);
             break;
     } /* switch */
 
 
-    templfile = fopen (templname, "r");
+    templfile = fopen (templname, "r");                /* open template file */
 
     if (templfile == NULL)
     {
+        g_free (templname);
+        g_free (path);
+
         DEBUG_LOG ("Cannot read template file '%s'", templname);
         return errno;
     } /* if */
@@ -1301,6 +1299,9 @@ int prjFileExport (PRJFILE_EXPORT_TYPE type, const char *filename, DFCPRJ_FILTER
     if (exportfile == NULL)
     {
         (void) fclose (templfile);
+        g_free (templname);
+        g_free (path);
+
         DEBUG_LOG ("Cannot create export file '%s'", filename);
         return errno;
     } /* if */
@@ -1446,6 +1447,9 @@ int prjFileExport (PRJFILE_EXPORT_TYPE type, const char *filename, DFCPRJ_FILTER
     {
         err = errno;
     } /* if */
+
+    g_free (templname);
+    g_free (path);
 
     return err;
 } /* prjFileExport() */

@@ -308,7 +308,7 @@ static GtkWidget* createInfoDlg (const DFCPRJ_INFO *pInfo)
     gtk_window_set_type_hint (GTK_WINDOW (dialog), GDK_WINDOW_TYPE_HINT_DIALOG);
     gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), TRUE);
 
-    pixbuf = create_pixbuf (PACKAGE_ICON);
+    pixbuf = createPixbufFromFile (PACKAGE_ICON);
 
     if (pixbuf != NULL)
     {

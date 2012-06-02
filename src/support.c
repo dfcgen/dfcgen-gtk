@@ -17,134 +17,136 @@
 #include "base.h"    /* FREE() */
 
 
-GtkWidget*
-lookup_widget                          (GtkWidget       *widget,
-                                        const gchar     *widget_name)
+/* FUNCTION *******************************************************************/
+/** \brief This function returns a widget in a component created by \e Glade.
+ *
+ *         Call it with the toplevel widget in the component, or alternatively
+ *         any widget in the component, and the name of the widget you want
+ *         returned.
+ *
+ *  \param[in] widget   Top level widget pointer.
+ *  \param[in] name     Name of widget to be searched for.
+ *
+ *  \return             Pointer to widget, if found, else NULL.
+ ******************************************************************************/
+GtkWidget* lookup_widget (GtkWidget* widget, const gchar* name)
 {
-  GtkWidget *parent, *found_widget;
+    GtkWidget *parent, *found_widget;
 
-  for (;;)
+    for (;;)
     {
-      if (GTK_IS_MENU (widget))
-        parent = gtk_menu_get_attach_widget (GTK_MENU (widget));
-      else
-        parent = widget->parent;
-      if (!parent)
-        parent = (GtkWidget*) g_object_get_data (G_OBJECT (widget), "GladeParentKey");
-      if (parent == NULL)
-        break;
-      widget = parent;
-    }
+        if (GTK_IS_MENU (widget))
+        {
+            parent = gtk_menu_get_attach_widget (GTK_MENU (widget));
+        } /* if */
+        else
+        {
+            parent = widget->parent;
+        } /* else */
 
-  found_widget = (GtkWidget*) g_object_get_data (G_OBJECT (widget),
-                                                 widget_name);
+        if (parent == NULL)
+        {
+            parent = (GtkWidget*) g_object_get_data (G_OBJECT (widget), "GladeParentKey");
+        } /* if */
+
+        if (parent == NULL)
+        {
+            break;
+        } /* if */
+
+        widget = parent;
+    } /* for */
+
+    found_widget = (GtkWidget*) g_object_get_data (G_OBJECT (widget), name);
+
 #ifdef DEBUG
-  if (!found_widget)
-    g_warning ("Widget not found: %s", widget_name);
+  if (found_widget == NULL)
+  {
+      g_warning ("Widget '%s' not found", name);
+  } /* if */
 #endif
 
   return found_widget;
-}
+} /* lookup_widget() */
 
-static GList *pixmaps_directories = NULL;
 
-/* Use this function to set the directory containing installed pixmaps. */
-void
-add_pixmap_directory                   (const gchar     *directory)
+
+/* FUNCTION *******************************************************************/
+/** \brief This function returns a path to a sub-directory of PACKAGE_DATA_DIR.
+ *
+ *  \param[in] subdir   Name of sub-directory (last path component).
+ *
+ *  \return             A newly allocated string that must be freed with g_free().
+ ******************************************************************************/
+gchar* getPackageDataSubdirPath (const gchar* subdir)
 {
-  pixmaps_directories = g_list_prepend (pixmaps_directories,
-                                        g_strdup (directory));
-}
+    gchar* path;
 
-/* This is an internally used function to find pixmap files. */
-static gchar*
-find_pixmap_file                       (const gchar     *filename)
-{
-  GList *elem;
-
-  /* We step through each of the pixmaps directory to find it. */
-  elem = pixmaps_directories;
-  while (elem)
-    {
-      gchar *pathname = g_strdup_printf ("%s%s%s", (gchar*)elem->data,
-                                         G_DIR_SEPARATOR_S, filename);
-      if (g_file_test (pathname, G_FILE_TEST_EXISTS))
-        return pathname;
-      FREE (pathname);
-      elem = elem->next;
-    }
-  return NULL;
-}
-
-/* This is an internally used function to create pixmaps. */
-GtkWidget*
-create_pixmap                          (GtkWidget       *widget,
-                                        const gchar     *filename)
-{
-  gchar *pathname = NULL;
-  GtkWidget *pixmap;
-
-  if (!filename || !filename[0])
-      return gtk_image_new ();
-
-  pathname = find_pixmap_file (filename);
-
-  if (!pathname)
-    {
-      g_warning (_("Couldn't find pixmap file: %s"), filename);
-      return gtk_image_new ();
-    }
-
-  pixmap = gtk_image_new_from_file (pathname);
-  FREE (pathname);
-  return pixmap;
-}
-
-/* This is an internally used function to create pixmaps. */
-GdkPixbuf*
-create_pixbuf                          (const gchar     *filename)
-{
-  gchar *pathname = NULL;
-  GdkPixbuf *pixbuf;
-  GError *error = NULL;
-
-  if (!filename || !filename[0])
-      return NULL;
-
-  pathname = find_pixmap_file (filename);
-
-  if (!pathname)
-    {
-      g_warning (_("Couldn't find pixmap file: %s"), filename);
-      return NULL;
-    }
-
-  pixbuf = gdk_pixbuf_new_from_file (pathname, &error);
-  if (!pixbuf)
-    {
-      fprintf (stderr, "Failed to load pixbuf file: %s: %s\n",
-               pathname, error->message);
-      g_error_free (error);
-    }
-  FREE (pathname);
-  return pixbuf;
-}
-
-#if 0 /* FIXME */
-/* This is used to set ATK action descriptions. */
-void
-glade_set_atk_action_description       (AtkAction       *action,
-                                        const gchar     *action_name,
-                                        const gchar     *description)
-{
-  gint n_actions, i;
-
-  n_actions = atk_action_get_n_actions (action);
-  for (i = 0; i < n_actions; i++)
-    {
-      if (!g_strcmp0 (atk_action_get_name (action, i), action_name))
-        atk_action_set_description (action, i, description);
-    }
-}
-
+#ifdef G_OS_WIN32
+#if GTK_CHECK_VERSION (2, 18, 0)
+    gchar* pkgdatadir = g_win32_get_package_installation_directory_of_module (NULL);
+#else
+    gchar* pkgdatadir = g_win32_get_package_installation_directory (NULL, NULL);
 #endif
+
+    if (pkgdatadir != NULL)
+    {
+        path = g_build_filename (pkgdatadir, subdir, NULL);
+    } /* if */
+    else
+#endif
+    path = g_build_filename (PACKAGE_DATA_DIR, subdir, NULL);
+
+    if (path == NULL)
+    {
+        g_critical (_("Couldn't locate package data sub-directory '%s'"), subdir);
+    } /* if */
+
+    return path;
+} /* getPackageDataSubdirPath() */
+
+
+
+
+/* FUNCTION *******************************************************************/
+/** \brief Create a \c GdkPixbuf from a pixmaps file.
+ *
+ *  \param[in] filename Pixmpas filename.
+ *
+ *  \return    A newly allocated \c GdkPixbuf, representing the pixmap file.
+ ******************************************************************************/
+GdkPixbuf* createPixbufFromFile (const gchar* filename)
+{
+    gchar *path;
+    gchar *subdir;
+    GdkPixbuf *pixbuf;
+    GError *error = NULL;
+
+    ASSERT (filename != NULL);
+
+    subdir = getPackageDataSubdirPath (PACKAGE_PIXMAPS_DIR);
+    path = g_build_filename (subdir, filename, NULL);
+
+    if (path == NULL)
+    {
+        g_free (subdir);
+        g_warning (_("Couldn't find pixmap file '%s'"), filename);
+
+        return NULL;
+    } /* if */
+
+    pixbuf = gdk_pixbuf_new_from_file (path, &error);
+
+    if (pixbuf == NULL)
+    {
+        g_warning (_("Failed to create pixbuf from file '%s': %s"),
+                   path, error->message);
+        g_error_free (error);
+    } /* if */
+
+    g_free (path);
+    g_free (subdir);
+
+    return pixbuf;
+} /* createPixbufFromFile() */
+

@@ -41,12 +41,6 @@ typedef struct
 
 /* LOCAL CONSTANT DEFINITIONS *************************************************/
 
-#ifdef TEST
-#define MISCDLG_FILTER_DATAPATH ".." G_DIR_SEPARATOR_S "data" G_DIR_SEPARATOR_S "filters"
-#else
-#define MISCDLG_FILTER_DATAPATH PACKAGE_FILTERS_DIR
-#endif
-
 #define MISCDLG_WIDGET_MAIN     "miscDesignDlgMain"
 #define MISCDLG_ENTRY_SAMPLE    "entrySampleF"    /**< Sample frequency entry */
 #define MISCDLG_SPIN_DEGREE     "spinDegree" /**< Degree of filter entry/spin */
@@ -341,6 +335,7 @@ void miscDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
                           const CFG_DESKTOP* pPrefs)
 {
     const gchar* filename;
+    gchar* path;                            /* path to filters sub-directory */
     DFCPRJ_FILTER prj;
     GDir* dir;
     GtkRequisition size;                      /* requisition size of combobox */
@@ -362,11 +357,12 @@ void miscDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     } /* for */
 
 
-    /* 3rd step: insert all predefined (raw) filters found in
-     *           MISCDLG_FILTER_DATAPATH
+    /* 3rd step: insert all predefined (raw) filters found in sub-directory
+     *           PACKAGE_FILTERS_DIR of directory PACKAGE_DATA_DIR
      */
     rawFilterList = g_array_new (FALSE, TRUE, sizeof (MISCDLG_FILTER_DESC));
-    dir = g_dir_open (MISCDLG_FILTER_DATAPATH, 0, &err);
+    path = getPackageDataSubdirPath (PACKAGE_FILTERS_DIR);
+    dir = g_dir_open (path, 0, &err);
 
     if (err == NULL)                                             /* no error? */
     {
@@ -380,9 +376,7 @@ void miscDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
             {
                 if (g_str_has_suffix (filename, PRJFILE_NAME_SUFFIX))
                 {
-                    raw.fname = g_strjoin (G_DIR_SEPARATOR_S,
-                                           MISCDLG_FILTER_DATAPATH,
-                                           filename, NULL);
+                    raw.fname = g_build_filename (path, filename, NULL);
                     prjFileRead (raw.fname, &prj, &err);
 
                     if ((err == NULL) &&               /* valid project file? */
@@ -435,10 +429,11 @@ void miscDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
 
         dlgError (topWidget,
                   _("Could not load predefined filter(s) from '%s'"),
-                  MISCDLG_FILTER_DATAPATH);
+                  path);
     } /* else */
 
 
+    g_free (path);                     /* free the sub-directory path string */
     gtk_combo_box_set_row_separator_func (combo, miscDlgComboSeparator, NULL, NULL);
 
 

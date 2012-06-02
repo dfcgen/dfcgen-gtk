@@ -691,7 +691,7 @@ GtkWidget* mainDlgCreate (void)
     topWidget = gtk_window_new (GTK_WINDOW_TOPLEVEL);
     gtk_container_set_border_width (GTK_CONTAINER (topWidget), 6);
 
-    iconPixbuf = create_pixbuf (PACKAGE_ICON);
+    iconPixbuf = createPixbufFromFile (PACKAGE_ICON);
 
     if (iconPixbuf != NULL)
     {

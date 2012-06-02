@@ -58,7 +58,7 @@ void helpDlgMenuActivate (GtkMenuItem* menuitem, gpointer user_data)
     static const gchar *documenters[] = {PACKAGE_AUTHOR, NULL};
 #endif
 
-    GdkPixbuf* pixbuf = create_pixbuf (PACKAGE_ICON);
+    GdkPixbuf* pixbuf = createPixbufFromFile (PACKAGE_ICON);
     GtkWidget* dialogAbout = gtk_about_dialog_new ();
 
     gtk_window_set_destroy_with_parent (GTK_WINDOW (dialogAbout), TRUE);

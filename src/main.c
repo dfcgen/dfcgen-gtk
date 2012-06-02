@@ -17,14 +17,8 @@
 
 #include <gtk/gtk.h>
 
-#ifdef TEST
-#define PIXMAP_DIR ".." G_DIR_SEPARATOR_S "data" G_DIR_SEPARATOR_S "pixmaps"
-#else
-#define PIXMAP_DIR PACKAGE_PIXMAPS_DIR
-#endif
 
-int
-main (int argc, char *argv[])
+int main (int argc, char *argv[])
 {
   GtkWidget *topWidget;
 
@@ -36,8 +30,6 @@ main (int argc, char *argv[])
 
   gtk_set_locale ();
   gtk_init (&argc, &argv);
-
-  add_pixmap_directory (PIXMAP_DIR);
 
   /*
    * The following code was added by Glade to create one of each component

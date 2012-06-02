@@ -282,7 +282,7 @@ static void responseWinCreate (RESPONSE_WIN *pDesc)
     gtk_window_set_destroy_with_parent (GTK_WINDOW (pDesc->topWidget), TRUE);
     gtk_window_set_focus_on_map (GTK_WINDOW (pDesc->topWidget), FALSE);
 
-    iconPixbuf = create_pixbuf (pDesc->iconFile);
+    iconPixbuf = createPixbufFromFile (pDesc->iconFile);
 
     if (iconPixbuf != NULL)
     {
