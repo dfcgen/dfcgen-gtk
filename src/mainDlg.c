@@ -955,8 +955,10 @@ GtkWidget* mainDlgCreate (void)
 
     btnHelp = gtk_button_new_from_stock (GTK_STOCK_HELP);
     gtk_container_add (GTK_CONTAINER (hbuttonbox1), btnHelp);
-    GTK_WIDGET_SET_FLAGS (btnHelp, GTK_CAN_DEFAULT);
     gtk_widget_set_tooltip_text (btnHelp, _("Help"));
+#ifndef TODO
+    gtk_widget_set_sensitive (btnHelp, FALSE);
+#endif
 
     btnApply = gtk_button_new_from_stock (GTK_STOCK_APPLY);
     gtk_container_add (GTK_CONTAINER (hbuttonbox1), btnApply);
