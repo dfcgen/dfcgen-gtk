@@ -34,7 +34,11 @@ AC_CONFIG_FILES([Makefile
                  data/pixmaps/Makefile
                  data/filters/Makefile
                  data/templates/Makefile
-                 doc/Makefile])
+                 doc/Makefile
+                 dist/Makefile
+                 dist/debian/Makefile
+                 dist/win32/Makefile])
+
 
 dnl Automake options: we are not strictly GNU compatible (foreign),
 dnl because the following files are missing: NEWS, AUTHORS, ABOUT-NLS
