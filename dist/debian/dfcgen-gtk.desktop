@@ -1,0 +1,16 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=DFCGEN (GTK+)
+Name[en]=DFCGEN (GTK+)
+Name[de]=DFCGEN (GTK+)
+GenericName=Digital Filter Coefficients Generator
+GenericName[en]=Digital Filter Coefficients Generator
+GenericName[de]=Digital Filter Coefficients Generator
+Comment=Digital Filter Coefficients Generator
+Comment[en]=Digital Filter Coefficients Generator
+Comment[de]=Digital Filter Coefficients Generator
+Icon=dfcgen-gtk.png
+Exec=dfcgen-gtk
+Categories=GNOME;Electronics;
+StartupNotify=false
