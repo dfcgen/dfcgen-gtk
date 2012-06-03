@@ -9,14 +9,13 @@
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = po include src data doc
+SUBDIRS = po include src data doc dist
 
 doc_DATA = \
 	README\
 	COPYING\
 	ChangeLog\
-	INSTALL\
-	dfcgen-gtk.desktop
+	INSTALL
 
 
 EXTRA_DIST = $(doc_DATA)
