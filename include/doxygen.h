@@ -19,7 +19,7 @@
  *                distribution (and updates the \e gettext database and \e po files)
  *              - \c make \c update-po in \e po directory updates the
  *                strings list in file \e de.po
- *              - \c make \c all in \e po directory builds the \e mo file(s)
+ *              - \c make \c all in \e po directory builds the \e gmo file(s)
  *
  *
  ******************************************************************************/
