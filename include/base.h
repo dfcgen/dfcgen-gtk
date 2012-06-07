@@ -55,23 +55,12 @@ typedef int BOOL;          /**< Boolean data type (TRUE, FALSE are from gLib) */
 #define ASSERT(cond)            g_assert (cond) /**< assert() macro (currently from gLib) */
 
 
-#ifdef DEBUG
-
-#ifdef __USE_ISOC99                   /* open argument list in ISO C99 format */
+#if defined (DEBUG) && defined (__GNUC__)
 #define DEBUG_LOG(format, ...)  g_printerr ("\n%s, %d: " format, __FILE__ , __LINE__, ## __VA_ARGS__)
-#else  /* !__USE_ISOC99 */
-
-#ifdef __GNUC__       /* open argument list in GCC format (ISO C89 extension) */
-#define DEBUG_LOG(format, args...) g_printerr ("\n%s, %d: " format, __FILE__ , __LINE__, args)
 #else  /* !__GNUC__ */
 #define DEBUG_LOG(format, ...)
 #endif /* __GNUC__ */
 
-#endif /* __USE_ISOC99 */
-
-#else  /* !DEBUG */
-#define DEBUG_LOG(format, ...)
-#endif
 
 
 /* MACRO **********************************************************************/
