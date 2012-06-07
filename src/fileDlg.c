@@ -292,7 +292,7 @@ void fileDlgSaveAsActivate (GtkWidget* srcWidget, gpointer user_data)
                                           GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                           GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT);
     if (dfcPrjFileName == NULL)
-    {                                  /* FIXME: add "untitled.dfc" to de.po */
+    {
         gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (dialog),
                                            gettext ("untitled" PRJFILE_NAME_SUFFIX));
     } /* if */
