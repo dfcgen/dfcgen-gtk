@@ -23,12 +23,23 @@ int main (int argc, char *argv[])
   GtkWidget *topWidget;
 
 #ifdef ENABLE_NLS
-  bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
+  gchar* localedir = getPackageDirectory (DIR_ID_LOCALE);
+
+#ifdef G_OS_WIN32
+  /* bindtextdomain() is not UTF-8 aware
+   */
+  gchar* tmp = g_win32_locale_filename_from_utf8 (localedir);
+
+  g_free (localedir);
+  localedir = tmp;
+#endif /* G_OS_WIN32 */
+
+  bindtextdomain (GETTEXT_PACKAGE, localedir);
+  g_free (localedir);
   bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
   textdomain (GETTEXT_PACKAGE);
 #endif
 
-  gtk_set_locale ();
   gtk_init (&argc, &argv);
 
   /*
