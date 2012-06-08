@@ -597,18 +597,21 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     widget = GTK_DIALOG (responseDlg)->action_area;
     gtk_button_box_set_layout (GTK_BUTTON_BOX (widget), GTK_BUTTONBOX_END);
 
-    widget = gtk_button_new_from_stock ("gtk-help");
+    widget = gtk_button_new_from_stock (GTK_STOCK_HELP);
     gtk_dialog_add_action_widget (GTK_DIALOG (responseDlg), widget, GTK_RESPONSE_HELP);
+#ifndef TODO
+    gtk_widget_set_sensitive (widget, FALSE);
+#endif
 
-    widget = gtk_button_new_from_stock ("gtk-cancel");
+    widget = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
     gtk_dialog_add_action_widget (GTK_DIALOG (responseDlg), widget, GTK_RESPONSE_CANCEL);
     GTK_WIDGET_SET_FLAGS (widget, GTK_CAN_DEFAULT);
 
-    widget = gtk_button_new_from_stock ("gtk-apply");
+    widget = gtk_button_new_from_stock (GTK_STOCK_APPLY);
     gtk_dialog_add_action_widget (GTK_DIALOG (responseDlg), widget, GTK_RESPONSE_APPLY);
     GTK_WIDGET_SET_FLAGS (widget, GTK_CAN_DEFAULT);
 
-    widget = gtk_button_new_from_stock ("gtk-ok");
+    widget = gtk_button_new_from_stock (GTK_STOCK_OK);
     gtk_dialog_add_action_widget (GTK_DIALOG (responseDlg), widget, GTK_RESPONSE_OK);
     GTK_WIDGET_SET_FLAGS (widget, GTK_CAN_DEFAULT);
 
