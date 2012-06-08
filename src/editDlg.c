@@ -207,18 +207,21 @@ static GtkWidget* createSettingsDlg (const CFG_DESKTOP* pPrefs)
     box = GTK_DIALOG (settingsDlg)->action_area;
     gtk_button_box_set_layout (GTK_BUTTON_BOX (box), GTK_BUTTONBOX_END);
 
-    widget = gtk_button_new_from_stock ("gtk-help");
+    widget = gtk_button_new_from_stock (GTK_STOCK_HELP);
     gtk_widget_show (widget);
     gtk_dialog_add_action_widget (GTK_DIALOG (settingsDlg), widget,
                                   GTK_RESPONSE_HELP);
+#ifndef TODO
+    gtk_widget_set_sensitive (widget, FALSE);
+#endif
     GTK_WIDGET_SET_FLAGS (widget, GTK_CAN_DEFAULT);
 
-    widget = gtk_button_new_from_stock ("gtk-cancel");
+    widget = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
     gtk_dialog_add_action_widget (GTK_DIALOG (settingsDlg), widget,
                                   GTK_RESPONSE_CANCEL);
     GTK_WIDGET_SET_FLAGS (widget, GTK_CAN_DEFAULT);
 
-    widget = gtk_button_new_from_stock ("gtk-ok");
+    widget = gtk_button_new_from_stock (GTK_STOCK_OK);
     gtk_dialog_add_action_widget (GTK_DIALOG (settingsDlg), widget,
                                   GTK_RESPONSE_OK);
     GTK_WIDGET_SET_FLAGS (widget, GTK_CAN_DEFAULT);
@@ -399,15 +402,18 @@ static GtkWidget* createInfoDlg (const DFCPRJ_INFO *pInfo)
     gtk_button_box_set_layout (
         GTK_BUTTON_BOX (GTK_DIALOG (dialog)->action_area), GTK_BUTTONBOX_END);
 
-    widget = gtk_button_new_from_stock ("gtk-help");
+    widget = gtk_button_new_from_stock (GTK_STOCK_HELP);
     gtk_dialog_add_action_widget (GTK_DIALOG (dialog), widget, GTK_RESPONSE_HELP);
+#ifndef TODO
+    gtk_widget_set_sensitive (widget, FALSE);
+#endif
     GTK_WIDGET_SET_FLAGS (widget, GTK_CAN_DEFAULT);
 
-    widget = gtk_button_new_from_stock ("gtk-cancel");
+    widget = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
     gtk_dialog_add_action_widget (GTK_DIALOG (dialog), widget, GTK_RESPONSE_CANCEL);
     GTK_WIDGET_SET_FLAGS (widget, GTK_CAN_DEFAULT);
 
-    widget = gtk_button_new_from_stock ("gtk-ok");
+    widget = gtk_button_new_from_stock (GTK_STOCK_OK);
     gtk_dialog_add_action_widget (GTK_DIALOG (dialog), widget, GTK_RESPONSE_OK);
     GTK_WIDGET_SET_FLAGS (widget, GTK_CAN_DEFAULT);
 
