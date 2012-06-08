@@ -12,3 +12,4 @@ win32dir = $(docdir)/build/win32
 dist_win32_DATA = \
 	dfcgen-gtk.rc \
 	dfcgen.ico
+

@@ -8,23 +8,36 @@
 ##
 
 AM_CPPFLAGS = \
-	-DPACKAGE_LOCALE_DIR="\"$(localedir)\"" \
-	-DPACKAGE_DATA_DIR="\"$(pkgdatadir)\"" \
-	-I"$(top_srcdir)/include" \
-	@PACKAGE_CFLAGS@
+	-DPACKAGE_LOCALE_DIR=\"$(localedir)\" \
+	-DPACKAGE_PIXMAPS_DIR=\"$(pkgpixmapsdir)\" \
+	-DPACKAGE_FILTERS_DIR=\"$(pkgfiltersdir)\" \
+	-DPACKAGE_TEMPLATES_DIR=\"$(pkgtemplatesdir)\" \
+	-I"$(top_srcdir)/include"
 
 
 # Additional CFLAGS
-# AM_CFLAGS =
+AM_CFLAGS = @PKGCONF_CFLAGS@
+
 
 # Additional LDFLAGS
-# AM_LDFLAGS =
+#
+# Note: There is no need to put in here PKGCONF_LIBS (from PKG_CHECK_MODULES(),
+#       pkg-config), because configure.ac has put this variable into LIBS.
+#
+# AM_LDFLAGS = 
 
 
 bin_PROGRAMS = dfcgen-gtk
 
-# Use PACKAGE_LIBS from PKG_CHECK_MODULES (pkg-config)
-dfcgen_gtk_LDADD = @PACKAGE_LIBS@
+# need for LIBINTL from AM_GNU_GETTEXT() - gettext.m4
+dfcgen_gtk_LDADD = @LIBINTL@
+
+# when building on MinGW: add resource file and Win32 compiler flags
+if MINGW_BUILD
+PACKAGE_RC_FILE = dfcgen-gtk.rc
+dfcgen_gtk_LDADD += $(PACKAGE_RC_FILE).o
+dfcgen_gtk_LDFLAGS = -mwindows
+endif
 
 
 dfcgen_gtk_SOURCES = \
@@ -56,3 +69,14 @@ dfcgen_gtk_SOURCES = \
 	linFirFilter.c \
 	rootsPlot.c \
 	filterPrint.c
+
+
+# when building on MinGW: regard an additional rule on "make [all]", which
+#                         executes the resource compiler
+if MINGW_BUILD
+all-local: $(PACKAGE_RC_FILE).o
+
+$(PACKAGE_RC_FILE).o: ../dist/win32/$(PACKAGE_RC_FILE)
+	$(WINDRES) -i ../dist/win32/$(PACKAGE_RC_FILE) --input-format=rc -o $(PACKAGE_RC_FILE).o -O coff
+
+endif

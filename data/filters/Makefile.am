@@ -7,7 +7,7 @@
 ## Process this file with automake to produce Makefile.in
 ##
 
-filtersdir = $(pkgdatadir)/@PACKAGE_FILTERS_DIR@
+filtersdir = $(pkgfiltersdir)
 
 dist_filters_DATA = \
 	differentiator1.dfc\

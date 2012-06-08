@@ -7,7 +7,7 @@
 ## Process this file with automake to produce Makefile.in
 ##
 
-pixmapsdir = $(pkgdatadir)/@PACKAGE_PIXMAPS_DIR@
+pixmapsdir = $(pkgpixmapsdir)
 
 dist_pixmaps_DATA = \
 	dfcgen.png\

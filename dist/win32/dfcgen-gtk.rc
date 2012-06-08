@@ -2,7 +2,7 @@
  * dfcgen-gtk windows resource file, to be compiled with RC (Microsoft) or
  * WINDRES (MinGW)
  *
- * Author:  Copyright (C) 2006, 2011-2012 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * Author:  Copyright (C) 2011-2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * Version: $Id$
  *
  ******************************************************************************/
@@ -20,7 +20,6 @@ FILETYPE       VFT_APP
 BEGIN
     BLOCK "VarFileInfo"
     BEGIN
-       VALUE "Translation", 0x0409, 0x04E4      /* English, Windows charset (codepage 1252) */
        VALUE "Translation", 0x0407, 0x04E4      /* German, Windows charset */
     END
 	BLOCK "StringFileInfo"
@@ -29,23 +28,11 @@ BEGIN
 		BEGIN
 			VALUE "CompanyName", "Dipl.-Ing. R. Hoppe\000"
             VALUE "LegalCopyright", "Copyright (C) 2006, 2011-2012 Ralf Hoppe\000"
-			VALUE "FileDescription", "Koeffizientengenerator für digitale Systeme\000"
+			VALUE "FileDescription", "Digital Filter Coefficients Generator (DFCGEN) GTK+\000"
 			VALUE "FileVersion", "0.4\000"
 			VALUE "InternalName", PACKAGE "\000"
-			VALUE "OriginalFilename", PACKAGE ".EXE\000"
+			VALUE "OriginalFilename", PACKAGE ".exe\000"
 			VALUE "ProductName", PACKAGE " für Windows\000"
-            VALUE "E-Mail", "ralf.hoppe@ieee.org"
-		END
-
-		BLOCK "040904E4"                    /* US English, Windows charset */
-		BEGIN
-			VALUE "CompanyName", "Dipl.-Ing. R. Hoppe\000"
-            VALUE "LegalCopyright", "Copyright (C) 2006, 2011-2012 Ralf Hoppe\000"
-			VALUE "FileDescription", "Digital Filter Coefficients Generator\000"
-			VALUE "FileVersion", "1.12/E\000"
-			VALUE "InternalName", PACKAGE "\000"
-			VALUE "OriginalFilename", PACKAGE ".EXE\000"
-			VALUE "ProductName", PACKAGE " for Windows\000"
             VALUE "E-Mail", "ralf.hoppe@ieee.org"
 		END
 	END
