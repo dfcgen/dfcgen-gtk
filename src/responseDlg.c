@@ -287,7 +287,7 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     gtk_window_set_title (GTK_WINDOW (responseDlg), _("Response Settings"));
     gtk_window_set_resizable (GTK_WINDOW (responseDlg), FALSE);
     gtk_window_set_destroy_with_parent (GTK_WINDOW (responseDlg), TRUE);
-    gtk_window_set_icon_name (GTK_WINDOW (responseDlg), "gtk-preferences");
+    gtk_window_set_icon_name (GTK_WINDOW (responseDlg), GTK_STOCK_PREFERENCES);
     gtk_window_set_type_hint (GTK_WINDOW (responseDlg), GDK_WINDOW_TYPE_HINT_DIALOG);
 
     box = gtk_hbox_new (FALSE, 12);                /* x- and y-side of dialog */

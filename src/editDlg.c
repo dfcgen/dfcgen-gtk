@@ -104,7 +104,7 @@ static GtkWidget* createSettingsDlg (const CFG_DESKTOP* pPrefs)
     gtk_window_set_title (GTK_WINDOW (settingsDlg), _(PACKAGE " Settings"));
     gtk_window_set_resizable (GTK_WINDOW (settingsDlg), FALSE);
     gtk_window_set_destroy_with_parent (GTK_WINDOW (settingsDlg), TRUE);
-    gtk_window_set_icon_name (GTK_WINDOW (settingsDlg), "gtk-preferences");
+    gtk_window_set_icon_name (GTK_WINDOW (settingsDlg), GTK_STOCK_PREFERENCES);
     gtk_window_set_type_hint (GTK_WINDOW (settingsDlg), GDK_WINDOW_TYPE_HINT_DIALOG);
 
     box = GTK_DIALOG (settingsDlg)->vbox;
