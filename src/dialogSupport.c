@@ -318,11 +318,11 @@ BOOL dlgPopupDouble (char *title, char *label, char *comment, double *pResult)
     vbox = GTK_DIALOG (dialog)->action_area;
     gtk_button_box_set_layout (GTK_BUTTON_BOX (vbox), GTK_BUTTONBOX_END);
 
-    widget = gtk_button_new_from_stock ("gtk-cancel");
+    widget = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
     gtk_dialog_add_action_widget (GTK_DIALOG (dialog), widget, GTK_RESPONSE_CANCEL);
     GTK_WIDGET_SET_FLAGS (widget, GTK_CAN_DEFAULT);
 
-    widget = gtk_button_new_from_stock ("gtk-ok");
+    widget = gtk_button_new_from_stock (GTK_STOCK_OK);
     gtk_dialog_add_action_widget (GTK_DIALOG (dialog), widget, GTK_RESPONSE_OK);
     GTK_WIDGET_SET_FLAGS (widget, GTK_CAN_DEFAULT);
     gtk_widget_grab_default (widget);
