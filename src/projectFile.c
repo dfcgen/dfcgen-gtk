@@ -1253,7 +1253,7 @@ static gint exportConvertCoeff (char* buffer, gint bufsize, gdouble val)
  ******************************************************************************/
 int prjFileExport (PRJFILE_EXPORT_TYPE type, const char *filename, DFCPRJ_FILTER *pProject)
 {
-    gchar inbuf[128]; /* FIXME */
+    gchar inbuf[128];
     gchar outbuf[128];
     gchar* templname;                                   /* template filename */
     FILE *templfile;                                        /* template file */
@@ -1263,7 +1263,7 @@ int prjFileExport (PRJFILE_EXPORT_TYPE type, const char *filename, DFCPRJ_FILTER
     int repcnt = 0;      /* repeat counter for a line (index of coefficient) */
     int err = 0;
     BOOL doReadTemplateLines = TRUE;              /* no END OF FILE so far ? */
-    gchar* path = getPackageDataSubdirPath (PACKAGE_TEMPLATES_DIR);
+    gchar* path = getPackageDirectory (DIR_ID_TEMPLATES);
 
     switch (type)
     {
@@ -1286,10 +1286,10 @@ int prjFileExport (PRJFILE_EXPORT_TYPE type, const char *filename, DFCPRJ_FILTER
 
     if (templfile == NULL)
     {
+        DEBUG_LOG ("Cannot read template file '%s'", templname);
         g_free (templname);
         g_free (path);
 
-        DEBUG_LOG ("Cannot read template file '%s'", templname);
         return errno;
     } /* if */
 

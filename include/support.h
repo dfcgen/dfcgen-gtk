@@ -22,29 +22,57 @@
 
 #include <gtk/gtk.h>
 
-/*
- * Standard gettext macros.
+/* If gettext.m4 has detected GNU gettext (libintl.h), then ENABLE_NLS is
+ * defined. In that case a translation to the user's natural language may
+ * be possible (if there are catalog files for that language installed).
  */
 #ifdef ENABLE_NLS
-#  include <libintl.h>
-#  undef _
-#  define _(String) dgettext (PACKAGE, String)
-#  define Q_(String) g_strip_context ((String), gettext (String))
-#  ifdef gettext_noop
-#    define N_(String) gettext_noop (String)
-#  else
-#    define N_(String) (String)
-#  endif
-#else  /* !ENABLE_NLS */
-#  define textdomain(String) (String)
-#  define gettext(String) (String)
-#  define dgettext(Domain,Message) (Message)
-#  define dcgettext(Domain,Message,Type) (Message)
-#  define bindtextdomain(Domain,Directory) (Domain)
-#  define _(String) (String)
-#  define Q_(String) g_strip_context ((String), (String))
-#  define N_(String) (String)
+
+#include <libintl.h>
+
+#undef _
+#define _(String) dgettext (PACKAGE, String)
+#define Q_(String) g_strip_context ((String), gettext (String))
+
+#ifdef gettext_noop
+#define N_(String) gettext_noop (String)
+#else
+#define N_(String) (String)
+#endif
+
+#else  /* !ENABLE_NLS (no translation) */
+
+#define textdomain(String) (String)
+#define gettext(String) (String)
+#define dgettext(Domain,Message) (Message)
+#define dcgettext(Domain,Message,Type) (Message)
+#define bindtextdomain(Domain,Directory) (Domain)
+
+#define _(String) (String)
+#define Q_(String) g_strip_context ((String), (String))
+#define N_(String) (String)
 #endif  /* ENABLE_NLS */
+
+
+/* GLOBAL TYPE DECLARATIONS ***************************************************/
+
+
+/** Directory Path Identifiers.
+ *
+ *  \attention Don't change the enums, because order must match array indices
+ *             in support.c.
+ */
+typedef enum
+{
+    DIR_ID_INVALID = -1,                     /**< Invalid ID (unused so far) */
+    DIR_ID_TEMPLATES = 0,                           /**< Templates directory */
+    DIR_ID_PIXMAPS = 1,                               /**< Pixmaps directory */
+    DIR_ID_FILTERS = 2,                    /**< Predefined filters directory */
+    DIR_ID_LOCALE = 3,                                 /**< Locale directory */
+
+    DIR_ID_SIZE                               /**< Size of DIRECTORY_ID enum */
+} DIRECTORY_ID;
+
 
 
 /* EXPORTED FUNCTIONS *********************************************************/
@@ -66,13 +94,13 @@ GtkWidget* lookup_widget (GtkWidget* widget, const gchar* widget_name);
 
 
 /* FUNCTION *******************************************************************/
-/** \brief This function returns a path to a sub-directory of PACKAGE_DATA_DIR.
+/** \brief This function returns a path to a directory, using UTF-8 encoding.
  *
- *  \param[in] subdir   Name of sub-directory (last path component).
+ *  \param[in] dir_id   Directory identifier.
  *
  *  \return             A newly allocated string that must be freed with g_free().
  ******************************************************************************/
-gchar* getPackageDataSubdirPath (const gchar* subdir);
+gchar* getPackageDirectory (DIRECTORY_ID dir_id);
 
 
 

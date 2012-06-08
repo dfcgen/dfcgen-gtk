@@ -9,8 +9,10 @@
  *
  ******************************************************************************/
 
-#include "gui.h" /* includes base.h and config.h */
+#include "gui.h"     /* includes base.h and config.h */
 #include "support.h"
+
+#include <string.h>  /* strlen() */
 
 
 /* FUNCTION *******************************************************************/
@@ -68,38 +70,64 @@ GtkWidget* lookup_widget (GtkWidget* widget, const gchar* name)
 
 
 /* FUNCTION *******************************************************************/
-/** \brief This function returns a path to a sub-directory of PACKAGE_DATA_DIR.
+/** \brief This function returns a path to a directory, using UTF-8 encoding.
  *
- *  \param[in] subdir   Name of sub-directory (last path component).
+ *  \param[in] dir_id   Directory identifier.
  *
  *  \return             A newly allocated string that must be freed with g_free().
  ******************************************************************************/
-gchar* getPackageDataSubdirPath (const gchar* subdir)
+gchar* getPackageDirectory (DIRECTORY_ID dir_id)
 {
+    static const gchar* pkgdir[DIR_ID_SIZE] =
+    {
+        PACKAGE_TEMPLATES_DIR,                       /* (0) DIR_ID_TEMPLATES */
+        PACKAGE_PIXMAPS_DIR,                           /* (1) DIR_ID_PIXMAPS */
+        PACKAGE_FILTERS_DIR,                           /* (2) DIR_ID_FILTERS */
+        PACKAGE_LOCALE_DIR                              /* (3) DIR_ID_LOCALE */
+    };
+
     gchar* path;
 
 #ifdef G_OS_WIN32
 #if GTK_CHECK_VERSION (2, 18, 0)
-    gchar* pkgdatadir = g_win32_get_package_installation_directory_of_module (NULL);
+    gchar* root = g_win32_get_package_installation_directory_of_module (NULL);
 #else
-    gchar* pkgdatadir = g_win32_get_package_installation_directory (NULL, NULL);
+    gchar* root = g_win32_get_package_installation_directory (NULL, NULL);
 #endif
 
-    if (pkgdatadir != NULL)
+    if (root != NULL)                       /* installation directory found? */
     {
-        path = g_build_filename (pkgdatadir, subdir, NULL);
+        const gchar* pStart = pkgdir[dir_id];
+        const gchar* pEnd = pStart + strlen (pStart);
+
+        DEBUG_LOG ("Trying to determine sub-directory from '%s'", pStart);
+
+        while ((pEnd != pStart) && (*pEnd != '/'))
+        {
+            --pEnd;
+        } /* while */
+
+        if (*pEnd == '/')
+        {
+            ++pEnd;
+        } /* if */
+
+        path = g_build_filename (root, "share", pEnd, NULL);
+
+        g_free (root);
+        DEBUG_LOG ("Sub-directory '%s' mapped to '%s'", pEnd, path);
     } /* if */
-    else
+    else /* use the MinGW path */
 #endif
-    path = g_build_filename (PACKAGE_DATA_DIR, subdir, NULL);
+    path = g_strdup (pkgdir[dir_id]);
 
     if (path == NULL)
     {
-        g_critical (_("Couldn't locate package data sub-directory '%s'"), subdir);
+        g_critical (_("Couldn't locate package sub-directory no. %d"), dir_id);
     } /* if */
 
     return path;
-} /* getPackageDataSubdirPath() */
+} /* getPackageDirectory() */
 
 
 
@@ -120,7 +148,7 @@ GdkPixbuf* createPixbufFromFile (const gchar* filename)
 
     ASSERT (filename != NULL);
 
-    subdir = getPackageDataSubdirPath (PACKAGE_PIXMAPS_DIR);
+    subdir = getPackageDirectory (DIR_ID_PIXMAPS);
     path = g_build_filename (subdir, filename, NULL);
 
     if (path == NULL)

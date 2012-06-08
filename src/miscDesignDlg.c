@@ -357,11 +357,11 @@ void miscDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     } /* for */
 
 
-    /* 3rd step: insert all predefined (raw) filters found in sub-directory
-     *           PACKAGE_FILTERS_DIR of directory PACKAGE_DATA_DIR
+    /* 3rd step: insert all predefined (raw) filters found in a sub-directory,
+     *           identified by DIR_ID_FILTERS
      */
     rawFilterList = g_array_new (FALSE, TRUE, sizeof (MISCDLG_FILTER_DESC));
-    path = getPackageDataSubdirPath (PACKAGE_FILTERS_DIR);
+    path = getPackageDirectory (DIR_ID_FILTERS);
     dir = g_dir_open (path, 0, &err);
 
     if (err == NULL)                                             /* no error? */
