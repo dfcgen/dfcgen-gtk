@@ -14,8 +14,9 @@
 #include "responsePlot.h"
 #include "responseWin.h"
 #include "responseDlg.h"
+#include "dfcProject.h"  /* dfcPrjGetFilter() */
 #include "filterPrint.h" /* filterPrintResponse() */
-#include "cfgSettings.h"
+#include "cfgSettings.h" /* cfgSaveResponseSettings(), cfgRestoreResponseSettings */
 #include "mathFuncs.h"
 
 
@@ -39,6 +40,7 @@ typedef struct
     GdkRectangle zoom;                 /**< Zoom coordinates (last rectangle) */
     GdkGCValues original;                /**< Saved GdkGC values when zooming */
     GtkCheckMenuItem *menuref;            /**< (Backward) menu item reference */
+    GtkWidget* btnPrint;                  /**< Print button widget reference */
     GtkWidget* topWidget;        /**< response plot window (top-level widget) */
     GtkWidget* draw;                            /**< \e GtkDrawingArea widget */
     GtkWidget* label;             /**< Label which shows the number of points */
@@ -266,7 +268,7 @@ static void responseWinCreate (RESPONSE_WIN *pDesc)
     GtkWidget *vbox;
     GtkWidget *hseparator;
     GtkWidget *hbox;
-    GtkWidget *btnSettings, *btnPrint;
+    GtkWidget *btnSettings;
     GdkPixbuf *iconPixbuf;
 
     pDesc->topWidget = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -309,14 +311,14 @@ static void responseWinCreate (RESPONSE_WIN *pDesc)
     gtk_box_pack_start (GTK_BOX (hbox), pDesc->label, FALSE, FALSE, 6);
     gtk_label_set_single_line_mode (GTK_LABEL (pDesc->label), TRUE);
 
-    btnPrint = gtk_button_new_from_stock (GTK_STOCK_PRINT);
-    gtk_box_pack_end (GTK_BOX (hbox), btnPrint, FALSE, FALSE, 6);
-    g_signal_connect ((gpointer) btnPrint, "clicked",
+    pDesc->btnPrint = gtk_button_new_from_stock (GTK_STOCK_PRINT);
+    gtk_box_pack_end (GTK_BOX (hbox), pDesc->btnPrint, FALSE, FALSE, 6);
+    g_signal_connect ((gpointer) pDesc->btnPrint, "clicked",
                       G_CALLBACK (responseWinBtnPrintActivate),
                       pDesc);
 
-    GTK_WIDGET_SET_FLAGS (btnPrint, GTK_CAN_DEFAULT);
-    gtk_widget_set_tooltip_text (btnPrint, _("Print this response plot"));
+    GTK_WIDGET_SET_FLAGS (pDesc->btnPrint, GTK_CAN_DEFAULT);
+    gtk_widget_set_tooltip_text (pDesc->btnPrint, _("Print this response plot"));
 
     btnSettings = gtk_button_new_from_stock (GTK_STOCK_PREFERENCES);
     gtk_box_pack_end (GTK_BOX (hbox), btnSettings, FALSE, FALSE, 6);
@@ -591,17 +593,24 @@ void responseWinMenuActivate (GtkMenuItem* menuitem, gpointer user_data)
  ******************************************************************************/
 void responseWinRedraw (RESPONSE_TYPE type)
 {
+    RESPONSE_TYPE start, stop;
+    BOOL filterValid = (dfcPrjGetFilter () != NULL);
+
     if (type < RESPONSE_TYPE_SIZE)
     {
-        (void)responseWinExpose (&responseWidget[type]);
+        start = stop = type;
     } /* if */
     else                                                        /* redraw all */
     {
-        for (type = 0; type < RESPONSE_TYPE_SIZE; type++)
-        {
-            (void)responseWinExpose (&responseWidget[type]);
-        } /* for */
+        start = 0;
+        stop = RESPONSE_TYPE_SIZE - 1;
     } /* else */
+
+    for (type = start; type <= stop; type++)
+    {
+        gtk_widget_set_sensitive (responseWidget[type].btnPrint, filterValid);
+        (void)responseWinExpose (&responseWidget[type]);
+    } /* for */
 } /* responseWinRedraw() */
 
 
