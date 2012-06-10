@@ -7,9 +7,4 @@
 ## Process this file with automake to produce Makefile.in
 ##
 
-win32dir = $(docdir)/build/win32
-
-dist_win32_DATA = \
-	dfcgen-gtk.rc \
-	dfcgen.ico
-
+EXTRA_DIST = dfcgen-gtk.rc dfcgen.ico
