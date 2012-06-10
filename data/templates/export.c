@@ -2,7 +2,7 @@
  * Copyright (C) 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * Version: $Id$
  *
- * DFCGEN (GTK+) exported coefficients
+ * DFCGen (GTK+) exported coefficients
  *
  *****************************************************************************/
 
