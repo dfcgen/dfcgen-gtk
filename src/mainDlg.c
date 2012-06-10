@@ -659,7 +659,6 @@ GtkWidget* mainDlgCreate (void)
     GtkWidget *widget, *label, *toolbarMain, *menuItem;
     GtkWidget *menuMain, *menuMainItem, *menuContainer, *submenuContainer;
 
-    GdkPixbuf *iconPixbuf;
     GtkWidget *vbox1;
 
     GtkWidget *toolitem1;
@@ -691,13 +690,19 @@ GtkWidget* mainDlgCreate (void)
     topWidget = gtk_window_new (GTK_WINDOW_TOPLEVEL);
     gtk_container_set_border_width (GTK_CONTAINER (topWidget), 6);
 
-    iconPixbuf = createPixbufFromFile (PACKAGE_ICON);
-
-    if (iconPixbuf != NULL)
+#ifndef G_OS_WIN32
     {
-        gtk_window_set_icon (GTK_WINDOW (topWidget), iconPixbuf);
-        gdk_pixbuf_unref (iconPixbuf);
-    } /* if */
+        /* On Win32 the compiled-in resource should be used as icon
+         */
+        GdkPixbuf *iconPixbuf = createPixbufFromFile (PACKAGE_ICON);
+
+        if (iconPixbuf != NULL)
+        {
+            gtk_window_set_icon (GTK_WINDOW (topWidget), iconPixbuf);
+            gdk_pixbuf_unref (iconPixbuf);
+        } /* if */
+    }
+#endif /* G_OS_WIN32 */
 
     gtk_window_set_role (GTK_WINDOW (topWidget), PACKAGE);
 
