@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>dfcgen-gtk</name>
-	<comment>Digital Filter Coefficients Generator (DFCGEN) GTK+</comment>
+	<comment>Digital Filter Coefficients Generator (DFCGen) GTK+</comment>
 	<projects>
 	</projects>
 	<buildSpec>
