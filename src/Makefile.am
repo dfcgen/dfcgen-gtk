@@ -33,7 +33,7 @@ bin_PROGRAMS = dfcgen-gtk
 dfcgen_gtk_LDADD = @LIBINTL@
 
 # when building on MinGW: add resource file and Win32 compiler flags
-if MINGW_BUILD
+if BUILD_OS_MINGW32
 PACKAGE_RC_FILE = dfcgen-gtk.rc
 dfcgen_gtk_LDADD += $(PACKAGE_RC_FILE).o
 dfcgen_gtk_LDFLAGS = -mwindows
@@ -73,7 +73,7 @@ dfcgen_gtk_SOURCES = \
 
 # when building on MinGW: regard an additional rule on "make [all]", which
 #                         executes the resource compiler
-if MINGW_BUILD
+if BUILD_OS_MINGW32
 all-local: $(PACKAGE_RC_FILE).o
 
 $(PACKAGE_RC_FILE).o: ../dist/win32/$(PACKAGE_RC_FILE)

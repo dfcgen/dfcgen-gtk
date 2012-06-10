@@ -143,21 +143,22 @@ AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION(0.17)
 
 
-dnl Check for MinGW environment (do this after AC_PROG_CC)
-dnl install from http://sourceforge.net/projects/mingw/files/Installer/mingw-get-inst
+dnl (After AC_PROG_CC) check for MinGW platform in host := cpu-company-os.
+dnl If this is MinGW (host is typically 'i686-pc-mingw32'), then in addition
+dnl test for availablity of the GNU resource compiler 'windres'.
 case "$host" in
   *-mingw32*)
-     mingw_build=yes
+     build_mingw=yes
      AC_CHECK_TOOL(WINDRES, windres)
     ;;
   *)
-    mingw_build=no
+    build_mingw=no
     ;;
 esac
 
 AC_MSG_CHECKING([for MinGW])
-AC_MSG_RESULT([$mingw_build])
-AM_CONDITIONAL(MINGW_BUILD, test x$mingw_build = xyes)
+AC_MSG_RESULT([$build_mingw])
+AM_CONDITIONAL(BUILD_OS_MINGW32, test x$build_mingw = xyes)
 
 
 dnl Check for libraries required by GSL, finally going into LIBS and LDFLAGS:
