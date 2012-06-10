@@ -1,9 +1,9 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=DFCGEN (GTK+)
-Name[en]=DFCGEN (GTK+)
-Name[de]=DFCGEN (GTK+)
+Name=DFCGen (GTK+)
+Name[en]=DFCGen (GTK+)
+Name[de]=DFCGen (GTK+)
 GenericName=Digital Filter Coefficients Generator
 GenericName[en]=Digital Filter Coefficients Generator
 GenericName[de]=Digital Filter Coefficients Generator
