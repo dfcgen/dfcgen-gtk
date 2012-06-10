@@ -15,6 +15,7 @@
  * \section     Developers
  *              - \c make \c dist in root directory generates a distribution package
  *              - \c make \c dist-debian in root directory builds a Debian package
+ *              - \c make \c dist-win32 in root directory builds (on MinGW) a Win32 package
  *              - \c make \c distcheck in root directory checks the package for
  *                distribution (and updates the \e gettext database and \e po files)
  *              - \c make \c update-po in \e po directory updates the
