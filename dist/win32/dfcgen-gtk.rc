@@ -28,7 +28,7 @@ BEGIN
 		BEGIN
 			VALUE "CompanyName", "Dipl.-Ing. R. Hoppe\000"
             VALUE "LegalCopyright", "Copyright (C) 2006, 2011-2012 Ralf Hoppe\000"
-			VALUE "FileDescription", "Digital Filter Coefficients Generator (DFCGEN) GTK+\000"
+			VALUE "FileDescription", "Digital Filter Coefficients Generator (DFCGen) GTK+\000"
 			VALUE "FileVersion", "0.4\000"
 			VALUE "InternalName", PACKAGE "\000"
 			VALUE "OriginalFilename", PACKAGE ".exe\000"
@@ -40,4 +40,4 @@ BEGIN
 END
 
 
-DFCGEN ICON "dfcgen.ico"
+DFCGen ICON "dfcgen.ico"
