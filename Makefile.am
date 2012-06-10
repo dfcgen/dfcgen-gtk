@@ -50,12 +50,18 @@ GTK_VERSION=$(shell $(PKG_CONFIG) --modversion "gtk+-2.0" | \
 dist_win32_dir = ./dist/$(PACKAGE)$(GTK_VERSION)-$(VERSION)
 
 # all GTK/GDK DLLs needed by dfcgen-gtk (heuristically determined)
-GTK_DLL_LIST = intl.dll libatk-1.0-0.dll libcairo-2.dll libgdk_pixbuf-2.0-0.dll \
+GTK_DLL_COMMON = libgio-2.0-0.dll libatk-1.0-0.dll libcairo-2.dll libgdk_pixbuf-2.0-0.dll \
          libgdk-win32-2.0-0.dll libglib-2.0-0.dll libgmodule-2.0-0.dll \
          libgobject-2.0-0.dll libgsl-0.dll libgslcblas-0.dll \
          libgtk-win32-2.0-0.dll libiconv-2.dll libintl-8.dll \
          libpango-1.0-0.dll libpangocairo-1.0-0.dll libpangowin32-1.0-0.dll \
-         libpng12-0.dll libssp-0.dll
+         libpng*.dll libgthread-2.0-0.dll libpangoft2-1.0-0.dll
+
+GTK212_DLL_ADDONS = intl.dll libssp-0.dll
+GTK220_DLL_ADDONS = freetype6.dll libexpat-1.dll libfontconfig-1.dll
+
+GTK_DLL_LIST = $(GTK_DLL_COMMON) $(GTK212_DLL_ADDONS) $(GTK220_DLL_ADDONS)
+
 
 dist-win32: all
 	@echo "Building Win32 distribution in $(dist_win32_dir) ..."
@@ -73,7 +79,7 @@ dist-win32: all
 	mkdir $(dist_win32_dir)/lib
 	cp -R /mingw/lib/gtk-2.0 $(dist_win32_dir)/lib && rm -fR $(dist_win32_dir)/lib/gtk-2.0/include
 	for f in $(GTK_DLL_LIST); do \
-	  cp -t $(dist_win32_dir) /mingw/bin/$$f; \
+	  cp -t $(dist_win32_dir) /mingw/bin/$$f 2>/dev/null; \
 	done
 	@echo '--------------------------------------------------------------------'
 	@echo "Win32 distribution in $(dist_win32_dir) ready for upload"
