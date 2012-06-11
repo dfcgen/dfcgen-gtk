@@ -3,7 +3,7 @@
  * \file
  *           Design dialogs handler.
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
  *
  ******************************************************************************/
@@ -53,6 +53,8 @@ typedef union dlg
 
 
 /* GLOBAL CONSTANT DECLARATIONS ***********************************************/
+
+#define DESIGNDLG_COMBO_CLASS   "comboFilterClass" /**< Filter class combobox widget name */
 
 
 /* GLOBAL VARIABLE DECLARATIONS ***********************************************/

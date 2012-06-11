@@ -59,7 +59,6 @@ typedef struct
 /* LOCAL CONSTANT DEFINITIONS *************************************************/
 
 #define DESIGNDLG_DEFAULT       FLTCLASS_DEFAULT          /**< Default design */
-#define DESIGNDLG_COMBO_CLASS    "comboFilterClass" /**< Filter class combobox widget name */
 
 
 

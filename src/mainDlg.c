@@ -655,35 +655,13 @@ GtkWidget* mainDlgCreate (void)
 {
     int i;
     MAINDLG_COEFF_ACTION *pAction;
-
-    GtkWidget *widget, *label, *toolbarMain, *menuItem;
-    GtkWidget *menuMain, *menuMainItem, *menuContainer, *submenuContainer;
-
-    GtkWidget *vbox1;
-
-    GtkWidget *toolitem1;
-    GtkWidget *btnOpen;
-    GtkWidget *btnSave;
-    GtkWidget *btnNew;
-    GtkWidget *btnPreferences;
-    GtkWidget *separatortoolitem2;
-    GtkWidget *btnExit;
-    GtkWidget *hbox1;
-    GtkWidget *boxDesignDlg;
-    GtkWidget *hbox3;
-    GtkWidget *eventbox2;
-    GtkWidget *comboFilterClass;
-    GtkWidget *hbuttonbox1;
-    GtkWidget *btnApply;
-    GtkWidget *btnHelp;
-    GtkWidget *boxFilterDlg;
-    GtkWidget *vpaneFilter;
-    GtkWidget *frame1;
-    GtkWidget *scrolledwindow1;
-    GtkWidget *scrolledwindow2;
-    GtkWidget *table6;
-    GtkWidget *hbuttonbox3;
     GtkRequisition size;
+
+    GtkWidget *menuMain, *menuMainItem, *menuContainer, *submenuContainer;
+    GtkWidget *toolbarMain, *menuItem;
+    GtkWidget *widget, *label, *table, *button;
+    GtkWidget *hbox1, *hbox2, *hbox3, *vbox1, *vpaneFilter;
+    GtkWidget *boxDesignDlg, *boxFilterDlg, *comboFilterClass;
 
     GtkAccelGroup *accel_group = gtk_accel_group_new ();
 
@@ -893,40 +871,41 @@ GtkWidget* mainDlgCreate (void)
     gtk_box_pack_start (GTK_BOX (vbox1), toolbarMain, FALSE, FALSE, 0);
     gtk_toolbar_set_style (GTK_TOOLBAR (toolbarMain), GTK_TOOLBAR_BOTH);
 
-    toolitem1 = (GtkWidget*) gtk_tool_item_new ();
-    gtk_container_add (GTK_CONTAINER (toolbarMain), toolitem1);
+    widget = (GtkWidget*) gtk_tool_item_new ();
+    gtk_container_add (GTK_CONTAINER (toolbarMain), widget);
 
-    btnOpen = (GtkWidget*) gtk_tool_button_new_from_stock (GTK_STOCK_OPEN);
-    gtk_container_add (GTK_CONTAINER (toolbarMain), btnOpen);
-    g_signal_connect ((gpointer) btnOpen, "clicked",
+    button = (GtkWidget*) gtk_tool_button_new_from_stock (GTK_STOCK_OPEN);
+    gtk_container_add (GTK_CONTAINER (toolbarMain), button);
+    g_signal_connect ((gpointer) button, "clicked",
                       G_CALLBACK (fileDlgOpenActivate),
                       NULL);
 
-    btnSave = (GtkWidget*) gtk_tool_button_new_from_stock (GTK_STOCK_SAVE);
-    gtk_container_add (GTK_CONTAINER (toolbarMain), btnSave);
-    g_signal_connect ((gpointer) btnSave, "clicked",
+    button = (GtkWidget*) gtk_tool_button_new_from_stock (GTK_STOCK_SAVE);
+    gtk_container_add (GTK_CONTAINER (toolbarMain), button);
+    g_signal_connect ((gpointer) button, "clicked",
                       G_CALLBACK (fileDlgSaveActivate),
                       NULL);
-    GLADE_HOOKUP_OBJECT (topWidget, btnSave, "toolBtnSave");
+    GLADE_HOOKUP_OBJECT (topWidget, button, "toolBtnSave");
 
-    btnNew = (GtkWidget*) gtk_tool_button_new_from_stock (GTK_STOCK_NEW);
-    gtk_container_add (GTK_CONTAINER (toolbarMain), btnNew);
-    g_signal_connect ((gpointer) btnNew, "clicked",
+    button = (GtkWidget*) gtk_tool_button_new_from_stock (GTK_STOCK_NEW);
+    gtk_container_add (GTK_CONTAINER (toolbarMain), button);
+    g_signal_connect ((gpointer) button, "clicked",
                       G_CALLBACK (fileDlgNewActivate), NULL);
 
     widget = (GtkWidget*) gtk_separator_tool_item_new ();
     gtk_container_add (GTK_CONTAINER (toolbarMain), widget);
 
-    btnPreferences = (GtkWidget*) gtk_tool_button_new_from_stock (GTK_STOCK_PREFERENCES);
-    gtk_container_add (GTK_CONTAINER (toolbarMain), btnPreferences);
-    g_signal_connect ((gpointer) btnPreferences, "clicked",
+    button = (GtkWidget*) gtk_tool_button_new_from_stock (GTK_STOCK_PREFERENCES);
+    gtk_container_add (GTK_CONTAINER (toolbarMain), button);
+    g_signal_connect ((gpointer) button, "clicked",
                       G_CALLBACK (editDlgSettingsActivate), NULL);
 
-    separatortoolitem2 = (GtkWidget*) gtk_separator_tool_item_new ();
-    gtk_container_add (GTK_CONTAINER (toolbarMain), separatortoolitem2);
+    widget = (GtkWidget*) gtk_separator_tool_item_new ();
+    gtk_container_add (GTK_CONTAINER (toolbarMain), widget);
 
-    btnExit = (GtkWidget*) gtk_tool_button_new_from_stock (GTK_STOCK_QUIT);
-    gtk_container_add (GTK_CONTAINER (toolbarMain), btnExit);
+    button = (GtkWidget*) gtk_tool_button_new_from_stock (GTK_STOCK_QUIT);
+    gtk_container_add (GTK_CONTAINER (toolbarMain), button);
+    g_signal_connect ((gpointer) button, "clicked", G_CALLBACK (mainDlgQuit), NULL);
 
     hbox1 = gtk_hbox_new (FALSE, 0);
     gtk_box_pack_start (GTK_BOX (vbox1), hbox1, TRUE, TRUE, 0);
@@ -944,33 +923,34 @@ GtkWidget* mainDlgCreate (void)
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
     gtk_box_pack_start (GTK_BOX (hbox3), label, FALSE, FALSE, 0);
 
-    eventbox2 = gtk_event_box_new ();
-    gtk_box_pack_start (GTK_BOX (hbox3), eventbox2, FALSE, TRUE, 0);
-    gtk_widget_set_tooltip_text (eventbox2, _("Class of filter (or system)"));
+    widget = gtk_event_box_new ();
+    gtk_box_pack_start (GTK_BOX (hbox3), widget, FALSE, TRUE, 0);
+    gtk_widget_set_tooltip_text (widget, _("Class of filter (or system)"));
 
     comboFilterClass = gtk_combo_box_new_text ();
-    gtk_container_add (GTK_CONTAINER (eventbox2), comboFilterClass);
+    gtk_container_add (GTK_CONTAINER (widget), comboFilterClass);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), comboFilterClass);
 
-    hbuttonbox1 = gtk_hbutton_box_new ();
-    gtk_box_pack_start (GTK_BOX (boxDesignDlg), hbuttonbox1, FALSE, TRUE, 0);
-    gtk_container_set_border_width (GTK_CONTAINER (hbuttonbox1), 6);
-    gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox1), GTK_BUTTONBOX_SPREAD);
-    gtk_box_set_spacing (GTK_BOX (hbuttonbox1), 12);
+    widget = gtk_hbutton_box_new ();
+    gtk_box_pack_start (GTK_BOX (boxDesignDlg), widget, FALSE, TRUE, 0);
+    gtk_container_set_border_width (GTK_CONTAINER (widget), 6);
+    gtk_button_box_set_layout (GTK_BUTTON_BOX (widget), GTK_BUTTONBOX_SPREAD);
+    gtk_box_set_spacing (GTK_BOX (widget), 12);
 
-    btnHelp = gtk_button_new_from_stock (GTK_STOCK_HELP);
-    gtk_container_add (GTK_CONTAINER (hbuttonbox1), btnHelp);
-    gtk_widget_set_tooltip_text (btnHelp, _("Help"));
+    button = gtk_button_new_from_stock (GTK_STOCK_HELP);
+    gtk_container_add (GTK_CONTAINER (widget), button);
+    gtk_widget_set_tooltip_text (button, _("Help"));
 #ifndef TODO
-    gtk_widget_set_sensitive (btnHelp, FALSE);
+    gtk_widget_set_sensitive (button, FALSE);
 #endif
 
-    btnApply = gtk_button_new_from_stock (GTK_STOCK_APPLY);
-    gtk_container_add (GTK_CONTAINER (hbuttonbox1), btnApply);
-    GTK_WIDGET_SET_FLAGS (btnApply, GTK_CAN_DEFAULT);
-    g_signal_connect ((gpointer) btnApply, "clicked",
+    button = gtk_button_new_from_stock (GTK_STOCK_APPLY);
+    gtk_container_add (GTK_CONTAINER (widget), button);
+    GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+    g_signal_connect ((gpointer) button, "clicked",
                       G_CALLBACK (designDlgApply), comboFilterClass);
-    gtk_widget_set_tooltip_text (btnApply, _("Apply input data"));
+    gtk_widget_set_tooltip_text (button, _("Apply input data"));
+    GLADE_HOOKUP_OBJECT (topWidget, button, MAINDLG_BTN_APPLY);
 
     boxFilterDlg = gtk_vbox_new (FALSE, 0);
     gtk_box_pack_start (GTK_BOX (hbox1), boxFilterDlg, TRUE, TRUE, 0);
@@ -980,45 +960,45 @@ GtkWidget* mainDlgCreate (void)
     gtk_box_pack_start (GTK_BOX (boxFilterDlg), vpaneFilter, TRUE, TRUE, 0);
     gtk_container_set_border_width (GTK_CONTAINER (vpaneFilter), 6);
 
-    frame1 = gtk_frame_new (NULL);
-    gtk_paned_pack1 (GTK_PANED (vpaneFilter), frame1, FALSE, TRUE);
-    gtk_container_set_border_width (GTK_CONTAINER (frame1), 6);
+    widget = gtk_frame_new (NULL);
+    gtk_paned_pack1 (GTK_PANED (vpaneFilter), widget, FALSE, TRUE);
+    gtk_container_set_border_width (GTK_CONTAINER (widget), 6);
 
-    gtk_container_add (GTK_CONTAINER (frame1), rootsPlotCreate ());
+    gtk_container_add (GTK_CONTAINER (widget), rootsPlotCreate ());
 
     label = gtk_label_new (_("<b>Roots</b>"));
-    gtk_frame_set_label_widget (GTK_FRAME (frame1), label);
+    gtk_frame_set_label_widget (GTK_FRAME (widget), label);
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
 
-    table6 = gtk_table_new (2, 2, FALSE);
-    gtk_paned_pack2 (GTK_PANED (vpaneFilter), table6, TRUE, TRUE);
-    gtk_container_set_border_width (GTK_CONTAINER (table6), 6);
-    gtk_table_set_col_spacings (GTK_TABLE (table6), 12);
+    table = gtk_table_new (2, 2, FALSE);
+    gtk_paned_pack2 (GTK_PANED (vpaneFilter), table, TRUE, TRUE);
+    gtk_container_set_border_width (GTK_CONTAINER (table), 6);
+    gtk_table_set_col_spacings (GTK_TABLE (table), 12);
 
-    scrolledwindow2 = gtk_scrolled_window_new (NULL, NULL);
-    gtk_table_attach (GTK_TABLE (table6), scrolledwindow2, 1, 2, 1, 2,
+    widget = gtk_scrolled_window_new (NULL, NULL);
+    gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 1, 2,
                       (GtkAttachOptions) (GTK_EXPAND | GTK_SHRINK | GTK_FILL),
                       (GtkAttachOptions) (GTK_EXPAND | GTK_SHRINK | GTK_FILL), 0, 0);
-    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow2), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-    gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolledwindow2), GTK_SHADOW_IN);
+    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (widget), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+    gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (widget), GTK_SHADOW_IN);
 
     treeDenominator = createCoeffListTreeView (&treeNumerator);
-    gtk_container_add (GTK_CONTAINER (scrolledwindow2), GTK_WIDGET (treeDenominator));
+    gtk_container_add (GTK_CONTAINER (widget), GTK_WIDGET (treeDenominator));
     gtk_widget_set_tooltip_text (GTK_WIDGET (treeDenominator), _("Denominator coefficients"));
 
-    scrolledwindow1 = gtk_scrolled_window_new (NULL, NULL);
-    gtk_table_attach (GTK_TABLE (table6), scrolledwindow1, 0, 1, 1, 2,
+    widget = gtk_scrolled_window_new (NULL, NULL);
+    gtk_table_attach (GTK_TABLE (table), widget, 0, 1, 1, 2,
                       (GtkAttachOptions) (GTK_EXPAND | GTK_SHRINK | GTK_FILL),
                       (GtkAttachOptions) (GTK_EXPAND | GTK_SHRINK | GTK_FILL), 0, 0);
-    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow1), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-    gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolledwindow1), GTK_SHADOW_IN);
+    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (widget), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+    gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (widget), GTK_SHADOW_IN);
 
     treeNumerator = createCoeffListTreeView (&treeDenominator);
-    gtk_container_add (GTK_CONTAINER (scrolledwindow1), GTK_WIDGET (treeNumerator));
+    gtk_container_add (GTK_CONTAINER (widget), GTK_WIDGET (treeNumerator));
     gtk_widget_set_tooltip_text (GTK_WIDGET (treeNumerator), _("Numerator coefficients"));
 
     label = gtk_label_new (_("<b>Numerator</b>"));
-    gtk_table_attach (GTK_TABLE (table6), label, 0, 1, 0, 1,
+    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (0), 0, 6);
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
@@ -1026,24 +1006,24 @@ GtkWidget* mainDlgCreate (void)
     gtk_label_set_ellipsize (GTK_LABEL (label), PANGO_ELLIPSIZE_END);
 
     label = gtk_label_new (_("<b>Denominator</b>"));
-    gtk_table_attach (GTK_TABLE (table6), label, 1, 2, 0, 1,
+    gtk_table_attach (GTK_TABLE (table), label, 1, 2, 0, 1,
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (0), 0, 6);
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
     gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
     gtk_label_set_ellipsize (GTK_LABEL (label), PANGO_ELLIPSIZE_END);
 
-    hbuttonbox3 = gtk_hbutton_box_new ();
-    gtk_box_pack_start (GTK_BOX (boxFilterDlg), hbuttonbox3, FALSE, TRUE, 0);
-    gtk_container_set_border_width (GTK_CONTAINER (hbuttonbox3), 6);
-    gtk_box_set_spacing (GTK_BOX (hbuttonbox3), 6);
+    hbox2 = gtk_hbutton_box_new ();
+    gtk_box_pack_start (GTK_BOX (boxFilterDlg), hbox2, FALSE, TRUE, 0);
+    gtk_container_set_border_width (GTK_CONTAINER (hbox2), 6);
+    gtk_box_set_spacing (GTK_BOX (hbox2), 6);
 
     for (i = 0, pAction = mainDlgCoeffBtn;
          i < N_ELEMENTS (mainDlgCoeffBtn);
          i++, pAction++)
     {
         pAction->btn = gtk_button_new ();
-        gtk_container_add (GTK_CONTAINER (hbuttonbox3), pAction->btn);
+        gtk_container_add (GTK_CONTAINER (hbox2), pAction->btn);
         gtk_widget_set_sensitive (pAction->btn, FALSE);
         gtk_widget_set_tooltip_text (pAction->btn, gettext (pAction->tooltip));
         widget = gtk_image_new_from_stock (pAction->stockimg,
@@ -1057,9 +1037,6 @@ GtkWidget* mainDlgCreate (void)
     statusbar = gtk_statusbar_new ();
     gtk_box_pack_start (GTK_BOX (vbox1), statusbar, FALSE, FALSE, 0);
 
-    g_signal_connect ((gpointer) btnExit, "clicked",
-                      G_CALLBACK (mainDlgQuit),
-                      NULL);
     g_signal_connect ((gpointer) boxDesignDlg, "realize",
                       G_CALLBACK (designDlgBoxRealize),
                       NULL);
@@ -1069,28 +1046,8 @@ GtkWidget* mainDlgCreate (void)
 
     /* Store pointers to all widgets, for use by lookup_widget(). */
     GLADE_HOOKUP_OBJECT_NO_REF (topWidget, topWidget, "topWidget");
-    GLADE_HOOKUP_OBJECT (topWidget, toolbarMain, "toolbarMain");
-    GLADE_HOOKUP_OBJECT (topWidget, toolitem1, "toolitem1");
-    GLADE_HOOKUP_OBJECT (topWidget, btnOpen, "btnOpen");
-    GLADE_HOOKUP_OBJECT (topWidget, btnSave, "btnSave");
-    GLADE_HOOKUP_OBJECT (topWidget, btnNew, "btnNew");
-    GLADE_HOOKUP_OBJECT (topWidget, btnPreferences, "btnPreferences");
-    GLADE_HOOKUP_OBJECT (topWidget, separatortoolitem2, "separatortoolitem2");
-    GLADE_HOOKUP_OBJECT (topWidget, btnExit, "btnExit");
-    GLADE_HOOKUP_OBJECT (topWidget, hbox1, "hbox1");
     GLADE_HOOKUP_OBJECT (topWidget, boxDesignDlg, "boxDesignDlg");
-    GLADE_HOOKUP_OBJECT (topWidget, hbox3, "hbox3");
-    GLADE_HOOKUP_OBJECT (topWidget, eventbox2, "eventbox2");
-    GLADE_HOOKUP_OBJECT (topWidget, comboFilterClass, "comboFilterClass");
-    GLADE_HOOKUP_OBJECT (topWidget, hbuttonbox1, "hbuttonbox1");
-    GLADE_HOOKUP_OBJECT (topWidget, btnApply, MAINDLG_BTN_APPLY);
-    GLADE_HOOKUP_OBJECT (topWidget, btnHelp, "btnHelp");
-    GLADE_HOOKUP_OBJECT (topWidget, boxFilterDlg, "boxFilterDlg");
-    GLADE_HOOKUP_OBJECT (topWidget, vpaneFilter, "vpaneFilter");
-    GLADE_HOOKUP_OBJECT (topWidget, frame1, "frame1");
-    GLADE_HOOKUP_OBJECT (topWidget, scrolledwindow1, "scrolledwindow1");
-    GLADE_HOOKUP_OBJECT (topWidget, scrolledwindow2, "scrolledwindow2");
-    GLADE_HOOKUP_OBJECT (topWidget, hbuttonbox3, "hbuttonbox3");
+    GLADE_HOOKUP_OBJECT (topWidget, comboFilterClass, DESIGNDLG_COMBO_CLASS);
 
     gtk_window_add_accel_group (GTK_WINDOW (topWidget), accel_group);
     gtk_widget_show_all (topWidget);
