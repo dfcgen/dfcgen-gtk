@@ -81,9 +81,6 @@
 
 * Optimization
 
-  - Function: mainDlgCreate
-    Reduce number of variables used
-
   - Function: responseWidget
     Try to move some of these data into responsePlot.c
 
