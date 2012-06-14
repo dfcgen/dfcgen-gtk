@@ -31,6 +31,8 @@ uninstall-local:
 dist_debian_dir="dist/$(distdir)"
 
 dist-debian: dist
+	svn2cl -r 'HEAD:1' --linelen=80 --group-by-day --separate-daylogs \
+		--reparagraph --authors=".svn-authors" --output=ChangeLog.$(shell date "+%g%m%d")
 	cp -f -t dist $(distdir).tar.gz
 	cd dist && gunzip -c $(distdir).tar.gz | tar xf -
 	cp -Rf dist/debian $(dist_debian_dir)
@@ -45,7 +47,7 @@ dist-debian: dist
 # maintainer rule for "package" build on MinGW
 if BUILD_OS_MINGW32
 
-GTK_VERSION=$(shell $(PKG_CONFIG) --modversion "gtk+-2.0" | \
+GTK_VERSION = $(shell $(PKG_CONFIG) --modversion "gtk+-2.0" | \
                     sed -n 's/^\([0-9]\+\)\.\([0-9]\+\)\(\.[0-9]*\)\?/\1\2/p')
 dist_win32_dir = ./dist/$(PACKAGE)$(GTK_VERSION)-$(VERSION)
 
