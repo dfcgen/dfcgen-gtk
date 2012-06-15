@@ -81,10 +81,13 @@ dist-win32: all
 	mkdir $(dist_win32_dir)/lib
 	cp -R /mingw/lib/gtk-2.0 $(dist_win32_dir)/lib && rm -fR $(dist_win32_dir)/lib/gtk-2.0/include
 	for f in $(GTK_DLL_LIST); do \
+	  echo -e "\tPackaging $(dist_win32_dir)/$$f"; \
 	  cp -t $(dist_win32_dir) /mingw/bin/$$f 2>/dev/null; \
+	  true; \
 	done
-	@echo '--------------------------------------------------------------------'
-	@echo "Win32 distribution in $(dist_win32_dir) ready for upload"
+	@echo
+	@echo'--------------------------------------------------------------------'
+	@echo "Win32 package in $(dist_win32_dir) ready for upload"
 	@echo '--------------------------------------------------------------------'
 
 endif
