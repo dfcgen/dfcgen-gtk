@@ -35,6 +35,7 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = dfcgen-gtk$(EXEEXT)
+@BUILD_OS_MINGW32_TRUE@am__append_1 = $(PACKAGE_RC_FILE).o
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -64,7 +65,9 @@ am_dfcgen_gtk_OBJECTS = support.$(OBJEXT) main.$(OBJEXT) \
 	linFirDesignDlg.$(OBJEXT) linFirFilter.$(OBJEXT) \
 	rootsPlot.$(OBJEXT) filterPrint.$(OBJEXT)
 dfcgen_gtk_OBJECTS = $(am_dfcgen_gtk_OBJECTS)
-dfcgen_gtk_LDADD = $(LDADD)
+dfcgen_gtk_DEPENDENCIES = $(am__append_1)
+dfcgen_gtk_LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(dfcgen_gtk_LDFLAGS) \
+	$(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__depfiles_maybe = depfiles
@@ -128,14 +131,14 @@ OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 PACKAGE_AUTHOR = @PACKAGE_AUTHOR@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
-PACKAGE_CFLAGS = @PACKAGE_CFLAGS@
-PACKAGE_LIBS = @PACKAGE_LIBS@
 PACKAGE_NAME = @PACKAGE_NAME@
 PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
+PKGCONF_CFLAGS = @PKGCONF_CFLAGS@
+PKGCONF_LIBS = @PKGCONF_LIBS@
 PKG_CONFIG = @PKG_CONFIG@
 POSUB = @POSUB@
 SET_MAKE = @SET_MAKE@
@@ -143,6 +146,7 @@ SHELL = @SHELL@
 STRIP = @STRIP@
 USE_NLS = @USE_NLS@
 VERSION = @VERSION@
+WINDRES = @WINDRES@
 XGETTEXT = @XGETTEXT@
 XGETTEXT_015 = @XGETTEXT_015@
 XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
@@ -185,6 +189,9 @@ mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
 pdfdir = @pdfdir@
+pkgfiltersdir = @pkgfiltersdir@
+pkgpixmapsdir = @pkgpixmapsdir@
+pkgtemplatesdir = @pkgtemplatesdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
@@ -197,19 +204,22 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_CPPFLAGS = \
-	-DPACKAGE_LOCALE_DIR=\""$(localedir)"\" \
-	-DPACKAGE_FILTERS_DIR=\""$(pkgdatadir)/filters"\" \
-	-DPACKAGE_TEMPLATES_DIR=\""$(pkgdatadir)/templates"\" \
-	-DPACKAGE_PIXMAPS_DIR=\""$(pkgdatadir)/pixmaps"\" \
-	-I"$(top_srcdir)/include" \
-	@PACKAGE_CFLAGS@
+	-DPACKAGE_LOCALE_DIR=\"$(localedir)\" \
+	-DPACKAGE_PIXMAPS_DIR=\"$(pkgpixmapsdir)\" \
+	-DPACKAGE_FILTERS_DIR=\"$(pkgfiltersdir)\" \
+	-DPACKAGE_TEMPLATES_DIR=\"$(pkgtemplatesdir)\" \
+	-I"$(top_srcdir)/include"
 
 
 # Additional CFLAGS
-AM_CFLAGS = 
+AM_CFLAGS = @PKGCONF_CFLAGS@
 
-# Use PACKAGE_LIBS from PKG_CHECK_MODULES (pkg-config)
-AM_LDFLAGS = @PACKAGE_LIBS@
+# need for LIBINTL from AM_GNU_GETTEXT() - gettext.m4
+dfcgen_gtk_LDADD = @LIBINTL@ $(am__append_1)
+
+# when building on MinGW: add resource file and Win32 compiler flags
+@BUILD_OS_MINGW32_TRUE@PACKAGE_RC_FILE = dfcgen-gtk.rc
+@BUILD_OS_MINGW32_TRUE@dfcgen_gtk_LDFLAGS = -mwindows
 dfcgen_gtk_SOURCES = \
 	support.c \
 	main.c \
@@ -313,7 +323,7 @@ clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
 dfcgen-gtk$(EXEEXT): $(dfcgen_gtk_OBJECTS) $(dfcgen_gtk_DEPENDENCIES) 
 	@rm -f dfcgen-gtk$(EXEEXT)
-	$(LINK) $(dfcgen_gtk_OBJECTS) $(dfcgen_gtk_LDADD) $(LIBS)
+	$(dfcgen_gtk_LINK) $(dfcgen_gtk_OBJECTS) $(dfcgen_gtk_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -448,7 +458,8 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(PROGRAMS)
+@BUILD_OS_MINGW32_FALSE@all-local:
+all-am: Makefile $(PROGRAMS) all-local
 installdirs:
 	for dir in "$(DESTDIR)$(bindir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
@@ -549,19 +560,26 @@ uninstall-am: uninstall-binPROGRAMS
 
 .MAKE: install-am install-strip
 
-.PHONY: CTAGS GTAGS all all-am check check-am clean clean-binPROGRAMS \
-	clean-generic ctags distclean distclean-compile \
-	distclean-generic distclean-tags distdir dvi dvi-am html \
-	html-am info info-am install install-am install-binPROGRAMS \
-	install-data install-data-am install-dvi install-dvi-am \
-	install-exec install-exec-am install-html install-html-am \
-	install-info install-info-am install-man install-pdf \
-	install-pdf-am install-ps install-ps-am install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
-	uninstall-am uninstall-binPROGRAMS
+.PHONY: CTAGS GTAGS all all-am all-local check check-am clean \
+	clean-binPROGRAMS clean-generic ctags distclean \
+	distclean-compile distclean-generic distclean-tags distdir dvi \
+	dvi-am html html-am info info-am install install-am \
+	install-binPROGRAMS install-data install-data-am install-dvi \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-info install-info-am install-man \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic pdf pdf-am ps ps-am \
+	tags uninstall uninstall-am uninstall-binPROGRAMS
 
+
+# when building on MinGW: regard an additional rule on "make [all]", which
+#                         executes the resource compiler
+@BUILD_OS_MINGW32_TRUE@all-local: $(PACKAGE_RC_FILE).o
+
+@BUILD_OS_MINGW32_TRUE@$(PACKAGE_RC_FILE).o: ../dist/win32/$(PACKAGE_RC_FILE)
+@BUILD_OS_MINGW32_TRUE@	$(WINDRES) -i ../dist/win32/$(PACKAGE_RC_FILE) --input-format=rc -o $(PACKAGE_RC_FILE).o -O coff
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

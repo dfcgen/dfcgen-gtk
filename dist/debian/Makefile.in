@@ -35,8 +35,8 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 subdir = dist/debian
-DIST_COMMON = $(dist_debian_DATA) $(dist_doc_DATA) \
-	$(srcdir)/Makefile.am $(srcdir)/Makefile.in
+DIST_COMMON = $(dist_doc_DATA) $(srcdir)/Makefile.am \
+	$(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/gettext.m4 \
 	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/lib-ld.m4 \
@@ -72,8 +72,8 @@ am__nobase_list = $(am__nobase_strip_setup); \
 am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
-am__installdirs = "$(DESTDIR)$(debiandir)" "$(DESTDIR)$(docdir)"
-DATA = $(dist_debian_DATA) $(dist_doc_DATA)
+am__installdirs = "$(DESTDIR)$(docdir)"
+DATA = $(dist_doc_DATA)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
@@ -197,8 +197,8 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-debiandir = $(docdir)/build/debian
-dist_debian_DATA = \
+dist_doc_DATA = dfcgen-gtk.desktop
+EXTRA_DIST = \
 	changelog \
 	compat \
 	control \
@@ -209,7 +209,6 @@ dist_debian_DATA = \
 	postinst \
 	prerm
 
-dist_doc_DATA = dfcgen-gtk.desktop
 all: all-am
 
 .SUFFIXES:
@@ -243,26 +242,6 @@ $(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
-install-dist_debianDATA: $(dist_debian_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(debiandir)" || $(MKDIR_P) "$(DESTDIR)$(debiandir)"
-	@list='$(dist_debian_DATA)'; test -n "$(debiandir)" || list=; \
-	for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  echo "$$d$$p"; \
-	done | $(am__base_list) | \
-	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(debiandir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(debiandir)" || exit $$?; \
-	done
-
-uninstall-dist_debianDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(dist_debian_DATA)'; test -n "$(debiandir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	test -n "$$files" || exit 0; \
-	echo " ( cd '$(DESTDIR)$(debiandir)' && rm -f" $$files ")"; \
-	cd "$(DESTDIR)$(debiandir)" && rm -f $$files
 install-dist_docDATA: $(dist_doc_DATA)
 	@$(NORMAL_INSTALL)
 	test -z "$(docdir)" || $(MKDIR_P) "$(DESTDIR)$(docdir)"
@@ -324,7 +303,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(debiandir)" "$(DESTDIR)$(docdir)"; do \
+	for dir in "$(DESTDIR)$(docdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -372,7 +351,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-dist_debianDATA install-dist_docDATA
+install-data-am: install-dist_docDATA
 
 install-dvi: install-dvi-am
 
@@ -416,21 +395,20 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-dist_debianDATA uninstall-dist_docDATA
+uninstall-am: uninstall-dist_docDATA
 
 .MAKE: install-am install-strip
 
 .PHONY: all all-am check check-am clean clean-generic distclean \
 	distclean-generic distdir dvi dvi-am html html-am info info-am \
 	install install-am install-data install-data-am \
-	install-dist_debianDATA install-dist_docDATA install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am install-man \
-	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip installcheck installcheck-am installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-generic pdf pdf-am ps ps-am uninstall uninstall-am \
-	uninstall-dist_debianDATA uninstall-dist_docDATA
+	install-dist_docDATA install-dvi install-dvi-am install-exec \
+	install-exec-am install-html install-html-am install-info \
+	install-info-am install-man install-pdf install-pdf-am \
+	install-ps install-ps-am install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-generic pdf \
+	pdf-am ps ps-am uninstall uninstall-am uninstall-dist_docDATA
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

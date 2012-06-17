@@ -1,226 +1,809 @@
-2012-05-19 Ralf Hoppe  <ralf.hoppe@ieee.org>
+2012-06-17  Ralf Hoppe  <ralf.hoppe@ieee.org>
 
-	* COPYING, README, TODO, aclocal.m4, ChangeLog, dist/debian/changelog:
-	* Makefile.in, config.h.in, configure:
-	* doc/Doxyfile, doc/Makefile.in:
-	* data/Makefile.in, data/filters/Makefile.in:
-	* data/templates/Makefile.in, data/pixmaps/Makefile.in:
-	* po/POTFILES.in, po/de.po, po/de.gmo, po/dfcgen-gtk.pot:
-	* src/Makefile.in, include/Makefile.in:
-	Release of version 0.3 on Ubuntu 10.04 Lucid Lynx.
+	* ChangeLog, Makefile.in, config.h.in, configure,
+	  data/Makefile.in, data/filters/Makefile.in,
+	  data/pixmaps/Makefile.in, data/templates/Makefile.in,
+          dist/dfcgen-gtk-0.4.tar.gz, dist/dfcgen-gtk_0.4-1.dsc,
+          dist/dfcgen-gtk_0.4-1.tar.gz, dist/dfcgen-gtk_0.4-1_i386.changes
+          dist/dfcgen-gtk_0.4-1_i386.deb, dist/dfcgen-gtk212-0.4.zip,
+	  dist/dfcgen-gtk220-0.4.zip, dist/debian/Makefile.in,
+          dist/debian/changelog, dist/win32/Makefile.in, doc/Doxyfile,
+          doc/Makefile.in, include/Makefile.in, po/de.gmo, po/de.po,
+	  po/dfcgen-gtk.pot, src/Makefile.in: dfcgen-gtk release 0.4
 
-2012-05-13 Ralf Hoppe  <ralf.hoppe@ieee.org>
+	* dist/dfcgen-gtk-0.3.tar.gz, dist/dfcgen-gtk_0.3-1.dsc,
+	  dist/dfcgen-gtk_0.3-1.tar.gz, dist/dfcgen-gtk_0.3-1_i386.changes,
+	  dist/dfcgen-gtk_0.3-1_i386.deb: Removed in preparation of release 0.4
 
-	* src/cfgSettings.c, src/filterPrint.c, src/helpDlg.c:
-	* include/filterPrint.h:
-	GTK versions before 2.12 not supported anymore.
+	* Makefile.am (dist-win32): Missing zlib1.dll added to Win32 package.
 
-	* src/helpDlg.c: Help sub-menu removed, because no help available.
+2012-06-15  Ralf Hoppe  <ralf.hoppe@ieee.org>
 
-	* src/editDlg.c, src/linFirDesignDlg.c, src/miscDesignDlg.c:
-	* src/responseDlg.c, src/responseWin.c, src/stdIirDesignDlg.c:
-	No use of GtkTooltips, because obsolete since 2.12.
+	* Makefile.am (dist-win32): Bugfix in for loop, in case copying a
+	  DLL fails.
 
-	* src/fileDlg.c:
-	Do not show hidden files in all file dialogs.
+2012-06-14  Ralf Hoppe <ralf.hoppe@ieee.org>
 
-	* src/main.c, src/miscDesignDlg.c, src/projectFile.c:
-	Conditional define for path now associated with TEST, not DEBUG.
+	* .svn-authors, Makefile.am (dist-debian): Create a ChangeLog file
+	  from SVN logs.
 
-	* dist/debian/control, dist/debian/copyright:
-	Homepage changed to www.dfcgen.de.
+2012-06-13  Ralf Hoppe <ralf.hoppe@ieee.org>
 
-2012-05-05  Ralf Hoppe  <ralf.hoppe@ieee.org>
+	* TODO: Todo associated with mainDlgCreate() completed.
 
-	* src/filterResponse.c, src/mathPoly.c, src/dialogSupport.c:
-	Doxygen comments corrected.
+2012-06-11  Ralf Hoppe <ralf.hoppe@ieee.org>
 
-2012-04-30  Ralf Hoppe  <ralf.hoppe@ieee.org>
+	* include/designDlg.h, src/designDlg.c, src/mainDlg.c: Some internal
+	  cleanup of variable usage in mainDlgCreate().
 
-	* data/Makefile.am:
-	* data/templates/Makefile.am:
-	* data/templates/export.txt:
-	* data/templates/export.m:
-	* data/templates/export.c:
-	* src/Makefile.am, src/dfcProject.c, src/projectFile.c:
-	* src/fileDlg.c, src/mainDlg.c, include/dfcProject.h:
-	* po/de.po:
-	Export of coefficients, using template files, implemented.
+2012-06-10  Ralf Hoppe <ralf.hoppe@ieee.org>
 
-	* .cproject, .project: Transition to Eclipse.
+	* Makefile.am: GTK 2.20 requires to copy more DLLs (MinGW).
 
-2012-03-20  Ralf Hoppe  <ralf.hoppe@ieee.org>
+	* src/responseWin.c (responseWinRedraw): Enable print button after
+	  creation of a valid filter/system.
 
-	* configure.ac, Makefile.am, data/Makefile.am, src/main.c:
-	- Pixmaps moved to sub-directory data/pixmaps.
-	- Package homepage changed to www.dfcgen.de.
+	* dist/debian/Makefile.am, dist/win32/Makefile.am: Some build files not
+	  installed anymore.
 
-	* configure.ac, include/doxygen.h:
-	New option --enable-debug for configure script, inclusive CFLAGS.
+	* include/doxygen.h: Automated Win32 distribution (MinGW) build by
+	  Makefile rule 'dist-win32'.
 
-2012-01-03  Ralf Hoppe  <ralf.hoppe@ieee.org>
+	* Makefile.am, configure.ac, src/Makefile.am: Automated Win32
+	  distribution build by Makefile rule 'dist-win32'.
 
-	* dist/debian/postinst, dist/debian/prerm:
-	Added post-install and pre-rm script for Gnome desktop files
+	* src/mainDlg.c (mainDlgCreate): Do not set a main window icon from PNG
+	  file, if running on Win32.
 
-	* dist/debian/control: Section changed and Homepage added.
+	* dist/Makefile.in, dist/win32/Makefile.in,
+	  dist/debian/Makefile.in: initial revision
+
+	* README, COPYING, .project, dist/win32/dfcgen-gtk.rc,
+	  dist/debian/control, dist/debian/dfcgen-gtk.desktop,
+	  data/templates/export.c, data/templates/export.m: Name DFCGEN
+	  changed to DFCGen.
+
+2012-06-08  Ralf Hoppe <ralf.hoppe@ieee.org>
+
+	* src/editDlg.c, src/responseDlg.c, src/responseWin.c,
+	src/dialogSupport.c: Defines used for GTK buttons.
+
+	* src/main.c: Build on MinGW now is working, inclusive Win32 resource
+	  file processing and gettext support.
+
+	* include/support.h, src/miscDesignDlg.c, src/projectFile.c,
+	  src/support.c: Build on MinGW now is working, inclusive Win32 resource
+	  file processing and gettext support.
+
+	* data/filters/Makefile.am, data/pixmaps/Makefile.am,
+	  data/templates/Makefile.am, dist/win32/Makefile.am,
+	  dist/win32/dfcgen-gtk.rc, src/Makefile.am: Build on MinGW now is
+	  working, inclusive Win32 resource file processing and gettext support.
+
+	* configure.ac: Build on MinGW now is working, inclusive Win32 resource
+	  file processing and gettext support.
+
+2012-06-07  Ralf Hoppe <ralf.hoppe@ieee.org>
+
+	* include/base.h: DEBUG_LOG() macro conditionals changed.
+
+	* src/fileDlg.c: FIXME comment removed.
+
+	* include/doxygen.h: Typo (related to po directory) corrected.
+
+	* COPYING, data/templates/export.c, data/templates/export.m: Name
+	of dfcgen-gtk package corrected.
+
+2012-06-03  Ralf Hoppe <ralf.hoppe@ieee.org>
+
+	* src/mainDlg.c: Make help button inactive, because no help available so
+	  far.
+
+	* dist/win32, dist/win32/Makefile.am, dist/Makefile.am,
+	dist/win32/dfcgen-gtk.rc, dist/win32/dfcgen.ico: Win32 specific
+	files added.
+
+	* dist/debian/Makefile.am: Directory 'dist' added to distribution
+	  package.
+
+	* dfcgen-gtk.desktop: Moved to sub-directory 'dist/debian'.
+
+	* configure.ac, Makefile.am: Directory 'dist' added to
+	  distribution package.
+
+	* dist/debian/dfcgen-gtk.desktop: Moved into debian sub-directory.
+
+2012-06-02  Ralf Hoppe <ralf.hoppe@ieee.org>
+
+	* include/base.h, src/cairoPlot.c, src/cfgSettings.c,
+	  src/dialogSupport.c, src/editDlg.c, src/fileDlg.c, src/filterPrint.c,
+	  src/filterResponse.c, src/mainDlg.c, src/mathPoly.c,
+	  src/miscDesignDlg.c, src/projectFile.c, src/responseDlg.c,
+	  src/support.c: MALLOC() and FREE() replaced by g_malloc() and g_free().
+
+	* src/editDlg.c, src/helpDlg.c, src/main.c, src/mainDlg.c,
+	  src/miscDesignDlg.c, src/projectFile.c, src/responseWin.c,
+	  src/support.c: Handling of sub-directories in pkgdatadir made
+	  compatible with Win32 port.
+
+	* src/filterPrint.c (filterPrintPageHeader): Avoid GLib critical
+	  warning in case project title, author or description is not defined.
+
+	* src/Makefile.am, include/support.h: Handling of sub-directories
+	in pkgdatadir made compatible with Win32 port.
+
+	* include/gui.h: Redefinition of PACKAGE_ICON avoided.
+
+	* data/filters/Makefile.am, data/pixmaps/Makefile.am,
+	  data/templates/Makefile.am: New defines PACKAGE_FILTERS_DIR,
+	  PACKAGE_PIXMAPS_DIR, PACKAGE_TEMPLATES_DIR used.
+
+	* dfcgen-gtk.desktop: Menu application name changed to DFCGEN (GTK+).
+
+	* configure.ac: New defines PACKAGE_FILTERS_DIR, PACKAGE_PIXMAPS_DIR,
+	  PACKAGE_TEMPLATES_DIR created. CFLAGS_MACHINE removed. AC_INIT()
+	  changed to new style.
+
+2012-05-29  Ralf Hoppe <ralf.hoppe@ieee.org>
+
+	* configure.ac: Added -DGDK_DISABLE_DEPRECATED and
+	  -DGTK_DISABLE_DEPRECATED to CFLAGS_LANG. All AC_CHECK_LIB() macros
+	  removed because work done by PKG_CHECK_MODULES().
+
+	* include/gui.h (GLADE_HOOKUP_OBJECT): gtk_widget_ref() replaced by
+	  g_object_unref() and gtk_widget_ref() replaced by g_object_ref(),
+	  because both functions are deprecated.
+
+	* include/mathFuncs.h: Functions hypot() and pow10() renamed to
+	  uppercase letters, because both are macros now.
+
+	* src/Makefile.am: PACKAGE_LIBS moved away from AM_LDFLAGS into
+	  dfcgen_gtk_LDADD, else does not compile under Win32.
+
+	* src/designDlg.c (designDlgBoxRealize): Deprecated macro
+	  GTK_WIDGET_TOPLEVEL() conditionally replaced by function
+	  gtk_widget_is_toplevel(), which is available since GTK 2.18.
+
+	* src/dfcProject.c (dfcPrjExport): Error number ENOTSUP (unsupported in
+	  MinGW) changed to EINVAL.
+
+	* src/cairoPlot.c, src/linFirFilter.c, src/mathFuncs.c,
+	  src/stdIirFilter.c: Functions hypot() and pow10() renamed to
+	  uppercase letters, because both are macros now.
+
+2012-05-20  Ralf Hoppe <ralf.hoppe@ieee.org>
+
+	* .: config.log added to property "svn:ignore"
+
+	* dist/dfcgen-gtk-0.2.tar.gz, dist/dfcgen-gtk-0.3.tar.gz,
+	  dist/dfcgen-gtk_0.2-1.dsc, dist/dfcgen-gtk_0.2-1.tar.gz,
+	  dist/dfcgen-gtk_0.2-1_i386.changes, dist/dfcgen-gtk_0.2-1_i386.deb,
+	  dist/dfcgen-gtk_0.3-1.dsc, dist/dfcgen-gtk_0.3-1.tar.gz,
+	  dist/dfcgen-gtk_0.3-1_i386.changes, dist/dfcgen-gtk_0.3-1_i386.deb:
+	  dfcgen-gtk release 0.3
+
+	* dist/dfcgen-gtk-0.1.tar.gz, dist/dfcgen-gtk-0.2.tar.gz,
+	  dist/dfcgen-gtk_0.1-1.dsc, dist/dfcgen-gtk_0.1-1.tar.gz,
+	  dist/dfcgen-gtk_0.1-1_i386.changes, dist/dfcgen-gtk_0.1-1_i386.deb,
+	  dist/dfcgen-gtk_0.2-1.dsc, dist/dfcgen-gtk_0.2-1.tar.gz,
+	  dist/dfcgen-gtk_0.2-1_i386.changes, dist/dfcgen-gtk_0.2-1_i386.deb:
+	  dfcgen-gtk release 0.2
+
+	* dist/dfcgen-gtk-0.1.tar.gz, dist/dfcgen-gtk_0.1-1.dsc,
+	  dist/dfcgen-gtk_0.1-1.tar.gz, dist/dfcgen-gtk_0.1-1_i386.changes,
+	  dist/dfcgen-gtk_0.1-1_i386.deb: dfcgen-gtk release 0.1
+
+	* COPYING, ChangeLog, Makefile.in, README, TODO, config.h.in, configure,
+	  data/Makefile.in, data/filters/Makefile.in, data/pixmaps/Makefile.in,
+	  dist/debian/changelog, doc/Doxyfile, doc/Makefile.in,
+	  include/Makefile.in, po/de.gmo, po/de.po, po/dfcgen-gtk.pot,
+	  src/Makefile.in: Release of version 0.3 on Ubuntu 10.04 Lucid Lynx.
+
+	* po/POTFILES.in: Copyright string updated.
+
+	* include/Makefile.am: Copyright string updated.
+
+2012-05-19  Ralf Hoppe <ralf.hoppe@ieee.org>
+
+	* include/editDlg.h, include/fileDlg.h, include/mainDlg.h: Copyright
+	  string updated.
+
+	* src/support.c, include/support.h: Some format changes.
+
+	* include/projectFile.h: Export of coefficients, using template files,
+	  implemented.
+
+	* include/doxygen.h: New option --enable-debug for configure script,
+	  inclusive CFLAGS.
+
+	* data/templates/Makefile.in, data/templates/export.c,
+	  data/templates/export.txt, include/dfcProject.h, src/Makefile.am,
+	  src/dfcProject.c, src/fileDlg.c, src/mainDlg.c: Export of
+	  coefficients, using template files, implemented.
+
+	* src/dialogSupport.c, src/filterResponse.c, src/mathPoly.c: Doxygen
+	  comments corrected.
+
+	* dist/debian/control, dist/debian/copyright: Homepage changed to
+	  www.dfcgen.de.
+
+	* src/main.c, src/projectFile.c: GTK versions before 2.12 not supported
+	  anymore.
+
+	* src/miscDesignDlg.c: Conditional define for path now associated with
+	  TEST, not DEBUG. No use of GtkTooltips, because obsolete since 2.12.
+
+	* src/editDlg.c, src/linFirDesignDlg.c, src/responseDlg.c,
+	  src/responseWin.c, src/stdIirDesignDlg.c: No use of GtkTooltips,
+	  because obsolete since 2.12.
+
+	* include/filterPrint.h, src/cfgSettings.c, src/filterPrint.c,
+	  src/helpDlg.c: GTK versions before 2.12 not supported anymore.
+
+	* configure.ac, Makefile.am: Pixmaps moved to sub-directory data/pixmaps.
+
+	* data/Makefile.am, data/templates/Makefile.am: Export of
+	  coefficients, using template files, implemented.
+
+2012-05-13  Ralf Hoppe <ralf.hoppe@ieee.org>
+
+	* .cproject, .project: Build path corrected.
+
+2012-05-05  Ralf Hoppe <ralf.hoppe@ieee.org>
+
+	* data/filters/Makefile.in, data/templates/Makefile.in,
+	  data/templates/Makefile.am, data/templates/export.c,
+	  data/templates/export.m, data/templates/export.txt: Initial
+	 revision.
+
+2012-04-28  Ralf Hoppe <ralf.hoppe@ieee.org>
+
+	* pixmaps: Pixmaps moved into a subdirectory below pkgdatadir.
+
+	* data/pixmaps: Pixmaps move to datatdir.
+
+	* data/Makefile.am, data/Makefile.in, data/differentiator1.dfc,
+	  data/differentiator2.dfc, data/filters, data/filters/Makefile.am,
+	  data/filters/differentiator1.dfc, data/filters/differentiator2.dfc,
+	  data/filters/fitting15_poly2.dfc, data/filters/fitting21_poly2.dfc,
+	  data/filters/fitting5_poly2.dfc, data/filters/fitting7_poly2.dfc,
+	  data/filters/fitting7_poly4.dfc, data/filters/fitting9_poly2.dfc,
+	  data/filters/fitting9_poly4.dfc, data/filters/integrator_38rule.dfc,
+	  data/filters/integrator_rect.dfc, data/filters/integrator_simpson.dfc,
+	  data/filters/integrator_trapez.dfc, data/fitting15_poly2.dfc,
+	  data/fitting21_poly2.dfc, data/fitting5_poly2.dfc,
+	  data/fitting7_poly2.dfc, data/fitting7_poly4.dfc,
+	  data/fitting9_poly2.dfc, data/fitting9_poly4.dfc,
+	  data/integrator_38rule.dfc, data/integrator_rect.dfc,
+	  data/integrator_simpson.dfc, data/integrator_trapez.dfc,
+	  data/templates: Predefined filters moved into a subdirectory.
+
+2012-01-11  Ralf Hoppe <ralf.hoppe@ieee.org>
+
+	* .cproject, .project: Eclipse project file(s) added.
+
+2012-01-06  Ralf Hoppe <ralf.hoppe@ieee.org>
+
+	* doc/Doxyfile: LaTeX generation turned on for embedded formulas.
+
+2012-01-03  Ralf Hoppe <ralf.hoppe@ieee.org>
+
+	* ChangeLog, Makefile.in, po/de.gmo, po/de.po: Last minute changes
+	  before 0.2 release.
 
 	* Makefile.am: File dfcgen-gtk.desktop added to doc directory.
 
-2012-01-01  Ralf Hoppe  <ralf.hoppe@ieee.org>
+	* dist/debian/control: Section changed and Homepage added.
 
-	* COPYING, README, TODO, aclocal.m4, ChangeLog, dist/debian/changelog:
-	* Makefile.in, config.h.in, configure, dfcgen-gtk.glade:
-	* doc/Makefile.in, data/Makefile.in, pixmaps/Makefile.in:
-	* po/de.po, po/de.gmo, po/dfcgen-gtk.pot: Release of version 0.2 on Ubuntu 10.04 Lucid Lynx.
+	* src/helpDlg.c: Changed gtk_about_dialog_set_name() to
+	  gtk_about_dialog_set_program_name() because this function is obsolete.
 
-	* include/fileDlg.h, include/filterPrint.h, include/mainDlg.h, include/Makefile.am, include/Makefile.in:
-	* src/fileDlg.c, src/filterPrint.c, src/responseWin.c, src/mainDlg.c, src/Makefile.am, src/Makefile.in:
-	Support for coefficients and response plot printing.
+	* dfcgen-gtk.desktop: Initial revision of Gnome desktop file.
 
-	* src/cairoPlot.c (cairoPlot2d): Bugfix with respect to the position of y-axis name.
+	* dist/debian/postinst, dist/debian/prerm: Added post-install and pre-rm
+	  script for Gnome desktop files.
 
-	* doc/Doxyfile: Doxygen 1.7 update
+2012-01-01  Ralf Hoppe <ralf.hoppe@ieee.org>
 
-2011-10-16  Ralf Hoppe  <ralf.hoppe@ieee.org>
+	* README, TODO, aclocal.m4, config.h.in, configure,
+	  dfcgen-gtk.glade, dist/debian/changelog, data/Makefile.in,
+	  Makefile.in, ChangeLog, COPYING, po/de.gmo, po/de.po,
+	  po/dfcgen-gtk.pot, pixmaps/Makefile.in, doc/Makefile.in: Release
+	  of version 0.2 on Ubuntu 10.04 Lucid Lynx.
 
-	* src/dialogSupport.c (dlgGetDouble):
-	Function g_strtod() used instead of strtod().
+	* include/Makefile.am, include/Makefile.in, include/editDlg.h,
+	  include/fileDlg.h, include/filterPrint.h, include/mainDlg.h,
+	  src/mainDlg.c, src/responseWin.c, src/fileDlg.c,
+	  src/filterPrint.c, src/Makefile.in: Support for coefficients and
+	  response plot printing.
 
-	* include/fileDlg.h, include/filterPrint.h, src/filterPrint.c, src/fileDlg.c (fileDlgPrintActivate):
-	* po/POTFILES.in, po/de.gmo, po/de.po, po/dfcgen-gtk.pot:
-	* src/Makefile.am:
-	Project info and coefficients printing implemented (supported
-	starting with GTK 2.10), inclusive German translations.
+	* src/helpDlg.c: Emacs mode/coding added.
 
-	* src/cfgSettings.c (cfgReadUnit):
-	* src/editDlg.c (cfgFlushSettings, dupInfoStr):
-	* src/projectFile.c (attrStringHandler):
-	* src/miscDesignDlg (updateLayout):
-	String functions of GLib used, instead of <string.h>.
+	* src/cairoPlot.c (cairoPlot2d): Bugfix with respect to the position of
+	  y-axis name.
 
-	* src/editDlg.c (createInfoDlg): Scrolling policy of project
-	description GtkTextView widget changed to GTK_POLICY_ALWAYS in
-	y-direction.
+	* doc/Doxyfile: Doxygen 1.7 update.
 
-2011-09-24  Ralf Hoppe  <ralf.hoppe@ieee.org>
+	* src/support.c: base.h added to include files.
+
+	* include/dfcProject.h: Doxygen comments corrected.
+
+	* include/doxygen.h: "make dist-debian" added to developers
+	  documentation section.
+
+	* include/base.h: Version/Id keyword corrected.
+
+2011-10-16  Ralf Hoppe <ralf.hoppe@ieee.org>
+
+	* src/dialogSupport.c (dlgGetDouble): Function g_strtod() used
+	instead of strtod().
+
+	* include/dfcgen.h: minor (Doxygen) comment changes
+
+	* src/dfcProject.c, src/filterResponse.c, src/filterSupport.c,
+	  src/mathMisc.c, src/mathPoly.c: minor (Doxygen) comment changes
+
+	* src/support.c: String functions of GLib used, instead of <string.h>.
+	  Macro FREE() used instead of g_free().
+
+	* src/responseDlg.c: Macro FREE() used instead of g_free()
+
+	* src/mainDlg.c: Macro FREE() used instead of g_free(). Defines for
+	  GTK stock items used.
+
+	* src/cairoPlot.c: Macro FREE() used instead of g_free()
+
+	* src/cfgSettings.c, src/miscDesignDlg.c, src/projectFile.c: String
+	  functions of GLib used, instead of <string.h>. Macro FREE() used
+	  instead of g_free().
+
+	* src/editDlg.c: String functions of GLib used, instead of <string.h>.
+	  Scrolling policy of project description GtkTextView widget changed
+	  to GTK_POLICY_ALWAYS in y-direction. Macro FREE() used instead of
+	  g_free()
+
+	* include/filterPrint.h, src/filterPrint.c: Project info and
+	  coefficients printing implemented (supported starting with GTK 2.10),
+	  inclusive German translations.
+
+	* include/fileDlg.h, po/POTFILES.in, po/de.gmo, po/de.po,
+	  po/dfcgen-gtk.pot, src/Makefile.am,
+	  src/fileDlg.c (fileDlgPrintActivate): Project info and
+	  coefficients printing implemented (supported starting with
+	  GTK 2.10), inclusive German translations.
+
+2011-09-24  Ralf Hoppe <ralf.hoppe@ieee.org>
 
 	* src/cfgSettings.c (cfgFlushSettings): Added a comment to
-	configuration file, which forces Emacs conf-mode.
+	  configuration file, which forces Emacs conf-mode.
 
-2011-09-03  Ralf Hoppe  <ralf.hoppe@ieee.org>
+2011-09-03  Ralf Hoppe <ralf.hoppe@ieee.org>
 
-	* src/editDlg.c (createSettingsDlg):
-	* src/linFirDesignDlg.c (linFirDesignDlgCreate):
-	* src/miscDesignDlg.c (createDialog):
-	* src/responseDlg.c (responseDlgCreate):
-	* src/stdIirDesignDlg.c (stdIirDesignDlgCreate):
-	* src/stdIirDesignDlg.c (stdIirDesignDlgCreate): Warning regarding
-	a non-zero page size within gtk_adjustment_new() for a GtkSpinButton
-	fixed.
+	* src/editDlg.c (createSettingsDlg),
+	  src/linFirDesignDlg.c (linFirDesignDlgCreate),
+	  src/miscDesignDlg.c (createDialog),
+	  src/responseDlg.c (responseDlgCreate),
+	  src/stdIirDesignDlg.c (stdIirDesignDlgCreate): Warning regarding a
+	  non-zero page size within gtk_adjustment_new() for a GtkSpinButton
+	  fixed.
 
-2011-08-28  Ralf Hoppe  <ralf.hoppe@ieee.org>
+	* src/cairoPlot.c, src/cfgSettings.c, src/designDlg.c, src/dfcProject.c,
+	  src/dialogSupport.c, src/editDlg.c, src/fileDlg.c,
+	  src/filterResponse.c, src/helpDlg.c: Copyright in file header
+	  corrected.
 
-	* Makefile.am (dist-debian): Maintainer target for Debian package build added.
+2011-08-28  Ralf Hoppe <ralf.hoppe@ieee.org>
+
+	* dist/debian/control: Version field removed
+
+	* Makefile.am (dist-debian): call to dpkg-parsechangelog added
+
+	* dist/debian/control: Update of dependencies and version numbers.
+	  More comments.
+
+	* dist/debian/rules: simplified for debhelper V7
+
+	* dist/debian/docs: NEWS and AUTHORS removed (not part of dist)
+
+	* dist/debian/dirs: directory /usr/sbin removed
+
+	* dist/debian/copyright: introduction extended
+
+	* dist/debian/compat: debhelper version 7 used
+
+	* Makefile.am: dist-debian target for Debian package build added.
 
 	* COPYING: Introduction added.
 
 	* README: Package dependies and compile preconditions removed.
 
-2011-08-21  Ralf Hoppe  <ralf.hoppe@ieee.org>
+2011-08-21  Ralf Hoppe <ralf.hoppe@ieee.org>
 
-	* stamp.po: Added to version control, because part of distribution.
+	* data/Makefile.am: Installation directory corrected. Header keyword
+	  changed to Id.
 
-2011-08-20  Ralf Hoppe  <ralf.hoppe@ieee.org>
+	* Makefile.am, configure.ac, doc/Makefile.am, include/Makefile.am,
+	  pixmaps/Makefile.am, src/Makefile.am: Header keyword changed to Id
 
-	* po/de.po: Update of line numbers and file header (msgmerge).
+	* include/base.h, include/cairoPlot.h, include/cfgSettings.h,
+	  include/designDlg.h, include/dfcProject.h, include/dfcgen.h,
+	  include/dialogSupport.h, include/doxygen.h, include/editDlg.h,
+	  include/fileDlg.h, include/filterResponse.h, include/filterSupport.h,
+	  include/gui.h, include/helpDlg.h, include/linFirDesignDlg.h,
+	  include/linFirFilter.h, include/mainDlg.h, include/mathFuncs.h,
+	  include/mathMisc.h, include/mathPoly.h, include/miscDesignDlg.h,
+	  include/miscFilter.h, include/projectFile.h, include/responseDlg.h,
+	  include/responsePlot.h, include/responseWin.h, include/rootsPlot.h,
+	  include/stdIirDesignDlg.h, include/stdIirFilter.h: Header keyword
+	  changed to Id
 
-	* configure.ac: AC_CONFIG_AUX_DIR([build-aux]) used.
+	* src/cairoPlot.c, src/cfgSettings.c, src/designDlg.c, src/dfcProject.c,
+	  src/dialogSupport.c, src/editDlg.c, src/fileDlg.c,
+	  src/filterResponse.c, src/filterSupport.c, src/helpDlg.c,
+	  src/linFirDesignDlg.c, src/linFirFilter.c, src/mainDlg.c,
+	  src/mathFuncs.c, src/mathMisc.c, src/mathPoly.c, src/miscDesignDlg.c,
+	  src/miscFilter.c, src/projectFile.c, src/responseDlg.c,
+	  src/responsePlot.c, src/responseWin.c, src/rootsPlot.c,
+	  src/stdIirDesignDlg.c, src/stdIirFilter.c: Header keyword changed to
+	  Id
 
-	* Makefile.am: AUTHORS and NEWS removed from doc_DATA (not part of project anymore)
+	* configure.ac: property svn:keywords set to "Id Revision Date Author"
 
-	* src/Makefile.am, include/Makefile.am, data/Makefile.am, pixmaps/Makefile.am, doc/Makefile.am:
-	Migration from Anjuta Version 1 structure to a regular Automake structure.
+	* po/stamp-po: part of distribution, so must be under version control
 
-	* src/support.c (glade_set_atk_action_description): Commented out, because unused.
+	* doc/Makefile.am, doc/dfcgen.sty: property svn:keywords set to "Id
+	  Revision Date Author"
 
-2011-08-16  Ralf Hoppe  <ralf.hoppe@ieee.org>
+	* data/Makefile.am: property svn:keywords set to "Id Revision Date
+	  Author"
 
-	* config.sub, config.guess, depcomp, install-sh, missing, config.rpath:
-	Moved to new directory 'build-aux'.
+	* pixmaps/Makefile.am: property svn:keywords set to "Id Revision Date
+	  Author"
 
-	* ltmain.sh: Removed (libtool not used in this project).
+	* po/de.po, po/dfcgen-gtk.pot: property svn:keywords set to "Id Revision
+	  Date Author"
 
-	* AUTHORS, NEWS: Removed (Automake strictness 'foreign' does not require this file).
+	* include/Makefile.am, include/base.h, include/cairoPlot.h,
+	  include/cfgSettings.h, include/designDlg.h, include/dfcProject.h,
+	  include/dfcgen.h, include/dialogSupport.h, include/doxygen.h,
+	  include/editDlg.h, include/fileDlg.h, include/filterResponse.h,
+	  include/filterSupport.h, include/gui.h, include/helpDlg.h,
+	  include/linFirDesignDlg.h, include/linFirFilter.h, include/mainDlg.h,
+	  include/mathFuncs.h, include/mathMisc.h, include/mathPoly.h,
+	  include/miscDesignDlg.h, include/miscFilter.h, include/projectFile.h,
+	  include/responseDlg.h, include/responsePlot.h, include/responseWin.h,
+	  include/rootsPlot.h, include/stdIirDesignDlg.h,
+	  include/stdIirFilter.h, include/support.h: property svn:keywords set
+	  to "Id Revision Date Author"
 
-2011-08-14  Ralf Hoppe  <ralf.hoppe@ieee.org>
+	* src/Makefile.am, src/cairoPlot.c, src/cfgSettings.c, src/designDlg.c,
+	  src/dfcProject.c, src/dialogSupport.c, src/editDlg.c, src/fileDlg.c,
+	  src/filterResponse.c, src/filterSupport.c, src/helpDlg.c,
+	  src/linFirDesignDlg.c, src/linFirFilter.c, src/main.c, src/mainDlg.c,
+	  src/mathFuncs.c, src/mathMisc.c, src/mathPoly.c, src/miscDesignDlg.c,
+	  src/miscFilter.c, src/projectFile.c, src/responseDlg.c,
+	  src/responsePlot.c, src/responseWin.c, src/rootsPlot.c,
+	  src/stdIirDesignDlg.c, src/stdIirFilter.c, src/support.c: property
+	  "svn:keywords set to "Id Revision Date Author"
 
-	* src/helpDlg.c: Define PACKAGE_WEBSITE renamed to PACKAGE_URL.
+	* COPYING, INSTALL, Makefile.am, README, TODO: property "svn:keywords
+	  set to "Id Revision Date Author"
 
-	* src/mainDlg.c, src/fileDlg.c, src/responseWin.c:
-	Bugfix for conditional compile of print support.
+	* configure.ac: comment on AM_INIT_AUTOMAKE() added
 
-	* include/base.h, include/cairoPlot.h, include/cfgSettings.h, include/designDlg.h:
-	* include/dfcProject.h, include/dfcgen.h, include/dialogSupport.h, include/doxygen.h:
-	* include/editDlg.h, include/fileDlg.h, include/filterResponse.h, include/filterSupport.h:
-	* include/gui.h, include/helpDlg.h, include/linFirDesignDlg.h, include/linFirFilter.h:
-	* include/mainDlg.h, include/mathFuncs.h, include/mathMisc.h, include/mathPoly.h:
-	* include/miscDesignDlg.h, include/miscFilter.h, include/projectFile.h, include/responseDlg.h:
-	* include/responsePlot.h, include/responseWin.h, include/rootsPlot.h, include/stdIirDesignDlg.h:
-	* include/stdIirFilter.h:
-	* src/cairoPlot.c, src/cfgSettings.c, src/designDlg.c, src/dfcProject.c, src/dialogSupport.c:
-	* src/editDlg.c, src/fileDlg.c, src/filterResponse.c, src/filterSupport.c, src/helpDlg.c:
-	* src/linFirDesignDlg.c, src/linFirFilter.c, src/mainDlg.c, src/mathFuncs.c, src/mathMisc.c:
-	* src/mathPoly.c, src/miscDesignDlg.c, src/miscFilter.c, src/projectFile.c, src/responseWin.c:
-	* src/responsePlot.c, src/responseDlg.c, src/rootsPlot.c, src/stdIirDesignDlg.c, src/stdIirFilter.c:
-	Update of file header (cvs2svn, copyright).
+2011-08-20  Ralf Hoppe <ralf.hoppe@ieee.org>
 
-	* configure.ac: 53
-	- AC_PROG_LIBTOOL removed
-	- AC_PREREQ(2.65) added for Ubuntu 10.04 LTS (Lucid Lynx)
-	- some minor comment changes
+	* po/de.po: Update of line numbers and file header.
 
-2011-08-12  Ralf Hoppe  <ralf.hoppe@ieee.org>
+	* src/support.c: glade_set_atk_action_description() commented out,
+	  because unused.
 
-	* config.rpath: New file (needed by the AM_GNU_GETTEXT autoconf/gettext macro).
-	* po/POTFILES.in, po/LINGUAS: New file (with gettext-0.17).
+	* configure.ac: AC_CONFIG_AUX_DIR() used.
+
+	* Makefile.am, data/Makefile.am, doc/Makefile.am, include/Makefile.am,
+	  pixmaps/Makefile.am, src/Makefile.am: Migration from Anjuta Version 1
+	  structure to a regular Automake structure.
+
+2011-08-16  Ralf Hoppe <ralf.hoppe@ieee.org>
+
+	* m4/gettext.m4, m4/iconv.m4, m4/lib-ld.m4, m4/lib-link.m4,
+	  m4/lib-prefix.m4, m4/nls.m4, m4/po.m4, m4/progtest.m4: Added gettext
+	  M4 macros
+
+	* m4: Added M4 macros (most from gettext)
+
+	* AUTHORS, NEWS: Removed (Automake strictness 'foreign' does not require
+	  this file)
+
+	* AUTHORS, NEWS: Added again (else 'make check' does not work)
+
+	* AUTHORS: Removed (Automake strictness 'foreign' does not require this
+	  file)
+
+	* build-aux/config.guess, build-aux/config.rpath, build-aux/config.sub,
+	  build-aux/depcomp, build-aux/install-sh, build-aux/missing: moved from
+	  root directory into a sub-directory
+
+	* build-aux: Autoconf/Automake aux files moved to this directory
+
+	* ltmain.sh: Removed (libtool not used by this project)
+
+	* NEWS: Removed (Automake strictness 'foreign' does not require this
+	  file)
+
+	* config.guess, config.rpath, config.sub, depcomp, install-sh, missing:
+	  Removed (moved to build-aux directory)
+
+	* config.guess, config.sub, depcomp, install-sh, missing: commit before
+	  delete resp. move to build-aux directory
+
+2011-08-14  Ralf Hoppe <ralf.hoppe@ieee.org>
+
+	* include/base.h, include/cairoPlot.h, include/cfgSettings.h,
+	  include/designDlg.h, include/dfcProject.h, include/dfcgen.h,
+	  include/dialogSupport.h, include/doxygen.h, include/editDlg.h,
+	  include/fileDlg.h, include/filterResponse.h, include/filterSupport.h,
+	  include/gui.h, include/helpDlg.h, include/linFirDesignDlg.h,
+	  include/linFirFilter.h, include/mainDlg.h, include/mathFuncs.h,
+	  include/mathMisc.h, include/mathPoly.h, include/miscDesignDlg.h,
+	  include/miscFilter.h, include/projectFile.h, include/responseDlg.h,
+	  include/responsePlot.h, include/responseWin.h, include/rootsPlot.h,
+	  include/stdIirDesignDlg.h, include/stdIirFilter.h: Update of file
+	  header (cvs2svn, copyright).
+
+	* src/stdIirFilter.c: Update of file header (cvs2svn, copyright).
+
+	* src/stdIirDesignDlg.c: Update of file header (cvs2svn, copyright).
+
+	* src/rootsPlot.c: Update of file header (cvs2svn, copyright).
+
+	* src/responsePlot.c: Update of file header (cvs2svn, copyright).
+
+	* src/responseDlg.c: Update of file header (cvs2svn, copyright).
+
+	* src/projectFile.c: Update of file header (cvs2svn, copyright).
+
+	* src/miscFilter.c: Update of file header (cvs2svn, copyright).
+
+	* src/miscDesignDlg.c: Update of file header (cvs2svn, copyright).
+
+	* src/mathPoly.c: Update of file header (cvs2svn, copyright).
+
+	* src/mathMisc.c: Update of file header (cvs2svn, copyright).
+
+	* src/mathFuncs.c: Update of file header (cvs2svn, copyright).
+
+	* src/mainDlg.c: * Bugfix for conditional compile of print support. *
+	  Update of file header (cvs2svn, copyright).
+
+	* src/linFirFilter.c: Update of file header (cvs2svn, copyright).
+
+	* src/linFirDesignDlg.c: Update of file header (cvs2svn, copyright).
+
+	* src/helpDlg.c: * Define PACKAGE_WEBSITE renamed to (more common)
+	  PACKAGE_URL. * Update of file header (cvs2svn, copyright).
+
+	* src/filterSupport.c: Update of file header (cvs2svn, copyright).
+
+	* src/filterResponse.c: Update of file header (cvs2svn, copyright).
+
+	* src/fileDlg.c: * Bugfix for conditional compile of print support. *
+	  Update of file header (cvs2svn, copyright).
+
+	* src/editDlg.c: Update of file header (cvs2svn, copyright).
+
+	* src/dialogSupport.c: Update of file header (cvs2svn, copyright).
+
+	* src/dfcProject.c: Update of file header (cvs2svn, copyright).
+
+	* src/designDlg.c: Update of file header (cvs2svn, copyright).
+
+	* src/responseWin.c: * Bugfix for conditional compile of print support *
+	  Update of file header (cvs2svn, copyright)
+
+	* src/cfgSettings.c: Update of file header (cvs2svn, copyright)
+
+	* src/cairoPlot.c: Update of file header (cvs2svn, copyright)
+
+	* configure.ac: AC_PROG_LIBTOOL removed. AC_PREREQ(2.65) added for
+	  Ubuntu 10.04 LTS (Lucid Lynx). Some minor comment changes.
+
+	* po/POTFILES.in: New file (with gettext-0.17)
+
+	* src/Makefile: Removed (generated by configure)
+
+2011-08-13  Ralf Hoppe <ralf.hoppe@ieee.org>
+
+	* po/LINGUAS: New file (from gettext-0.17)
+
+	* po/Makevars, po/Rules-quot, po/boldquot.sed, po/en@boldquot.header,
+	  po/en@quot.header, po/insert-header.sin, po/quot.sed,
+	  po/remove-potcdate.sin: New file, from gettext-0.17
+
+	* po/Makefile.in.in: Upgrade to gettext-0.17
+
+	* po/Makefile, po/Makefile.in, po/POTFILES: Removed (generated by
+	  configure).
+
 	* po/ChangeLog: Removed (merged with ChangeLog at root).
 
-	* config.h, config.log, config.status, stamp-h1, libtool, Makefile:
-	* data/Makefile, doc/Makefile, include/Makefile, src/Makefile, pixmaps/Makefile, po/Makefile:
-	* po/Makefile.in, po/POTFILES: Removed (generated by configure).
+	* pixmaps/Makefile, include/Makefile, doc/Makefile, data/Makefile:
+	  Removed (generated by configure).
+
+2011-08-12  Ralf Hoppe <ralf.hoppe@ieee.org>
+
+	* Makefile, config.h, config.log, config.status, libtool, stamp-h1:
+	  Removed (generated by configure).
 
 	* dfcgen-gtk.prj: Removed (Anjuta version 1, obsolete).
-	* autogen.sh: Removed (performed by autoreconf).
-	* acinclude.m4: Removed (should not be used for new packages, see GNU Automake manual).
+
 	* acconfig.h: Removed (not really needed, see GNU Autoconf manual).
-	* mkinstalldirs: Removed (not needed anymore, was only for old gettext versions).
-	* description-pak: Removed (because only Debian packaging supported, but this was for RPM's).
+
 	* setup-gettext: Removed (not needed anymore by gettext).
 
-2011-08-07  Ralf Hoppe  <ralf.hoppe@ieee.org>
+	* config.rpath: Added (needed by the AM_GNU_GETTEXT autoconf macro).
+
+	* autogen.sh: Removed (performed by autoreconf).
+
+	* description-pak: Removed (because only Debian packaging supported, but
+	  this was for RPM's).
+
+	* mkinstalldirs: Removed (not needed anymore, was only for old gettext
+	  versions).
+
+	* acinclude.m4: Removed (should not be used for new packages, see GNU
+	  Automake manual).
+
+2011-08-07  Ralf Hoppe <ralf.hoppe@ieee.org>
 
 	* configure.in: Removed.
-	* configure.ac: 30 Upgrade to automake-1.11 and autoconf-2.65.
-	* Makefile.am: 31 Upgrade to automake-1.11 and autoconf-2.65.
-	* po/Makevars: New file, from gettext-0.17.
 
-2011-08-07  gettextize  <bug-gnu-gettext@gnu.org>
+	* Makefile.am: Upgrade to automake-1.11 and autoconf-2.65
 
-	* m4/gettext.m4: New file, from gettext-0.17.
-	* m4/iconv.m4: New file, from gettext-0.17.
-	* m4/lib-ld.m4: New file, from gettext-0.17.
-	* m4/lib-link.m4: New file, from gettext-0.17.
-	* m4/lib-prefix.m4: New file, from gettext-0.17.
-	* m4/nls.m4: New file, from gettext-0.17.
-	* m4/po.m4: New file, from gettext-0.17.
-	* m4/progtest.m4: New file, from gettext-0.17.
-	* Makefile.am (EXTRA_DIST): Add config.rpath.
-	* po/Makefile.in.in: Upgrade to gettext-0.17.
-	* po/Rules-quot: New file, from gettext-0.17.
-	* po/boldquot.sed: New file, from gettext-0.17.
-	* po/en@boldquot.header: New file, from gettext-0.17.
-	* po/en@quot.header: New file, from gettext-0.17.
-	* po/insert-header.sin: New file, from gettext-0.17.
-	* po/quot.sed: New file, from gettext-0.17.
-	* po/remove-potcdate.sin: New file, from gettext-0.17.
+	* configure.ac: Upgrade to automake-1.11 and autoconf-2.65
+
+2010-10-13  Ralf Hoppe <ralf.hoppe@ieee.org>
+
+	* description-pak: Added.
+
+2007-09-22  Ralf Hoppe <ralf.hoppe@ieee.org>
+
+	* include/designDlg.h: *** empty log message ***
+
+2006-11-18  Ralf Hoppe <ralf.hoppe@ieee.org>
+
+	* doc/Makefile: Prefix directory changed.
+
+2006-11-11  Ralf Hoppe <ralf.hoppe@ieee.org>
+
+	* dist, dist/debian, dist/debian/changelog, dist/debian/compat,
+	  dist/debian/control, dist/debian/copyright, dist/debian/dirs,
+	  dist/debian/docs, dist/debian/rules: Initial revision
+
+	* dfcgen-gtk.prj: Directories tmp, debian, DEBIAN excluded from project
+
+	* TODO: Some todos added.
+
+	* Makefile, Makefile.am, Makefile.in, config.h, config.log,
+	  config.status, configure, configure.in, data/Makefile,
+	  include/Makefile, include/Makefile.am, include/Makefile.in,
+	  pixmaps/Makefile, src/Makefile: PACKAGE_DATA_DIR and PACKAGE_DOC_DIR
+	  corrected.
+
+2006-11-09  Ralf Hoppe <ralf.hoppe@ieee.org>
+
+	* README: Some capitalized words made lowercase.
+
+	* COPYING: Now it is GPL.
+
+2006-11-08  Ralf Hoppe <ralf.hoppe@ieee.org>
+
+	* Makefile.am, include/Makefile, include/Makefile.in: New generated.
+
+	* po/de.gmo, po/de.po: Some strings corrected.
+
+	* TODO: New todo for response plots added.
+
+	* doc/dfcgen.sty: Now requires amsmath.
+
+	* include/Makefile, include/Makefile.am, include/Makefile.in,
+	  include/cairoPlot.h, include/dfcProject.h, include/filterResponse.h,
+	  include/filterSupport.h, include/linFirFilter.h,
+	  include/responsePlot.h, include/rootsPlot.h, include/stdIirFilter.h:
+	  Last changes before release 0.1.
+
+	* pixmaps/amplitude.png: Initial revision.
+
+	* config.h, config.h.in, config.log, config.status, configure,
+	  configure.in, dfcgen-gtk.prj, dfcgen-gtk.pws, libtool,
+	  pixmaps/Makefile, pixmaps/Makefile.am, pixmaps/Makefile.in: Newly
+	  generated by Anjuta before release 0.1
+
+	* po/Makefile, po/de.gmo, po/de.po, po/dfcgen-gtk.pot: Final
+	  translations before release 0.1
+
+	* src/Makefile, src/Makefile.am, src/Makefile.in, src/cairoPlot.c,
+	  src/cfgSettings.c, src/designDlg.c, src/dfcProject.c, src/fileDlg.c,
+	  src/filterResponse.c, src/filterSupport.c, src/linFirFilter.c,
+	  src/mainDlg.c, src/miscFilter.c, src/responseDlg.c,
+	  src/responsePlot.c, src/responseWin.c, src/rootsPlot.c,
+	  src/stdIirFilter.c: Last changes before release 0.1
+
+	* AUTHORS, NEWS, README, TODO: First usuable revision.
+
+	* Makefile, Makefile.am, Makefile.in: Newly generated by Anjuta.
+
+	* COPYING, INSTALL, depcomp, dfcgen-gtk.glade, dfcgen-gtk.gladep,
+	  install-sh, missing: Initial revision.
+
+2006-11-04  Ralf Hoppe <ralf.hoppe@ieee.org>
+
+	* include/doxygen.h, include/editDlg.h, include/linFirDesignDlg.h,
+	  include/rootsPlot.h, pixmaps, pixmaps/Makefile, pixmaps/Makefile.am,
+	  pixmaps/Makefile.in, pixmaps/attenuation.png, pixmaps/charfunc.png,
+	  pixmaps/dfcgen.png, pixmaps/grpdelay.png, pixmaps/impulse.png,
+	  pixmaps/phase.png, pixmaps/phasedelay.png, pixmaps/step.png,
+	  src/linFirDesignDlg.c, src/linFirFilter.c, src/rootsPlot.c: Initial
+	  revision.
+
+	* po/Makefile, po/POTFILES, po/POTFILES.in, po/de.gmo, po/de.po,
+	  po/dfcgen-gtk.pot: First german translation.
+
+	* include/base.h, include/cairoPlot.h, include/cfgSettings.h,
+	  include/dfcProject.h, include/dfcgen.h, include/dialogSupport.h,
+	  include/filterResponse.h, include/filterSupport.h, include/gui.h,
+	  include/linFirFilter.h, include/mainDlg.h, include/mathFuncs.h,
+	  include/mathMisc.h, include/mathPoly.h, include/miscDesignDlg.h,
+	  include/projectFile.h, include/responseDlg.h,
+	  include/stdIirDesignDlg.h, include/stdIirFilter.h, src/cairoPlot.c,
+	  src/cfgSettings.c, src/designDlg.c, src/dfcProject.c,
+	  src/dialogSupport.c, src/editDlg.c, src/fileDlg.c,
+	  src/filterResponse.c, src/filterSupport.c, src/main.c, src/mainDlg.c,
+	  src/mathFuncs.c, src/mathMisc.c, src/mathPoly.c, src/miscDesignDlg.c,
+	  src/miscFilter.c, src/projectFile.c, src/responseDlg.c,
+	  src/responsePlot.c, src/responseWin.c, src/stdIirDesignDlg.c,
+	  src/stdIirFilter.c: Further work (near 0.1 now).
+
+2006-09-11  Ralf Hoppe <ralf.hoppe@ieee.org>
+
+	* Makefile, config.h, config.log, config.status, data/Makefile,
+	  doc/Makefile, include/Makefile, libtool, po/Makefile, po/Makefile.in,
+	  po/POTFILES, src/Makefile, stamp-h1: Initial revision
+
+	* AUTHORS, ChangeLog, Makefile.am, Makefile.in, NEWS, README, TODO,
+	  acconfig.h, acinclude.m4, aclocal.m4, autogen.sh, config.guess,
+	  config.h.in, config.sub, configure, configure.in, data,
+	  data/Makefile.am, data/Makefile.in, data/differentiator1.dfc,
+	  data/differentiator2.dfc, data/fitting15_poly2.dfc,
+	  data/fitting21_poly2.dfc, data/fitting5_poly2.dfc,
+	  data/fitting7_poly2.dfc, data/fitting7_poly4.dfc,
+	  data/fitting9_poly2.dfc, data/fitting9_poly4.dfc,
+	  data/integrator_38rule.dfc, data/integrator_rect.dfc,
+	  data/integrator_simpson.dfc, data/integrator_trapez.dfc,
+	  dfcgen-gtk.prj, dfcgen-gtk.pws, doc, doc/Doxyfile, doc/Makefile.am,
+	  doc/Makefile.in, doc/dfcgen.sty, include, include/Makefile.am,
+	  include/Makefile.in, include/base.h, include/cairoPlot.h,
+	  include/cfgSettings.h, include/designDlg.h, include/dfcProject.h,
+	  include/dfcgen.h, include/dialogSupport.h, include/fileDlg.h,
+	  include/filterResponse.h, include/filterSupport.h, include/gui.h,
+	  include/helpDlg.h, include/linFirFilter.h, include/mainDlg.h,
+	  include/mathFuncs.h, include/mathMisc.h, include/mathPoly.h,
+	  include/miscDesignDlg.h, include/miscFilter.h, include/projectFile.h,
+	  include/responseDlg.h, include/responsePlot.h, include/responseWin.h,
+	  include/stdIirDesignDlg.h, include/stdIirFilter.h, include/support.h,
+	  ltmain.sh, mkinstalldirs, po, po/ChangeLog, po/Makefile.in.in,
+	  po/POTFILES.in, po/de.gmo, po/de.po, po/dfcgen-gtk.pot, setup-gettext,
+	  src, src/Makefile.am, src/Makefile.in, src/cairoPlot.c,
+	  src/cfgSettings.c, src/designDlg.c, src/dfcProject.c,
+	  src/dialogSupport.c, src/editDlg.c, src/fileDlg.c,
+	  src/filterResponse.c, src/filterSupport.c, src/helpDlg.c, src/main.c,
+	  src/mainDlg.c, src/mathFuncs.c, src/mathMisc.c, src/mathPoly.c,
+	  src/miscDesignDlg.c, src/miscFilter.c, src/projectFile.c,
+	  src/responseDlg.c, src/responsePlot.c, src/responseWin.c,
+	  src/stdIirDesignDlg.c, src/stdIirFilter.c, src/support.c, stamp-h.in:
+	  Initial CVS import.
+
+2006-09-11  Ralf Hoppe <ralf.hoppe@ieee.org>
+
+	* : Standard project directories initialized by cvs2svn.
+

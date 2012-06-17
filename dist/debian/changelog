@@ -1,3 +1,11 @@
+dfcgen-gtk (0.4-1) unstable; urgency=medium
+
+  * Win32/MinGW platform support
+  * Bugfixes
+
+
+ -- Ralf Hoppe <ralf.hoppe@ieee.org>  Fri, 15 Jun 2012 22:12:03 +0200
+
 dfcgen-gtk (0.3-1) unstable; urgency=medium
 
   * Export of coefficients to MATLAB, C and plain text
