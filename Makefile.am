@@ -57,7 +57,7 @@ GTK_DLL_COMMON = libgio-2.0-0.dll libatk-1.0-0.dll libcairo-2.dll libgdk_pixbuf-
          libgobject-2.0-0.dll libgsl-0.dll libgslcblas-0.dll \
          libgtk-win32-2.0-0.dll libiconv-2.dll libintl-8.dll \
          libpango-1.0-0.dll libpangocairo-1.0-0.dll libpangowin32-1.0-0.dll \
-         libpng*.dll libgthread-2.0-0.dll libpangoft2-1.0-0.dll
+         libpng*.dll libgthread-2.0-0.dll libpangoft2-1.0-0.dll zlib1.dll
 
 GTK212_DLL_ADDONS = intl.dll libssp-0.dll
 GTK220_DLL_ADDONS = freetype6.dll libexpat-1.dll libfontconfig-1.dll
