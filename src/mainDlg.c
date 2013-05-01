@@ -2,7 +2,7 @@
 /**
  * \file     mainDlg.c
  * \brief    Main dialog elements (right, bottom of window) handling.
- * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe
+ * \author   Copyright (C) 2006, 2011-2013 Ralf Hoppe
  *
  * \version  $Id$
  *
@@ -92,12 +92,12 @@ static void allowCoeffActions (BOOL active);
 static int getSelectedCoeff (GtkTreeSelection *selection);
 static void treeSelectionCallback (GtkTreeSelection *treeselection, gpointer user_data);
 
-static GtkTreeView* createCoeffListTreeView (GtkTreeView **pOther);
+static GtkTreeView* coeffCreateListTreeView (GtkTreeView **pOther);
 static void indexCellDataFunc (GtkTreeViewColumn *column, GtkCellRenderer *renderer,
                                GtkTreeModel *model, GtkTreeIter *iter, gpointer data);
 static void coeffCellDataFunc (GtkTreeViewColumn *column, GtkCellRenderer *renderer,
                                GtkTreeModel *model, GtkTreeIter *iter, gpointer data);
-static void fillCoeffListTreeView (GtkTreeView *tree,  GtkListStore *store,
+static void coeffFillListTreeView (GtkTreeView *tree,  GtkListStore *store,
                                    MATHPOLY *poly);
 static MATHPOLY *getSelectedPoly (FLTCOEFF* pFilter, int *pIndex);
 
@@ -552,7 +552,7 @@ void coeffCellDataFunc (GtkTreeViewColumn *column, GtkCellRenderer *renderer,
  *  \return         GtkTreeView widget associated with the coefficients list.
  *
  ******************************************************************************/
-static GtkTreeView* createCoeffListTreeView (GtkTreeView **pOther)
+static GtkTreeView* coeffCreateListTreeView (GtkTreeView **pOther)
 {
     GtkCellRenderer *renderer;
     GtkTreeViewColumn *column;
@@ -609,7 +609,7 @@ static GtkTreeView* createCoeffListTreeView (GtkTreeView **pOther)
                             G_CALLBACK (treeSelectionCallback), pOther);
 
     return tree;
-} /* createCoeffListTreeView() */
+} /* coeffCreateListTreeView() */
 
 
 
@@ -621,7 +621,7 @@ static GtkTreeView* createCoeffListTreeView (GtkTreeView **pOther)
  *  \param poly         Pointer to polynomial coefficients to be filled in.
  *
  ******************************************************************************/
-static void fillCoeffListTreeView (GtkTreeView *tree, GtkListStore *store,
+static void coeffFillListTreeView (GtkTreeView *tree, GtkListStore *store,
                                    MATHPOLY *poly)
 {
     int i;
@@ -633,8 +633,27 @@ static void fillCoeffListTreeView (GtkTreeView *tree, GtkListStore *store,
         gtk_list_store_set (store, &iter, MAINDLG_LIST_COLUMN_INDEX, i,
                             MAINDLG_LIST_COLUMN_COEFF, poly->coeff[i], -1);
     } /* for */
-} /* fillCoeffListTreeView() */
+} /* coeffFillListTreeView() */
 
+
+
+
+static void coeffRedrawListTreeViews ()
+{
+    GtkListStore *storeNum = GTK_LIST_STORE (gtk_tree_view_get_model (treeNumerator));
+    GtkListStore *storeDen = GTK_LIST_STORE (gtk_tree_view_get_model (treeDenominator));
+    FLTCOEFF* pFilter = dfcPrjGetFilter();
+
+    gtk_list_store_clear (storeNum);
+    gtk_list_store_clear (storeDen);
+
+    if (pFilter != NULL)
+    {
+        coeffFillListTreeView (treeNumerator, storeNum, &pFilter->num);
+        coeffFillListTreeView (treeDenominator, storeDen, &pFilter->den);
+    } /* if */
+
+} /* coeffRedrawListTreeViews() */
 
 
 
@@ -982,7 +1001,7 @@ GtkWidget* mainDlgCreate (void)
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (widget), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (widget), GTK_SHADOW_IN);
 
-    treeDenominator = createCoeffListTreeView (&treeNumerator);
+    treeDenominator = coeffCreateListTreeView (&treeNumerator);
     gtk_container_add (GTK_CONTAINER (widget), GTK_WIDGET (treeDenominator));
     gtk_widget_set_tooltip_text (GTK_WIDGET (treeDenominator), _("Denominator coefficients"));
 
@@ -993,7 +1012,7 @@ GtkWidget* mainDlgCreate (void)
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (widget), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (widget), GTK_SHADOW_IN);
 
-    treeNumerator = createCoeffListTreeView (&treeDenominator);
+    treeNumerator = coeffCreateListTreeView (&treeDenominator);
     gtk_container_add (GTK_CONTAINER (widget), GTK_WIDGET (treeNumerator));
     gtk_widget_set_tooltip_text (GTK_WIDGET (treeNumerator), _("Numerator coefficients"));
 
@@ -1133,8 +1152,6 @@ void mainDlgUpdatePrjInfo ()
  ******************************************************************************/
 BOOL mainDlgUpdateFilter (int err)
 {
-    GtkListStore *storeNum, *storeDen;
-
     FLTCOEFF* pFilter = dfcPrjGetFilter();
     BOOL valid = pFilter != NULL;
 
@@ -1161,25 +1178,29 @@ BOOL mainDlgUpdateFilter (int err)
         gtk_widget_set_sensitive (lookup_widget (topWidget, "menuItemFileExport"), valid);
         gtk_widget_set_sensitive (lookup_widget (topWidget, "menuItemFilePrint"), valid);
 
-        storeNum = GTK_LIST_STORE (gtk_tree_view_get_model (treeNumerator));
-        storeDen = GTK_LIST_STORE (gtk_tree_view_get_model (treeDenominator));
-        gtk_list_store_clear (storeNum);
-        gtk_list_store_clear (storeDen);
-
-        if (valid)
-        {
-            fillCoeffListTreeView (treeNumerator, storeNum, &pFilter->num);
-            fillCoeffListTreeView (treeDenominator, storeDen, &pFilter->den);
-        } /* if */
-
+        coeffRedrawListTreeViews ();
         responseWinRedraw (RESPONSE_TYPE_SIZE);
         rootsPlotUpdate (pFilter);
+
         return TRUE;
     } /* if */
 
     return FALSE;
 } /* mainDlgUpdateFilter() */
 
+
+
+/* FUNCTION *******************************************************************/
+/** Redraw of main filter dialog and all associated response plot (an case a
+ *  project is defined, else does nothing).
+ *
+ ******************************************************************************/
+void mainDlgRedrawAll ()
+{
+    responseWinRedraw (RESPONSE_TYPE_SIZE);     /* redraw all response plots */
+    rootsPlotRedraw ();                /* redraw roots window in main dialog */
+    coeffRedrawListTreeViews (); /* redraw coefficients lists in main dialog */
+}
 
 
 
