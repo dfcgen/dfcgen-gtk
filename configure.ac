@@ -1,6 +1,6 @@
 dnl -*- Autoconf -*-
 dnl
-dnl Copyright (C) 2006, 2011-2012 Ralf Hoppe <ralf.hoppe@ieee.org>
+dnl Copyright (C) 2006, 2011-2013 Ralf Hoppe <ralf.hoppe@ieee.org>
 dnl
 dnl Version:  $Id$
 dnl
@@ -10,20 +10,32 @@ dnl Note: This file requires tool and library versions, which are provided
 dnl       first by Ubuntu 8.04 (Hardy).
 dnl
 
+define([dfcgen_name], [Digital Filter Coefficients Generator (GTK+)])
+define([dfcgen_version], [0.5])
+define([dfcgen_bugreport], [ralf.hoppe@ieee.org])
+define([dfcgen_tarname], [dfcgen-gtk])
+define([dfcgen_url], [http://www.dfcgen.de])
+
+
 dnl Autoconf requirements
-AC_PREREQ(2.65)
+AC_PREREQ(2.63)
 
 dnl AC_INIT() defines: PACKAGE_NAME, PACKAGE_TARNAME, PACKAGE_VERSION,
 dnl                    PACKAGE_STRING, PACKAGE_BUGREPORT, PACKAGE_URL
- 
-AC_INIT([Digital Filter Coefficients Generator (GTK+)], [0.4],
-        [ralf.hoppe@ieee.org],
-        [dfcgen-gtk],
-        [http://www.dfcgen.de])
+dnl
+dnl: but does not have an URL argument in autoconf < 2.64.
+m4_version_prereq([2.64],
+        [AC_INIT([dfcgen_name], [dfcgen_version], [dfcgen_bugreport],
+                 [dfcgen_tarname], [dfcgen_url])],
+        [AC_INIT([dfcgen_name], [dfcgen_version], [dfcgen_bugreport],
+                 [dfcgen_tarname])
+         AC_SUBST([PACKAGE_URL], [dfcgen_url])
+         AC_DEFINE([PACKAGE_URL], ["dfcgen_url"], [Package URL])])
 
+        
 AC_CONFIG_HEADERS([config.h])
 
-AC_CONFIG_AUX_DIR([build-aux])
+AC_CONFIG_AUX_DIR([build])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([src/main.c])
 AC_CONFIG_FILES([Makefile
