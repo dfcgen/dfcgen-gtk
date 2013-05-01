@@ -3,7 +3,7 @@
  * \file     editDlg.c
  * \brief    \e Edit dialog(s).
  *
- * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011, 2012, 2013 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
  *
  ******************************************************************************/
@@ -282,8 +282,7 @@ static GtkResponseType editDlgSettingsAccept (GtkWidget* dialog)
         settings.frequUnit = unitF[idxFrequ];
 
         cfgSetDesktopPrefs (&settings);               /* save new preferences */
-        responseWinRedraw (RESPONSE_TYPE_SIZE);           /* redraw all plots */
-        rootsPlotRedraw ();
+        mainDlgRedrawAll ();            /* redraw all plots and coefficients */
 
         return GTK_RESPONSE_OK;
     } /* if */
