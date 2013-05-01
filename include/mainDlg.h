@@ -3,7 +3,7 @@
  * \file
  *           Main dialog management.
  *
- * \author   Copyright (C) 2006, 2011-2012 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011-2013 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
  *
  ******************************************************************************/
@@ -74,6 +74,14 @@ extern "C" {
  *
  ******************************************************************************/
     BOOL mainDlgUpdateFilter (int err);
+
+
+/* FUNCTION *******************************************************************/
+/** Redraw of main filter dialog and all associated response plot (an case a
+ *  project is defined, else does nothing).
+ *
+ ******************************************************************************/
+    void mainDlgRedrawAll (void);
 
 
 #ifdef  __cplusplus
