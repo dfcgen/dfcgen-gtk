@@ -1,8 +1,7 @@
-## -*- Makefile -*-
 ##
-## Copyright (c) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+## Copyright (c) 2006, 2011, 2013 Ralf Hoppe <ralf.hoppe@ieee.org>
 ##
-## Version:  $Id
+## Version:  $Id$
 ##
 ## Process this file with automake to produce Makefile.in
 ##
