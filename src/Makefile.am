@@ -1,6 +1,5 @@
-## -*- Makefile -*-
 ##
-## Copyright (c) 2006, 2011-2012 Ralf Hoppe <ralf.hoppe@ieee.org>
+## Copyright (C) 2006, 2011-2013 Ralf Hoppe <ralf.hoppe@ieee.org>
 ##
 ## Version:  $Id$
 ##
