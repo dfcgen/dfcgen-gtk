@@ -1,4 +1,4 @@
-dnl -*- Autoconf -*-
+dnl -*- mode: autoconf -*-
 dnl
 dnl Copyright (C) 2006, 2011-2013 Ralf Hoppe <ralf.hoppe@ieee.org>
 dnl
@@ -6,15 +6,12 @@ dnl Version:  $Id$
 dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl
-dnl Note: This file requires tool and library versions, which are provided
-dnl       first by Ubuntu 8.04 (Hardy).
-dnl
 
-define([dfcgen_name], [Digital Filter Coefficients Generator (GTK+)])
-define([dfcgen_version], [0.5])
-define([dfcgen_bugreport], [ralf.hoppe@ieee.org])
-define([dfcgen_tarname], [dfcgen-gtk])
-define([dfcgen_url], [http://www.dfcgen.de])
+m4_define([dfcgen_name], [Digital Filter Coefficients Generator (GTK+)])
+m4_define([dfcgen_version], [0.5])
+m4_define([dfcgen_bugreport], [ralf.hoppe@ieee.org])
+m4_define([dfcgen_tarname], [dfcgen-gtk])
+m4_define([dfcgen_url], [http://www.dfcgen.de])
 
 
 dnl Autoconf requirements
@@ -52,9 +49,14 @@ AC_CONFIG_FILES([Makefile
                  dist/win32/Makefile])
 
 
-dnl Automake options: we are not strictly GNU compatible (foreign),
-dnl because the following files are missing: NEWS, AUTHORS, ABOUT-NLS
+dnl Some Automake Options
+
+dnl We are not strictly GNU compatible (foreign), because the following files
+dnl are missing: NEWS, AUTHORS, ABOUT-NLS
 AM_INIT_AUTOMAKE([-Wall foreign])
+
+dnl Enable the ability to specifiy '--enable-maintainer-mode' or
+dnl '--disable-maintainer-mode' to configure.
 AM_MAINTAINER_MODE
 
 
