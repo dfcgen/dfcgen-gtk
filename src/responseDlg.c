@@ -372,8 +372,16 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (widget), TRUE);
     GLADE_HOOKUP_OBJECT (responseDlg, widget, RESPONSE_DLG_SPIN_SAMPLES);
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
-    gtk_spin_button_set_value (GTK_SPIN_BUTTON (widget), pDiag->num);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
+
+    if (pDiag->initFunc == NULL)
+    {
+        gtk_spin_button_set_value (GTK_SPIN_BUTTON (widget), pDiag->num);
+    } /* if */
+    else
+    {
+        gtk_widget_set_sensitive (widget, FALSE);
+    } /* else */
 
     label = gtk_label_new (NULL);                             /* x-start unit */
     gtk_table_attach (GTK_TABLE (table), label, 2, 3, 0, 1,
