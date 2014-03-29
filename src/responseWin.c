@@ -41,7 +41,7 @@ typedef struct
     GdkGCValues original;                /**< Saved GdkGC values when zooming */
     GtkCheckMenuItem *menuref;            /**< (Backward) menu item reference */
     GtkWidget* btnPrint;                  /**< Print button widget reference */
-    GtkWidget* topWidget;        /**< response plot window (top-level widget) */
+    GtkWidget* topWidget; /**< response plot top-level widget (NULL if not exists) */
     GtkWidget* draw;                            /**< \e GtkDrawingArea widget */
     GtkWidget* label;             /**< Label which shows the number of points */
 } RESPONSE_WIN;
@@ -65,8 +65,8 @@ static void cancelZoomMode (RESPONSE_WIN *pDesc);
 static void responseWinCreate (RESPONSE_WIN *pDesc);
 static gboolean exposeHandler (GtkWidget *widget, GdkEventExpose *event, gpointer user_data);
 static BOOL responseWinExpose (RESPONSE_WIN* pDesc);
-static void responseWinDrawAreaMapped (GtkWidget* widget, gpointer user_data);
-static void responseWinDrawAreaDestroy (GtkObject* object, gpointer user_data);
+static void responseWinMapped (GtkWidget* widget, gpointer user_data);
+static void responseWinDestroyed (GtkObject* object, gpointer user_data);
 static void responseWinBtnPropActivate (GtkButton *button, gpointer user_data);
 static void responseWinBtnPrintActivate (GtkWidget* srcWidget, gpointer user_data);
 static gboolean responseWinKeyPress (GtkWidget *widget, GdkEventKey *event,
@@ -344,10 +344,10 @@ static void responseWinCreate (RESPONSE_WIN *pDesc)
                       G_CALLBACK (exposeHandler),
                       pDesc);
     g_signal_connect ((gpointer) pDesc->draw, "destroy",
-                      G_CALLBACK (responseWinDrawAreaDestroy),
+                      G_CALLBACK (responseWinDestroyed),
                       pDesc);
     g_signal_connect ((gpointer) pDesc->draw, "map",
-                      G_CALLBACK (responseWinDrawAreaMapped),
+                      G_CALLBACK (responseWinMapped),
                       pDesc);
     g_signal_connect ((gpointer) btnSettings, "clicked",
                       G_CALLBACK (responseWinBtnPropActivate),
@@ -450,7 +450,7 @@ static gboolean exposeHandler (GtkWidget *widget, GdkEventExpose *event, gpointe
  *                      event.
  *
  ******************************************************************************/
-static void responseWinDrawAreaDestroy(GtkObject* object, gpointer user_data)
+static void responseWinDestroyed(GtkObject* object, gpointer user_data)
 {
     RESPONSE_WIN* pDesc = user_data;
 
@@ -461,7 +461,7 @@ static void responseWinDrawAreaDestroy(GtkObject* object, gpointer user_data)
                               PLOT_COLOR_SIZE);
     gtk_check_menu_item_set_active (pDesc->menuref, FALSE);    /* update menu */
 
-} /* responseWinDrawAreaDestroy() */
+} /* responseWinDestroyed() */
 
 
 
@@ -474,7 +474,7 @@ static void responseWinDrawAreaDestroy(GtkObject* object, gpointer user_data)
  *                      event.
  *
  ******************************************************************************/
-static void responseWinDrawAreaMapped (GtkWidget* widget, gpointer user_data)
+static void responseWinMapped (GtkWidget* widget, gpointer user_data)
 {
     gboolean success[PLOT_COLOR_SIZE];
 
@@ -490,7 +490,7 @@ static void responseWinDrawAreaMapped (GtkWidget* widget, gpointer user_data)
         DEBUG_LOG ("Could not allocate colors in system colormap");
     } /* if */
 
-} /* responseWinDrawAreaMapped() */
+} /* responseWinMapped() */
 
 
 
@@ -608,7 +608,11 @@ void responseWinRedraw (RESPONSE_TYPE type)
 
     for (type = start; type <= stop; type++)
     {
-        gtk_widget_set_sensitive (responseWidget[type].btnPrint, filterValid);
+        if (responseWidget[type].topWidget != NULL)
+        {
+            gtk_widget_set_sensitive (responseWidget[type].btnPrint, filterValid);
+        } /* if */
+
         (void)responseWinExpose (&responseWidget[type]);
     } /* for */
 } /* responseWinRedraw() */
