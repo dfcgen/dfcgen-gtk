@@ -1,3 +1,11 @@
+2014-03-29  Ralf Hoppe  <ralf.hoppe@ieee.org>
+
+	* src/responseDlg.c (responseDlgCreate): Response dialog does not
+	allow to edit 'Samples' on impulse/step response.
+
+	* src/responseWin.c (responseWinRedraw): Avoid warning on
+	non-existing print button widget.
+
 2013-06-12  Ralf Hoppe  <ralf.hoppe@ieee.org>
 
 	* include/doxygen.h: Rule 'make maintainer-clean' explained.
@@ -849,3 +857,5 @@
 
 	* .*: Initial import.
 
+
+Copyright (C) 2006-2014 Ralf Hoppe <ralf.hoppe@ieee.org>
