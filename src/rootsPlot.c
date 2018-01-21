@@ -3,7 +3,7 @@
  * \file
  *           Roots plot functions.
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
+ * \author   Copyright (C) 2006, 2011, 2018 Ralf Hoppe <ralf.hoppe@ieee.org>
  * \version  $Id$
  *
  ******************************************************************************/
@@ -307,14 +307,14 @@ static gboolean rootsPlotExposeHandler (GtkWidget *widget, GdkEventExpose *event
     {
         {                                  /* stability boundary circle (top) */
             {realText}, {imagText}, NULL,                 /* x, y, pData */
-            0.5, PLOT_STYLE_LINE_ONLY, 0,            /* thickness, style, num */
+            0.6, PLOT_STYLE_LINE_ONLY, 0,            /* thickness, style, num */
             NULL, NULL,                             /* progressFunc, initFunc */
             plotUnitCircleTop, NULL,                   /* sampleFunc, endFunc */
             circleColor,                                            /* colors */
         },
-        {                                  /* stability boundary circle (top) */
+        {                               /* stability boundary circle (bottom) */
             {realText}, {imagText}, NULL,                      /* x, y, pData */
-            0.5, PLOT_STYLE_LINE_ONLY, 0,            /* thickness, style, num */
+            0.6, PLOT_STYLE_LINE_ONLY, 0,            /* thickness, style, num */
             NULL, NULL,                             /* progressFunc, initFunc */
             plotUnitCircleBottom, NULL,                /* sampleFunc, endFunc */
             circleColor,                                            /* colors */
