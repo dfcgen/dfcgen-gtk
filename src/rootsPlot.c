@@ -87,7 +87,6 @@ static int rootsPlotInit (double start, double stop, void *pData)
 } /* rootsPlotInit() */
 
 
-
 /* FUNCTION *******************************************************************/
 /** Plot function for a polynomial root. This function must be of type
  *  PLOT_FUNC_GET from cairoPlot.h (see there).
@@ -306,34 +305,34 @@ static gboolean rootsPlotExposeHandler (GtkWidget *widget, GdkEventExpose *event
     static PLOT_DIAG rplots[] =
     {
         {                                  /* stability boundary circle (top) */
-            {realText}, {imagText}, NULL,                 /* x, y, pData */
-            0.6, PLOT_STYLE_LINE_ONLY, 0,            /* thickness, style, num */
+            {realText}, {imagText}, NULL,                      /* x, y, pData */
+            1.0, PLOT_STYLE_LINE_ONLY, 0,            /* thickness, style, num */
             NULL, NULL,                             /* progressFunc, initFunc */
             plotUnitCircleTop, NULL,                   /* sampleFunc, endFunc */
             circleColor,                                            /* colors */
         },
         {                               /* stability boundary circle (bottom) */
             {realText}, {imagText}, NULL,                      /* x, y, pData */
-            0.6, PLOT_STYLE_LINE_ONLY, 0,            /* thickness, style, num */
+            1.0, PLOT_STYLE_LINE_ONLY, 0,            /* thickness, style, num */
             NULL, NULL,                             /* progressFunc, initFunc */
             plotUnitCircleBottom, NULL,                /* sampleFunc, endFunc */
             circleColor,                                            /* colors */
         },
         {                                                            /* zeros */
             {realText}, {imagText}, NULL,                      /* x, y, pData */
-            1.5, PLOT_STYLE_CIRCLE_ONLY, 0,          /* thickness, style, num */
+            2.0, PLOT_STYLE_CIRCLE_ONLY, 0,          /* thickness, style, num */
             NULL, rootsPlotInit, plotRoot, NULL, /* progress-, init-, sample-, endFunc */
             rootsColor,                                             /* colors */
         },
         {                                                            /* poles */
             {N_(realText)}, {imagText}, NULL,                  /* x, y, pData */
-            1.5, PLOT_STYLE_CROSS_ONLY, 0,           /* thickness, style, num */
+            2.0, PLOT_STYLE_CROSS_ONLY, 0,           /* thickness, style, num */
             NULL, rootsPlotInit, plotRoot, NULL, /* progress-, init-, sample-, endFunc */
             rootsColor,                                             /* colors */
         },
         {                                                            /* poles */
             {N_(realText)}, {imagText}, NULL,                  /* x, y, pData */
-            1.5, PLOT_STYLE_CROSS_ONLY, 1,           /* thickness, style, num */
+            2.0, PLOT_STYLE_CROSS_ONLY, 1,           /* thickness, style, num */
             NULL, NULL, returnZeroRoot, NULL, /* progress-, init-, sample-, endFunc */
             rootsColor,                                             /* colors */
         }
@@ -391,7 +390,7 @@ static gboolean rootsPlotExposeHandler (GtkWidget *widget, GdkEventExpose *event
                 rplots[4].style = PLOT_STYLE_CROSS_ONLY;
             } /* else */
         } /* else */
-  
+
         circleColor[PLOT_COLOR_LABELS] =                 /* set all invisible */
             circleColor[PLOT_COLOR_GRID] =
             circleColor[PLOT_COLOR_BOX] = 
@@ -505,4 +504,3 @@ void rootsPlotRedraw ()
 /******************************************************************************/
 /* END OF FILE                                                                */
 /******************************************************************************/
-
