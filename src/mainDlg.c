@@ -2,9 +2,7 @@
 /**
  * \file     mainDlg.c
  * \brief    Main dialog elements (right, bottom of window) handling.
- * \author   Copyright (C) 2006, 2011-2013 Ralf Hoppe
- *
- * \version  $Id$
+ * \author   Copyright (C) 2006, 2011-2013, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  * \note     Parts of code taken over from \e glade in interface.c, which itself
  *           isn't a project file.

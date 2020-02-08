@@ -1,9 +1,6 @@
+## -*- mode: makefile-automake -*-
 ##
-## Copyright (c) 2006, 2011-2013 Ralf Hoppe <ralf.hoppe@ieee.org>
-##
-## Version:  $Id$
-##
-## Process this file with automake to produce Makefile.in
+## Copyright (c) 2006-2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
 ##
 
 pixmapsdir = $(pkgpixmapsdir)
@@ -18,4 +15,3 @@ dist_pixmaps_DATA = \
 	phasedelay.png\
 	step.png\
 	amplitude.png
-

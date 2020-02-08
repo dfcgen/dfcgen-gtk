@@ -11,8 +11,7 @@
  * \note     All double values written to a \e dfcgen project file are formated
  *           in the \e C locale for LC_CTYPE.
  *
- * \author   Copyright (C) 2006, 2011-2012 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Id$
+ * \author   Copyright (C) 2006, 2011-2012 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  ******************************************************************************/
 

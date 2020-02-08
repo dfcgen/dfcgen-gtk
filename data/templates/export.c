@@ -1,6 +1,5 @@
 /********************************* -*- C -*- *********************************
- * Copyright (C) 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
- * Version: $Id$
+ * Copyright (C) 2006-2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  * DFCGen (GTK+) exported coefficients
  *

@@ -2,13 +2,10 @@
 /**
  * \file
  *              Digital Filter Coefficients Generator common types.
- * \version     $Id$
- *
- * \author      Copyright (C) 2006, 2011 Ralf Hoppe
+  *
+ * \author      Copyright (C) 2006, 2011, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  ******************************************************************************/
-
-
 
 #ifndef DFCGEN_H
 #define DFCGEN_H

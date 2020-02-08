@@ -3,8 +3,7 @@
  * \file     doxygen.h
  *           Additional doxygen sections (no code).
  *
- * \author   Copyright (C) 2006, 2011-2013 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Id$
+ * \author   Copyright (C) 2006, 2011-2013, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  * \page        Configure
  *              See output of \c configure \c --help

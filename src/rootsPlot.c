@@ -3,8 +3,7 @@
  * \file
  *           Roots plot functions.
  *
- * \author   Copyright (C) 2006, 2011, 2018 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Id$
+ * \author   Copyright (C) 2006, 2011, 2018, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  ******************************************************************************/
 

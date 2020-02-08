@@ -2,8 +2,7 @@
  * dfcgen-gtk windows resource file, to be compiled with RC (Microsoft) or
  * WINDRES (MinGW)
  *
- * Author:  Copyright (C) 2011-2012 Ralf Hoppe <ralf.hoppe@ieee.org>
- * Version: $Id$
+ * Author:  Copyright (C) 2011-2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  ******************************************************************************/
 
@@ -32,8 +31,8 @@ BEGIN
 			VALUE "FileVersion", "0.4\000"
 			VALUE "InternalName", PACKAGE "\000"
 			VALUE "OriginalFilename", PACKAGE ".exe\000"
-			VALUE "ProductName", PACKAGE " für Windows\000"
-            VALUE "E-Mail", "ralf.hoppe@ieee.org"
+			VALUE "ProductName", PACKAGE " fÃ¼r Windows\000"
+            VALUE "E-Mail", "ralf.hoppe@dfcgen.de"
 		END
 	END
 

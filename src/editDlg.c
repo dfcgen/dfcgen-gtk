@@ -3,8 +3,7 @@
  * \file     editDlg.c
  * \brief    \e Edit dialog(s).
  *
- * \author   Copyright (C) 2006, 2011, 2012, 2013 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Id$
+ * \author   Copyright (C) 2006, 2011, 2012, 2013, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  ******************************************************************************/
 

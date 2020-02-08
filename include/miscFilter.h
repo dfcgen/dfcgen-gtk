@@ -6,8 +6,7 @@
  * \note     Includes raw filters (filters without a design, except \f$f_{Sample}\f$).
  *
  *
- * \author   Copyright (C) 2006, 2011 Ralf Hoppe <ralf.hoppe@ieee.org>
- * \version  $Id$
+ * \author   Copyright (C) 2006, 2011, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  ******************************************************************************/
 

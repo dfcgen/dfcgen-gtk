@@ -5,8 +5,7 @@
  *
  * \note     Includes raw filters (filters without a design).
  *
- * \author   Copyright (C) 2006, 2011, 2012 Ralf Hoppe
- * \version  $Id$
+ * \author   Copyright (C) 2006, 2011, 2012, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  ******************************************************************************/
 

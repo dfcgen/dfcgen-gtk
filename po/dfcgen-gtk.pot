@@ -1,7 +1,6 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Ralf Hoppe
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Digital Filter Coefficients Generator (GTK+)
+# Copyright (C) 2006-2020 Ralf Hoppe
+# This file is distributed under the same license as the dfcgen-gtk package.
 #
 #, fuzzy
 msgid ""
