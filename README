@@ -1,11 +1,11 @@
 What is dfcgen-gtk?
 
-    DFCGen, the Digital Filter Coefficients Generator, is a FREEWARE
-    tool/program, which may assist you in the design of digital filters. It
-    supports the engineer in analysis and synthesis of linear time-invariant
-    time-discrete (LTI) systems from the theoretical point of view. It
-    performs generation of system transfer function coefficients in the Z-domain,
-    based on the type and specific parameters of a chosen system.
+    DFCGen, the Digital Filter Coefficients Generator, assists the engineer
+    in the design of digital filters.  It supports the engineer in analysis
+    and synthesis of linear time-invariant time-discrete (LTI) systems from
+    the theoretical point of view.  It performs generation of system transfer
+    function coefficients in the Z-domain, based on the type and specific
+    parameters of a chosen system.
 
     It supports:
 

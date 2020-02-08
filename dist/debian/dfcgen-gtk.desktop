@@ -12,5 +12,6 @@ Comment[en]=Digital Filter Coefficients Generator
 Comment[de]=Digital Filter Coefficients Generator
 Icon=dfcgen-gtk.png
 Exec=dfcgen-gtk
-Categories=GNOME;Electronics;
+Categories=Education;Electronics;GTK;
+Keywords=dsp;signal;processing;fir;iir;
 StartupNotify=false

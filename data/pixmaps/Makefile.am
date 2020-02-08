@@ -9,7 +9,7 @@
 pixmapsdir = $(pkgpixmapsdir)
 
 dist_pixmaps_DATA = \
-	dfcgen.png\
+	dfcgen-gtk.png\
 	attenuation.png\
 	charfunc.png\
 	grpdelay.png\

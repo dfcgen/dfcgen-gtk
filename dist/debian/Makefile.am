@@ -1,24 +1,18 @@
-## -*- Makefile -*-
+## -*- mode: makefile-automake -*-
 ##
-## Copyright (C) 2006, 2011-2012 Ralf Hoppe <ralf.hoppe@ieee.org>
-##
-## Version:  $Id$
-##
-## Process this file with automake to produce Makefile.in
+## Copyright (C) 2006-2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
 ##
 
-dist_doc_DATA = dfcgen-gtk.desktop
-
+SUBDIRS = source
 
 EXTRA_DIST = \
+	dfcgen-gtk.desktop \
+	dfcgen-gtk.png \
 	changelog \
 	compat \
 	control \
 	copyright \
-	dirs \
 	docs \
 	rules \
-	postinst \
-	prerm
-
-
+	watch \
+	install

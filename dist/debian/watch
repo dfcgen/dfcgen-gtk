@@ -1,0 +1,2 @@
+version=3
+http://www.dfcgen.de/main.html dfcgen-gtk/dfcgen-gtk-(.+)@ARCHIVE_EXT@

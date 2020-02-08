@@ -7,29 +7,14 @@ dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl
 
-m4_define([dfcgen_name], [Digital Filter Coefficients Generator (GTK+)])
-m4_define([dfcgen_version], [0.5])
-m4_define([dfcgen_bugreport], [ralf.hoppe@ieee.org])
-m4_define([dfcgen_tarname], [dfcgen-gtk])
-m4_define([dfcgen_url], [http://www.dfcgen.de])
+AC_PREREQ([2.69])
 
+AC_INIT([Digital Filter Coefficients Generator (GTK+)],
+        [0.5],
+        [ralf.hoppe@ieee.org],
+        [dfcgen-gtk],
+        [http://www.dfcgen.de])
 
-dnl Autoconf requirements
-AC_PREREQ(2.63)
-
-dnl AC_INIT() defines: PACKAGE_NAME, PACKAGE_TARNAME, PACKAGE_VERSION,
-dnl                    PACKAGE_STRING, PACKAGE_BUGREPORT, PACKAGE_URL
-dnl
-dnl: but does not have an URL argument in autoconf < 2.64.
-m4_version_prereq([2.64],
-        [AC_INIT([dfcgen_name], [dfcgen_version], [dfcgen_bugreport],
-                 [dfcgen_tarname], [dfcgen_url])],
-        [AC_INIT([dfcgen_name], [dfcgen_version], [dfcgen_bugreport],
-                 [dfcgen_tarname])
-         AC_SUBST([PACKAGE_URL], [dfcgen_url])
-         AC_DEFINE([PACKAGE_URL], ["dfcgen_url"], [Package URL])])
-
-        
 AC_CONFIG_HEADERS([config.h])
 
 AC_CONFIG_AUX_DIR([build])
@@ -46,10 +31,9 @@ AC_CONFIG_FILES([Makefile
                  doc/Makefile
                  dist/Makefile
                  dist/debian/Makefile
+                 dist/debian/source/Makefile
                  dist/win32/Makefile])
 
-
-dnl Some Automake Options
 
 dnl We are not strictly GNU compatible (foreign), because the following files
 dnl are missing: NEWS, AUTHORS, ABOUT-NLS
@@ -75,7 +59,7 @@ CFLAGS_WARN="-Wall -Wundef -Wshadow \
 CFLAGS_DEBUG="-g -pg -O0 -fstack-protector-all -UNDEBUG \
               -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
 
-CFLAGS_NDEBUG="-O3 -funroll-loops -DNDEBUG -DG_DISABLE_ASSERT"
+CFLAGS_NDEBUG="-DNDEBUG -DG_DISABLE_ASSERT"
 
 
 
@@ -110,7 +94,7 @@ AC_SUBST(PACKAGE_AUTHOR, ["Ralf Hoppe"])
 AC_SUBST(COPYRIGHT_HOLDER, ["Copyright (C) 2006, 2011-2012 $PACKAGE_AUTHOR"])
 AC_DEFINE_UNQUOTED(PACKAGE_AUTHOR, ["$PACKAGE_AUTHOR"], [package author])
 AC_DEFINE_UNQUOTED(PACKAGE_COPYRIGHT, ["$COPYRIGHT_HOLDER"], [copyright holder])
-AC_DEFINE(PACKAGE_ICON, ["dfcgen.png"], [package icon])
+AC_DEFINE(PACKAGE_ICON, ["dfcgen-gtk.png"], [package icon])
 
 dnl some installation directories
 pkgpixmapsdir='$(pkgdatadir)/pixmaps'

@@ -1,42 +1,23 @@
-#
 # Debian Control File
 # Note: Build a Debian package with 'dpkg-buildpackage -rfakeroot'
 #
-# Copyright (C) 2006, 2011, 2012 Ralf Hoppe <ralf.hoppe@ieee.org>
+# Copyright (C) 2006, 2011, 2012, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
 #
 Source: dfcgen-gtk
 Section: electronics
-Priority: extra
-Maintainer: Ralf Hoppe <ralf.hoppe@ieee.org>
-Build-Depends: debhelper (>= 7), autotools-dev, libc6-dev, libgsl0-dev (>= 1.10), libgtk2.0-dev (>= 2.12)
-Standards-Version: 3.8.3
-
-# Now the Debian policy standard (see package debian-policy). The evolution of
-# Debian policy is described in file upgrading-checklist.txt. Notice that there
-# is also an Ubuntu policy standard (which is mostly equivalent).
-#
-# The policy package contains:
-# - Debian Policy Manual
-# - Linux Filesystem Hierarchy Standard (FHS)
-# - Authoritative list of virtual package names
-# - Paper about libc6 migration
-# - Policy checklist for upgrading your packages
-#
-# Ubuntu 5.10 => Debian-Policy 3.6.1
-# Ubuntu 10.04 => Debian-Policy 3.8.4
-# Ubuntu 11.04 => Debian-Policy 3.9.1
-Package: dfcgen-gtk
-Architecture: i386
-#
-# (deprecated) Ubuntu 5.10 => libgtk2.0-0 2.8, libgsl0 1.6
-# Ubuntu 8.04 (Hardy) => libgtk2.0-0 2.12, libgsl0ldbl 1.10
-# Ubuntu 10.04 (Lucid) => libgtk2.0-0 2.20, libgsl0ldbl 1.13
-Depends: libc6, libgsl0ldbl (>= 1.10), libgtk2.0-0 (>= 2.12)
+Priority: optional
+Maintainer: Ralf Hoppe <ralf.hoppe@dfcgen.de>
+Build-Depends: debhelper (>= 9), libgsl-dev, libgtk2.0-dev (>= 2.12)
+Standards-Version: 3.9.4
 Homepage: http://www.dfcgen.de
+
+Package: dfcgen-gtk
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}
 Description: Digital Filter Coefficients Generator (DFCGen) GTK+
-    DFCGen, the Digital Filter Coefficients Generator, is a free program,
-    which assists the engineer in the design of digital filters. It supports
-    the engineer in analysis and synthesis of linear time-invariant
-    time-discrete (LTI) systems from the theoretical point of view. It performs
-    generation of system transfer function coefficients in the Z-domain, based
-    on the type and specific parameters of a chosen system.
+ DFCGen, the Digital Filter Coefficients Generator, assists the engineer
+ in the design of digital filters. It supports the engineer in analysis
+ and synthesis of linear time-invariant time-discrete (LTI) systems from
+ the theoretical point of view. It performs generation of system transfer
+ function coefficients in the Z-domain, based on the type and specific
+ parameters of a chosen system.
