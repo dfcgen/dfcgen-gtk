@@ -28,10 +28,10 @@ BEGIN
 			VALUE "CompanyName", "Dipl.-Ing. R. Hoppe\000"
             VALUE "LegalCopyright", "Copyright (C) 2006, 2011-2012 Ralf Hoppe\000"
 			VALUE "FileDescription", "Digital Filter Coefficients Generator (DFCGen) GTK+\000"
-			VALUE "FileVersion", "0.4\000"
+			VALUE "FileVersion", "0.5\000"
 			VALUE "InternalName", PACKAGE "\000"
 			VALUE "OriginalFilename", PACKAGE ".exe\000"
-			VALUE "ProductName", PACKAGE " fÃ¼r Windows\000"
+			VALUE "ProductName", PACKAGE " für Windows\000"
             VALUE "E-Mail", "ralf.hoppe@dfcgen.de"
 		END
 	END
