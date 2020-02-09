@@ -136,7 +136,7 @@ dnl effect - it disables any intl/ subdirectory handling. This seems
 dnl appropriate because libintl should be available on all GNU Linux systems.
 dnl For details see the explanations on AM_GNU_GETTEXT() in the gettext manual.
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION(0.17)
+AM_GNU_GETTEXT_VERSION([0.19.7])
 
 
 dnl (After AC_PROG_CC) check for MinGW platform in host := cpu-company-os.
