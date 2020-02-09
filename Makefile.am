@@ -22,17 +22,15 @@ uninstall-local:
 	-rm -r $(docdir)
 
 
-
-# Maintainer rule for building a Debian package
+# Maintainer rule for building the Debian package.
+# NOTE: Generates the changelog starting with release 0.4-1.
 dist_debian_dir="dist/$(distdir)"
 
 dist-debian: dist
-	svn2cl -r 'HEAD:1' --linelen=80 --group-by-day --separate-daylogs \
-		--reparagraph --authors=".svn-authors" --output=ChangeLog.$(shell date "+%g%m%d")
+	git log --pretty --numstat --summary --no-merges --since=29/10/2016 | git2cl > ChangeLog.$(shell date '+%g%m%d')
 	cp -f -t dist $(distdir).tar.gz
 	cd dist && gunzip -c $(distdir).tar.gz | tar xf -
 	cp -Rf dist/debian $(dist_debian_dir)
-	rm -Rf $(dist_debian_dir)/debian/.svn
 	cd $(dist_debian_dir) && dpkg-buildpackage -rfakeroot
 	@echo '--------------------------------------------------------------------'
 	@dpkg-parsechangelog -l./dist/debian/changelog
