@@ -2894,8 +2894,7 @@ CFLAGS_WARN="-Wall -Wundef -Wshadow \
 # -g  => include debug info
 # -pg => include code for gprof (GNU profiler)
 # -O0 => no optimization
-CFLAGS_DEBUG="-g -pg -O0 -fstack-protector-all -UNDEBUG \
-              -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
+CFLAGS_DEBUG="-g -pg -O0 -fstack-protector-all -UNDEBUG"
 
 CFLAGS_NDEBUG="-DNDEBUG -DG_DISABLE_ASSERT"
 
