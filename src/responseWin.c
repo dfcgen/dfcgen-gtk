@@ -288,7 +288,7 @@ static void responseWinCreate (RESPONSE_WIN *pDesc)
     if (iconPixbuf != NULL)
     {
         gtk_window_set_icon (GTK_WINDOW (pDesc->topWidget), iconPixbuf);
-        gdk_pixbuf_unref (iconPixbuf);
+        g_object_unref (iconPixbuf);
     } /* if */
 
     vbox = gtk_vbox_new (FALSE, 0);

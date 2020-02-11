@@ -75,7 +75,7 @@ void helpDlgMenuActivate (GtkMenuItem* menuitem, gpointer user_data)
     if (pixbuf != NULL)
     {
         gtk_about_dialog_set_logo (GTK_ABOUT_DIALOG (dialogAbout), pixbuf);
-        gdk_pixbuf_unref (pixbuf);
+        g_object_unref (pixbuf);
     } /* if */
 
     (void) gtk_dialog_run (GTK_DIALOG (dialogAbout));

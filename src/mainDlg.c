@@ -694,7 +694,7 @@ GtkWidget* mainDlgCreate (void)
         if (iconPixbuf != NULL)
         {
             gtk_window_set_icon (GTK_WINDOW (topWidget), iconPixbuf);
-            gdk_pixbuf_unref (iconPixbuf);
+            g_object_unref (iconPixbuf);
         } /* if */
     }
 #endif /* G_OS_WIN32 */
