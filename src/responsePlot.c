@@ -66,40 +66,40 @@ static void timeResponseEnd (void *pData);
 static RESPONSE_PLOT responsePlot[RESPONSE_TYPE_SIZE] =
 {
     {
-        RESPONSE_TYPE_MAGNITUDE,                                      /* type */
-        plotMagnitude,                                          /* sampleFunc */
+        .type = RESPONSE_TYPE_MAGNITUDE,                            /* type */
+        .sampleFunc = plotMagnitude,                          /* sampleFunc */
     },
     {
-        RESPONSE_TYPE_ATTENUATION,
-        plotAttenuation,
+        .type = RESPONSE_TYPE_ATTENUATION,
+        .sampleFunc = plotAttenuation,
     },
     {
-        RESPONSE_TYPE_CHAR,
-        plotChar,
+        .type = RESPONSE_TYPE_CHAR,
+        .sampleFunc = plotChar,
     },
     {
-        RESPONSE_TYPE_PHASE,
-        plotPhase,
+        .type = RESPONSE_TYPE_PHASE,
+        .sampleFunc = plotPhase,
     },
     {
-        RESPONSE_TYPE_DELAY,
-        plotPhaseDelay,
+        .type = RESPONSE_TYPE_DELAY,
+        .sampleFunc = plotPhaseDelay,
     },
     {
-        RESPONSE_TYPE_GROUP,
-        plotGroupDelay,
+        .type = RESPONSE_TYPE_GROUP,
+        .sampleFunc = plotGroupDelay,
     },
     {
-        RESPONSE_TYPE_IMPULSE,
-        timeResponse,                                           /* sampleFunc */
-        plotImpulseInit,                                          /* initFunc */
-        timeResponseEnd,                                           /* endFunc */
+        .type = RESPONSE_TYPE_IMPULSE,
+        .sampleFunc = timeResponse,
+        .initFunc = plotImpulseInit,
+        .endFunc = timeResponseEnd,
     },
     {
-        RESPONSE_TYPE_STEP,
-        timeResponse,                                           /* sampleFunc */
-        plotStepInit,                                             /* initFunc */
-        timeResponseEnd,                                           /* endFunc */
+        .type = RESPONSE_TYPE_STEP,
+        .sampleFunc = timeResponse,
+        .initFunc = plotStepInit,
+        .endFunc = timeResponseEnd
     }
 }; /* responsePlot[] */
 
