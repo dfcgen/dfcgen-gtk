@@ -49,7 +49,7 @@ typedef struct
 /* LOCAL CONSTANT DEFINITIONS *************************************************/
 
 
-#define RESPONSE_WIN_GRAPH_THICKNESS    (1.5)           /**< Graph line width */
+#define RESPONSE_WIN_GRAPH_THICKNESS    (2.0)           /**< Graph line width */
 
 
 /** Used GDK graphics context for zoom rectangle

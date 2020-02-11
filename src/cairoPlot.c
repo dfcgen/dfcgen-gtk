@@ -35,7 +35,7 @@
 
 #define PLOT_LABEL_MARKER_LEN   (5.0) /**< Length of label marker (stub) line */
 #define PLOT_LABEL_MARKER_WIDTH (2.0)  /**< Width of label marker (stub) line */
-#define PLOT_GRID_LINE_WIDTH    (0.5)                    /**< Grid line width */
+#define PLOT_GRID_LINE_WIDTH    (1.0)                    /**< Grid line width */
 #define PLOT_GRID_DASH_LEN      (1.0)                   /**< Grid dash length */
 #define PLOT_BOX_LINE_WIDTH     (1.0)                /**< Plot box line width */
 
