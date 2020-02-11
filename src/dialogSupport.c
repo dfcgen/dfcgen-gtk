@@ -96,13 +96,12 @@ void dlgError (GtkWidget* topWidget, char* format, ...)
 
     va_start(args, format);
     msg = g_strdup_vprintf (format, args);
-
     dialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (topWidget),
                                                  GTK_DIALOG_DESTROY_WITH_PARENT,
                                                  GTK_MESSAGE_ERROR,
                                                  GTK_BUTTONS_CLOSE,
-                                                 "%s",
-                                                 msg);
+                                                 NULL);
+    gtk_message_dialog_set_markup (GTK_MESSAGE_DIALOG (dialog), msg);
     gtk_dialog_run (GTK_DIALOG (dialog));
     gtk_widget_destroy (dialog);
     va_end(args);
