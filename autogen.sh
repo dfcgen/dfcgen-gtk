@@ -24,6 +24,7 @@ if [ "$#" = 0 -a "x$NOCONFIGURE" = "x" ]; then
     echo "" >&2
 fi
 
+GETTEXTIZE_FLAGS="--force --no-changelog"
 aclocal --install -I m4 || exit 1
 autoreconf --force --install || exit 1
 
