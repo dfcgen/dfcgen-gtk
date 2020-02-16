@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: dfcgen-gtk 0.5\n"
 "Report-Msgid-Bugs-To: ralf.hoppe@dfcgen.de\n"
-"POT-Creation-Date: 2020-02-09 00:01+0100\n"
+"POT-Creation-Date: 2020-02-16 18:24+0100\n"
 "PO-Revision-Date: 2020-02-08 22:50+0100\n"
 "Last-Translator: Ralf Hoppe <ralf.hoppe@dfcgen.de>\n"
 "Language-Team: Ralf Hoppe\n"
@@ -267,7 +267,7 @@ msgstr ""
 
 # Displayed if title, author or filename (may be a conversion error from filesystem
 # into UTF-8 coding) are unknown.
-#: src/mainDlg.c:1227 src/fileDlg.c:88 src/fileDlg.c:93 src/dialogSupport.c:133
+#: src/mainDlg.c:1227 src/fileDlg.c:88 src/fileDlg.c:93 src/dialogSupport.c:132
 msgid "<i>Unknown</i>"
 msgstr "<i>Unbekannt</i>"
 
@@ -326,16 +326,16 @@ msgstr "<b>h(t)</b>"
 msgid "<b>g(t)</b>"
 msgstr "<b>g(t)</b>"
 
-#: src/responseWin.c:320
+#: src/responseWin.c:317
 msgid "Print this response plot"
 msgstr "Diagramm drucken"
 
 # Tooltip
-#: src/responseWin.c:325
+#: src/responseWin.c:322
 msgid "Set response plot preferences"
 msgstr "Plot Einstellungen"
 
-#: src/responseWin.c:422
+#: src/responseWin.c:419
 #, c-format
 msgid "%d Points"
 msgstr "%d Stützwerte"

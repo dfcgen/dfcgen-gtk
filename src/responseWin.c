@@ -272,9 +272,6 @@ static void responseWinCreate (RESPONSE_WIN *pDesc)
 
     pDesc->topWidget = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
-    gtk_window_set_skip_taskbar_hint (GTK_WINDOW (pDesc->topWidget), TRUE); /* added */
-    gtk_window_set_skip_pager_hint (GTK_WINDOW (pDesc->topWidget), TRUE); /* added */
-
     gtk_window_set_title (GTK_WINDOW (pDesc->topWidget),
                           gtk_label_get_text (
                               GTK_LABEL (
