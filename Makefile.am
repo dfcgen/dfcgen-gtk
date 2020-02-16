@@ -1,4 +1,4 @@
-## -*- mode: makefile-automake -*-
+## -*- mode: makefile-automake; coding: utf-8 -*-
 ##
 ## Copyright (C) 2006-2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
 ##

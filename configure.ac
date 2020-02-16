@@ -1,4 +1,4 @@
-dnl -*- mode: autoconf -*-
+dnl -*- mode: autoconf; coding: utf-8 -*-
 dnl
 dnl Copyright (C) 2006-2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
 dnl
