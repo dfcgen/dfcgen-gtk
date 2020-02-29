@@ -1,0 +1,51 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+Format: 1.8
+Date: Mon, 13 Jan 2020 11:02:04 +0100
+Source: dfcgen-gtk
+Binary: dfcgen-gtk
+Architecture: source amd64
+Version: 0.5-1
+Distribution: unstable
+Urgency: medium
+Maintainer: Ralf Hoppe <ralf.hoppe@dfcgen.de>
+Changed-By: Ralf Hoppe <ralf.hoppe@dfcgen.de>
+Description:
+ dfcgen-gtk - Digital Filter Coefficients Generator (DFCGen) GTK+
+Changes:
+ dfcgen-gtk (0.5-1) unstable; urgency=medium
+ .
+   * Get rid of autoreconf warnings
+   * Change contact and copyright statement
+   * Sync with Debian release 0.4-3
+Checksums-Sha1:
+ b72fbf1617cc4bfb722317ccbc42e46d6d5c273e 1459 dfcgen-gtk_0.5-1.dsc
+ 559ef41d25d11a2b3fa3c3f4f4a4d9e73dd91695 430829 dfcgen-gtk_0.5-1.tar.gz
+ 79ba8644de926b26ad3030f7ebfe76626b1585e9 113616 dfcgen-gtk_0.5-1_amd64.deb
+Checksums-Sha256:
+ 74a57fdbe76fab99824465d2bc7dbb72cab22bdaf7a0d02e3c0cfad0a4cf85cf 1459 dfcgen-gtk_0.5-1.dsc
+ 65ecb5630e978f789c6b0db4c2d51c6ef81e12cb24299fb698e9456b1e149f95 430829 dfcgen-gtk_0.5-1.tar.gz
+ 5345e5827206c2d0eb53215fb40f9a9d213e7a56cc8dd614573109cd1c8ce0aa 113616 dfcgen-gtk_0.5-1_amd64.deb
+Files:
+ 8513b93410c9d1444847d9b982ca607f 1459 electronics optional dfcgen-gtk_0.5-1.dsc
+ 2f4e2d90c8456d1d8ebfb6e85e0d4521 430829 electronics optional dfcgen-gtk_0.5-1.tar.gz
+ 83979629787be99937daafe995b5c86f 113616 electronics optional dfcgen-gtk_0.5-1_amd64.deb
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJeWtIUAAoJENBPbxoULH0PposP/iU8uIfI5kVnBEzH2wPWqAVn
+JJXkQdduNAEvKnmXiMHFo69joweHo1gQJBOpYqxdUNYtQEUGHBmNYQBC/q4kUTsC
+xtfb0E2EK1R/reoLKNoPf1BZFidCJoACx8IcJWkbCVvnFXzoRtXq+QY6h+/GV7nH
+2SRlkfF5maD5PVlRlBWnA1UBbywHw+A7gfvmZEqMh04k1Z2k1V+C4zEGhY8sAf2/
+8D2F+xFIY6j5mhKuxk8+LxbxDeIrBhwMCbzi7qfXw+rBesETTsmEMlmWaYwvZB7L
+Y26VqmnCk6zAiJozHqKGrXxjj1vPVvubRUutRfmw2gxtgM+uS6slSxV5+a/uTy5O
+Tv2eFPnfP5B0eo52MB7MFYDX/Z2IOCABS6STqsanjmAkfjXfxBxBigDj1w/euba4
++2znUri4e8/E27tIyW3VjUaeGgOYFzQcEE7Fr6m3/jye6vMeiQKQTtqLmS33LyUX
+fb1HhS95CwugLgrKDPPjXT7Y9WNoiMnTPr3IEEnumeOQc1v/76zzzvKeMXOWOj1I
+H2UG6XlFVRwYGE3amZs97F5OuOZ3RwTGOh8SiOSkp5YwjGLD6/t0JPy/+SMh79i8
+7gKxIZHOlJfCy9LibtzReaSnVv0b2mAyfTK54Xa8Pf54rGbmmA8uMM3Qew4yPu3A
+s70NT6YUQWiWuFEcumyU
+=H8+W
+-----END PGP SIGNATURE-----
