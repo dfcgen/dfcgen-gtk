@@ -40,12 +40,6 @@
 * Stability
 
   - Function: linFirFilterGen
-    Implement semantic checks on bandwidth, center and cutoff frequency
-
-  - Function: stdIirFilterGen
-    Implement sematic checks on bandwidth, center and cutoff frequency
-
-  - Function: linFirFilterGen
     Use fpsetround()?
 
   - File: mathMisc.c
