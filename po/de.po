@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: dfcgen-gtk 0.5\n"
 "Report-Msgid-Bugs-To: ralf.hoppe@dfcgen.de\n"
-"POT-Creation-Date: 2020-02-16 18:24+0100\n"
-"PO-Revision-Date: 2020-02-08 22:50+0100\n"
+"POT-Creation-Date: 2020-03-22 15:53+0100\n"
+"PO-Revision-Date: 2020-03-22 15:57+0100\n"
 "Last-Translator: Ralf Hoppe <ralf.hoppe@dfcgen.de>\n"
 "Language-Team: Ralf Hoppe\n"
 "Language: de\n"
@@ -753,6 +753,10 @@ msgstr "Modulwinkel in Grad"
 #: src/stdIirDesignDlg.c:548
 msgid "Angle"
 msgstr "Modul"
+
+#: src/stdIirDesignDlg.c:785
+msgid "Degree must be even for bandpass/bandstop."
+msgstr "Für eine(n) Bandsperre/Bandpaß muß der Grad gerade sein."
 
 #: src/miscDesignDlg.c:57
 msgid "Hilbert transformer (FIR)"

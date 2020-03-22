@@ -850,9 +850,12 @@ static double approxBessel (FLTCOEFF *pFilter)
 
 
 /* FUNCTION *******************************************************************/
-/** Generates an IIR filter from standard approximations. The cutoff frequency
- *  always is assumed to be the 3dB point of magnitude response.
+/** \brief Generates an IIR filter from standard approximations.
  *
+ *  \attention          For bandpass/bandstop frequency transformation the
+ *                      degree must be even.
+ *  \note               The cutoff frequency always is assumed to be the 3dB
+ *                      point of magnitude response.
  *  \note               gsl_error_handler_t * gsl_set_error_handler (gsl_error_handler_t new_handler)
  *                      fpsetround()
  *
@@ -863,8 +866,6 @@ static double approxBessel (FLTCOEFF *pFilter)
  *
  *  \return             Zero on success, else an error number (see errno.h or
  *                      gsl_errno.h for predefined codes).
- *  \todo               Implement sematic checks on bandwidth, center and cutoff
- *                      frequency wrt. sample frequency.
  ******************************************************************************/
 int stdIirFilterGen (STDIIR_DESIGN *pDesign, FLTCOEFF *pFilter)
 {
@@ -895,7 +896,8 @@ int stdIirFilterGen (STDIIR_DESIGN *pDesign, FLTCOEFF *pFilter)
         {
             double f1, f2;
 
-            pFilter->den.degree /= 2;      /* design lowpass with half degree */
+            ASSERT(GSL_IS_EVEN(pFilter->den.degree));
+            pFilter->den.degree /= 2;    /* design lowpass with half degree */
 
             /* If center frequency \f$f_c\f$ is geometric, the bandwidth \f$B\f$
                may exceed half of center frequency, because \f$f_c^2 = f_1^2
@@ -917,8 +919,9 @@ int stdIirFilterGen (STDIIR_DESIGN *pDesign, FLTCOEFF *pFilter)
             pDesign->cutoff = fc;            /* lowpass cutoff (return value) */
 
             f1 = bilinearInv (fc - 0.5 * pDesign->ftr.bw, pFilter->f0);
+            STDIIR_ERROR_RET (pFilter, (f1 <= FLT_SAMPLE_MIN / 2) ? GSL_EFAILED : 0,
+                              "Bandwidth vs. cutoff frequency mismatch");
             f2 = bilinearInv (fc + 0.5 * pDesign->ftr.bw, pFilter->f0);
-
             fc = sqrt (f1 * f2);                /* geometric center frequency */
             bpQuality = fc / (f1 - f2);                     /* quality = fc/B */
 
