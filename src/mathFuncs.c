@@ -86,12 +86,12 @@ double mathDenorm10(MATH_NORMDBL val)
  ******************************************************************************/
 double mathFuncRectangle (double x)
 {
-    if ((x < 0) || (x > 1))
+    if ((x < 0.0) || (x > 1.0))
     {
-        return 0;
+        return 0.0;
     } /* if */
 
-    return 1;
+    return 1.0;
 } /* mathFuncRectangle() */
 
 
@@ -110,12 +110,12 @@ double mathFuncRectangle (double x)
  ******************************************************************************/
 double mathFuncHamming (double x)
 {
-    if ((x < 0) || (x > 1))
+    if ((x < 0.0) || (x > 1.0))
     {
-        return 0;
+        return 0.0;
     } /* if */
 
-    return 0.53836 - 0.46164 * cos (2 * M_PI * x);
+    return 0.53836 - 0.46164 * cos (2.0 * M_PI * x);
 } /* mathFuncHamming() */
 
 
@@ -133,12 +133,12 @@ double mathFuncHamming (double x)
  ******************************************************************************/
 double mathFuncHanning (double x)
 {
-    if ((x < 0) || (x > 1))
+    if ((x < 0.0) || (x > 1.0))
     {
-        return 0;
+        return 0.0;
     } /* if */
 
-    return 0.5 - 0.5 * cos (2 * M_PI * x);
+    return 0.5 - 0.5 * cos (2.0 * M_PI * x);
 } /* mathFuncHanning() */
 
 
@@ -157,12 +157,12 @@ double mathFuncHanning (double x)
  ******************************************************************************/
 double mathFuncBlackman (double x)
 {
-    if ((x < 0) || (x > 1))
+    if ((x < 0.0) || (x > 1.0))
     {
-        return 0;
+        return 0.0;
     } /* if */
 
-    return 0.42 - 0.5 * cos (2 * M_PI * x) + 0.08 * cos(4 * M_PI * x);
+    return 0.42 - 0.5 * cos (2.0 * M_PI * x) + 0.08 * cos(4.0 * M_PI * x);
 } /* mathFuncBlackman() */
 
 

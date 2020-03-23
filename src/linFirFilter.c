@@ -39,17 +39,19 @@
 typedef int (*LINFIR_SYSGEN_FUNC)(double x, MATHPOLY *poly);
 
 
-/* FUNCTION *******************************************************************/
-/** Mathematical function \f$y=f(x;a)\f$ with parameter \f$a\f$.
+/* FUNCTION *****************************************************************/
+/**
+ *  \brief Mathematical function \f$y=f(x;a)\f$ with parameter \f$a\f$.
  *
- *  \param x            Argument \f$x\f$ between 0 and 1.
- *  \param parameter    Parameter \f$a\f$.
+ *  \param step         windowing step, running from 0 to \p degree
+ *  \param degree       degree of filter
+ *  \param param        additional window parameter \f$a\f$
  *
  *  \return             Result \f$y\f$ when successful evaluated, else
  *                      GSL_POSINF or GSL_NEGINF. Use the functions gsl_isinf()
  *                      or gsl_finite() for result checking.
- ******************************************************************************/
-typedef double (*LINFIR_WINDOW_FUNC)(double x, double parameter);
+ ****************************************************************************/
+typedef double (*LINFIR_WINDOW_FUNC)(int step, int degree, double param);
 
 
 
@@ -83,11 +85,11 @@ static int genGaussianSystem (double x, MATHPOLY *poly);
 static int genCosineSystem (double x, MATHPOLY *poly);
 static int genCosine2System (double x, MATHPOLY *poly);
 static int genSquaredSystem (double x, MATHPOLY *poly);
-static double firWinKaiser (double x, double parameter);
-static double firWinRectangle (double x, double parameter);
-static double firWinHamming (double x, double parameter);
-static double firWinHanning (double x, double parameter);
-static double firWinBlackman (double x, double parameter);
+static double firWinKaiser (int step, int degree, double param);
+static double firWinRectangle (int step, int degree, double param);
+static double firWinHamming (int step, int degree, double param);
+static double firWinHanning (int step, int degree, double param);
+static double firWinBlackman (int step, int degree, double param);
 static double ftrHighpass (FLTCOEFF *pFilter);
 static double ftrBandpass (FLTCOEFF *pFilter, double fc, double bw, BOOL geometric);
 
@@ -308,80 +310,88 @@ static int genGaussianSystem (double x, MATHPOLY *poly)
 /* FUNCTION *******************************************************************/
 /** Rectangular window function.
  *
- *  \param x            Argument \f$x\f$ between 0 and 1.
- *  \param parameter    Parameter (unused).
+ *  \param step         windowing step, running from 0 to \p degree
+ *  \param degree       degree of filter
+ *  \param param        parameter (unused)
  *
  *  \return             Result \f$y\f$ when successful evaluated, else
  *                      GSL_POSINF or GSL_NEGINF. Use the functions gsl_isinf()
  *                      or gsl_finite() for result checking.
  ******************************************************************************/
-static double firWinRectangle (double x, double parameter)
+static double firWinRectangle (int step, int degree, double param)
 {
-    return mathFuncRectangle (x);
+    (void) param;
+    return mathFuncRectangle ((double) step / degree);
 } /* firWinRectangle() */
 
 
 /* FUNCTION *******************************************************************/
 /** \e Hamming window function.
  *
- *  \param x            Argument \f$x\f$ between 0 and 1.
- *  \param parameter    Parameter (unused).
+ *  \param step         windowing step, running from 0 to \p degree
+ *  \param degree       degree of filter
+ *  \param param        parameter (unused)
  *
  *  \return             Result \f$y\f$ when successful evaluated, else
  *                      GSL_POSINF or GSL_NEGINF. Use the functions gsl_isinf()
  *                      or gsl_finite() for result checking.
  ******************************************************************************/
-static double firWinHamming (double x, double parameter)
+static double firWinHamming (int step, int degree, double param)
 {
-    return mathFuncHamming (x);
+    (void) param;
+    return mathFuncHamming ((double) step / degree);
 } /* firWinHamming() */
 
 
 /* FUNCTION *******************************************************************/
 /** \e Hanning window function.
  *
- *  \param x            Argument \f$x\f$ between 0 and 1.
- *  \param parameter    Parameter (unused).
+ *  \param step         windowing step, running from 0 to \p degree
+ *  \param degree       degree of filter
+ *  \param param        parameter (unused)
  *
  *  \return             Result \f$y\f$ when successful evaluated, else
  *                      GSL_POSINF or GSL_NEGINF. Use the functions gsl_isinf()
  *                      or gsl_finite() for result checking.
  ******************************************************************************/
-static double firWinHanning (double x, double parameter)
+static double firWinHanning (int step, int degree, double param)
 {
-    return mathFuncHanning (x);
+    (void) param;
+    return mathFuncHanning ((double) (step + 1) / (degree + 2));
 } /* firWinHanning() */
 
 
 /* FUNCTION *******************************************************************/
 /** \e Blackman window function.
  *
- *  \param x            Argument \f$x\f$ between 0 and 1.
- *  \param parameter    Parameter (unused).
+ *  \param step         windowing step, running from 0 to \p degree
+ *  \param degree       degree of filter
+ *  \param param        parameter (unused)
  *
  *  \return             Result \f$y\f$ when successful evaluated, else
  *                      GSL_POSINF or GSL_NEGINF. Use the functions gsl_isinf()
  *                      or gsl_finite() for result checking.
  ******************************************************************************/
-static double firWinBlackman (double x, double parameter)
+static double firWinBlackman (int step, int degree, double param)
 {
-    return mathFuncBlackman (x);
+    return mathFuncBlackman ((double) (step + 1) / (degree + 2));
 } /* firWinBlackman() */
 
 
 /* FUNCTION *******************************************************************/
-/** \e Blackman window function.
+/** \e Kaiser window function.
  *
- *  \param x            Argument \f$x\f$ between 0 and 1.
- *  \param parameter    Parameter \f$\alpha\f$ of \e Kaiser window.
+ *  \param step         windowing step, running from 0 to \p degree
+ *  \param degree       degree of filter
+ *  \param param        parameter \f$\alpha\f$ of \e Kaiser window
  *
  *  \return             Result \f$y\f$ when successful evaluated, else
  *                      GSL_POSINF or GSL_NEGINF. Use the functions gsl_isinf()
  *                      or gsl_finite() for result checking.
  ******************************************************************************/
-static double firWinKaiser (double x, double parameter)
+static double firWinKaiser (int step, int degree, double param)
 {
-    return mathFuncKaiser (x, parameter);
+    return mathFuncKaiser ((double) step / degree, param);
 } /* firWinKaiser() */
 
 
@@ -597,10 +607,10 @@ int linFirFilterGen (LINFIR_DESIGN *pDesign, FLTCOEFF *pFilter)
     err = genFuncs[pDesign->type] (pDesign->cutoff / pFilter->f0, &pFilter->num);
     LINFIR_ERROR_RET (pFilter, err, "Linear FIR filter generation has failed");
 
-    for (i = 0; i <= pFilter->num.degree; i++)       /* apply window function */
+    for (i = 0; i <= pFilter->num.degree; i++)     /* apply window function */
     {
-        fnorm = winFuncs[pDesign->dspwin] ((double)i / pFilter->num.degree,
-                                            pDesign->winparm);
+        fnorm = winFuncs[pDesign->dspwin] (i, pFilter->num.degree, pDesign->winparm);
+
         if (gsl_finite (fnorm))
         {
             pFilter->num.coeff[i] *= fnorm;
