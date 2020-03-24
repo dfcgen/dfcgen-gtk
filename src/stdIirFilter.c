@@ -850,12 +850,13 @@ static double approxBessel (FLTCOEFF *pFilter)
 
 
 /* FUNCTION *******************************************************************/
-/** \brief Generates an IIR filter from standard approximations.
+/**
+ *  \brief Generates an IIR filter from standard approximations.
  *
  *  \attention          For bandpass/bandstop frequency transformation the
- *                      degree must be even.
- *  \note               The cutoff frequency always is assumed to be the 3dB
- *                      point of magnitude response.
+ *                      system order (degree) must be even.
+ *  \note               The cutoff frequency is assumed to be the 3dB point
+ *                      of magnitude response.
  *  \note               gsl_error_handler_t * gsl_set_error_handler (gsl_error_handler_t new_handler)
  *                      fpsetround()
  *
@@ -896,7 +897,7 @@ int stdIirFilterGen (STDIIR_DESIGN *pDesign, FLTCOEFF *pFilter)
         {
             double f1, f2;
 
-            ASSERT(GSL_IS_EVEN(pFilter->den.degree));
+            ASSERT(GSL_IS_EVEN(pDesign->order));
             pFilter->den.degree /= 2;    /* design lowpass with half degree */
 
             /* If center frequency \f$f_c\f$ is geometric, the bandwidth \f$B\f$
