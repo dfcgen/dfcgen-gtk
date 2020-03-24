@@ -406,22 +406,22 @@ static double firWinKaiser (int step, int degree, double param)
         |H_{HP}(f)| = H(0) - |H_{LP}(f)|
     \f]
  *
+ *  \attention          \p pFilter->num.degree must be even (LP/HP transform
+ *                      for systems with odd order is not possible/supported).
+ *
  *  \param pFilter      Pointer to linear FIR lowpass that coefficients shall
  *                      transformed.
  *
  *  \return             The frequency where the magnitude response has it's
  *                      maximum.
- * \todo Handle odd degree
- ******************************************************************************/
+  ******************************************************************************/
 static double ftrHighpass (FLTCOEFF *pFilter)
 {
     MATHPOLY *poly = &pFilter->num;
     double magnitude = gsl_poly_eval (poly->coeff, poly->degree + 1, 1.0);
 
-    if (GSL_IS_EVEN (poly->degree))
-    {
-        poly->coeff[poly->degree / 2] -= magnitude;
-    } /* if */
+    ASSERT(GSL_IS_EVEN(poly->degree));
+    poly->coeff[poly->degree / 2] -= magnitude;
 
     return pFilter->f0 / 2.0 - DBL_EPSILON;
 } /* ftrHighpass() */
@@ -445,6 +445,8 @@ static double ftrHighpass (FLTCOEFF *pFilter)
     \f]
  *  which may produce an aliasing effect at \f$f=0\f$.
  *
+ *  \attention          \p pFilter->num.degree must be even (LP/BP transform
+ *                      for systems with odd order is not possible/supported).
  *
  *  \param pFilter      Pointer to linear FIR lowpass that coefficients shall
  *                      transformed.
@@ -462,16 +464,18 @@ static double ftrBandpass (FLTCOEFF *pFilter, double fc, double bw, BOOL geometr
     double factor, tmp;
 
     MATHPOLY *poly = &pFilter->num;
-    double deg2 = poly->degree / 2.0;                       /* half of degree */
+    double deg2 = poly->degree / 2.0;                     /* half of degree */
+
+    ASSERT(GSL_IS_EVEN(poly->degree));
 
     if (geometric)
     {
         fc = HYPOT (fc, 0.5 * bw);
     } /* if */
 
-    factor = 2 * M_PI * fc / pFilter->f0;
+    factor = 2.0 * M_PI * fc / pFilter->f0;
 
-    for (i = 0; i <= poly->degree / 2; i++)             /* modify coefficients */
+    for (i = 0; i <= poly->degree / 2; i++)          /* modify coefficients */
     {
         tmp = cos (factor * (i - deg2));
         poly->coeff[i] *= tmp;
@@ -485,6 +489,9 @@ static double ftrBandpass (FLTCOEFF *pFilter, double fc, double bw, BOOL geometr
 
 /* FUNCTION *******************************************************************/
 /** \e Z domain bandstop transformation.
+ *
+ *  \attention          \p pFilter->num.degree must be even (LP/BS transform
+ *                      for systems with odd order is not possible/supported).
  *
  *  \param pFilter      Pointer to linear FIR lowpass that coefficients shall
  *                      transformed.
@@ -503,13 +510,11 @@ static double ftrBandstop (FLTCOEFF *pFilter, double fc, double bw, BOOL geometr
 
     MATHPOLY *poly = &pFilter->num;
 
-    fc = ftrBandpass (pFilter, fc, bw, geometric);
-    magnitude = filterResponsePoly (2 * M_PI * fc / pFilter->f0, poly);
+    ASSERT(GSL_IS_EVEN(poly->degree));
 
-    if (GSL_IS_EVEN (poly->degree))
-    {
-        poly->coeff[poly->degree / 2] -= magnitude;
-    } /* if */
+    fc = ftrBandpass (pFilter, fc, bw, geometric);
+    magnitude = filterResponsePoly (2.0 * M_PI * fc / pFilter->f0, poly);
+    poly->coeff[poly->degree / 2] -= magnitude;
 
     return pFilter->f0 / 2.0 - DBL_EPSILON;
 } /* ftrBandstop() */
@@ -520,8 +525,13 @@ static double ftrBandstop (FLTCOEFF *pFilter, double fc, double bw, BOOL geometr
 
 
 /* FUNCTION *******************************************************************/
-/** Generates a linear FIR filter. The cutoff frequency always is assumed to be
- *  the 3dB point of magnitude response.
+/**
+ *  \brief Generates a linear FIR filter.
+ *
+ *  \attention          For frequency transformations (HP/BP/BS) the system
+ *                      order (degree) must be even.
+ *  \note               The cutoff frequency is assumed to be the 3dB point
+ *                      of magnitude response.
  *
  *  \param pDesign      Pointer to linear FIR filter design data.
  *  \param pFilter      Pointer to buffer which gets the generated filter.
@@ -530,8 +540,6 @@ static double ftrBandstop (FLTCOEFF *pFilter, double fc, double bw, BOOL geometr
  *
  *  \return             Zero on success, else an error number (see errno.h or
  *                      gsl_errno.h for predefined codes).
- *  \todo               Implement semantic checks on bandwidth, center and cutoff
- *                      frequency wrt. sample frequency.
  *  \todo               Correct the lowpass design cutoff frequency (see Bessel
  *                      lowpass) when performing frequency transformations
  *                      (depends on characteristic too, significant on perfect
@@ -563,6 +571,9 @@ int linFirFilterGen (LINFIR_DESIGN *pDesign, FLTCOEFF *pFilter)
     gsl_error_handler_t *oldHandler;
     double fnorm;                                /* unity normation frequency */
 
+    ASSERT(GSL_IS_EVEN(pDesign->order) ||
+           (pDesign->ftr.type == FTR_NON));
+
     pFilter->factor = 0.0;                 /* roots are invalid (unused here) */
 
     /* Memory allocation for coefficients and roots space in numerator and
@@ -588,15 +599,12 @@ int linFirFilterGen (LINFIR_DESIGN *pDesign, FLTCOEFF *pFilter)
             pDesign->cutoff = 0.5 * pDesign->ftr.bw;
             break; /* FTR_BANDPASS, FTR_BANDSTOP */
 
-
         case FTR_HIGHPASS :
             pDesign->cutoff = pDesign->ftr.fc;
             break; /* FTR_HIGHPASS */
 
-
         case FTR_NON: /* LOWPASS */
             break; /* FTR_NON */
-
 
         default:
             ASSERT(0);
@@ -627,22 +635,18 @@ int linFirFilterGen (LINFIR_DESIGN *pDesign, FLTCOEFF *pFilter)
                                  pDesign->ftr.flags & FTRDESIGN_FLAG_CENTER_GEOMETRIC);
             break;
 
-
         case FTR_BANDPASS:
             fnorm = ftrBandpass (pFilter, pDesign->ftr.fc, pDesign->ftr.bw,
                                  pDesign->ftr.flags & FTRDESIGN_FLAG_CENTER_GEOMETRIC);
             break;
 
-
         case FTR_HIGHPASS:                /* lowpass->highpass transformation */
             fnorm = ftrHighpass (pFilter);
             break;
 
-
         case FTR_NON:                                              /* lowpass */
             fnorm = 0.0;
             break;
-
 
         default:
             ASSERT(0);

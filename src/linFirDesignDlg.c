@@ -103,12 +103,12 @@ static LINFIRDLG_DSPWIN linFirDlgWin[LINFIR_DSPWIN_SIZE] =
 };
 
 
-static const gboolean ftrEntry[FTR_SIZE][4] =
-{ /* entryCutF, entryCenterF, entryBandwidth, checkGeometric */
-    {TRUE,      FALSE,        FALSE,          FALSE},          /* FTR_NON */
-    {FALSE,     TRUE,         FALSE,          FALSE},     /* FTR_HIGHPASS */
-    {FALSE,     TRUE,         TRUE,           TRUE},      /* FTR_BANDPASS */
-    {FALSE,     TRUE,         TRUE,           TRUE},      /* FTR_BANDSTOP */
+static const gboolean ftrEntry[FTR_SIZE][5] =
+{ /* entryCutF, entryCenterF, entryBandwidth, checkGeometric, evenDegree */
+    {TRUE,      FALSE,        FALSE,          FALSE,          FALSE}, /* FTR_NON */
+    {FALSE,     TRUE,         FALSE,          FALSE,          TRUE},  /* FTR_HIGHPASS */
+    {FALSE,     TRUE,         TRUE,           TRUE,           TRUE},  /* FTR_BANDPASS */
+    {FALSE,     TRUE,         TRUE,           TRUE,           TRUE},  /* FTR_BANDSTOP */
 };
 
 
@@ -725,6 +725,11 @@ int linFirDesignDlgApply (GtkWidget *topWidget, const CFG_DESKTOP* pPrefs)
             design.ftr.type = idx;
         } /* else */
 
+        if (ftrEntry[design.ftr.type][4] && GSL_IS_ODD(design.order))
+        {
+            dlgError(topWidget, _("Degree must be even for frequency transformation."));
+            return INT_MAX;
+        }
 
         if (ftrEntry[design.ftr.type][0]) /* lowpass cutoff frequency required? */
         {

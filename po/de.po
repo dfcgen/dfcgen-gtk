@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: dfcgen-gtk 0.5\n"
 "Report-Msgid-Bugs-To: ralf.hoppe@dfcgen.de\n"
-"POT-Creation-Date: 2020-03-22 15:53+0100\n"
-"PO-Revision-Date: 2020-03-22 15:57+0100\n"
+"POT-Creation-Date: 2020-03-23 21:56+0100\n"
+"PO-Revision-Date: 2020-03-23 22:02+0100\n"
 "Last-Translator: Ralf Hoppe <ralf.hoppe@dfcgen.de>\n"
 "Language-Team: Ralf Hoppe\n"
 "Language: de\n"
@@ -754,7 +754,7 @@ msgstr "Modulwinkel in Grad"
 msgid "Angle"
 msgstr "Modul"
 
-#: src/stdIirDesignDlg.c:785
+#: src/stdIirDesignDlg.c:784
 msgid "Degree must be even for bandpass/bandstop."
 msgstr "Für eine(n) Bandsperre/Bandpaß muß der Grad gerade sein."
 
@@ -916,7 +916,7 @@ msgstr "Syntaxfehler in Zeile %d."
 msgid "Mandatory tag '%s' missing"
 msgstr "Pflicht-Tag '%s' nicht gefunden."
 
-#: src/projectFile.c:1522
+#: src/projectFile.c:1524
 #, c-format
 msgid "Something seems wrong with the project in '%s'"
 msgstr "Irgendetwas scheint mit dem Projekt in '%s' nicht in Ordnung."
@@ -973,6 +973,11 @@ msgstr "Parameter des Kaiser-Fensters"
 #: src/linFirDesignDlg.c:520
 msgid "α="
 msgstr "α="
+
+#: src/linFirDesignDlg.c:730
+#, fuzzy
+msgid "Degree must be even for frequency transformation."
+msgstr "Für eine Frequenztransformation muß der Grad gerade sein."
 
 #: src/rootsPlot.c:297
 msgid "Re(z)"
