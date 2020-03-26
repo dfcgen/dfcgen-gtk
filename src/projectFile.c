@@ -1150,6 +1150,11 @@ static void readProject (const char *filename, unsigned flags, GError **err)
                         } /* if */
                     } /* if */
                 } /* for */
+
+                if (tmpPrj.design.all.ftr.type != FTR_NON)
+                {
+                    tmpPrj.design.all.ftr.fc = tmpPrj.design.all.cutoff;
+                } /* if */
             } /* if */
         } /* if */
 
