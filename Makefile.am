@@ -22,6 +22,13 @@ uninstall-local:
 	-rm -r $(docdir)
 
 
+# make doxygen
+doxygen:
+	cd doc && $(MAKE) $(AM_MAKEFLAGS) doxygen
+
+.PHONY: doxygen
+
+
 # Maintainer rule for building the Debian package.
 # NOTE: Generates the changelog starting with release 0.4-1.
 dist_debian_dir="dist/$(distdir)"
