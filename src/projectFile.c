@@ -1063,11 +1063,14 @@ static int writeProject (FILE *f, DFCPRJ_FILTER *prj)
 
 
 /* FUNCTION *******************************************************************/
-/** Reads a filter project from a file into variable tmpPrj. In case of an error
- *  it sets the pointer to the error structure, which itself can be used to
- *  display the original error message. Modification of the error structure
- *  pointer indicates an critical error. In that case it has to be free'ed with
- *  g_error_free().
+/**
+ *  \brief              Reads a filter project from a file into variable tmpPrj.
+ *
+ *                      In case of an error it sets the pointer to the error
+ *                      structure, which itself can be used to display the
+ *                      original error message. Modification of the error
+ *                      structure pointer indicates an critical error. In that
+ *                      case it has to be free'ed with g_error_free().
  *
  *  \param filename     Filename of file (with path).
  *  \param flags        Project flags to be preset. Set this to
@@ -1107,6 +1110,7 @@ static void readProject (const char *filename, unsigned flags, GError **err)
 
 
     ctx = g_markup_parse_context_new (&parser, 0, &tmpPrj, NULL);
+    ASSERT (ctx != NULL);
 
     if (g_file_get_contents (filename, &content, &len, err))     /* read file */
     {
