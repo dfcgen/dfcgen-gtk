@@ -10,10 +10,10 @@ EXTRA_DIST =\
 override TEXINPUTS = .:$(abs_srcdir):
 export TEXINPUTS
 
-doxygen:
+dox:
 	doxygen
 
-.PHONY: doxygen
+.PHONY: dox
 
 
 maintainer-clean-local:

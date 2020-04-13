@@ -22,11 +22,11 @@ uninstall-local:
 	-rm -r $(docdir)
 
 
-# make doxygen
-doxygen:
-	cd doc && $(MAKE) $(AM_MAKEFLAGS) doxygen
+# make dox
+dox:
+	cd doc && $(MAKE) $(AM_MAKEFLAGS) dox
 
-.PHONY: doxygen
+.PHONY: dox
 
 
 # Maintainer rule for building the Debian package.
