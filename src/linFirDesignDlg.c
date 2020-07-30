@@ -680,8 +680,7 @@ BOOL linFirDesignDlgActive (GtkWidget *topWidget)
  *                        filter must be seen as invalid. You can use the
  *                        FLTERR_CRITICAL macro from filterSupport.h to check
  *                        this condition.
- *  \todo               Share code with IIR design dialog.
- ******************************************************************************/
+  ******************************************************************************/
 int linFirDesignDlgApply (GtkWidget *topWidget, const CFG_DESKTOP* pPrefs)
 {
     GtkWidget *combo;

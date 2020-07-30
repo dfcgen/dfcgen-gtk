@@ -1,6 +1,7 @@
 * User interface
-  The following improvements shall ensure similiar GUI features as are available
-  in old Win3.x version.
+
+  The following improvements shall ensure similiar GUI features as in
+  old Win3.x version.
 
   - Function: cairoPlot2d
     Think about transition to double coordinates in all functions below
@@ -19,28 +20,14 @@
   - Function: filterResponseTimeNew
     Allow user break
 
-  - Feature: Predefined filters
-    Improve description (and translation) of predefined filters
+  - Feature: Response Plot
+    Display coordinate when mouse moves over graph area
 
   - Feature: GTK-Help
     Implement GTK help, based on DocBook 5
 
-* Filter design
-  Improvements on algorithms currently implemented
-
-  - Function: linFirFilterGen
-    Correct the lowpass design cutoff frequency (see Bessel lowpass) when
-    performing frequency transformations (depends on characteristic too,
-    significant on perfect lowpass).
-
-  - Function: ftrHighpass
-    Handle odd degree
-
 
 * Stability
-
-  - Function: linFirFilterGen
-    Use fpsetround()?
 
   - File: mathMisc.c
     Implement a generic math. error handler
@@ -56,34 +43,3 @@
 
   - Function: mathPolyCoeffs2Roots
     Try to avoid mixing error codes from gsl_errno.h and errno.h 
-
-  - Function: linFirDesignDlgApply
-    Share code with IIR design dialog
-
-
-* Source style/comments
-
-  - Function: genCosine2System
-    Give formula
-
-  - Function: chebyT
-    Improve function description by the help of LaTeX
-
-  - Function: timeResponseProcNext
-    Describe algo used here 
-
-
-* Optimization
-
-  - Function: responseWidget
-    Try to move some of these data into responsePlot.c
-
-
-* New features
-
-  - Feature: New filter class ARBITRARY
-    Support of arbitrary frequency specification by Parks-McClellan algorithm
-
-  - Feature: Response Plot
-    Display coordinate when mouse moves over graph area
-

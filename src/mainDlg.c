@@ -666,7 +666,6 @@ static void coeffRedrawListTreeViews ()
  *
  *
  *  \return     Top widget reference.
- *  \todo       Reduce number of variables used (optimize the function)
  ******************************************************************************/
 GtkWidget* mainDlgCreate (void)
 {

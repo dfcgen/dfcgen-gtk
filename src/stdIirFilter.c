@@ -857,8 +857,6 @@ static double approxBessel (FLTCOEFF *pFilter)
  *                      system order (degree) must be even.
  *  \note               The cutoff frequency is assumed to be the 3dB point
  *                      of magnitude response.
- *  \note               gsl_error_handler_t * gsl_set_error_handler (gsl_error_handler_t new_handler)
- *                      fpsetround()
  *
  *  \param pDesign      Pointer to standard IIR design data.
  *  \param pFilter      Pointer to buffer which gets the generated filter.

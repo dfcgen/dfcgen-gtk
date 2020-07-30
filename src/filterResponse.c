@@ -223,8 +223,7 @@ static double timeResponseGetNext (double xtime, FLTSIGNAL sig)
  *                      function timeResponseProcNext() shall not occur.
  *                      Check this situation for example by the help of
  *                      function gsl_isinf() or gsl_finite().
- *  \todo Describe algo used here
- ******************************************************************************/
+  ******************************************************************************/
 static double timeResponseProcNext (FLTRESP_TIME_WORKSPACE *pWorkspace)
 {
     int i;
