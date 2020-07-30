@@ -1155,10 +1155,29 @@ static void readProject (const char *filename, unsigned flags, GError **err)
                     } /* if */
                 } /* for */
 
-                if (tmpPrj.design.all.ftr.type != FTR_NON)
+                /*
+                 * The next step is a counterpart to writeFrequTransf().  It
+                 * restores the cutoff/center frequency the right way, when
+                 * frequency transformations are active.
+                 */
+                switch (tmpPrj.design.all.ftr.type)
                 {
-                    tmpPrj.design.all.ftr.fc = tmpPrj.design.all.cutoff;
-                } /* if */
+                    case FTR_NON:                  /* ftr.fc has no meaning */
+                    case FTR_BANDPASS: /* wrote ftr.fc with PRJF_TAG_CENTER */
+                    case FTR_BANDSTOP:
+                        break;
+
+                    case FTR_HIGHPASS: /* wrote ftr.fc with PRJF_TAG_CUTOFF */
+                        tmpPrj.design.all.ftr.fc = tmpPrj.design.all.cutoff;
+                        break;
+
+                    default:
+                        g_set_error (err, G_MARKUP_ERROR,
+                                     G_MARKUP_ERROR_INVALID_CONTENT,
+                                     _("Unknown frequency transform type %d"),
+                                     tmpPrj.design.all.ftr.type);
+                        break;
+                } /* switch */
             } /* if */
         } /* if */
 

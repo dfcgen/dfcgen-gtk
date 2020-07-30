@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: dfcgen-gtk 0.5\n"
 "Report-Msgid-Bugs-To: ralf.hoppe@dfcgen.de\n"
-"POT-Creation-Date: 2020-03-23 21:56+0100\n"
-"PO-Revision-Date: 2020-03-23 22:02+0100\n"
+"POT-Creation-Date: 2020-07-30 22:04+0200\n"
+"PO-Revision-Date: 2020-07-30 22:05+0200\n"
 "Last-Translator: Ralf Hoppe <ralf.hoppe@dfcgen.de>\n"
 "Language-Team: Ralf Hoppe\n"
 "Language: de\n"
@@ -154,109 +154,109 @@ msgstr "Abzw."
 msgid "Coefficient"
 msgstr "Koeffizient"
 
-#: src/mainDlg.c:714
+#: src/mainDlg.c:713
 msgid "_File"
 msgstr "_Datei"
 
-#: src/mainDlg.c:749
+#: src/mainDlg.c:748
 msgid "_Export"
 msgstr "_Export"
 
-#: src/mainDlg.c:773
+#: src/mainDlg.c:772
 msgid "_Edit"
 msgstr "_Bearbeiten"
 
-#: src/mainDlg.c:779 src/editDlg.c:308
+#: src/mainDlg.c:778 src/editDlg.c:308
 msgid "Project Info"
 msgstr "Projektinfo"
 
-#: src/mainDlg.c:786
+#: src/mainDlg.c:785
 msgid "Coefficient(s)"
 msgstr "Koeffizient(en)"
 
-#: src/mainDlg.c:816
+#: src/mainDlg.c:815
 msgid "_View"
 msgstr "_Ansicht"
 
-#: src/mainDlg.c:822
+#: src/mainDlg.c:821
 msgid "_Magnitude Response"
 msgstr "_Amplitudengang"
 
-#: src/mainDlg.c:828
+#: src/mainDlg.c:827
 msgid "_Attenuation"
 msgstr "_Dämpfung"
 
-#: src/mainDlg.c:834
+#: src/mainDlg.c:833
 msgid "_Characteristic Function"
 msgstr "D_rosselung"
 
-#: src/mainDlg.c:840
+#: src/mainDlg.c:839
 msgid "_Phase Response"
 msgstr "_Phasengang"
 
-#: src/mainDlg.c:846
+#: src/mainDlg.c:845
 msgid "Phase _Delay"
 msgstr "Phasen_laufzeit"
 
-#: src/mainDlg.c:852
+#: src/mainDlg.c:851
 msgid "_Group Delay"
 msgstr "_Gruppenlaufzeit"
 
-#: src/mainDlg.c:858
+#: src/mainDlg.c:857
 msgid "_Impulse Response"
 msgstr "_Impulsantwort"
 
-#: src/mainDlg.c:864
+#: src/mainDlg.c:863
 msgid "_Step Response"
 msgstr "_Sprungantwort"
 
-#: src/mainDlg.c:870
+#: src/mainDlg.c:869
 msgid "_Help"
 msgstr "_Hilfe"
 
 # Label for filter class combobox
-#: src/mainDlg.c:939
+#: src/mainDlg.c:938
 msgid "<b>_Class</b>"
 msgstr "<b>_Klasse</b>"
 
 # Tooltip
-#: src/mainDlg.c:945
+#: src/mainDlg.c:944
 msgid "Class of filter (or system)"
 msgstr "Filterklasse"
 
 # Tooltip for help button
-#: src/mainDlg.c:959
+#: src/mainDlg.c:958
 msgid "Help"
 msgstr "Hilfe"
 
 # Tooltip
-#: src/mainDlg.c:969
+#: src/mainDlg.c:968
 msgid "Apply input data"
 msgstr "Eingabe anwenden"
 
-#: src/mainDlg.c:986
+#: src/mainDlg.c:985
 msgid "<b>Roots</b>"
 msgstr "<b>Wurzeln</b>"
 
 # Tooltip
-#: src/mainDlg.c:1004
+#: src/mainDlg.c:1003
 msgid "Denominator coefficients"
 msgstr "Nennerkoeffizienten"
 
 # Tooltip
-#: src/mainDlg.c:1015
+#: src/mainDlg.c:1014
 msgid "Numerator coefficients"
 msgstr "Zählerkoeffizienten"
 
-#: src/mainDlg.c:1017
+#: src/mainDlg.c:1016
 msgid "<b>Numerator</b>"
 msgstr "<b>Zähler</b>"
 
-#: src/mainDlg.c:1025
+#: src/mainDlg.c:1024
 msgid "<b>Denominator</b>"
 msgstr "<b>Nenner</b>"
 
-#: src/mainDlg.c:1165
+#: src/mainDlg.c:1164
 msgid ""
 "Filter generation has dropped some (near zero) coefficients, but the filter "
 "is still valid."
@@ -267,7 +267,7 @@ msgstr ""
 
 # Displayed if title, author or filename (may be a conversion error from filesystem
 # into UTF-8 coding) are unknown.
-#: src/mainDlg.c:1227 src/fileDlg.c:88 src/fileDlg.c:93 src/dialogSupport.c:132
+#: src/mainDlg.c:1226 src/fileDlg.c:88 src/fileDlg.c:93 src/dialogSupport.c:132
 msgid "<i>Unknown</i>"
 msgstr "<i>Unbekannt</i>"
 
@@ -901,22 +901,27 @@ msgstr ""
 msgid "Could not load predefined filter from '%s'"
 msgstr "Konnte das vor definierte Filter nicht von '%s' laden"
 
-#: src/projectFile.c:706
+#: src/projectFile.c:708
 #, c-format
 msgid "Unexpected tag '%s'"
 msgstr "Unerwartetes Tag '%s'."
 
-#: src/projectFile.c:773
+#: src/projectFile.c:775
 #, c-format
 msgid "Syntax error at line %d"
 msgstr "Syntaxfehler in Zeile %d."
 
-#: src/projectFile.c:1147
+#: src/projectFile.c:1153
 #, c-format
 msgid "Mandatory tag '%s' missing"
 msgstr "Pflicht-Tag '%s' nicht gefunden."
 
-#: src/projectFile.c:1524
+#: src/projectFile.c:1179
+#, c-format
+msgid "Unknown frequency transform type %d"
+msgstr "Unbekannte Frequenztransformation %d"
+
+#: src/projectFile.c:1552
 #, c-format
 msgid "Something seems wrong with the project in '%s'"
 msgstr "Irgendetwas scheint mit dem Projekt in '%s' nicht in Ordnung."
@@ -974,8 +979,7 @@ msgstr "Parameter des Kaiser-Fensters"
 msgid "α="
 msgstr "α="
 
-#: src/linFirDesignDlg.c:730
-#, fuzzy
+#: src/linFirDesignDlg.c:729
 msgid "Degree must be even for frequency transformation."
 msgstr "Für eine Frequenztransformation muß der Grad gerade sein."
 
