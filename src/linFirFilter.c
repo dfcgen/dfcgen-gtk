@@ -39,6 +39,17 @@
 typedef int (*LINFIR_SYSGEN_FUNC)(double x, MATHPOLY *poly);
 
 
+/**
+ *  \brief Additive inversion (LP/HP frequency transformation)
+ *         cutoff frequency correction for linear FIR systems.
+ *
+ *  \param fc           Cutoff frequency.
+ *
+ *  \return             Corrected cutoff frequency.
+ ******************************************************************************/
+typedef double (*LINFIR_FCORR_FUNC)(double x);
+
+
 /* FUNCTION *****************************************************************/
 /**
  *  \brief Mathematical function \f$y=f(x;a)\f$ with parameter \f$a\f$.
@@ -85,6 +96,11 @@ static int genGaussianSystem (double x, MATHPOLY *poly);
 static int genCosineSystem (double x, MATHPOLY *poly);
 static int genCosine2System (double x, MATHPOLY *poly);
 static int genSquaredSystem (double x, MATHPOLY *poly);
+static double corrRectangularCutoff (double fc);
+static double corrGaussianCutoff (double fc);
+static double corrCosineCutoff (double fc);
+static double corrCosine2Cutoff (double fc);
+static double corrSquaredCutoff (double fc);
 static double firWinKaiser (int step, int degree, double param);
 static double firWinRectangle (int step, int degree, double param);
 static double firWinHamming (int step, int degree, double param);
@@ -103,9 +119,10 @@ static double ftrBandpass (FLTCOEFF *pFilter, double fc, double bw, BOOL geometr
 /** Rectangular magnitude response system generator. Calculation of coefficient
  *  \f$c_i\f$ is based on the argument \f$x\f$ and polynomial degree \f$n\f$
  *  following the formula:
-    \f[
-        c_i=\frac{\sin\left[2\pi x\,(i-n/2)\right]}{2\pi x\,(i-n/2)}
-    \f]
+    \f{eqnarray*}
+        c_i &=& \frac{\sin\left[2\pi x\,(i-n/2)\right]}{2\pi x\,(i-n/2)} \\
+            &=& \si\left[2\pi x\,(i-n/2)\right]
+    \f}
  *
  *  \param x            Argument \f$x\f$.
  *  \param poly         The numerator polynomial of the linear FIR system (in
@@ -181,9 +198,11 @@ static int genCosineSystem (double x, MATHPOLY *poly)
 /** Squared cosine magnitude response system generator. Calculation of
  *  coefficient \f$c_i\f$ is based on the argument \f$x\f$ and polynomial degree
  *  \f$n\f$ following the formula:
-    \f[
-        c_i=\frac{}{}
-    \f]
+    \f{eqnarray*}
+        \Lambda &=& \frac{\pi}{\arccos\frac{1}{\sqrt[4]{2}}} \\
+        c_i &=& \frac{\si\left[\Lambda \pi x\,(i-n/2)\right]}{1-\left[\Lambda x\,(i-n/2)\right]^2} \\
+        \si(x) &=& \frac{\sin x}{x}
+    \f}
  *
  *  \param x            Argument \f$x\f$.
  *  \param poly         The numerator polynomial of the linear FIR system (in
@@ -191,7 +210,6 @@ static int genCosineSystem (double x, MATHPOLY *poly)
  *
  *  \return             Zero on success, else an error code (from errno.h or
  *                      gsl_errno.h).
- *  \todo               Give formula
  ******************************************************************************/
 static int genCosine2System (double x, MATHPOLY *poly)
 {
@@ -247,11 +265,11 @@ static int genSquaredSystem (double x, MATHPOLY *poly)
     gsl_sf_result result;
 
     double deg2 = poly->degree / 2.0;
-    double constant = 2.0 * M_PI / sqrt (M_SQRT2 - 1.0);
+    double constant = -2.0 * M_PI / sqrt (M_SQRT2 - 1.0);
 
     for (i = 0; i <= poly->degree; i++)
     {
-        err = gsl_sf_exp_e (-constant * x * fabs ((i - deg2)), &result);
+        err = gsl_sf_exp_e (constant * x * fabs (deg2 - i), &result);
 
         if (err != GSL_SUCCESS)
         {
@@ -305,6 +323,75 @@ static int genGaussianSystem (double x, MATHPOLY *poly)
     return GSL_SUCCESS;
 } /* genGaussianSystem() */
 
+
+/**
+ *  \brief      Cutoff frequency correction for LP/HP transformation of a
+ *              rectangular system.
+ *
+ *  \param[in]  fc      target cutoff frequency of highpass
+ *
+ *  \return     corrected cutoff frequency, to be used for lowpass design
+ */
+static double corrRectangularCutoff (double fc)
+{
+    return fc;                       /* no correction on rectangular system */
+}
+
+
+/**
+ *  \brief      Cutoff frequency correction for LP/HP transformation of a
+ *              cosine system.
+ *
+ *  \param[in]  fc      target cutoff frequency of highpass
+ *
+ *  \return     corrected cutoff frequency, to be used for lowpass design
+ */
+static double corrCosineCutoff (double fc)
+{
+    return M_PI_4 * fc / acos (1.0 - M_SQRT1_2);
+}
+
+
+/**
+ *  \brief      Cutoff frequency correction for LP/HP transformation of a
+ *              squared cosine system.
+ *
+ *  \param[in]  fc      target cutoff frequency of highpass
+ *
+ *  \return     corrected cutoff frequency, to be used for lowpass design
+ */
+static double corrCosine2Cutoff (double fc)
+{
+    return fc * acos (sqrt (M_SQRT1_2)) / acos (sqrt (1.0 - M_SQRT1_2));
+}
+
+
+/**
+ *  \brief      Cutoff frequency correction for LP/HP transformation of a
+ *              1st order squared system.
+ *
+ *  \param[in]  fc      target cutoff frequency of highpass
+ *
+ *  \return     corrected cutoff frequency, to be used for lowpass design
+ */
+static double corrSquaredCutoff (double fc)
+{
+    return (M_SQRT2 - 1.0) * fc;
+}
+
+
+/**
+ *  \brief      Cutoff frequency correction for LP/HP transformation of a
+ *              gaussian system.
+ *
+ *  \param[in]  fc      target cutoff frequency of highpass
+ *
+ *  \return     corrected cutoff frequency, to be used for lowpass design
+ */
+static double corrGaussianCutoff (double fc)
+{
+    return M_SQRT1_2 * fc * sqrt (- M_LN2 / log (1.0 - M_SQRT1_2));
+}
 
 
 /* FUNCTION *******************************************************************/
@@ -540,36 +627,40 @@ static double ftrBandstop (FLTCOEFF *pFilter, double fc, double bw, BOOL geometr
  *
  *  \return             Zero on success, else an error number (see errno.h or
  *                      gsl_errno.h for predefined codes).
- *  \todo               Correct the lowpass design cutoff frequency (see Bessel
- *                      lowpass) when performing frequency transformations
- *                      (depends on characteristic too, significant on perfect
- *                      lowpass).
- *  \todo               Use fpsetround()?
  ******************************************************************************/
 int linFirFilterGen (LINFIR_DESIGN *pDesign, FLTCOEFF *pFilter)
 {
     static const LINFIR_SYSGEN_FUNC genFuncs[LINFIR_TYPE_SIZE] =
     {
-        genRectangularSystem,                             /* LINFIR_TYPE_RECT */
-        genCosineSystem,                                   /* LINFIR_TYPE_COS */
-        genCosine2System,                                 /* LINFIR_TYPE_COS2 */
-        genSquaredSystem,                                /* LINFIR_TYPE_GAUSS */
-        genGaussianSystem                                  /* LINFIR_TYPE_SQR */
+        [LINFIR_TYPE_RECT] = genRectangularSystem,
+        [LINFIR_TYPE_COS] = genCosineSystem,
+        [LINFIR_TYPE_COS2] = genCosine2System,
+        [LINFIR_TYPE_GAUSS] = genGaussianSystem,
+        [LINFIR_TYPE_SQR] = genSquaredSystem
+    };
+
+    static const LINFIR_FCORR_FUNC corrFuncs[LINFIR_TYPE_SIZE] =
+    {
+        [LINFIR_TYPE_RECT] = corrRectangularCutoff,
+        [LINFIR_TYPE_COS] = corrCosineCutoff,
+        [LINFIR_TYPE_COS2] = corrCosine2Cutoff,
+        [LINFIR_TYPE_GAUSS] = corrGaussianCutoff,
+        [LINFIR_TYPE_SQR] = corrSquaredCutoff
     };
 
     static const LINFIR_WINDOW_FUNC winFuncs[LINFIR_DSPWIN_SIZE] =
     {
-        firWinRectangle,                                /* LINFIR_DSPWIN_RECT */
-        firWinHamming,                               /* LINFIR_DSPWIN_HAMMING */
-        firWinHanning,                               /* LINFIR_DSPWIN_HANNING */
-        firWinBlackman,                             /* LINFIR_DSPWIN_BLACKMAN */
-        firWinKaiser                                  /* LINFIR_DSPWIN_KAISER */
+        [LINFIR_DSPWIN_RECT] = firWinRectangle,
+        [LINFIR_DSPWIN_HAMMING] = firWinHamming,
+        [LINFIR_DSPWIN_HANNING] = firWinHanning,
+        [LINFIR_DSPWIN_BLACKMAN] = firWinBlackman,
+        [LINFIR_DSPWIN_KAISER] = firWinKaiser
     };
 
 
     int i, err;
     gsl_error_handler_t *oldHandler;
-    double fnorm;                                /* unity normation frequency */
+    double fnorm;                                   /* unity norm frequency */
 
     ASSERT(GSL_IS_EVEN(pDesign->order) ||
            (pDesign->ftr.type == FTR_NON));
@@ -586,21 +677,25 @@ int linFirFilterGen (LINFIR_DESIGN *pDesign, FLTCOEFF *pFilter)
     pFilter->den.coeff[0] = 1.0;
 
     /* All GSL errors are handled by the caller (starting from here), therefore
-     * disable the abort behaviour of the GSL library.
+     * disable the abort behavior of the GSL library.
      */
     oldHandler = gsl_set_error_handler_off ();
 
     pFilter->factor = 0.0;            /* no valid roots representation so far */
+    ASSERT (pDesign->type < LINFIR_TYPE_SIZE);
 
-    switch (pDesign->ftr.type)                    /* frequency transformation */
+    switch (pDesign->ftr.type)                  /* frequency transformation */
     {
-        case FTR_BANDPASS:
         case FTR_BANDSTOP:
+            pDesign->cutoff = corrFuncs[pDesign->type] (0.5 * pDesign->ftr.bw);
+            break;
+
+        case FTR_BANDPASS:
             pDesign->cutoff = 0.5 * pDesign->ftr.bw;
             break; /* FTR_BANDPASS, FTR_BANDSTOP */
 
-        case FTR_HIGHPASS :
-            pDesign->cutoff = pDesign->ftr.fc;
+        case FTR_HIGHPASS:
+            pDesign->cutoff = corrFuncs[pDesign->type] (pDesign->ftr.fc);
             break; /* FTR_HIGHPASS */
 
         case FTR_NON: /* LOWPASS */
@@ -610,8 +705,6 @@ int linFirFilterGen (LINFIR_DESIGN *pDesign, FLTCOEFF *pFilter)
             ASSERT(0);
     } /* switch */
 
-
-    ASSERT (pDesign->type < LINFIR_TYPE_SIZE);
     err = genFuncs[pDesign->type] (pDesign->cutoff / pFilter->f0, &pFilter->num);
     LINFIR_ERROR_RET (pFilter, err, "Linear FIR filter generation has failed");
 
