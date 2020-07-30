@@ -44,17 +44,16 @@ static double chebyT(double degree, double x);
 
 /* FUNCTION *******************************************************************/
 /** Evaluates \e Chebyshev function (polynomial) of first kind.
- * if |x| < 1 use : T(x) = cos(n*arcos(x))
- * if  x >= 1 use : T(x) = cosh(n*arcosh(x))    because cosh(jx) = cos(x)
- * if x < -1 you get a little problem, because cosh(x+j*Pi) = - cosh(x)
- * and therfore arcosh(-x) = arcosh(|x|) + j*Pi ,
- * then use T(x) = (-1)^n * cosh(n*arcosh(|x|))
+ * - If |x| < 1 use : \f$ \chebyT(x) = \cos(n \arccos x) \f$
+ * - If x >= 1 use : \f$ \chebyT(x) = \cosh(n \arcosh x) \f$ because \f$ \cosh(j x) = \cos x \f$ .
+ * - If x < -1 you get a problem, because \f$ \cosh(x + j \pi) = - \cosh x \f$
+ *   and therefore \f$ \arcosh(-x) = \arcosh(|x|) + j \pi\f$ , then use
+ *   \f$ \chebyT(x) = (-1)^n \cosh(n \arcosh |x|) \f$ .
  *
  *  \param degree       Degree \f$n\f$ of \e Chebyshev polynomial.
  *  \param x            Argument.
  *
  *  \return             Value of \e Chebyshev polynomial \f$\chebyT_n(x)\f$.
- *  \todo               Improve description by the help of LaTeX
  ******************************************************************************/
 static double chebyT(double degree, double x)
 {
