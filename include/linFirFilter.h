@@ -25,16 +25,14 @@ extern "C" {
 /* GLOBAL TYPE DECLARATIONS ***************************************************/
 
 /** Typical smoothing windows used in digital signal processing.
- *
- *  \attention Do not change enumeration values, because used as index.
  */
 typedef enum
 {
     LINFIR_DSPWIN_RECT = 0,
-    LINFIR_DSPWIN_HAMMING = 1,
-    LINFIR_DSPWIN_HANNING = 2,
-    LINFIR_DSPWIN_BLACKMAN = 3,
-    LINFIR_DSPWIN_KAISER = 4,
+    LINFIR_DSPWIN_HAMMING,
+    LINFIR_DSPWIN_HANNING,
+    LINFIR_DSPWIN_BLACKMAN,
+    LINFIR_DSPWIN_KAISER,
 
     LINFIR_DSPWIN_SIZE
 
@@ -43,22 +41,21 @@ typedef enum
 
 
 /** Linear FIR filter types.
- *
- *  \attention Do not change enumeration values, because used as index.
  */
 typedef enum
 {
-    LINFIR_TYPE_RECT = 0,                            /**< Rectangular lowpass */
-    LINFIR_TYPE_COS = 1,                                 /**< Cosinus lowpass */
-    LINFIR_TYPE_COS2 = 2,                         /**< Square cosinus lowpass */
-    LINFIR_TYPE_GAUSS = 3,                              /**< Gaussian lowpass */
-    LINFIR_TYPE_SQR = 4,                     /**< Squared first order lowpass */
+    LINFIR_TYPE_RECT = 0,                          /**< Rectangular lowpass */
+    LINFIR_TYPE_COS,                                   /**< Cosinus lowpass */
+    LINFIR_TYPE_COS2,                           /**< Square cosinus lowpass */
+    LINFIR_TYPE_GAUSS,                                /**< Gaussian lowpass */
+    LINFIR_TYPE_SQR,                         /**< Squared 1st order lowpass */
 
     LINFIR_TYPE_SIZE
 } LINFIR_TYPE;
 
 
-/** Linear FIR filter design data (from dialog).
+/** Linear FIR filter design constraints.
+ *  \see DESIGNDLG_COMMON
  */
 typedef struct
 {

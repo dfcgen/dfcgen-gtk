@@ -122,53 +122,61 @@ static CFG_DESKTOP deskPrefs =
  */
 static CFG_RESPONSE_SETTINGS respSet[RESPONSE_TYPE_SIZE] =
 {
-    {                                              /* RESPONSE_TYPE_MAGNITUDE */
+    [RESPONSE_TYPE_MAGNITUDE] =
+    {
         CFG_GROUP_WINDOW "Magnitude",
         {0.0, CFG_DEFAULT_F_STOP, PLOT_AXIS_FLAG_GRID},
         {0, 1, PLOT_AXIS_FLAG_GRID | PLOT_AXIS_FLAG_AUTO},
-        PLOT_STYLE_LINE_ONLY, 0, 0                       /* style, num, flags */
+        PLOT_STYLE_LINE_ONLY, 0, 0
     },
-    {                                            /* RESPONSE_TYPE_ATTENUATION */
+    [RESPONSE_TYPE_ATTENUATION] =
+    {
         CFG_GROUP_WINDOW "Attenuation",
         {0.0, CFG_DEFAULT_F_STOP, PLOT_AXIS_FLAG_GRID},
         {0, 60, PLOT_AXIS_FLAG_GRID | PLOT_AXIS_FLAG_AUTO},
-        PLOT_STYLE_LINE_ONLY, 0, 0                       /* style, num, flags */
+        PLOT_STYLE_LINE_ONLY, 0, 0
     },
-    {                                                   /* RESPONSE_TYPE_CHAR */
+    [RESPONSE_TYPE_CHAR] =
+    {
         CFG_GROUP_WINDOW "Char",
         {0.0, CFG_DEFAULT_F_STOP, PLOT_AXIS_FLAG_GRID},
         {0, 360, PLOT_AXIS_FLAG_GRID | PLOT_AXIS_FLAG_AUTO},
-        PLOT_STYLE_LINE_ONLY, 0, 0                       /* style, num, flags */
+        PLOT_STYLE_LINE_ONLY, 0, 0
     },
-    {                                                  /* RESPONSE_TYPE_PHASE */
+    [RESPONSE_TYPE_PHASE] =
+    {
         CFG_GROUP_WINDOW "Phase",
         {0.0, CFG_DEFAULT_F_STOP, PLOT_AXIS_FLAG_GRID},
         {0, 360, PLOT_AXIS_FLAG_GRID | PLOT_AXIS_FLAG_AUTO},
-        PLOT_STYLE_LINE_ONLY, 0, 0                       /* style, num, flags */
+        PLOT_STYLE_LINE_ONLY, 0, 0
     },
-    {                                                  /* RESPONSE_TYPE_DELAY */
+    [RESPONSE_TYPE_DELAY] =
+    {
         CFG_GROUP_WINDOW "Delay",
         {0.0, CFG_DEFAULT_F_STOP, PLOT_AXIS_FLAG_GRID},
         {0, CFG_DEFAULT_T_STOP, PLOT_AXIS_FLAG_GRID | PLOT_AXIS_FLAG_AUTO},
-        PLOT_STYLE_LINE_ONLY, 0, 0                       /* style, num, flags */
+        PLOT_STYLE_LINE_ONLY, 0, 0
     },
-    {                                                  /* RESPONSE_TYPE_GROUP */
+    [RESPONSE_TYPE_GROUP] =
+    {
         CFG_GROUP_WINDOW "Group",
         {0.0, CFG_DEFAULT_F_STOP, PLOT_AXIS_FLAG_GRID},
         {0, CFG_DEFAULT_T_STOP, PLOT_AXIS_FLAG_GRID | PLOT_AXIS_FLAG_AUTO},
-        PLOT_STYLE_LINE_ONLY, 0, 0                       /* style, num, flags */
+        PLOT_STYLE_LINE_ONLY, 0, 0
     },
-    {                                                /* RESPONSE_TYPE_IMPULSE */
+    [RESPONSE_TYPE_IMPULSE] =
+    {
         CFG_GROUP_WINDOW "Impulse",
         {0.0, CFG_DEFAULT_T_STOP, PLOT_AXIS_FLAG_GRID},
         {0, 1, PLOT_AXIS_FLAG_GRID | PLOT_AXIS_FLAG_AUTO},
-        PLOT_STYLE_CIRCLE_SAMPLE, 0, 0                   /* style, num, flags */
+        PLOT_STYLE_CIRCLE_SAMPLE, 0, 0
     },
-    {                                                   /* RESPONSE_TYPE_STEP */
+    [RESPONSE_TYPE_STEP] =
+    {
         CFG_GROUP_WINDOW "Step",
         {0.0, CFG_DEFAULT_T_STOP, PLOT_AXIS_FLAG_GRID},
         {0, 1, PLOT_AXIS_FLAG_GRID | PLOT_AXIS_FLAG_AUTO},
-        PLOT_STYLE_CIRCLE_SAMPLE, 0, 0                   /* style, num, flags */
+        PLOT_STYLE_CIRCLE_SAMPLE, 0, 0
     }
 };
 

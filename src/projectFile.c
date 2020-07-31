@@ -82,8 +82,6 @@ typedef int (*PRJF_TAG_OPEN_HANDLER) (GMarkupParseContext *ctx,
 
 
 /** Project file tag identifiers.
- *
- *  \attention Do not change because used as index.
  */
 typedef enum
 {
@@ -137,8 +135,6 @@ struct _PRJF_TAG_DESC
 
 
 /** Keyword identifier in an export template file.
- *
- *  \attention Do not change because used as index.
  */
 typedef enum
 {

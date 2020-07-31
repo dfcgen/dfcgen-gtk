@@ -59,7 +59,8 @@ typedef enum
 
 
 
-/** Standard IIR filter design data (from dialog).
+/** Standard IIR filter design constraints.
+ *  \see DESIGNDLG_COMMON
  */
 typedef struct
 {
@@ -100,11 +101,6 @@ typedef struct
 /* FUNCTION *******************************************************************/
 /** Generates an IIR filter from standard approximations. The cutoff frequency
  *  always is assumed to be the 3dB point of magnitude response.
- *
- *  Detailed description.
- *
- *  \note               gsl_error_handler_t * gsl_set_error_handler (gsl_error_handler_t new_handler)
- *                      fpsetround()
  *
  *  \param pDesign      Pointer to standard IIR design data.
  *  \param pFilter      Pointer to buffer which gets the generated filter.

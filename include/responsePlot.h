@@ -26,22 +26,19 @@ extern "C" {
 
 
 /** Predefined (supported) digital filter/system responses.
- *
- *  \attention The enums defined here are used as index (somewhere), means do
- *             not change without think about it.
  */
 typedef enum
 {
-    RESPONSE_TYPE_MAGNITUDE = 0,                      /**< magnitude response */
-    RESPONSE_TYPE_ATTENUATION = 1,                           /**< attenuation */
-    RESPONSE_TYPE_CHAR = 2,                      /**< characteristic function */
-    RESPONSE_TYPE_PHASE = 3,                              /**< phase response */
-    RESPONSE_TYPE_DELAY = 4,                                 /**< phase delay */
-    RESPONSE_TYPE_GROUP = 5,                                 /**< group delay */
-    RESPONSE_TYPE_IMPULSE = 6,              /**< time-domain impulse response */
-    RESPONSE_TYPE_STEP = 7,                    /**< time-domain step response */
+    RESPONSE_TYPE_MAGNITUDE = 0,                    /**< magnitude response */
+    RESPONSE_TYPE_ATTENUATION,                             /**< attenuation */
+    RESPONSE_TYPE_CHAR,                        /**< characteristic function */
+    RESPONSE_TYPE_PHASE,                                /**< phase response */
+    RESPONSE_TYPE_DELAY,                                   /**< phase delay */
+    RESPONSE_TYPE_GROUP,                                   /**< group delay */
+    RESPONSE_TYPE_IMPULSE,                /**< time-domain impulse response */
+    RESPONSE_TYPE_STEP,                      /**< time-domain step response */
 
-    RESPONSE_TYPE_SIZE                 /**< administrative value (array size) */
+    RESPONSE_TYPE_SIZE               /**< administrative value (array size) */
 } RESPONSE_TYPE;
 
 

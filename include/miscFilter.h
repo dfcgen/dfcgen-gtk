@@ -48,7 +48,8 @@ typedef enum
 } MISCFLT;
 
 
-/** Misc filter design data.
+/** Misc filter design constraints.
+ *  \see DESIGNDLG_COMMON
  */
 typedef struct
 {

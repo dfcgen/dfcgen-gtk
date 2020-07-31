@@ -33,9 +33,9 @@ extern "C" {
 typedef enum
 {
     FTR_NON = 0,
-    FTR_HIGHPASS = 1,
-    FTR_BANDPASS = 2,
-    FTR_BANDSTOP = 3,
+    FTR_HIGHPASS,
+    FTR_BANDPASS,
+    FTR_BANDSTOP,
 
     FTR_SIZE
 } FTR;

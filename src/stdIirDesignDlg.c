@@ -88,11 +88,11 @@ static STDIIR_DLG_CHAR stdIirDlgChar[STDIIR_TYPE_SIZE] =
 
 
 static const gboolean ftrEntry[FTR_SIZE][5] =
-{ /* entryCutF, entryCenterF, entryBandwidth, checkGeometric, evenDegree */
-    {TRUE,      FALSE,        FALSE,          FALSE,          FALSE}, /* FTR_NON */
-    {FALSE,     TRUE,         FALSE,          FALSE,          FALSE}, /* FTR_HIGHPASS */
-    {FALSE,     TRUE,         TRUE,           TRUE,           TRUE},  /* FTR_BANDPASS */
-    {FALSE,     TRUE,         TRUE,           TRUE,           TRUE},  /* FTR_BANDSTOP */
+{                  /* entryCutF, entryCenterF, entryBandwidth, checkGeometric, evenDegree */
+    [FTR_NON]      = {TRUE,      FALSE,        FALSE,          FALSE,          FALSE},
+    [FTR_HIGHPASS] = {FALSE,     TRUE,         FALSE,          FALSE,          FALSE},
+    [FTR_BANDPASS] = {FALSE,     TRUE,         TRUE,           TRUE,           TRUE},
+    [FTR_BANDSTOP] = {FALSE,     TRUE,         TRUE,           TRUE,           TRUE},
 };
 
 

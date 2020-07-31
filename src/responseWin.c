@@ -86,6 +86,7 @@ static PLOT_UNIT plotUnitDeg = {"°", 1.0};          /**< Constant degree unit *
  */
 static RESPONSE_WIN responseWidget[RESPONSE_TYPE_SIZE] =
 {
+    [RESPONSE_TYPE_MAGNITUDE] =
     {
         RESPONSE_TYPE_MAGNITUDE,                                      /* type */
         "amplitude.png",                                          /* iconFile */
@@ -96,6 +97,7 @@ static RESPONSE_WIN responseWidget[RESPONSE_TYPE_SIZE] =
             .thickness = RESPONSE_WIN_GRAPH_THICKNESS,    /* graph thickness */
         },
     },
+    [RESPONSE_TYPE_ATTENUATION] =
     {
         RESPONSE_TYPE_ATTENUATION,
         "attenuation.png",                                        /* iconFile */
@@ -106,6 +108,7 @@ static RESPONSE_WIN responseWidget[RESPONSE_TYPE_SIZE] =
             .thickness = RESPONSE_WIN_GRAPH_THICKNESS,    /* graph thickness */
         },
     },
+    [RESPONSE_TYPE_CHAR] =
     {
         RESPONSE_TYPE_CHAR,
         "charfunc.png",                                           /* iconFile */
@@ -116,6 +119,7 @@ static RESPONSE_WIN responseWidget[RESPONSE_TYPE_SIZE] =
             .thickness = RESPONSE_WIN_GRAPH_THICKNESS,    /* graph thickness */
         },
     },
+    [RESPONSE_TYPE_PHASE] =
     {
         RESPONSE_TYPE_PHASE,
         "phase.png",                                              /* iconFile */
@@ -126,6 +130,7 @@ static RESPONSE_WIN responseWidget[RESPONSE_TYPE_SIZE] =
             .thickness = RESPONSE_WIN_GRAPH_THICKNESS,    /* graph thickness */
         },
     },
+    [RESPONSE_TYPE_DELAY] =
     {
         RESPONSE_TYPE_DELAY,
         "phasedelay.png",                                         /* iconFile */
@@ -136,6 +141,7 @@ static RESPONSE_WIN responseWidget[RESPONSE_TYPE_SIZE] =
             .thickness = RESPONSE_WIN_GRAPH_THICKNESS,    /* graph thickness */
         }
     },
+    [RESPONSE_TYPE_GROUP] =
     {
         RESPONSE_TYPE_GROUP,
         "grpdelay.png",                                           /* iconFile */
@@ -146,6 +152,7 @@ static RESPONSE_WIN responseWidget[RESPONSE_TYPE_SIZE] =
             .thickness = RESPONSE_WIN_GRAPH_THICKNESS,    /* graph thickness */
         }
     },
+    [RESPONSE_TYPE_IMPULSE] =
     {
         RESPONSE_TYPE_IMPULSE,
         "impulse.png",                                            /* iconFile */
@@ -156,6 +163,7 @@ static RESPONSE_WIN responseWidget[RESPONSE_TYPE_SIZE] =
             .thickness = RESPONSE_WIN_GRAPH_THICKNESS,    /* graph thickness */
         },
     },
+    [RESPONSE_TYPE_STEP] =
     {
         RESPONSE_TYPE_STEP,
         "step.png",                                               /* iconFile */

@@ -82,12 +82,12 @@ typedef struct
 /** Array of all standard FIR filter types (in same order as the enums).
  */
 static LINFIRDLG_CHAR linFirDlgChar[LINFIR_TYPE_SIZE] =
-{   /* type,            btn,  name */
-    {LINFIR_TYPE_RECT,  NULL, N_("Rectangular (perfect)")},
-    {LINFIR_TYPE_COS,   NULL, N_("Cosine")},
-    {LINFIR_TYPE_COS2,  NULL, N_("Squared cosine")},
-    {LINFIR_TYPE_GAUSS, NULL, N_("Gaussian")},
-    {LINFIR_TYPE_SQR,   NULL, N_("Squared 1st order")}
+{   /* type, btn, name */
+    [LINFIR_TYPE_RECT] = {LINFIR_TYPE_RECT,  NULL, N_("Rectangular (perfect)")},
+    [LINFIR_TYPE_COS] = {LINFIR_TYPE_COS,   NULL, N_("Cosine")},
+    [LINFIR_TYPE_COS2] = {LINFIR_TYPE_COS2,  NULL, N_("Squared cosine")},
+    [LINFIR_TYPE_GAUSS] = {LINFIR_TYPE_GAUSS, NULL, N_("Gaussian")},
+    [LINFIR_TYPE_SQR] = {LINFIR_TYPE_SQR,   NULL, N_("Squared 1st order")}
 }; /* linFirDlgChar[] */
 
 
@@ -95,20 +95,20 @@ static LINFIRDLG_CHAR linFirDlgChar[LINFIR_TYPE_SIZE] =
  */
 static LINFIRDLG_DSPWIN linFirDlgWin[LINFIR_DSPWIN_SIZE] =
 { /* type, btn, name */
-    {LINFIR_DSPWIN_RECT, NULL, N_("None")},             /* LINFIR_DSPWIN_RECT */
-    {LINFIR_DSPWIN_HAMMING, NULL, N_("Hamming")},    /* LINFIR_DSPWIN_HAMMING */
-    {LINFIR_DSPWIN_HANNING, NULL, N_("Hanning")},    /* LINFIR_DSPWIN_HANNING */
-    {LINFIR_DSPWIN_BLACKMAN, NULL, N_("Blackman")}, /* LINFIR_DSPWIN_BLACKMAN */
-    {LINFIR_DSPWIN_KAISER, NULL, N_("Kaiser")},       /* LINFIR_DSPWIN_KAISER */
+    [LINFIR_DSPWIN_RECT] = {LINFIR_DSPWIN_RECT, NULL, N_("None")},
+    [LINFIR_DSPWIN_HAMMING] = {LINFIR_DSPWIN_HAMMING, NULL, N_("Hamming")},
+    [LINFIR_DSPWIN_HANNING] = {LINFIR_DSPWIN_HANNING, NULL, N_("Hanning")},
+    [LINFIR_DSPWIN_BLACKMAN] = {LINFIR_DSPWIN_BLACKMAN, NULL, N_("Blackman")},
+    [LINFIR_DSPWIN_KAISER] = {LINFIR_DSPWIN_KAISER, NULL, N_("Kaiser")}
 };
 
 
 static const gboolean ftrEntry[FTR_SIZE][5] =
-{ /* entryCutF, entryCenterF, entryBandwidth, checkGeometric, evenDegree */
-    {TRUE,      FALSE,        FALSE,          FALSE,          FALSE}, /* FTR_NON */
-    {FALSE,     TRUE,         FALSE,          FALSE,          TRUE},  /* FTR_HIGHPASS */
-    {FALSE,     TRUE,         TRUE,           TRUE,           TRUE},  /* FTR_BANDPASS */
-    {FALSE,     TRUE,         TRUE,           TRUE,           TRUE},  /* FTR_BANDSTOP */
+{                  /* entryCutF, entryCenterF, entryBandwidth, checkGeometric, evenDegree */
+    [FTR_NON]      = {TRUE,      FALSE,        FALSE,          FALSE,          FALSE},
+    [FTR_HIGHPASS] = {FALSE,     TRUE,         FALSE,          FALSE,          TRUE},
+    [FTR_BANDPASS] = {FALSE,     TRUE,         TRUE,           TRUE,           TRUE},
+    [FTR_BANDSTOP] = {FALSE,     TRUE,         TRUE,           TRUE,           TRUE},
 };
 
 

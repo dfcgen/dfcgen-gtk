@@ -65,36 +65,44 @@ static void timeResponseEnd (void *pData);
  */
 static RESPONSE_PLOT responsePlot[RESPONSE_TYPE_SIZE] =
 {
+    [RESPONSE_TYPE_MAGNITUDE] =
     {
-        .type = RESPONSE_TYPE_MAGNITUDE,                            /* type */
-        .sampleFunc = plotMagnitude,                          /* sampleFunc */
+        .type = RESPONSE_TYPE_MAGNITUDE,
+        .sampleFunc = plotMagnitude,
     },
+    [RESPONSE_TYPE_ATTENUATION] =
     {
         .type = RESPONSE_TYPE_ATTENUATION,
         .sampleFunc = plotAttenuation,
     },
+    [RESPONSE_TYPE_CHAR] =
     {
         .type = RESPONSE_TYPE_CHAR,
         .sampleFunc = plotChar,
     },
+    [RESPONSE_TYPE_PHASE] =
     {
         .type = RESPONSE_TYPE_PHASE,
         .sampleFunc = plotPhase,
     },
+    [RESPONSE_TYPE_DELAY] =
     {
         .type = RESPONSE_TYPE_DELAY,
         .sampleFunc = plotPhaseDelay,
     },
+    [RESPONSE_TYPE_GROUP] =
     {
         .type = RESPONSE_TYPE_GROUP,
         .sampleFunc = plotGroupDelay,
     },
+    [RESPONSE_TYPE_IMPULSE] =
     {
         .type = RESPONSE_TYPE_IMPULSE,
         .sampleFunc = timeResponse,
         .initFunc = plotImpulseInit,
         .endFunc = timeResponseEnd,
     },
+    [RESPONSE_TYPE_STEP] =
     {
         .type = RESPONSE_TYPE_STEP,
         .sampleFunc = timeResponse,
