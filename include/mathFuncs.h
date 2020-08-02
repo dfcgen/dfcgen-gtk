@@ -152,7 +152,7 @@ typedef struct
 
 
 /* FUNCTION *******************************************************************/
-/** \e Hanning window function
+/** \e van \e Hann window function
     \f[
        y = \begin{cases} 0, & \mbox{if} \;\; x<0 \\
                          0, & \mbox{if} \;\; x>1 \\
@@ -163,7 +163,7 @@ typedef struct
  *
  *  \return             Result \f$y\f$.
  ******************************************************************************/
-    double mathFuncHanning (double x);
+    double mathFuncVanHann (double x);
 
 
 

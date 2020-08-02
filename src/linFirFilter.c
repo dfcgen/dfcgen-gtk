@@ -104,7 +104,7 @@ static double corrSquaredCutoff (double fc);
 static double firWinKaiser (int step, int degree, double param);
 static double firWinRectangle (int step, int degree, double param);
 static double firWinHamming (int step, int degree, double param);
-static double firWinHanning (int step, int degree, double param);
+static double firWinVanHann (int step, int degree, double param);
 static double firWinBlackman (int step, int degree, double param);
 static double ftrHighpass (FLTCOEFF *pFilter);
 static double ftrBandpass (FLTCOEFF *pFilter, double fc, double bw, BOOL geometric);
@@ -431,7 +431,7 @@ static double firWinHamming (int step, int degree, double param)
 
 
 /* FUNCTION *******************************************************************/
-/** \e Hanning window function.
+/** \e van \e Hann window function.
  *
  *  \param step         windowing step, running from 0 to \p degree
  *  \param degree       degree of filter
@@ -441,11 +441,11 @@ static double firWinHamming (int step, int degree, double param)
  *                      GSL_POSINF or GSL_NEGINF. Use the functions gsl_isinf()
  *                      or gsl_finite() for result checking.
  ******************************************************************************/
-static double firWinHanning (int step, int degree, double param)
+static double firWinVanHann (int step, int degree, double param)
 {
     (void) param;
-    return mathFuncHanning ((double) (step + 1) / (degree + 2));
-} /* firWinHanning() */
+    return mathFuncVanHann ((double) (step + 1) / (degree + 2));
+} /* firWinVanHann() */
 
 
 /* FUNCTION *******************************************************************/
@@ -652,7 +652,7 @@ int linFirFilterGen (LINFIR_DESIGN *pDesign, FLTCOEFF *pFilter)
     {
         [LINFIR_DSPWIN_RECT] = firWinRectangle,
         [LINFIR_DSPWIN_HAMMING] = firWinHamming,
-        [LINFIR_DSPWIN_HANNING] = firWinHanning,
+        [LINFIR_DSPWIN_VANHANN] = firWinVanHann,
         [LINFIR_DSPWIN_BLACKMAN] = firWinBlackman,
         [LINFIR_DSPWIN_KAISER] = firWinKaiser
     };

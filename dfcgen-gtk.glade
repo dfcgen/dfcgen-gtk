@@ -7,7 +7,7 @@
     <property name="can_focus">False</property>
     <property name="destroy_with_parent">True</property>
     <property name="type_hint">normal</property>
-    <property name="copyright" translatable="yes">Copyright (c) 2006 PACKAGE_AUTHOR</property>
+    <property name="copyright" translatable="yes">Copyright (c) 2006, 2020 PACKAGE_AUTHOR</property>
     <property name="website">PACKAGE_WEBSITE</property>
     <property name="authors">PACKAGE_AUTHOR</property>
     <property name="documenters">PACKAGE_AUTHOR</property>
@@ -3705,7 +3705,7 @@ Bandstop</property>
                         </child>
                         <child>
                           <widget class="GtkRadioButton" id="radiobutton14">
-                            <property name="label" translatable="yes">Hanning</property>
+                            <property name="label" translatable="yes">van Hann</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>

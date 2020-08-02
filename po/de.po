@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: dfcgen-gtk 0.5\n"
 "Report-Msgid-Bugs-To: ralf.hoppe@dfcgen.de\n"
-"POT-Creation-Date: 2020-07-30 22:04+0200\n"
-"PO-Revision-Date: 2020-07-30 22:05+0200\n"
+"POT-Creation-Date: 2020-08-02 20:23+0200\n"
+"PO-Revision-Date: 2020-08-02 20:23+0200\n"
 "Last-Translator: Ralf Hoppe <ralf.hoppe@dfcgen.de>\n"
 "Language-Team: Ralf Hoppe\n"
 "Language: de\n"
@@ -276,66 +276,66 @@ msgid "translator-credits"
 msgstr "Ralf Hoppe"
 
 # f means the physical unit Frequency
-#: src/responseWin.c:93 src/responseWin.c:103 src/responseWin.c:113
-#: src/responseWin.c:123 src/responseWin.c:133 src/responseWin.c:143
+#: src/responseWin.c:94 src/responseWin.c:105 src/responseWin.c:116
+#: src/responseWin.c:127 src/responseWin.c:138 src/responseWin.c:149
 msgid "<b>f</b>"
 msgstr "<b>f</b>"
 
 # magnitude response H(f)
-#: src/responseWin.c:94
+#: src/responseWin.c:95
 msgid "<b>H(f)</b>"
 msgstr "<b>H(f)</b>"
 
 # attenuation
-#: src/responseWin.c:104
+#: src/responseWin.c:106
 msgid "<b>A(f)</b>"
 msgstr "<b>A(f)</b>"
 
 # characteristic function
-#: src/responseWin.c:114
+#: src/responseWin.c:117
 msgid "<b>D(f)</b>"
 msgstr "<b>D(f)</b>"
 
 # phase response
-#: src/responseWin.c:124
+#: src/responseWin.c:128
 msgid "<b>B(f)</b>"
 msgstr "<b>B(f)</b>"
 
 # phase delay
-#: src/responseWin.c:134
+#: src/responseWin.c:139
 msgid "<b>T<sub>p</sub>(f)</b>"
 msgstr "<b>T<sub>p</sub>(f)</b>"
 
 # group delay
-#: src/responseWin.c:144
+#: src/responseWin.c:150
 msgid "<b>T<sub>g</sub>(f)</b>"
 msgstr "<b>T<sub>g</sub>(f)</b>"
 
 # t means the physical unit Time
-#: src/responseWin.c:153 src/responseWin.c:163
+#: src/responseWin.c:160 src/responseWin.c:171
 msgid "<b>t</b>"
 msgstr "<b>t</b>"
 
 # step response
-#: src/responseWin.c:154
+#: src/responseWin.c:161
 msgid "<b>h(t)</b>"
 msgstr "<b>h(t)</b>"
 
 # impulse response
-#: src/responseWin.c:164
+#: src/responseWin.c:172
 msgid "<b>g(t)</b>"
 msgstr "<b>g(t)</b>"
 
-#: src/responseWin.c:317
+#: src/responseWin.c:325
 msgid "Print this response plot"
 msgstr "Diagramm drucken"
 
 # Tooltip
-#: src/responseWin.c:322
+#: src/responseWin.c:330
 msgid "Set response plot preferences"
 msgstr "Plot Einstellungen"
 
-#: src/responseWin.c:419
+#: src/responseWin.c:427
 #, c-format
 msgid "%d Points"
 msgstr "%d Stützwerte"
@@ -901,27 +901,27 @@ msgstr ""
 msgid "Could not load predefined filter from '%s'"
 msgstr "Konnte das vor definierte Filter nicht von '%s' laden"
 
-#: src/projectFile.c:708
+#: src/projectFile.c:702
 #, c-format
 msgid "Unexpected tag '%s'"
 msgstr "Unerwartetes Tag '%s'."
 
-#: src/projectFile.c:775
+#: src/projectFile.c:769
 #, c-format
 msgid "Syntax error at line %d"
 msgstr "Syntaxfehler in Zeile %d."
 
-#: src/projectFile.c:1153
+#: src/projectFile.c:1147
 #, c-format
 msgid "Mandatory tag '%s' missing"
 msgstr "Pflicht-Tag '%s' nicht gefunden."
 
-#: src/projectFile.c:1179
+#: src/projectFile.c:1173
 #, c-format
 msgid "Unknown frequency transform type %d"
 msgstr "Unbekannte Frequenztransformation %d"
 
-#: src/projectFile.c:1552
+#: src/projectFile.c:1546
 #, c-format
 msgid "Something seems wrong with the project in '%s'"
 msgstr "Irgendetwas scheint mit dem Projekt in '%s' nicht in Ordnung."
@@ -956,8 +956,8 @@ msgid "Hamming"
 msgstr "Hamming"
 
 #: src/linFirDesignDlg.c:100
-msgid "Hanning"
-msgstr "Hanning"
+msgid "van Hann"
+msgstr "van Hann"
 
 #: src/linFirDesignDlg.c:101
 msgid "Blackman"

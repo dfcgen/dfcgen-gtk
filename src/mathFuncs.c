@@ -120,7 +120,7 @@ double mathFuncHamming (double x)
 
 
 /* FUNCTION *******************************************************************/
-/** \e Hanning window function
+/** \e van \e Hann window function
     \f[
        y = \begin{cases} 0, & \mbox{if} \;\; x<0 \\
                          0, & \mbox{if} \;\; x>1 \\
@@ -131,15 +131,15 @@ double mathFuncHamming (double x)
  *
  *  \return             Result \f$y\f$.
  ******************************************************************************/
-double mathFuncHanning (double x)
+double mathFuncVanHann (double x)
 {
     if ((x < 0.0) || (x > 1.0))
     {
         return 0.0;
     } /* if */
 
-    return 0.5 - 0.5 * cos (2.0 * M_PI * x);
-} /* mathFuncHanning() */
+    return 0.5 * (1.0 - cos (2.0 * M_PI * x));
+} /* mathFuncVanHann() */
 
 
 /* FUNCTION *******************************************************************/

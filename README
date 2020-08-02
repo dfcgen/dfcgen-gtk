@@ -10,7 +10,7 @@ What is dfcgen-gtk?
     It supports:
 
     * Linear FIR systems of various characteristics with windowing functions as
-      Hamming, Hanning, Blackman or Kaiser window
+      Hamming, van Hann, Blackman or Kaiser window
 
     * Standard IIR filters like Cauer, Chebyshev, Butterworth and Bessel
 
