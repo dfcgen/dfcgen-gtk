@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: dfcgen-gtk 0.5\n"
 "Report-Msgid-Bugs-To: ralf.hoppe@dfcgen.de\n"
-"POT-Creation-Date: 2020-08-02 20:23+0200\n"
+"POT-Creation-Date: 2020-08-06 21:47+0200\n"
 "PO-Revision-Date: 2020-08-02 20:23+0200\n"
 "Last-Translator: Ralf Hoppe <ralf.hoppe@dfcgen.de>\n"
 "Language-Team: Ralf Hoppe\n"
@@ -64,37 +64,37 @@ msgstr ""
 "erzeugen. Bitte prüfen Sie die Werte für den Grad, die Abtastfrequenz sowie "
 "alle weiteren Parameter."
 
-#: src/mainDlg.c:122
+#: src/mainDlg.c:119
 msgid "Change"
 msgstr "Ändern"
 
-#: src/mainDlg.c:123
+#: src/mainDlg.c:120
 msgid "Edit a single coefficient"
 msgstr "Einen einzelnen Koeffizienten ändern"
 
-#: src/mainDlg.c:126
+#: src/mainDlg.c:123
 msgid "Multiply"
 msgstr "Multiplizieren"
 
-#: src/mainDlg.c:127
+#: src/mainDlg.c:124
 msgid "Multiply all coefficients with a constant"
 msgstr "Alle Koeffizienten mit einer Konstante multiplizieren"
 
-#: src/mainDlg.c:130
+#: src/mainDlg.c:127
 msgid "Round"
 msgstr "Runden"
 
-#: src/mainDlg.c:131
+#: src/mainDlg.c:128
 msgid "Round all coefficients"
 msgstr "Alle Koeffizienten runden"
 
-#: src/mainDlg.c:172
+#: src/mainDlg.c:169
 msgid "The current filter/system has not been saved. Are you sure to quit now?"
 msgstr ""
 "Das aktuelle Filter/System wurde noch nicht gespeichert. Wollen Sie trotzdem "
 "beenden?"
 
-#: src/mainDlg.c:283
+#: src/mainDlg.c:278
 #, c-format
 msgid ""
 "Changes coefficient of tap z<sup>-%d</sup> in the selected list to a new "
@@ -102,35 +102,35 @@ msgid ""
 msgstr ""
 "Ändert den Koeffizient von Abzweig z<sup>-%d</sup> in der ausgewählten Liste"
 
-#: src/mainDlg.c:286
+#: src/mainDlg.c:281
 msgid "Change coefficient"
 msgstr "Koeffizient ändern"
 
-#: src/mainDlg.c:287
+#: src/mainDlg.c:282
 msgid "_New"
 msgstr "_Neu"
 
 # Tooltip
-#: src/mainDlg.c:315
+#: src/mainDlg.c:308
 msgid "Multiply coefficients"
 msgstr "Koeffizient modifizieren"
 
-#: src/mainDlg.c:316
+#: src/mainDlg.c:309
 msgid "_Factor"
 msgstr "_Faktor"
 
-#: src/mainDlg.c:317
+#: src/mainDlg.c:310
 msgid "Multiplies all coefficients in the selected list with the given factor."
 msgstr ""
 "Multipliziert alle Koeffizienten in der ausgewählten Liste mit dem "
 "eingegebenen Faktor."
 
-#: src/mainDlg.c:363
+#: src/mainDlg.c:348
 msgid "Do you really want to round all coefficients in the selected list?"
 msgstr ""
 "Wollen Sie wirklich alle Koeffizienten in der ausgewählten Liste runden?"
 
-#: src/mainDlg.c:416
+#: src/mainDlg.c:401
 msgid ""
 "Cannot implement such a filter. Maybe the result of such an operation leads "
 "to vanishing coefficients at all."
@@ -138,7 +138,7 @@ msgstr ""
 "Kann ein solches Filter nicht erzeugen. Möglicherweise führt die Operation "
 "zu einem Ergebnis, in dem alle Koeffizienten annähernd Null sind."
 
-#: src/mainDlg.c:430
+#: src/mainDlg.c:415
 msgid ""
 "Cannot perform the desired operation. It seems that all the memory is "
 "exhausted."
@@ -146,117 +146,117 @@ msgstr ""
 "Kann die gewünschte Operation nicht ausführen. Es scheint, als ob Ihr "
 "Hauptspeicher nicht ausreicht."
 
-#: src/mainDlg.c:576
+#: src/mainDlg.c:578
 msgid "Tap"
 msgstr "Abzw."
 
-#: src/mainDlg.c:587
+#: src/mainDlg.c:589
 msgid "Coefficient"
 msgstr "Koeffizient"
 
-#: src/mainDlg.c:713
+#: src/mainDlg.c:716
 msgid "_File"
 msgstr "_Datei"
 
-#: src/mainDlg.c:748
+#: src/mainDlg.c:751
 msgid "_Export"
 msgstr "_Export"
 
-#: src/mainDlg.c:772
+#: src/mainDlg.c:775
 msgid "_Edit"
 msgstr "_Bearbeiten"
 
-#: src/mainDlg.c:778 src/editDlg.c:308
+#: src/mainDlg.c:781 src/editDlg.c:308
 msgid "Project Info"
 msgstr "Projektinfo"
 
-#: src/mainDlg.c:785
+#: src/mainDlg.c:788
 msgid "Coefficient(s)"
 msgstr "Koeffizient(en)"
 
-#: src/mainDlg.c:815
+#: src/mainDlg.c:818
 msgid "_View"
 msgstr "_Ansicht"
 
-#: src/mainDlg.c:821
+#: src/mainDlg.c:824
 msgid "_Magnitude Response"
 msgstr "_Amplitudengang"
 
-#: src/mainDlg.c:827
+#: src/mainDlg.c:830
 msgid "_Attenuation"
 msgstr "_Dämpfung"
 
-#: src/mainDlg.c:833
+#: src/mainDlg.c:836
 msgid "_Characteristic Function"
 msgstr "D_rosselung"
 
-#: src/mainDlg.c:839
+#: src/mainDlg.c:842
 msgid "_Phase Response"
 msgstr "_Phasengang"
 
-#: src/mainDlg.c:845
+#: src/mainDlg.c:848
 msgid "Phase _Delay"
 msgstr "Phasen_laufzeit"
 
-#: src/mainDlg.c:851
+#: src/mainDlg.c:854
 msgid "_Group Delay"
 msgstr "_Gruppenlaufzeit"
 
-#: src/mainDlg.c:857
+#: src/mainDlg.c:860
 msgid "_Impulse Response"
 msgstr "_Impulsantwort"
 
-#: src/mainDlg.c:863
+#: src/mainDlg.c:866
 msgid "_Step Response"
 msgstr "_Sprungantwort"
 
-#: src/mainDlg.c:869
+#: src/mainDlg.c:872
 msgid "_Help"
 msgstr "_Hilfe"
 
 # Label for filter class combobox
-#: src/mainDlg.c:938
+#: src/mainDlg.c:941
 msgid "<b>_Class</b>"
 msgstr "<b>_Klasse</b>"
 
 # Tooltip
-#: src/mainDlg.c:944
+#: src/mainDlg.c:947
 msgid "Class of filter (or system)"
 msgstr "Filterklasse"
 
 # Tooltip for help button
-#: src/mainDlg.c:958
+#: src/mainDlg.c:961
 msgid "Help"
 msgstr "Hilfe"
 
 # Tooltip
-#: src/mainDlg.c:968
+#: src/mainDlg.c:971
 msgid "Apply input data"
 msgstr "Eingabe anwenden"
 
-#: src/mainDlg.c:985
+#: src/mainDlg.c:988
 msgid "<b>Roots</b>"
 msgstr "<b>Wurzeln</b>"
 
 # Tooltip
-#: src/mainDlg.c:1003
+#: src/mainDlg.c:1006
 msgid "Denominator coefficients"
 msgstr "Nennerkoeffizienten"
 
 # Tooltip
-#: src/mainDlg.c:1014
+#: src/mainDlg.c:1017
 msgid "Numerator coefficients"
 msgstr "Zählerkoeffizienten"
 
-#: src/mainDlg.c:1016
+#: src/mainDlg.c:1019
 msgid "<b>Numerator</b>"
 msgstr "<b>Zähler</b>"
 
-#: src/mainDlg.c:1024
+#: src/mainDlg.c:1027
 msgid "<b>Denominator</b>"
 msgstr "<b>Nenner</b>"
 
-#: src/mainDlg.c:1164
+#: src/mainDlg.c:1167
 msgid ""
 "Filter generation has dropped some (near zero) coefficients, but the filter "
 "is still valid."
@@ -267,7 +267,7 @@ msgstr ""
 
 # Displayed if title, author or filename (may be a conversion error from filesystem
 # into UTF-8 coding) are unknown.
-#: src/mainDlg.c:1226 src/fileDlg.c:88 src/fileDlg.c:93 src/dialogSupport.c:132
+#: src/mainDlg.c:1229 src/fileDlg.c:88 src/fileDlg.c:93 src/dialogSupport.c:132
 msgid "<i>Unknown</i>"
 msgstr "<i>Unbekannt</i>"
 

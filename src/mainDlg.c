@@ -41,7 +41,7 @@
 
 /** Function that operates on selected coefficients.
  */
-typedef BOOL (* MAINDLG_COEFF_OPERATION) (GtkWidget *top, FLTCOEFF *pFilter,
+typedef BOOL (* MAINDLG_COEFF_OPERATION) (FLTCOEFF *pFilter,
                                           MATHPOLY *poly, int index);
 
 
@@ -80,12 +80,9 @@ typedef enum
 
 static void mainDlgDestroy (GtkObject* object, gpointer user_data);
 static void mainDlgQuit (GtkWidget* widget, gpointer user_data);
-static BOOL mainDlgCoeffEdit (GtkWidget *widget, FLTCOEFF *pFilter,
-                              MATHPOLY *poly, int index);
-static BOOL mainDlgCoeffsRound (GtkWidget *widget, FLTCOEFF *pFilter,
-                                MATHPOLY *poly, int index);
-static BOOL mainDlgCoeffsFactor (GtkWidget *widget, FLTCOEFF *pFilter,
-                                 MATHPOLY *poly, int index);
+static BOOL mainDlgCoeffEdit (FLTCOEFF *pFilter, MATHPOLY *poly, int index);
+static BOOL mainDlgCoeffsRound (FLTCOEFF *pFilter, MATHPOLY *poly, int index);
+static BOOL mainDlgCoeffsFactor (FLTCOEFF *pFilter, MATHPOLY *poly, int index);
 static void allowCoeffActions (BOOL active);
 static int getSelectedCoeff (GtkTreeSelection *selection);
 static void treeSelectionCallback (GtkTreeSelection *treeselection, gpointer user_data);
@@ -266,7 +263,6 @@ static MATHPOLY *getSelectedPoly (FLTCOEFF* pFilter, int *pIndex)
 /** Operation which is performed when the \e Edit button is clicked (called from
  *  function mainDlgCoeffAction(), type is MAINDLG_COEFF_OPERATION).
  *
- *  \param widget       Widget that has emitted the "activate" signal.
  *  \param pFilter      Pointer to filter which is currently displayed in the
  *                      GtkTreeView coefficients list.
  *  \param poly         Pointer to selected coefficients (\p pFilter->num or
@@ -276,8 +272,7 @@ static MATHPOLY *getSelectedPoly (FLTCOEFF* pFilter, int *pIndex)
  *  \return             TRUE if the operation was really performed, else
  *                      FALSE (means no coefficient has changed).
  ******************************************************************************/
-static BOOL mainDlgCoeffEdit (GtkWidget *widget, FLTCOEFF *pFilter,
-                              MATHPOLY *poly, int index)
+static BOOL mainDlgCoeffEdit (FLTCOEFF *pFilter, MATHPOLY *poly, int index)
 {
     char *intro =
         g_strdup_printf (_("Changes coefficient of tap z<sup>-%d</sup> in"
@@ -296,7 +291,6 @@ static BOOL mainDlgCoeffEdit (GtkWidget *widget, FLTCOEFF *pFilter,
 /** Operation which is performed when the \e Factor button is clicked (called
  *  from function mainDlgCoeffAction(), type is MAINDLG_COEFF_OPERATION).
  *
- *  \param widget       Widget that has emitted the "activate" signal.
  *  \param pFilter      Pointer to filter which is currently displayed in the
  *                      GtkTreeView coefficients list.
  *  \param poly         Pointer to selected coefficients (\p pFilter->num or
@@ -306,8 +300,7 @@ static BOOL mainDlgCoeffEdit (GtkWidget *widget, FLTCOEFF *pFilter,
  *  \return             TRUE if the operation was really performed, else
  *                      FALSE (means no coefficient has changed).
  ******************************************************************************/
-static BOOL mainDlgCoeffsFactor (GtkWidget *widget, FLTCOEFF *pFilter,
-                                 MATHPOLY *poly, int index)
+static BOOL mainDlgCoeffsFactor (FLTCOEFF *pFilter, MATHPOLY *poly, int index)
 {
     int i;
     double factor = 1.0;
@@ -334,13 +327,6 @@ static BOOL mainDlgCoeffsFactor (GtkWidget *widget, FLTCOEFF *pFilter,
 /** Operation which is performed when the \e Round button is clicked (called
  *  from function mainDlgCoeffAction(), type is MAINDLG_COEFF_OPERATION).
  *
- *  \attention          If the "activate" signal comes from a \c GtkButton
- *                      then the reference in \p widget cannot be passed to
- *                      gtk_message_dialog_new(), because this reference must
- *                      be of type GTK_WINDOW (but GTK_BUTTON is not inherited
- *                      from GTK_WINDOW).
- *
- *  \param widget       Widget that has emitted the "activate" signal.
  *  \param pFilter      Pointer to filter which is currently displayed in the
  *                      GtkTreeView coefficients list.
  *  \param poly         Pointer to selected coefficients (\p pFilter->num or
@@ -350,8 +336,7 @@ static BOOL mainDlgCoeffsFactor (GtkWidget *widget, FLTCOEFF *pFilter,
  *  \return             TRUE if the operation was really performed, else
  *                      FALSE (means no coefficient has changed).
  ******************************************************************************/
-static BOOL mainDlgCoeffsRound (GtkWidget *widget, FLTCOEFF *pFilter,
-                                MATHPOLY *poly, int index)
+static BOOL mainDlgCoeffsRound (FLTCOEFF *pFilter, MATHPOLY *poly, int index)
 {
     int i;
 
@@ -385,7 +370,7 @@ static BOOL mainDlgCoeffsRound (GtkWidget *widget, FLTCOEFF *pFilter,
 /** This function is called if a coefficients button (\e Edit, \e Factor,
  *  \e Round) or the associated menu item was clicked
  *
- *  \param widget       \c GtkButton that was clicked.
+ *  \param widget       \c GtkButton that was clicked (unused).
  *  \param user_data    User data as passed to function g_signal_connect. Here
  *                      it is a pointer to the button descriptor in array
  *                      mainDlgCoeffBtn.
@@ -401,13 +386,13 @@ static void mainDlgCoeffAction (GtkWidget *widget, gpointer user_data)
     FLTCOEFF *pFilter = dfcPrjGetFilter ();
     MATHPOLY *poly = getSelectedPoly (&tmp, &index);
 
-    if ((pFilter != NULL) && (poly != NULL))                 /* sanity checks */
+    if ((pFilter != NULL) && (poly != NULL))               /* sanity checks */
     {
-        if (filterDuplicate (&tmp, pFilter) == 0)        /* make temp. filter */
+        if (filterDuplicate (&tmp, pFilter) == 0)      /* make temp. filter */
         {
-            if (pAction->op (widget, &tmp, poly, index))       /* performed? */
+            if (pAction->op (&tmp, poly, index))              /* performed? */
             {
-                result = filterCheck (&tmp);             /* check realization */
+                result = filterCheck (&tmp);           /* check realization */
 
                 if (FLTERR_CRITICAL (result))
                 {
@@ -417,7 +402,7 @@ static void mainDlgCoeffAction (GtkWidget *widget, gpointer user_data)
                                 " Maybe the result of such an operation"
                                 " leads to vanishing coefficients at all."));
                 } /* if */
-                else                   /* seems okay (do not free any memory) */
+                else                 /* seems okay (do not free any memory) */
                 {
                     dfcPrjSetFilter (FLTCLASS_NOTDEF, &tmp, NULL);
                     mainDlgUpdateFilter (result);
@@ -464,7 +449,6 @@ static void allowCoeffActions (BOOL active)
  *  \param user_data    Selection of the other GtkTreeView list (user data as
  *                      passed to function g_signal_connect).
  *
- *  \todo  Process double-clicks (see the tree-view tutorial on how to make this)
  ******************************************************************************/
 static void treeSelectionCallback (GtkTreeSelection *selection, gpointer user_data)
 {
@@ -487,6 +471,26 @@ static void treeSelectionCallback (GtkTreeSelection *selection, gpointer user_da
 
 } /* treeSelectionCallback() */
 
+
+/* FUNCTION *******************************************************************/
+/** Callback function for \e row-activated signal on a GtkTreeSelection associated
+ *  with a coefficients list GtkTreeView.
+ *
+ *  \param treeview     Selection of the GtkTreeView list.
+ *  \param path         Selection path.
+ *  \param column       A GtkTreeColumn.
+ *  \param user_data    Selection of the other GtkTreeView list (user data as
+ *                      passed to function g_signal_connect).
+ *
+ ******************************************************************************/
+static void treeDblClickedCallback (GtkTreeView *treeview, GtkTreePath *path,
+                                    GtkTreeViewColumn *column, gpointer userdata)
+{
+    (void) column;                                                /* unused */
+    (void) path;
+
+    mainDlgCoeffAction (treeview, userdata);
+}
 
 
 /* FUNCTION *******************************************************************/
@@ -560,7 +564,6 @@ static GtkTreeView* coeffCreateListTreeView (GtkTreeView **pOther)
      */
     GtkListStore *store = gtk_list_store_new (MAINDLG_LIST_COLUMN_SIZE,
                                               G_TYPE_INT, G_TYPE_DOUBLE);
-
     /* 2nd step: create the tree view
      */
     tree = GTK_TREE_VIEW (gtk_tree_view_new ());
@@ -568,7 +571,6 @@ static GtkTreeView* coeffCreateListTreeView (GtkTreeView **pOther)
     gtk_tree_view_set_hover_expand (tree, TRUE);
     gtk_tree_selection_set_mode (gtk_tree_view_get_selection (tree), GTK_SELECTION_SINGLE);
     gtk_tree_view_set_search_column (tree, MAINDLG_LIST_COLUMN_INDEX);
-
 
     /* 3rd step: create all columns
      */
@@ -594,17 +596,18 @@ static GtkTreeView* coeffCreateListTreeView (GtkTreeView **pOther)
                                      GTK_TREE_VIEW_COLUMN_AUTOSIZE);
     gtk_tree_view_append_column (tree, column);
 
-
     /* 4th step: set model into tree view (and show widget)
      */
     gtk_tree_view_set_model (tree, GTK_TREE_MODEL (store));
     g_object_unref (G_OBJECT (store));        /* view now holds the reference */
 
-
-    /* 5th step: Connect to "changed" signal
+    /* 5th step: Connect to "changed" and "row-activated" signal
      */
     g_signal_connect_after ((gpointer) gtk_tree_view_get_selection (tree), "changed",
                             G_CALLBACK (treeSelectionCallback), pOther);
+
+    g_signal_connect(tree, "row-activated",
+                     G_CALLBACK (treeDblClickedCallback), &mainDlgCoeffBtn[0]);
 
     return tree;
 } /* coeffCreateListTreeView() */
