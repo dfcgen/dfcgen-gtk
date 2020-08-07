@@ -4,18 +4,10 @@
   old Win3.x version.
 
   - Function: cairoPlot2d
-    Think about transition to double coordinates in all functions below
-    cairoPlot2d.
     Make axisX.start and axisX.stop positions dependent of precision
 
   - Function: createAxisLabel
     Parametrize margin by precision
-
-  - Function: treeSelectionCallback
-    Process double-clicks (see the tree-view tutorial on how to make this)
-
-  - Function: responseWinCreate
-    Restore size of drawing area from last session 
 
   - Function: filterResponseTimeNew
     Allow user break
@@ -27,13 +19,14 @@
     Implement GTK help, based on DocBook 5
 
 
-* Stability
+* Functionality
 
-  - File: mathMisc.c
-    Implement a generic math. error handler
+  - Function: responseWinCreate
+    Restore size of drawing area from last session 
 
-  - Function: ftrBandstop
-    Handle GSL_POSINF for call to filterResponsePoly() 
+  - Function: dfcPrjExport
+    Create and use an export precision (for coefficients) instead of using
+    the output precision
 
   - Function: plotPhase
     Check phase response of linear FIR filters and improve the graph layout
@@ -41,5 +34,11 @@
 
 * Maintainability
 
+  - File: mathMisc.c
+    Implement a generic math. error handler
+
   - Function: mathPolyCoeffs2Roots
     Try to avoid mixing error codes from gsl_errno.h and errno.h 
+
+  - Function: ftrBandstop
+    Handle GSL_POSINF for call to filterResponsePoly() 
