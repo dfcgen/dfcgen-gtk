@@ -1,6 +1,6 @@
 ## -*- mode: makefile-automake -*-
 ##
-## Copyright (C) 2006, 2011-2013, 2019 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+## Copyright (C) 2006, 2011-2013, 2019, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
 ##
 
 noinst_HEADERS = \
@@ -11,7 +11,6 @@ noinst_HEADERS = \
 	dfcProject.h\
 	dfcgen.h\
 	dialogSupport.h\
-	doxygen.h\
 	editDlg.h\
 	fileDlg.h\
 	filterResponse.h\
