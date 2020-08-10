@@ -3,12 +3,12 @@
  * \file     projectFile.c
  * \brief    Project file handling.
  *
- * \note     The \e dfcgen filter project file functions implemented here are
+ * \note     The DFCGen filter project file functions implemented here are
  *           very closely related to the \e GLib XML support functions.
  *           Adoption to other platforms or to libxml is possible, but need
  *           some rework.
  *
- * \note     All double values written to a \e dfcgen project file are formated
+ * \note     All double values written to a DFCGen project file are formated
  *           in the \e C locale for LC_CTYPE.
  *
  * \author   Copyright (C) 2006, 2011-2012 Ralf Hoppe <ralf.hoppe@dfcgen.de>
@@ -44,7 +44,7 @@ typedef enum
     PRJF_TAGFLAG_MISC = 1 << FLTCLASS_MISC, /**< Tag is mandatory for misc filters */
     PRJF_TAGFLAG_LINFIR = 1 << FLTCLASS_LINFIR, /**< Tag is mandatory for linear FIR filters */
     PRJF_TAGFLAG_STDIIR = 1 << FLTCLASS_STDIIR, /**< Tag is mandatory for standard IIR filters */
-    PRJF_TAGFLAG_FOUND = 1 << FLTCLASS_SIZE /**< Tag found (in \e dfcgen project file) */
+    PRJF_TAGFLAG_FOUND = 1 << FLTCLASS_SIZE /**< Tag found (in DFCGen project file) */
 } PRJF_TAGFLAG;
 
 
@@ -308,7 +308,7 @@ static PRJF_TAG_DESC prjTagsDesc[PRJF_IDTAG_SIZE] =
  *
  *  \param ctx          Pointer to parser context.
  *  \param pTag         Pointer to tag descriptor.
- *  \param prj          Pointer to \e dfcgen project.
+ *  \param prj          Pointer to DFCGen project.
  *  \param text         Pointer to content of tag (zero-terminated).
  *
  *  \return             Zero on success, else an error number.
@@ -336,7 +336,7 @@ static int tagStringHandler (GMarkupParseContext *ctx, PRJF_TAG_DESC *pTag,
  *
  *  \param ctx          Pointer to parser context.
  *  \param p            Pointer to tag descriptor.
- *  \param prj          Pointer to \e dfcgen project.
+ *  \param prj          Pointer to DFCGen project.
  *  \param text         Pointer to content of tag (zero-terminated).
  *
  *  \return             Zero on success, else an error number.
@@ -365,7 +365,7 @@ static int tagIntHandler (GMarkupParseContext *ctx, PRJF_TAG_DESC *p,
  *
  *  \param ctx          Pointer to parser context.
  *  \param p            Pointer to tag descriptor.
- *  \param prj          Pointer to \e dfcgen project.
+ *  \param prj          Pointer to DFCGen project.
  *  \param text         Pointer to content of tag (zero-terminated).
  *
  *  \return             Zero on success, else an error number.
@@ -398,7 +398,7 @@ static int tagDoubleHandler (GMarkupParseContext *ctx, PRJF_TAG_DESC *p,
  *
  *  \param ctx          Pointer to parser context.
  *  \param pTag         Pointer to tag descriptor.
- *  \param prj          Pointer to \e dfcgen project.
+ *  \param prj          Pointer to DFCGen project.
  *  \param text         Pointer to content of tag (zero-terminated).
  *
  *  \return             Zero on success, else an error number in domain G_MARKUP_ERROR.
@@ -434,7 +434,7 @@ static int tagCoeffHandler (GMarkupParseContext *ctx, PRJF_TAG_DESC *pTag,
  *
  *  \param ctx          Pointer to parser context.
  *  \param pTag         Pointer to tag descriptor.
- *  \param prj          Pointer to \e dfcgen project.
+ *  \param prj          Pointer to DFCGen project.
  *  \param text         Pointer to content of tag (zero-terminated).
  *
  *  \return             Zero on success, else an error number.
@@ -476,7 +476,7 @@ static int tagDegreeHandler (GMarkupParseContext *ctx, PRJF_TAG_DESC *pTag,
  *
  *  \param ctx          Pointer to parser context.
  *  \param p            Pointer to tag descriptor.
- *  \param prj          Pointer to \e dfcgen project.
+ *  \param prj          Pointer to DFCGen project.
  *  \param attrn        List of attribute names.
  *  \param attrv        List of associated attribute values.
  *
@@ -497,7 +497,7 @@ static int tagPolyHandler (GMarkupParseContext *ctx, PRJF_TAG_DESC *p,
  *
  *  \param ctx          Pointer to parser context.
  *  \param pTag         Pointer to tag descriptor.
- *  \param prj          Pointer to \e dfcgen project.
+ *  \param prj          Pointer to DFCGen project.
  *  \param attrn        List of attribute names.
  *  \param attrv        List of associated attribute values.
  *
@@ -534,7 +534,7 @@ static int attrSupersedHandler (GMarkupParseContext *ctx, PRJF_TAG_DESC *pTag,
  *
  *  \param ctx          Pointer to parser context.
  *  \param pTag         Pointer to tag descriptor.
- *  \param prj          Pointer to \e dfcgen project.
+ *  \param prj          Pointer to DFCGen project.
  *  \param attrn        List of attribute names.
  *  \param attrv        List of associated attribute values.
  *
@@ -589,7 +589,7 @@ static int attrStringHandler (GMarkupParseContext *ctx, PRJF_TAG_DESC *pTag,
  *
  *  \param ctx          Pointer to parser context.
  *  \param pTag         Pointer to tag descriptor.
- *  \param prj          Pointer to \e dfcgen project.
+ *  \param prj          Pointer to DFCGen project.
  *  \param attrn        List of attribute names.
  *  \param attrv        List of associated attribute values.
  *
@@ -625,7 +625,7 @@ static int attrGeometricHandler (GMarkupParseContext *ctx, PRJF_TAG_DESC *pTag,
  *
  *  \param ctx          Pointer to parser context.
  *  \param pTag         Pointer to tag descriptor.
- *  \param prj          Pointer to \e dfcgen project.
+ *  \param prj          Pointer to DFCGen project.
  *  \param attrn        List of attribute names.
  *  \param attrv        List of associated attribute values.
  *
@@ -1552,7 +1552,7 @@ void prjFileRead (const char *filename, DFCPRJ_FILTER *pProject, GError **err)
 
 
 /* FUNCTION *******************************************************************/
-/** Scans for project info (header) in a \e dfcgen project file. In case
+/** Scans for project info (header) in a DFCGen project file. In case
  *  of an error it sets the pointer to the error structure, which itself can be
  *  used to display the original error message. Modification of the error
  *  structure pointer indicates an critical error. In that case it has to be

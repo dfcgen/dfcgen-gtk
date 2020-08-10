@@ -1,7 +1,7 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
  * \file
- *           \e dfcgen configuration settings.
+ *           DFCGen configuration settings.
  *
  * \note     All double values written to the configuration file are formated
  *           in the "C" locale for LC_NUMERIC.
@@ -51,7 +51,7 @@ typedef struct
 /* EXPORTED FUNCTIONS *********************************************************/
 
 /* FUNCTION *******************************************************************/
-/** Reads the \e dfcgen configuration from XDG_CONFIG_DIR, the XDG user
+/** Reads the DFCGen configuration from XDG_CONFIG_DIR, the XDG user
  *  configuration directory (see XDG specification at
  *  http://www.freedesktop.org/Standards/basedir-spec).
  *
@@ -62,7 +62,7 @@ typedef struct
 
 
 /* FUNCTION *******************************************************************/
-/** Writes the \e dfcgen configuration to XDG_CONFIG_DIR, the XDG user
+/** Writes the DFCGen configuration to XDG_CONFIG_DIR, the XDG user
  *  configuration directory (see XDG specification at
  *  http://www.freedesktop.org/Standards/basedir-spec).
  *

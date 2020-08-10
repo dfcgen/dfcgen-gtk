@@ -1,7 +1,7 @@
 /******************************************************************************/
 /**
  * \file
- *           \e dfcgen filter project management.
+ *           DFCGen filter project management.
  *
  * \author   Copyright (C) 2006, 2011-2012, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
@@ -26,7 +26,7 @@ extern "C" {
 /* GLOBAL TYPE DECLARATIONS ***************************************************/
 
 
-/** \e dfcgen project info data.
+/** DFCGen project info data.
  */
     typedef struct
     {
@@ -37,7 +37,7 @@ extern "C" {
 
 
 
-/** \e dfcgen project.
+/** DFCGen project.
  */
     typedef struct
     {

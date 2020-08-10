@@ -3,7 +3,7 @@
  * \file
  *           Project file handling.
  *
- * \note     All double values written to a \e dfcgen project file are formated
+ * \note     All double values written to a DFCGen project file are formated
  *           in the "C" locale for LC_NUMERIC.
  *
  * \author   Copyright (C) 2006, 2011, 2012, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
@@ -95,7 +95,7 @@ extern "C" {
 
 
 /* FUNCTION *******************************************************************/
-/** Scans for project info (header) data in a \e dfcgen project file. In case
+/** Scans for project info (header) data in a DFCGen project file. In case
  *  of an error it sets the pointer to the error structure, which itself can be
  *  used to display the original error message. Modification of the error
  *  structure pointer indicates an critical error. In that case it has to be

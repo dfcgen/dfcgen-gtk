@@ -1,7 +1,7 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
  * \file
- *           \e dfcgen filter project management.
+ *           DFCGen filter project management.
  *
  * \note     The filter project management functions implemented here are very
  *           to the \e GLib XML support functions. Adoption to other platforms

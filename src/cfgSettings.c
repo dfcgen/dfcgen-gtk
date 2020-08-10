@@ -1,7 +1,7 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
  * \file     cfgSettings.c
- * \brief    \e dfcgen configuration settings.
+ * \brief    DFCGen configuration settings.
  *
  * \note     All double values written to the configuration file are formated
  *           in the "C" locale for LC_NUMERIC.
@@ -370,7 +370,7 @@ static void cfgReadFlag (GKeyFile *keyFile, const gchar *group, const gchar *key
 
 
 /* FUNCTION *******************************************************************/
-/** Reads the \e dfcgen configuration from XDG_CONFIG_DIR, the XDG user
+/** Reads the DFCGen configuration from XDG_CONFIG_DIR, the XDG user
  *  configuration directory (see XDG specification at
  *  http://www.freedesktop.org/Standards/basedir-spec).
  *
@@ -481,7 +481,7 @@ void cfgCacheSettings (GtkWidget *widget)
 
 
 /* FUNCTION *******************************************************************/
-/** Writes the \e dfcgen configuration to the XDG user configuration directory
+/** Writes the DFCGen configuration to the XDG user configuration directory
  *  (see XDG specification at http://www.freedesktop.org/Standards/basedir-spec).
  *  The syntax of key files is described in the \e Desktop \e Entry \e Specification
  *  at http://freedesktop.org/Standards/desktop-entry-spec.
