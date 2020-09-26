@@ -370,7 +370,7 @@ static BOOL mainDlgCoeffsRound (FLTCOEFF *pFilter, MATHPOLY *poly, int index)
 /** This function is called if a coefficients button (\e Edit, \e Factor,
  *  \e Round) or the associated menu item was clicked
  *
- *  \param widget       \c GtkButton that was clicked (unused).
+ *  \param widget       Associated \c GtkButton or \c GtkTreeView widget.
  *  \param user_data    User data as passed to function g_signal_connect. Here
  *                      it is a pointer to the button descriptor in array
  *                      mainDlgCoeffBtn.
@@ -489,7 +489,7 @@ static void treeDblClickedCallback (GtkTreeView *treeview, GtkTreePath *path,
     (void) column;                                                /* unused */
     (void) path;
 
-    mainDlgCoeffAction (treeview, userdata);
+    mainDlgCoeffAction (GTK_WIDGET(treeview), userdata);
 }
 
 
