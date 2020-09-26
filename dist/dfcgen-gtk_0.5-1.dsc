@@ -13,26 +13,26 @@ Build-Depends: debhelper (>= 9), libgsl-dev, libgtk2.0-dev (>= 2.12)
 Package-List:
  dfcgen-gtk deb electronics optional arch=any
 Checksums-Sha1:
- 559ef41d25d11a2b3fa3c3f4f4a4d9e73dd91695 430829 dfcgen-gtk_0.5-1.tar.gz
+ 094fe77015870efa0999695dbd039e294b544a9d 440064 dfcgen-gtk_0.5-1.tar.gz
 Checksums-Sha256:
- 65ecb5630e978f789c6b0db4c2d51c6ef81e12cb24299fb698e9456b1e149f95 430829 dfcgen-gtk_0.5-1.tar.gz
+ 0957da50c002146977261d17cd9a8a04981f8d0550215c4bc2fb9d8a38a97e94 440064 dfcgen-gtk_0.5-1.tar.gz
 Files:
- 2f4e2d90c8456d1d8ebfb6e85e0d4521 430829 dfcgen-gtk_0.5-1.tar.gz
+ 3eb8c09ffb2a6d384103b4c30a30b46a 440064 dfcgen-gtk_0.5-1.tar.gz
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBCAAGBQJeWtIMAAoJENBPbxoULH0PDtMP/0pMXswxSrVdmPMSKXLz0Olv
-v6HWNiQv2EazLU0xZzKBvvL3jzWYwbrroZ+KCn1kLOwBvXzRZYDYv5BW4BXrz0kO
-V0RxWJrXsWB2St4mlwrv0IMyVCy0r0bXqnXqi2uKdxJ80A39esAwbLfzZSd5JdF4
-qQPnpQ8FZeTFC+uNYZ4zlKx4XljkacNK83QubkR03FQ2sE7mfrGlp8I1+0zGXsrw
-1kADEaU7HHdGDeNl2bKm/oG1w0xZ5ktzAkiqxJWCAHA1jSwrM3oczidu3TdLV+vQ
-er7Sa5eheeCrU/zUi3CkVqHWjLEXRvxxQJiXpsnmTpRWAzzmHrLeqEtY2GwWRGU1
-7fRR60CBuuH9logZ4VR++5ELr+CoOnayqmkRk+TpmpC1LGAp2sUkqlvJJ0gFxfyH
-+AqQohoRL4VWcsdSOtvcrCcoXzk/WtNDGwVmBHd9xtKoaS0TRcTRndoQYxdFYbgb
-0Jt9EqQ8veepoTyhMYrrgRLBnekrcSdGHRsDlyd8PeCVq5FgbVKXAQ4PMQrLDBOS
-KyWfqN1onCfNm0Daq9YRL55wcU5/9jd61lQzp66GwDy+LNjvKnCElULhapajkb3/
-CH1+kz+X5bY83ts9U4pHzaz7Be3mSWY28xkxerSG42a3RA1w39CAzGsNAb+cETAa
-CqdfsIpJeI3IIZisa0/J
-=KtJg
+iQIcBAEBCAAGBQJfb1PbAAoJENBPbxoULH0PU0YP/RMFYc9fZwJbts/7uH3VJUOz
+bhNcJ7+0RnlCmaO4Zy3dutWjaoQ0PnuAao4M2q+bw9ao0/8Q4LgfonjdDL6h6C7W
+xMCFgewSQ5Nq5TO911HhcwBDZ5jyH0LQcWsJ9XsELJGMLDFj2CtHZsXSCunwbbym
+zd8D02kyUgxyp2EJa2KvkWE8DhQyIVZpSAQglyX8LKkBdSSs8JbjfegQCezr/XAf
+YwjKJzkKXSlDXPo7EPkVHmLxQ+fur1ugHOB2s4UnXMm8QaZDfPTa4QFmFNlom9I0
+KWMN6HDltRb/SY9cvLTlXQRauFlBM+9QDWDPl+im9Ipv+Gkf6AFZV/cr15EATr92
+lv5Ke30XZA4tmR9znMMg03FMcrmudTVZR3df9109bcy2F9GtxS68YgAfD3ZskfWo
+JPXxw7ULQwq30sZHYZhefvylnGPQ6jya2bFPKVCfG9pdpJDstT1oh8ZN232TBRDH
+ltPbJNv+aQAmp5jH1h27nqKu2N4nZQBhqNbNXTG3OaoLo7G8T63PyZdwKAMH4yeb
+k+xyfNv2GIptBgCvwTCxB5lmNHQm5+0xEmICuAsGr+9WYm0tJ1eh/BkrrlpCstNi
+diOSZ7Y3HjXyn9JoplAL4NMyCE5LBw/CQyvE/vG4IFke2i9CouQvbH8Y4WOWQwf0
+hbDhBF795UzTGA722bGj
+=2iqe
 -----END PGP SIGNATURE-----

@@ -16,36 +16,51 @@ Description:
 Changes:
  dfcgen-gtk (0.5-1) unstable; urgency=medium
  .
+   * Support double click on coefficients list
+   * Give tribute to Julius van Hann, not Hanning
+   * Improve precision of lin. FIR frequency transformations
+   * Fix Hann/Blackman window calculation
+   * Fix cutoff frequency handling on read from project file
+   * Add some semantic checks to frequency transformations
+   * Fix (not visible) grid in response windows
+   * Show response windows in taskbar and pager
+   * Use of C99 array/struct initialization
+   * Fix GDK/GTK+ warnings
+   * Migration of associated Eclipse project to 3.8.1 (Juno)
+   * Migration of Glade project to 3.8.6 (last release supporting GTK+2.0)
+   * Migration from Subversion to Git
+   * Remove Subversion keywords from source files
    * Get rid of autoreconf warnings
+   * Upgrade to Automake 1.15
    * Change contact and copyright statement
    * Sync with Debian release 0.4-3
 Checksums-Sha1:
- b72fbf1617cc4bfb722317ccbc42e46d6d5c273e 1459 dfcgen-gtk_0.5-1.dsc
- 559ef41d25d11a2b3fa3c3f4f4a4d9e73dd91695 430829 dfcgen-gtk_0.5-1.tar.gz
- 79ba8644de926b26ad3030f7ebfe76626b1585e9 113616 dfcgen-gtk_0.5-1_amd64.deb
+ ce2840a2e80faea4cfbcdb19311c6ae8a3d986ec 1459 dfcgen-gtk_0.5-1.dsc
+ 094fe77015870efa0999695dbd039e294b544a9d 440064 dfcgen-gtk_0.5-1.tar.gz
+ dae4780a1ba048f137ba200c1a0ed98cb0c89264 95364 dfcgen-gtk_0.5-1_amd64.deb
 Checksums-Sha256:
- 74a57fdbe76fab99824465d2bc7dbb72cab22bdaf7a0d02e3c0cfad0a4cf85cf 1459 dfcgen-gtk_0.5-1.dsc
- 65ecb5630e978f789c6b0db4c2d51c6ef81e12cb24299fb698e9456b1e149f95 430829 dfcgen-gtk_0.5-1.tar.gz
- 5345e5827206c2d0eb53215fb40f9a9d213e7a56cc8dd614573109cd1c8ce0aa 113616 dfcgen-gtk_0.5-1_amd64.deb
+ 46df7cfdfa5a4f65c900f437c37ae099dd9f506ef6c08991c3dfd53a8857e47c 1459 dfcgen-gtk_0.5-1.dsc
+ 0957da50c002146977261d17cd9a8a04981f8d0550215c4bc2fb9d8a38a97e94 440064 dfcgen-gtk_0.5-1.tar.gz
+ 7f38a62e96be0842d7788ea37f69c457da7a44e1f28aad1804b93e63637db0bc 95364 dfcgen-gtk_0.5-1_amd64.deb
 Files:
- 8513b93410c9d1444847d9b982ca607f 1459 electronics optional dfcgen-gtk_0.5-1.dsc
- 2f4e2d90c8456d1d8ebfb6e85e0d4521 430829 electronics optional dfcgen-gtk_0.5-1.tar.gz
- 83979629787be99937daafe995b5c86f 113616 electronics optional dfcgen-gtk_0.5-1_amd64.deb
+ f7dc66ac9542335d363e7e6039716135 1459 electronics optional dfcgen-gtk_0.5-1.dsc
+ 3eb8c09ffb2a6d384103b4c30a30b46a 440064 electronics optional dfcgen-gtk_0.5-1.tar.gz
+ 329335e4bbdba63fb08a50e9eb269cfc 95364 electronics optional dfcgen-gtk_0.5-1_amd64.deb
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBCAAGBQJeWtIUAAoJENBPbxoULH0PposP/iU8uIfI5kVnBEzH2wPWqAVn
-JJXkQdduNAEvKnmXiMHFo69joweHo1gQJBOpYqxdUNYtQEUGHBmNYQBC/q4kUTsC
-xtfb0E2EK1R/reoLKNoPf1BZFidCJoACx8IcJWkbCVvnFXzoRtXq+QY6h+/GV7nH
-2SRlkfF5maD5PVlRlBWnA1UBbywHw+A7gfvmZEqMh04k1Z2k1V+C4zEGhY8sAf2/
-8D2F+xFIY6j5mhKuxk8+LxbxDeIrBhwMCbzi7qfXw+rBesETTsmEMlmWaYwvZB7L
-Y26VqmnCk6zAiJozHqKGrXxjj1vPVvubRUutRfmw2gxtgM+uS6slSxV5+a/uTy5O
-Tv2eFPnfP5B0eo52MB7MFYDX/Z2IOCABS6STqsanjmAkfjXfxBxBigDj1w/euba4
-+2znUri4e8/E27tIyW3VjUaeGgOYFzQcEE7Fr6m3/jye6vMeiQKQTtqLmS33LyUX
-fb1HhS95CwugLgrKDPPjXT7Y9WNoiMnTPr3IEEnumeOQc1v/76zzzvKeMXOWOj1I
-H2UG6XlFVRwYGE3amZs97F5OuOZ3RwTGOh8SiOSkp5YwjGLD6/t0JPy/+SMh79i8
-7gKxIZHOlJfCy9LibtzReaSnVv0b2mAyfTK54Xa8Pf54rGbmmA8uMM3Qew4yPu3A
-s70NT6YUQWiWuFEcumyU
-=H8+W
+iQIcBAEBCAAGBQJfb1PgAAoJENBPbxoULH0PgKoQAK8bM5Jp5aeSgZbNn+/HwDoy
+UcnLEsrhGqUWSPx4bkCd0wIByaFkqihBJ+rkEyos++cZ/qZPocwBFnLkOJQVIJtO
+I8WRxWFOhSlpD9kKl90AvNHm0k+iKx/RE1fMsrwog0sdtAzvkg1Qkwo8BPORxTMA
+NLrdMlDuoVbyoPwbdf3b8bouW0hKos0MD6j0CZ6TtwIvGRrpZUi3IYUrZ2oqINNm
+iqt7OMMREDUNzBU3NFofNEtr9mPskzVuucWYIVGoBsn774L+D7pPl+AzDpke/a4b
+3Jm+N0773ptwU2suVO7D8mmI3EAPIgkzKCwvKwuogBOqL78ZbKWo2vLsnRipmvhT
+Y5SE1599pa2Oc54xYysR8JLa7iem5/2oPHkSuYSbuvS8HgDnArZfkTFOeIeG/jg/
+4g1qtaAWs2LX5KGg0ugpJ4JdlMgfley6/gVvEdb8nFra7Anwc1MyYg1ubN1ymmxx
+FyHZBbSfMBjTNvd5G/wmpSe8DRAvKtqc1MZXhAbqnuZ+epiZ3esAoPLbJv1MAg1a
+qIiudYzvE0SDSxSD8w2IBmVrSVYFnwicE63NkjGv4vul0mxF8C0QSI0Do7HwLEMg
+k+85YZxckaCZirK6m/OsPCsE1mWR7BK2il9lPWmv25p/nlxqx7hp6BscP/5Dk0uF
+bLEAqSLHOec6u3A6SmxD
+=6O56
 -----END PGP SIGNATURE-----
