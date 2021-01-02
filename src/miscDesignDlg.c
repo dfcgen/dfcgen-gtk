@@ -1,11 +1,12 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
  * \file     miscDesignDlg.c
+ *
  * \brief    Miscellaneous FIR/IIR design dialogs.
  *
  * \note     Includes raw filters (filters without a design).
  *
- * \author   Copyright (C) 2006, 2011, 2012, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * \author   Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  ******************************************************************************/
 
@@ -116,7 +117,7 @@ static GtkWidget* createDialog (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
 {
     GtkWidget *miscDesignDlgMain, *miscDesignDlgTable;
     GtkWidget *label, *expander, *combo, *widget;
-    GtkObject *spinAdjustment;
+    GtkAdjustment *spinAdjust;
 
     miscDesignDlgMain = gtk_frame_new (NULL);             /* create the frame */
     gtk_box_pack_start (GTK_BOX (boxDesignDlg), miscDesignDlgMain, TRUE, TRUE, 0);
@@ -179,8 +180,8 @@ static GtkWidget* createDialog (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
                       (GtkAttachOptions) (0), 0, 0);
     gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 
-    spinAdjustment = gtk_adjustment_new (1, FLT_DEGREE_MIN, FLT_DEGREE_MAX, 1, 10, 0);
-    widget = gtk_spin_button_new (GTK_ADJUSTMENT (spinAdjustment), 1, 0);
+    spinAdjust = gtk_adjustment_new (1, FLT_DEGREE_MIN, FLT_DEGREE_MAX, 1, 10, 0);
+    widget = gtk_spin_button_new (spinAdjust, 1, 0);
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
     gtk_table_attach (GTK_TABLE (miscDesignDlgTable), widget, 1, 2, 1, 2,
                       (GtkAttachOptions) (GTK_FILL),

@@ -1,9 +1,10 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file
- *           Standard IIR filter dialog functions.
+ * \file     stdIirDesignDlg.c
  *
- * \author   Copyright (C) 2006, 2011-2012, 2020 Ralf Hoppe
+ * \brief    Standard IIR filter dialog functions.
+ *
+ * \author   Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  ******************************************************************************/
 
@@ -219,7 +220,7 @@ void stdIirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
 
     GtkWidget *stdIirDesignDlgMain, *comboFtr;
     GtkWidget *widget, *label, *frame, *box, *table;
-    GtkObject *spinAdjust;
+    GtkAdjustment *spinAdjust;
 
     GSList *iirTypeRadioGroup = NULL;
 
@@ -443,7 +444,7 @@ void stdIirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
 
     /* degree spin-button */
     spinAdjust = gtk_adjustment_new (1, FLT_DEGREE_MIN, FLT_DEGREE_MAX, 1, 10, 0);
-    widget = gtk_spin_button_new (GTK_ADJUSTMENT (spinAdjust), 1, 0);
+    widget = gtk_spin_button_new (spinAdjust, 1, 0);
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
     gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 0, 1,
                       (GtkAttachOptions) (GTK_FILL),
@@ -535,7 +536,7 @@ void stdIirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
 
     spinAdjust = gtk_adjustment_new (45, 1, 89, 1, 10, 0); /* elliptic angle */
-    widget = gtk_spin_button_new (GTK_ADJUSTMENT (spinAdjust), 1, 0);
+    widget = gtk_spin_button_new (spinAdjust, 1, 0);
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
     gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 2, 3,
                       (GtkAttachOptions) (GTK_FILL),

@@ -1,9 +1,10 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
  * \file     editDlg.c
- * \brief    \e Edit dialog(s).
  *
- * \author   Copyright (C) 2006, 2011, 2012, 2013, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * \brief    Edit dialog(s).
+ *
+ * \author   Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  ******************************************************************************/
 
@@ -96,7 +97,7 @@ static GtkWidget* createSettingsDlg (const CFG_DESKTOP* pPrefs)
 {
     int i;
     GtkWidget *settingsDlg, *widget, *label, *box, *table, *notebook;
-    GtkObject *spinAdjust;
+    GtkAdjustment *spinAdjust;
 
     settingsDlg = gtk_dialog_new ();
     gtk_container_set_border_width (GTK_CONTAINER (settingsDlg), 6);
@@ -121,7 +122,7 @@ static GtkWidget* createSettingsDlg (const CFG_DESKTOP* pPrefs)
     gtk_table_set_col_spacings (GTK_TABLE (table), 12);
 
     spinAdjust = gtk_adjustment_new (pPrefs->outprec, 1, DBL_DIG, 1, 1, 0);
-    widget = gtk_spin_button_new (GTK_ADJUSTMENT (spinAdjust), 1, 0);
+    widget = gtk_spin_button_new (spinAdjust, 1, 0);
     gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 0, 1,
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (0), 0, 0);

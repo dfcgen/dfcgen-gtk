@@ -1,8 +1,10 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
  * \file     mainDlg.c
+ *
  * \brief    Main dialog elements (right, bottom of window) handling.
- * \author   Copyright (C) 2006, 2011-2013, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ *
+ * \author   Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  * \note     Parts of code taken over from \e glade in interface.c, which itself
  *           isn't a project file.
@@ -78,7 +80,7 @@ typedef enum
 
 /* LOCAL FUNCTION DECLARATIONS ************************************************/
 
-static void mainDlgDestroy (GtkObject* object, gpointer user_data);
+static void mainDlgDestroy (GtkWidget* object, gpointer user_data);
 static void mainDlgQuit (GtkWidget* widget, gpointer user_data);
 static BOOL mainDlgCoeffEdit (FLTCOEFF *pFilter, MATHPOLY *poly, int index);
 static BOOL mainDlgCoeffsRound (FLTCOEFF *pFilter, MATHPOLY *poly, int index);
@@ -141,7 +143,7 @@ static MAINDLG_COEFF_ACTION mainDlgCoeffBtn[] =
  *  \param user_data    User data as passed to function g_signal_connect (unused).
  *
  ******************************************************************************/
-static void mainDlgDestroy (GtkObject* object, gpointer user_data)
+static void mainDlgDestroy (GtkWidget* object, gpointer user_data)
 {
     gtk_main_quit ();
 } /* mainDlgDestroy() */

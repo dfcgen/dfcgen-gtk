@@ -1,9 +1,10 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file
- *           Digital filter response window creation and callbacks.
+ * \file     responseWin.c
  *
- * \author   Copyright (C) 2006, 2011, 2012, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * \brief    Digital filter response window creation and callbacks.
+ *
+ * \author   Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  ******************************************************************************/
 
@@ -65,7 +66,7 @@ static void responseWinCreate (RESPONSE_WIN *pDesc);
 static gboolean exposeHandler (GtkWidget *widget, GdkEventExpose *event, gpointer user_data);
 static BOOL responseWinExpose (RESPONSE_WIN* pDesc);
 static void responseWinMapped (GtkWidget* widget, gpointer user_data);
-static void responseWinDestroyed (GtkObject* object, gpointer user_data);
+static void responseWinDestroyed (GtkWidget* object, gpointer user_data);
 static void responseWinBtnPropActivate (GtkButton *button, gpointer user_data);
 static void responseWinBtnPrintActivate (GtkWidget* srcWidget, gpointer user_data);
 static gboolean responseWinKeyPress (GtkWidget *widget, GdkEventKey *event,
@@ -454,7 +455,7 @@ static gboolean exposeHandler (GtkWidget *widget, GdkEventExpose *event, gpointe
  *                      event.
  *
  ******************************************************************************/
-static void responseWinDestroyed(GtkObject* object, gpointer user_data)
+static void responseWinDestroyed(GtkWidget* object, gpointer user_data)
 {
     RESPONSE_WIN* pDesc = user_data;
 

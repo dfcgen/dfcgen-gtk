@@ -1,9 +1,10 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
  * \file     responseDlg.c
+ *
  * \brief    Response settings/properties dialog.
  *
- * \author   Copyright (C) 2006, 2011-2012, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * \author   Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  ******************************************************************************/
 
@@ -276,7 +277,7 @@ static void colorItemChanged (GtkComboBox *combobox, gpointer user_data)
 GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
 {
     GtkWidget *widget, *label, *box, *frame, *alignment, *table, *colorSel;
-    GtkObject *adjustment;
+    GtkAdjustment *spinAdjust;
     char *axisName;
 
     GtkWidget *responseDlg = gtk_dialog_new ();
@@ -362,8 +363,8 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (0), 0, 0);
 
-    adjustment = gtk_adjustment_new (0, 0, RESPONSE_DLG_SPIN_MAX, 1, 10, 0);
-    widget = gtk_spin_button_new (GTK_ADJUSTMENT (adjustment), 1, 0);
+    spinAdjust = gtk_adjustment_new (0, 0, RESPONSE_DLG_SPIN_MAX, 1, 10, 0);
+    widget = gtk_spin_button_new (spinAdjust, 1, 0);
     gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 4, 5,
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (0), 0, 0);
