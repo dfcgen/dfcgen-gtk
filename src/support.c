@@ -1,10 +1,11 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
  * \file     support.c
+ *
  * \brief    Support functions, defines and macros, mostly for \e gettext,
  *           widget and file handling.
  *
- * \author   Copyright (C) 2006, 2011-2012, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * \author   Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  ******************************************************************************/
 
@@ -38,7 +39,7 @@ GtkWidget* lookup_widget (GtkWidget* widget, const gchar* name)
         } /* if */
         else
         {
-            parent = widget->parent;
+            parent = gtk_widget_get_parent (widget);
         } /* else */
 
         if (parent == NULL)
