@@ -605,21 +605,21 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     widget = GTK_DIALOG (responseDlg)->action_area;
     gtk_button_box_set_layout (GTK_BUTTON_BOX (widget), GTK_BUTTONBOX_END);
 
-    widget = gtk_button_new_from_stock (GTK_STOCK_HELP);
+    widget = DFCGEN_GTK_IMAGE_BUTTON_NEW(DFCGEN_GTK_STOCK_BUTTON_HELP);
     gtk_dialog_add_action_widget (GTK_DIALOG (responseDlg), widget, GTK_RESPONSE_HELP);
 #ifndef TODO
     gtk_widget_set_sensitive (widget, FALSE);
 #endif
 
-    widget = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+    widget = DFCGEN_GTK_IMAGE_BUTTON_NEW(DFCGEN_GTK_STOCK_BUTTON_CANCEL);
     gtk_dialog_add_action_widget (GTK_DIALOG (responseDlg), widget, GTK_RESPONSE_CANCEL);
     GTK_WIDGET_SET_FLAGS (widget, GTK_CAN_DEFAULT);
 
-    widget = gtk_button_new_from_stock (GTK_STOCK_APPLY);
+    widget = DFCGEN_GTK_IMAGE_BUTTON_NEW(DFCGEN_GTK_STOCK_BUTTON_APPLY);
     gtk_dialog_add_action_widget (GTK_DIALOG (responseDlg), widget, GTK_RESPONSE_APPLY);
     GTK_WIDGET_SET_FLAGS (widget, GTK_CAN_DEFAULT);
 
-    widget = gtk_button_new_from_stock (GTK_STOCK_OK);
+    widget = DFCGEN_GTK_IMAGE_BUTTON_NEW(DFCGEN_GTK_STOCK_BUTTON_OK);
     gtk_dialog_add_action_widget (GTK_DIALOG (responseDlg), widget, GTK_RESPONSE_OK);
     GTK_WIDGET_SET_FLAGS (widget, GTK_CAN_DEFAULT);
 

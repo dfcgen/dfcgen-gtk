@@ -4,7 +4,7 @@
  * \brief    Support functions, defines and macros, mostly for \e gettext,
  *           widget and file handling.
  *
- * \author   Copyright (C) 2006, 2011-2012, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * \author   Copyright (C) 2006, 2011-2012, 2020, 2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  ******************************************************************************/
 
@@ -20,6 +20,75 @@
 #endif
 
 #include <gtk/gtk.h>
+
+
+/* MACROS *********************************************************************/
+
+#if GTK_CHECK_VERSION (3, 10, 0)
+
+#define DFCGEN_GTK_IMAGE_BUTTON_NEW(id)                         \
+    gtk_button_new_from_icon_name (id, GTK_ICON_SIZE_BUTTON)
+#define DFCGEN_GTK_IMAGE_MENUITEM_NEW(id, label, accel) \
+    createImageMenuItem ((label), (id), accel)
+#define DFCGEN_GTK_TOOL_BUTTON_NEW(id)                                        \
+    ((GtkWidget*) gtk_tool_button_new (                                       \
+        gtk_image_new_from_icon_name (id, GTK_ICON_SIZE_LARGE_TOOLBAR), NULL))
+
+
+#define DFCGEN_GTK_STOCK_BUTTON_OK      "gtk-ok"
+#define DFCGEN_GTK_STOCK_BUTTON_CANCEL  "gtk-cancel"
+#define DFCGEN_GTK_STOCK_BUTTON_APPLY   "gtk-apply"
+#define DFCGEN_GTK_STOCK_BUTTON_HELP    "gtk-help"
+
+#define DFCGEN_GTK_STOCK_MENUITEM_ABOUT "gtk-about"
+#define DFCGEN_GTK_STOCK_MENUITEM_HELP  "gtk-help"
+#define DFCGEN_GTK_STOCK_MENUITEM_INFO  "gtk-info"
+
+#define DFCGEN_GTK_STOCK_NEW            "gtk-new"
+#define DFCGEN_GTK_STOCK_OPEN           "gtk-open"
+#define DFCGEN_GTK_STOCK_SAVE           "gtk-save"
+#define DFCGEN_GTK_STOCK_SAVE_AS        "gtk-save-as"
+#define DFCGEN_GTK_STOCK_PRINT          "gtk-print"
+#define DFCGEN_GTK_STOCK_PREFERENCES    "gtk-preferences"
+#define DFCGEN_GTK_STOCK_QUIT           "gtk-quit"
+#define DFCGEN_GTK_STOCK_COEFF_EDIT     "gtk-edit"
+#define DFCGEN_GTK_STOCK_COEFF_MULTIPLY "gtk-fullscreen"
+#define DFCGEN_GTK_STOCK_COEFF_ROUND    "gtk-convert"
+
+#else /* GTK version < 3.10 */
+
+#define DFCGEN_GTK_IMAGE_BUTTON_NEW(id) \
+    gtk_button_new_from_stock (id)
+
+#define DFCGEN_GTK_IMAGE_MENUITEM_NEW(id, label, accel) \
+    gtk_image_menu_item_new_from_stock ((id), (accel));
+
+#define DFCGEN_GTK_TOOL_BUTTON_NEW(id)                  \
+    ((GtkWidget*) gtk_tool_button_new_from_stock (id))
+
+
+#define DFCGEN_GTK_STOCK_BUTTON_OK      GTK_STOCK_OK
+#define DFCGEN_GTK_STOCK_BUTTON_CANCEL  GTK_STOCK_CANCEL
+#define DFCGEN_GTK_STOCK_BUTTON_APPLY   GTK_STOCK_APPLY
+#define DFCGEN_GTK_STOCK_BUTTON_HELP    GTK_STOCK_HELP
+
+#define DFCGEN_GTK_STOCK_MENUITEM_ABOUT GTK_STOCK_ABOUT
+#define DFCGEN_GTK_STOCK_MENUITEM_HELP  GTK_STOCK_HELP
+#define DFCGEN_GTK_STOCK_MENUITEM_INFO  GTK_STOCK_INFO
+
+#define DFCGEN_GTK_STOCK_NEW            GTK_STOCK_NEW
+#define DFCGEN_GTK_STOCK_OPEN           GTK_STOCK_OPEN
+#define DFCGEN_GTK_STOCK_SAVE           GTK_STOCK_SAVE
+#define DFCGEN_GTK_STOCK_SAVE_AS        GTK_STOCK_SAVE_AS
+#define DFCGEN_GTK_STOCK_PRINT          GTK_STOCK_PRINT
+#define DFCGEN_GTK_STOCK_PREFERENCES    GTK_STOCK_PREFERENCES
+#define DFCGEN_GTK_STOCK_QUIT           GTK_STOCK_QUIT
+#define DFCGEN_GTK_STOCK_COEFF_EDIT     GTK_STOCK_EDIT
+#define DFCGEN_GTK_STOCK_COEFF_MULTIPLY GTK_STOCK_FULLSCREEN
+#define DFCGEN_GTK_STOCK_COEFF_ROUND    GTK_STOCK_CONVERT
+
+#endif  /* GTK_CHECK_VERSION */
+
 
 /* If gettext.m4 has detected GNU gettext (libintl.h), then ENABLE_NLS is
  * defined. In that case a translation to the user's natural language may
@@ -114,5 +183,20 @@ GdkPixbuf* createPixbufFromFile (const gchar* filename);
 
 
 
-#endif /* SUPPORT_H */
+#if GTK_CHECK_VERSION (3, 10, 0)
+/* FUNCTION *******************************************************************/
+/** \brief Replacement for gtk_image_menu_item_new_from_stock() which is
+ *         deprecated since GTK 3.10.
+ *
+ *  \param[in]      name    Label to be applied.
+ *  \param[in]      img     Icon image name.
+ *  \param[in,out]  accel   The associated accelerator group.
+ *
+ *  \return    A newly created menu item.
+ ******************************************************************************/
+GtkWidget* createImageMenuItem(const gchar* name, const gchar* img,
+                               GtkAccelGroup* accel);
+#endif
 
+
+#endif /* SUPPORT_H */

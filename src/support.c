@@ -174,3 +174,37 @@ GdkPixbuf* createPixbufFromFile (const gchar* filename)
     return pixbuf;
 } /* createPixbufFromFile() */
 
+
+#if GTK_CHECK_VERSION (3, 10, 0)
+/* FUNCTION *******************************************************************/
+/** \brief Replacement for gtk_image_menu_item_new_from_stock() which is
+ *         deprecated since GTK 3.10.
+ *
+ *  \param[in]      name    Label to be applied.
+ *  \param[in]      img     Icon image name.
+ *  \param[in,out]  accel   The associated accelerator group.
+ *
+ *  \return    A newly created menu item.
+ ******************************************************************************/
+GtkWidget* createImageMenuItem(const gchar* name, const gchar* img,
+                               GtkAccelGroup* accel)
+{
+    GtkWidget *item = gtk_menu_item_new ();
+    GtkWidget *box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+    GtkWidget *icon = gtk_image_new_from_icon_name (img, GTK_ICON_SIZE_MENU);
+    GtkWidget *label = gtk_accel_label_new (name);
+
+    gtk_container_add (GTK_CONTAINER (box), icon);
+    gtk_label_set_use_underline (GTK_LABEL (label), TRUE);
+    gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+    gtk_widget_add_accelerator (item, "activate", accel,
+                                GDK_KEY_m, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+    gtk_accel_label_set_accel_widget (GTK_ACCEL_LABEL (label), item);
+    gtk_box_pack_end (GTK_BOX (box), label, TRUE, TRUE, 0);
+    gtk_container_add (GTK_CONTAINER (item), box);
+    gtk_widget_show_all (item);
+
+    return item;
+}
+
+#endif  /* GTK_CHECK_VERSION 3.10 */

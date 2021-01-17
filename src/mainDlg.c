@@ -55,8 +55,8 @@ typedef struct
     GtkWidget *btn;             /**< \c GtkButton associated with this action */
     GtkWidget *menu;          /**< \c GtkMenuItem associated with this action */
     MAINDLG_COEFF_OPERATION op;
-    char *text;                    /**< Menuitem text (describing the action) */
-    char *stockimg;
+    char *label;          /**< label text of menuitem (describing the action) */
+    char *stock;                               /**< stock item identification */
     char *tooltip;
 } MAINDLG_COEFF_ACTION;
 
@@ -118,16 +118,22 @@ static GtkWidget *statusbar;      /**< Statusbar in bottom line of top widget */
 static MAINDLG_COEFF_ACTION mainDlgCoeffBtn[] =
 {
     {
-        NULL, NULL, mainDlgCoeffEdit, N_("Change"),
-        GTK_STOCK_EDIT, N_("Edit a single coefficient")
+        .btn = NULL, .menu = NULL, .op = mainDlgCoeffEdit,
+        .label = N_("Change"),
+        .stock = DFCGEN_GTK_STOCK_COEFF_EDIT,
+        .tooltip = N_("Edit a single coefficient")
     },
     {
-        NULL, NULL, mainDlgCoeffsFactor, N_("Multiply"),
-        GTK_STOCK_FULLSCREEN, N_("Multiply all coefficients with a constant")
+        .btn = NULL, .menu = NULL, .op = mainDlgCoeffsFactor,
+        .label = N_("Multiply"),
+        .stock = DFCGEN_GTK_STOCK_COEFF_MULTIPLY,
+        .tooltip = N_("Multiply all coefficients with a constant")
     },
     {
-        NULL, NULL, mainDlgCoeffsRound, N_("Round"),
-        GTK_STOCK_CONVERT, N_("Round all coefficients")
+        .btn = NULL, .menu = NULL, .op = mainDlgCoeffsRound,
+        .label = N_("Round"),
+        .stock = DFCGEN_GTK_STOCK_COEFF_ROUND,
+        .tooltip = N_("Round all coefficients")
     }
 };
 
@@ -721,26 +727,30 @@ GtkWidget* mainDlgCreate (void)
     menuContainer = gtk_menu_new ();
     gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuMainItem), menuContainer);
 
-    menuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_NEW, accel_group);
+    menuItem = DFCGEN_GTK_IMAGE_MENUITEM_NEW(DFCGEN_GTK_STOCK_NEW,
+                                             _("_New"), accel_group);
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (fileDlgNewActivate),
                       NULL);
 
-    menuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_OPEN, accel_group);
+    menuItem = DFCGEN_GTK_IMAGE_MENUITEM_NEW(DFCGEN_GTK_STOCK_OPEN,
+                                             _("_Open"), accel_group);
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (fileDlgOpenActivate),
                       NULL);
 
-    menuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_SAVE, accel_group);
+    menuItem = DFCGEN_GTK_IMAGE_MENUITEM_NEW(DFCGEN_GTK_STOCK_SAVE,
+                                             _("_Save"), accel_group);
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (fileDlgSaveActivate),
                       NULL);
     GLADE_HOOKUP_OBJECT (topWidget, menuItem, "menuItemFileSave");
 
-    menuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_SAVE_AS, accel_group);
+    menuItem = DFCGEN_GTK_IMAGE_MENUITEM_NEW(DFCGEN_GTK_STOCK_SAVE_AS,
+                                             _("Save _as"), accel_group);
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (fileDlgSaveAsActivate),
@@ -757,7 +767,8 @@ GtkWidget* mainDlgCreate (void)
                       NULL);
     GLADE_HOOKUP_OBJECT (topWidget, menuItem, "menuItemFileExport");
 
-    menuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_PRINT, accel_group);
+    menuItem = DFCGEN_GTK_IMAGE_MENUITEM_NEW(DFCGEN_GTK_STOCK_PRINT,
+                                             _("_Print"), accel_group);
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (filterPrintCoeffs),
@@ -768,7 +779,8 @@ GtkWidget* mainDlgCreate (void)
     gtk_container_add (GTK_CONTAINER (menuContainer), widget);
     gtk_widget_set_sensitive (widget, FALSE);
 
-    menuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_QUIT, accel_group);
+    menuItem = DFCGEN_GTK_IMAGE_MENUITEM_NEW(DFCGEN_GTK_STOCK_QUIT,
+                                             _("_Quit"), accel_group);
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (mainDlgQuit),
@@ -780,10 +792,9 @@ GtkWidget* mainDlgCreate (void)
     menuContainer = gtk_menu_new ();
     gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuMainItem), menuContainer);
 
-    menuItem = gtk_image_menu_item_new_with_mnemonic (_("Project Info"));
+    menuItem = DFCGEN_GTK_IMAGE_MENUITEM_NEW(DFCGEN_GTK_STOCK_MENUITEM_INFO,
+                                             _("Project Info"), accel_group);
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
-    widget = gtk_image_new_from_stock (GTK_STOCK_INFO, GTK_ICON_SIZE_MENU);
-    gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menuItem), widget);
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (editDlgInfoActivate), NULL);
 
@@ -792,27 +803,24 @@ GtkWidget* mainDlgCreate (void)
     submenuContainer = gtk_menu_new ();
     gtk_menu_item_set_submenu (GTK_MENU_ITEM (widget), submenuContainer);
 
-
     for (i = 0, pAction = mainDlgCoeffBtn;
          i < N_ELEMENTS (mainDlgCoeffBtn);
          i++, pAction++)
     {
-        pAction->menu =
-            gtk_image_menu_item_new_with_mnemonic (gettext (pAction->text));
+        pAction->menu = DFCGEN_GTK_IMAGE_MENUITEM_NEW(
+            pAction->stock, gettext (pAction->label), accel_group);
         gtk_container_add (GTK_CONTAINER (submenuContainer), pAction->menu);
-        widget = gtk_image_new_from_stock (pAction->stockimg, GTK_ICON_SIZE_MENU);
-        gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (pAction->menu), widget);
         gtk_widget_set_sensitive (GTK_WIDGET(pAction->menu), FALSE);
         g_signal_connect ((gpointer) pAction->menu, "activate",
                           G_CALLBACK (mainDlgCoeffAction), pAction);
     } /* for */
 
-
     widget = gtk_separator_menu_item_new ();
     gtk_container_add (GTK_CONTAINER (menuContainer), widget);
     gtk_widget_set_sensitive (widget, FALSE);
 
-    menuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_PREFERENCES, accel_group);
+    menuItem = DFCGEN_GTK_IMAGE_MENUITEM_NEW(DFCGEN_GTK_STOCK_PREFERENCES,
+                                             _("_Preferences"), accel_group);
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (editDlgSettingsActivate), NULL);
@@ -878,11 +886,13 @@ GtkWidget* mainDlgCreate (void)
     gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuMainItem), menuContainer);
 
 #ifdef TODO
-    menuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_HELP, accel_group);
+    menuItem = DFCGEN_GTK_IMAGE_MENUITEM_NEW(DFCGEN_GTK_STOCK_MENUITEM_HELP,
+                                             _("_Help"), accel_group);
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
 #endif
 
-    menuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_ABOUT, accel_group);
+    menuItem = DFCGEN_GTK_IMAGE_MENUITEM_NEW(DFCGEN_GTK_STOCK_MENUITEM_ABOUT,
+                                             _("_About"), accel_group);
     gtk_container_add (GTK_CONTAINER (menuContainer), menuItem);
     g_signal_connect ((gpointer) menuItem, "activate",
                       G_CALLBACK (helpDlgMenuActivate),
@@ -895,20 +905,20 @@ GtkWidget* mainDlgCreate (void)
     widget = (GtkWidget*) gtk_tool_item_new ();
     gtk_container_add (GTK_CONTAINER (toolbarMain), widget);
 
-    button = (GtkWidget*) gtk_tool_button_new_from_stock (GTK_STOCK_OPEN);
+    button = DFCGEN_GTK_TOOL_BUTTON_NEW (DFCGEN_GTK_STOCK_OPEN);
     gtk_container_add (GTK_CONTAINER (toolbarMain), button);
     g_signal_connect ((gpointer) button, "clicked",
                       G_CALLBACK (fileDlgOpenActivate),
                       NULL);
 
-    button = (GtkWidget*) gtk_tool_button_new_from_stock (GTK_STOCK_SAVE);
+    button = DFCGEN_GTK_TOOL_BUTTON_NEW (DFCGEN_GTK_STOCK_SAVE);
     gtk_container_add (GTK_CONTAINER (toolbarMain), button);
     g_signal_connect ((gpointer) button, "clicked",
                       G_CALLBACK (fileDlgSaveActivate),
                       NULL);
     GLADE_HOOKUP_OBJECT (topWidget, button, "toolBtnSave");
 
-    button = (GtkWidget*) gtk_tool_button_new_from_stock (GTK_STOCK_NEW);
+    button = DFCGEN_GTK_TOOL_BUTTON_NEW (DFCGEN_GTK_STOCK_NEW);
     gtk_container_add (GTK_CONTAINER (toolbarMain), button);
     g_signal_connect ((gpointer) button, "clicked",
                       G_CALLBACK (fileDlgNewActivate), NULL);
@@ -916,7 +926,7 @@ GtkWidget* mainDlgCreate (void)
     widget = (GtkWidget*) gtk_separator_tool_item_new ();
     gtk_container_add (GTK_CONTAINER (toolbarMain), widget);
 
-    button = (GtkWidget*) gtk_tool_button_new_from_stock (GTK_STOCK_PREFERENCES);
+    button = DFCGEN_GTK_TOOL_BUTTON_NEW (DFCGEN_GTK_STOCK_PREFERENCES);
     gtk_container_add (GTK_CONTAINER (toolbarMain), button);
     g_signal_connect ((gpointer) button, "clicked",
                       G_CALLBACK (editDlgSettingsActivate), NULL);
@@ -924,7 +934,7 @@ GtkWidget* mainDlgCreate (void)
     widget = (GtkWidget*) gtk_separator_tool_item_new ();
     gtk_container_add (GTK_CONTAINER (toolbarMain), widget);
 
-    button = (GtkWidget*) gtk_tool_button_new_from_stock (GTK_STOCK_QUIT);
+    button = DFCGEN_GTK_TOOL_BUTTON_NEW (DFCGEN_GTK_STOCK_QUIT);
     gtk_container_add (GTK_CONTAINER (toolbarMain), button);
     g_signal_connect ((gpointer) button, "clicked", G_CALLBACK (mainDlgQuit), NULL);
 
@@ -958,14 +968,14 @@ GtkWidget* mainDlgCreate (void)
     gtk_button_box_set_layout (GTK_BUTTON_BOX (widget), GTK_BUTTONBOX_SPREAD);
     gtk_box_set_spacing (GTK_BOX (widget), 12);
 
-    button = gtk_button_new_from_stock (GTK_STOCK_HELP);
+    button = DFCGEN_GTK_IMAGE_BUTTON_NEW(DFCGEN_GTK_STOCK_BUTTON_HELP);
     gtk_container_add (GTK_CONTAINER (widget), button);
     gtk_widget_set_tooltip_text (button, _("Help"));
 #ifndef TODO
     gtk_widget_set_sensitive (button, FALSE);
 #endif
 
-    button = gtk_button_new_from_stock (GTK_STOCK_APPLY);
+    button = DFCGEN_GTK_IMAGE_BUTTON_NEW(DFCGEN_GTK_STOCK_BUTTON_APPLY);
     gtk_container_add (GTK_CONTAINER (widget), button);
     GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
     g_signal_connect ((gpointer) button, "clicked",
@@ -1043,13 +1053,10 @@ GtkWidget* mainDlgCreate (void)
          i < N_ELEMENTS (mainDlgCoeffBtn);
          i++, pAction++)
     {
-        pAction->btn = gtk_button_new ();
+        pAction->btn = DFCGEN_GTK_IMAGE_BUTTON_NEW(pAction->stock);
         gtk_container_add (GTK_CONTAINER (hbox2), pAction->btn);
         gtk_widget_set_sensitive (pAction->btn, FALSE);
         gtk_widget_set_tooltip_text (pAction->btn, gettext (pAction->tooltip));
-        widget = gtk_image_new_from_stock (pAction->stockimg,
-                                           GTK_ICON_SIZE_BUTTON);
-        gtk_container_add (GTK_CONTAINER (pAction->btn), widget);
         g_signal_connect ((gpointer) pAction->btn, "clicked",
                           G_CALLBACK (mainDlgCoeffAction), pAction);
     } /* for */

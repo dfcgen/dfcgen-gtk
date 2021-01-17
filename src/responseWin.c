@@ -316,7 +316,7 @@ static void responseWinCreate (RESPONSE_WIN *pDesc)
     gtk_box_pack_start (GTK_BOX (hbox), pDesc->label, FALSE, FALSE, 6);
     gtk_label_set_single_line_mode (GTK_LABEL (pDesc->label), TRUE);
 
-    pDesc->btnPrint = gtk_button_new_from_stock (GTK_STOCK_PRINT);
+    pDesc->btnPrint = DFCGEN_GTK_IMAGE_BUTTON_NEW(DFCGEN_GTK_STOCK_PRINT);
     gtk_box_pack_end (GTK_BOX (hbox), pDesc->btnPrint, FALSE, FALSE, 6);
     g_signal_connect ((gpointer) pDesc->btnPrint, "clicked",
                       G_CALLBACK (responseWinBtnPrintActivate),
@@ -325,7 +325,7 @@ static void responseWinCreate (RESPONSE_WIN *pDesc)
     GTK_WIDGET_SET_FLAGS (pDesc->btnPrint, GTK_CAN_DEFAULT);
     gtk_widget_set_tooltip_text (pDesc->btnPrint, _("Print this response plot"));
 
-    btnSettings = gtk_button_new_from_stock (GTK_STOCK_PREFERENCES);
+    btnSettings = DFCGEN_GTK_IMAGE_BUTTON_NEW(DFCGEN_GTK_STOCK_PREFERENCES);
     gtk_box_pack_end (GTK_BOX (hbox), btnSettings, FALSE, FALSE, 6);
     GTK_WIDGET_SET_FLAGS (btnSettings, GTK_CAN_DEFAULT);
     gtk_widget_set_tooltip_text (btnSettings, _("Set response plot preferences"));
