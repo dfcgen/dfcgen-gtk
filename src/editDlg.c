@@ -112,7 +112,7 @@ static GtkWidget* createSettingsDlg (const CFG_DESKTOP* pPrefs)
     notebook = gtk_notebook_new ();
     gtk_box_pack_start (GTK_BOX (box), notebook, TRUE, TRUE, 0);
 
-    box = gtk_hbox_new (FALSE, 0);
+    box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_container_add (GTK_CONTAINER (notebook), box);
 
     table = gtk_table_new (3, 2, FALSE);
@@ -194,7 +194,7 @@ static GtkWidget* createSettingsDlg (const CFG_DESKTOP* pPrefs)
                                 gtk_notebook_get_nth_page (
                                     GTK_NOTEBOOK (notebook), 0), label);
 
-    box = gtk_vbox_new (FALSE, 0);
+    box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
     gtk_container_add (GTK_CONTAINER (notebook), box);
 
     label = gtk_label_new (_("RFU"));

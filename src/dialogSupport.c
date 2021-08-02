@@ -14,6 +14,7 @@
 #include "dialogSupport.h"
 #include "cfgSettings.h"
 
+#include <float.h>  /* DBL_DIG */
 #include <stdlib.h>
 #include <stdarg.h>
 #include <errno.h>
@@ -298,7 +299,7 @@ BOOL dlgPopupDouble (char *title, char *label, char *comment, double *pResult)
         gtk_box_pack_start (GTK_BOX (vbox), widget, FALSE, FALSE, 12);
     } /* if */
 
-    hbox = gtk_hbox_new (FALSE, 0);
+    hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 6);
 
     widget = gtk_label_new_with_mnemonic (label);

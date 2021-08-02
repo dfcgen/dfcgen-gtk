@@ -715,7 +715,7 @@ GtkWidget* mainDlgCreate (void)
                       G_CALLBACK (mainDlgDestroy),
                       NULL);
 
-    vbox1 = gtk_vbox_new (FALSE, 0);
+    vbox1 = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
     gtk_container_add (GTK_CONTAINER (topWidget), vbox1);
 
     menuMain = gtk_menu_bar_new ();
@@ -938,15 +938,15 @@ GtkWidget* mainDlgCreate (void)
     gtk_container_add (GTK_CONTAINER (toolbarMain), button);
     g_signal_connect ((gpointer) button, "clicked", G_CALLBACK (mainDlgQuit), NULL);
 
-    hbox1 = gtk_hbox_new (FALSE, 0);
+    hbox1 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_pack_start (GTK_BOX (vbox1), hbox1, TRUE, TRUE, 0);
     gtk_container_set_border_width (GTK_CONTAINER (hbox1), 6);
 
-    boxDesignDlg = gtk_vbox_new (FALSE, 12);
+    boxDesignDlg = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
     gtk_box_pack_start (GTK_BOX (hbox1), boxDesignDlg, FALSE, TRUE, 0);
     gtk_container_set_border_width (GTK_CONTAINER (boxDesignDlg), 6);
 
-    hbox3 = gtk_hbox_new (FALSE, 12);
+    hbox3 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
     gtk_box_pack_start (GTK_BOX (boxDesignDlg), hbox3, FALSE, FALSE, 0);
     gtk_container_set_border_width (GTK_CONTAINER (hbox3), 6);
 
@@ -983,11 +983,11 @@ GtkWidget* mainDlgCreate (void)
     gtk_widget_set_tooltip_text (button, _("Apply input data"));
     GLADE_HOOKUP_OBJECT (topWidget, button, MAINDLG_BTN_APPLY);
 
-    boxFilterDlg = gtk_vbox_new (FALSE, 0);
+    boxFilterDlg = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
     gtk_box_pack_start (GTK_BOX (hbox1), boxFilterDlg, TRUE, TRUE, 0);
     gtk_container_set_border_width (GTK_CONTAINER (boxFilterDlg), 6);
 
-    vpaneFilter = gtk_vpaned_new ();
+    vpaneFilter = gtk_paned_new(GTK_ORIENTATION_VERTICAL);
     gtk_box_pack_start (GTK_BOX (boxFilterDlg), vpaneFilter, TRUE, TRUE, 0);
     gtk_container_set_border_width (GTK_CONTAINER (vpaneFilter), 6);
 

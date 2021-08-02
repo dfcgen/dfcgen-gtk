@@ -256,7 +256,7 @@ void linFirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     gtk_container_add (GTK_CONTAINER (frame), widget);
     gtk_alignment_set_padding (GTK_ALIGNMENT (widget), 0, 0, 12, 0);
 
-    box = gtk_vbox_new (FALSE, 0);
+    box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
     gtk_container_add (GTK_CONTAINER (widget), box);
     gtk_container_set_border_width (GTK_CONTAINER (box), 6);
 

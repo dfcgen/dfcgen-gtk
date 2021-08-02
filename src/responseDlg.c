@@ -290,7 +290,7 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     gtk_window_set_icon_name (GTK_WINDOW (responseDlg), GTK_STOCK_PREFERENCES);
     gtk_window_set_type_hint (GTK_WINDOW (responseDlg), GDK_WINDOW_TYPE_HINT_DIALOG);
 
-    box = gtk_hbox_new (FALSE, 12);                /* x- and y-side of dialog */
+    box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12); /* x- and y-side of dialog */
     gtk_box_pack_start (GTK_BOX (GTK_DIALOG (responseDlg)->vbox),
                         box, FALSE, FALSE, 6);
 
@@ -529,7 +529,7 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     gtk_expander_set_label_widget (GTK_EXPANDER (widget), label);
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
 
-    box = gtk_vbox_new (FALSE, 24);
+    box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 24);
     gtk_container_add (GTK_CONTAINER (widget), box);
 
     table = gtk_table_new (2, 3, FALSE);

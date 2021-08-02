@@ -296,7 +296,7 @@ static void responseWinCreate (RESPONSE_WIN *pDesc)
         g_object_unref (iconPixbuf);
     } /* if */
 
-    vbox = gtk_vbox_new (FALSE, 0);
+    vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
     gtk_container_add (GTK_CONTAINER (pDesc->topWidget), vbox);
 
     pDesc->draw = gtk_drawing_area_new ();
@@ -308,7 +308,7 @@ static void responseWinCreate (RESPONSE_WIN *pDesc)
     hseparator = gtk_hseparator_new ();
     gtk_box_pack_start (GTK_BOX (vbox), hseparator, FALSE, TRUE, 0);
 
-    hbox = gtk_hbox_new (FALSE, 0);
+    hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, TRUE, 6);
 
     pDesc->label = gtk_label_new ("");
