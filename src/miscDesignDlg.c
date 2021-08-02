@@ -136,7 +136,7 @@ static GtkWidget* createDialog (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     gtk_table_set_row_spacings (GTK_TABLE (miscDesignDlgTable), 6);
     gtk_table_set_col_spacings (GTK_TABLE (miscDesignDlgTable), 6);
 
-    combo = gtk_combo_box_new_text ();             /* type of filter combobox */
+    combo = gtk_combo_box_text_new ();           /* type of filter combobox */
     gtk_table_attach (GTK_TABLE (miscDesignDlgTable), combo, 0, 3, 0, 1,
                       (GtkAttachOptions) (GTK_FILL),
                       (GtkAttachOptions) (0), 0, 6);
@@ -353,7 +353,8 @@ void miscDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
      */
     for (count = 0; count < MISCFLT_SIZE; count++)
     {
-        gtk_combo_box_append_text (combo, gettext (miscFilterList[count].title));
+        gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo),
+                                        gettext (miscFilterList[count].title));
     } /* for */
 
 
@@ -366,7 +367,7 @@ void miscDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
 
     if (err == NULL)                                             /* no error? */
     {
-        gtk_combo_box_append_text (combo, "");  /* insert space for separator */
+        gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo), "");
 
         do         /* read all predefined filters from datadir (PREFIX/share) */
         {
@@ -392,8 +393,9 @@ void miscDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
                             raw.title = g_strdup (prj.info.title);
                             raw.desc = g_strdup (prj.info.desc); /* may be NULL */
 
-                            g_array_append_val(rawFilterList, raw);
-                            gtk_combo_box_append_text (combo, prj.info.title);
+                            g_array_append_val (rawFilterList, raw);
+                            gtk_combo_box_text_append_text (
+                                GTK_COMBO_BOX_TEXT (combo), prj.info.title);
                             ++count;
                         } /* if */
                         else
@@ -434,8 +436,8 @@ void miscDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
 
 
     g_free (path);                     /* free the sub-directory path string */
-    gtk_combo_box_set_row_separator_func (combo, miscDlgComboSeparator, NULL, NULL);
-
+    gtk_combo_box_set_row_separator_func (GTK_COMBO_BOX (combo),
+                                          miscDlgComboSeparator, NULL, NULL);
 
     /* To use the wrap feature of the description label the width of lable
      * widget must must be limited. A good reference width (used here) ist the
@@ -445,7 +447,7 @@ void miscDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     gtk_widget_set_size_request (lookup_widget (topWidget, MISCDLG_LABEL_DESC),
                                  size.width, -1);
 
-    gtk_combo_box_set_active (combo, 0);
+    gtk_combo_box_set_active (GTK_COMBO_BOX (combo), 0);
 
 } /* miscDesignDlgCreate() */
 

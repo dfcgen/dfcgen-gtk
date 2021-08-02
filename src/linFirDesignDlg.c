@@ -308,12 +308,12 @@ void linFirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
                       (GtkAttachOptions) (0), 3, 0);
     gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 
-    comboFtr = gtk_combo_box_new_text ();     /* frequency transform combobox */
+    comboFtr = gtk_combo_box_text_new ();   /* frequency transform combobox */
     gtk_container_add (GTK_CONTAINER (widget), comboFtr);
-    gtk_combo_box_append_text (GTK_COMBO_BOX (comboFtr), _("None"));
-    gtk_combo_box_append_text (GTK_COMBO_BOX (comboFtr), _("Highpass"));
-    gtk_combo_box_append_text (GTK_COMBO_BOX (comboFtr), _("Bandpass"));
-    gtk_combo_box_append_text (GTK_COMBO_BOX (comboFtr), _("Bandstop"));
+    gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (comboFtr), _("None"));
+    gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (comboFtr), _("Highpass"));
+    gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (comboFtr), _("Bandpass"));
+    gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (comboFtr), _("Bandstop"));
 
     GLADE_HOOKUP_OBJECT (topWidget, comboFtr, LINFIRDLG_COMBO_FTR);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), comboFtr);

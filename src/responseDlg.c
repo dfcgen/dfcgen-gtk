@@ -571,15 +571,15 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
                       (GtkAttachOptions) (GTK_FILL), 0, 0);
     gtk_widget_set_tooltip_text (widget, _("Style of graph"));
 
-    box = gtk_combo_box_new_text ();
+    box = gtk_combo_box_text_new ();
     gtk_container_add (GTK_CONTAINER (widget), box);
-    gtk_combo_box_append_text (GTK_COMBO_BOX (box), _("Line (continuous)")); /* PLOT_STYLE_LINE_ONLY */
-    gtk_combo_box_append_text (GTK_COMBO_BOX (box), _("Circle (discrete)")); /* PLOT_STYLE_CIRCLE_ONLY */
-    gtk_combo_box_append_text (GTK_COMBO_BOX (box), _("Samples (discrete)")); /* PLOT_STYLE_CIRCLE_SAMPLE */
-    gtk_combo_box_append_text (GTK_COMBO_BOX (box), _("Cross (discrete)")); /* PLOT_STYLE_CROSS_ONLY */
-    gtk_combo_box_append_text (GTK_COMBO_BOX (box), _("Box (discrete)")); /* PLOT_STYLE_BOX_ONLY */
+    gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (box), _("Line (continuous)")); /* PLOT_STYLE_LINE_ONLY */
+    gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (box), _("Circle (discrete)")); /* PLOT_STYLE_CIRCLE_ONLY */
+    gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (box), _("Samples (discrete)")); /* PLOT_STYLE_CIRCLE_SAMPLE */
+    gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (box), _("Cross (discrete)")); /* PLOT_STYLE_CROSS_ONLY */
+    gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (box), _("Box (discrete)")); /* PLOT_STYLE_BOX_ONLY */
     GLADE_HOOKUP_OBJECT (responseDlg, box, RESPONSE_DLG_COMBO_GRAPH);
-    gtk_combo_box_set_active(GTK_COMBO_BOX (box), pDiag->style);
+    gtk_combo_box_set_active (GTK_COMBO_BOX (box), pDiag->style);
 
     widget = gtk_event_box_new ();
     gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 1, 2,
@@ -587,18 +587,19 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
                       (GtkAttachOptions) (GTK_FILL), 0, 0);
     gtk_widget_set_tooltip_text (widget, _("Choose the color item to be changed, then modify the color"));
 
-    box = gtk_combo_box_new_text ();
+    box = gtk_combo_box_text_new ();
     gtk_container_add (GTK_CONTAINER (widget), box);
-    gtk_combo_box_append_text (GTK_COMBO_BOX (box), _("Labels")); /* PLOT_COLOR_LABELS */
-    gtk_combo_box_append_text (GTK_COMBO_BOX (box), _("Grid")); /* PLOT_COLOR_GRID */
-    gtk_combo_box_append_text (GTK_COMBO_BOX (box), _("Graph")); /* PLOT_COLOR_GRAPH */
-    gtk_combo_box_append_text (GTK_COMBO_BOX (box), _("Box")); /* PLOT_COLOR_BOX */
-    gtk_combo_box_append_text (GTK_COMBO_BOX (box), _("Units")); /* PLOT_COLOR_AXIS_NAME */
+    gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (box), _("Labels")); /* PLOT_COLOR_LABELS */
+    gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (box), _("Grid")); /* PLOT_COLOR_GRID */
+    gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (box), _("Graph")); /* PLOT_COLOR_GRAPH */
+    gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (box), _("Box")); /* PLOT_COLOR_BOX */
+    gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (box), _("Units")); /* PLOT_COLOR_AXIS_NAME */
 
     GLADE_HOOKUP_OBJECT (responseDlg, box, RESPONSE_DLG_COMBO_COLOR);
     g_signal_connect (box, "changed", G_CALLBACK (colorItemChanged), NULL);
 
-    gtk_combo_box_set_active(GTK_COMBO_BOX (box), 0);
+    gtk_combo_box_set_active (GTK_COMBO_BOX (box), 0);
+
 
     /* Action area (buttons)
      */

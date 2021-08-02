@@ -3,7 +3,7 @@
  * \file
  *           Design dialogs management.
  *
- * \author   Copyright (C) 2006, 2011, 2012, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * \author   Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  ******************************************************************************/
 
@@ -166,8 +166,8 @@ void designDlgBoxRealize(GtkWidget *widget, gpointer user_data)
 
     for (index = 0; index < FLTCLASS_SIZE; index++)
     {
-        gtk_combo_box_append_text (GTK_COMBO_BOX (classWidget),
-                                   gettext (dlgDesc[index].name));
+        gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (classWidget),
+                                        gettext (dlgDesc[index].name));
     } /* for */
 
 #if GTK_CHECK_VERSION (2, 18, 0)

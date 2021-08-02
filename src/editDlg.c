@@ -144,13 +144,13 @@ static GtkWidget* createSettingsDlg (const CFG_DESKTOP* pPrefs)
                       (GtkAttachOptions) (GTK_FILL), 0, 0);
     gtk_widget_set_tooltip_text (box, _("Frequency unit to be used for in-/output"));
 
-    widget = gtk_combo_box_new_text ();
+    widget = gtk_combo_box_text_new ();
     gtk_container_add (GTK_CONTAINER (box), widget);
     GLADE_HOOKUP_OBJECT (settingsDlg, widget, EDITSETDLG_COMBO_UNIT_FREQU);
 
     for (i = 0; i < N_ELEMENTS (unitF); i++)
     {
-        gtk_combo_box_append_text (GTK_COMBO_BOX (widget), unitF[i].name);
+        gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), unitF[i].name);
     } /* for */
 
     gtk_combo_box_set_active (GTK_COMBO_BOX (widget),
@@ -169,13 +169,13 @@ static GtkWidget* createSettingsDlg (const CFG_DESKTOP* pPrefs)
                       (GtkAttachOptions) (GTK_FILL), 0, 0);
     gtk_widget_set_tooltip_text (box, _("Time unit to be used for in-/output"));
 
-    widget = gtk_combo_box_new_text ();
+    widget = gtk_combo_box_text_new ();
     gtk_container_add (GTK_CONTAINER (box), widget);
     GLADE_HOOKUP_OBJECT (settingsDlg, widget, EDITSETDLG_COMBO_UNIT_TIME);
 
     for (i = 0; i < N_ELEMENTS (unitT); i++)
     {
-        gtk_combo_box_append_text (GTK_COMBO_BOX (widget), unitT[i].name);
+        gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), unitT[i].name);
     } /* for */
 
     gtk_combo_box_set_active (GTK_COMBO_BOX (widget), 

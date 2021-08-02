@@ -958,7 +958,7 @@ GtkWidget* mainDlgCreate (void)
     gtk_box_pack_start (GTK_BOX (hbox3), widget, FALSE, TRUE, 0);
     gtk_widget_set_tooltip_text (widget, _("Class of filter (or system)"));
 
-    comboFilterClass = gtk_combo_box_new_text ();
+    comboFilterClass = gtk_combo_box_text_new ();
     gtk_container_add (GTK_CONTAINER (widget), comboFilterClass);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), comboFilterClass);
 
