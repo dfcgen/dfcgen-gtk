@@ -51,7 +51,7 @@
 
 /* LOCAL VARIABLE DEFINITIONS *************************************************/
 
-static GdkColor responseDlgColorVals[PLOT_COLOR_SIZE]; /**< Colors (modified in dialog) */
+static GdkRGBA responseDlgColorVals[PLOT_COLOR_SIZE]; /**< Colors (modified in dialog) */
 static PLOT_COLOR responseDlgColorItem; /**< Curently selected color item (labels, graph, etc.) */
 
 

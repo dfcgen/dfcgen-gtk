@@ -6,7 +6,7 @@
  * \note     All double values written to the configuration file are formated
  *           in the "C" locale for LC_NUMERIC.
  *
- * \author   Copyright (C) 2006, 2011, 2012, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * \author   Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  ******************************************************************************/
 
@@ -49,13 +49,13 @@ typedef struct
  */
 typedef struct
 {
-    char *key;                               /**< Configuration file key name */
+    char *key;                             /**< Configuration file key name */
     CFG_AXIS_SETTINGS x;
     CFG_AXIS_SETTINGS y;
-    PLOT_STYLE style;                                     /**< Style of graph */
-    int num;                                   /**< Number of samples to take */
-    unsigned flags;                          /**< Flags, see CFG_FLAG_VISIBLE */
-    GdkColor color[PLOT_COLOR_SIZE];                         /**< Color array */
+    PLOT_STYLE style;                                   /**< Style of graph */
+    int num;                                 /**< Number of samples to take */
+    unsigned flags;                        /**< Flags, see CFG_FLAG_VISIBLE */
+    GdkRGBA color[PLOT_COLOR_SIZE];                        /**< Color array */
 } CFG_RESPONSE_SETTINGS;
 
 
@@ -197,7 +197,7 @@ static CFG_RESPONSE_SETTINGS respSet[RESPONSE_TYPE_SIZE] =
  *                      dark, mid, text, base, text_aa
  * \param state         State of widget: GTK_STATE_NORMAL, ...
  *
- * \return              GdkColor associated with style and state.
+ * \return              Color associated with style and state.
  */
 #define CFG_WIDGET_COLOR(widget, var, state) (widget)->style->var[state]
 
@@ -246,7 +246,7 @@ static void cfgReadUnit (GKeyFile *keyFile, const gchar *group, const gchar *key
         {"ps", GSL_CONST_NUM_PICO}
     };
 
-    int i;
+    size_t i;
 
     char *unitName = g_key_file_get_string (keyFile, group, key, NULL);
 
@@ -381,7 +381,7 @@ void cfgCacheSettings (GtkWidget *widget)
 {
     CFG_RESPONSE_SETTINGS* pSet;
     RESPONSE_TYPE i;
-    GdkColor color;
+    GdkRGBA color;
     char **colorList;  /* pointer to array of char pointers (NULL-terminated) */
     int colorIdx;
 
@@ -435,7 +435,7 @@ void cfgCacheSettings (GtkWidget *widget)
 
                 while ((colorList[colorIdx] != NULL) && (colorIdx < PLOT_COLOR_SIZE))
                 {                                 /* get all colors from list */
-                    if (gdk_color_parse (colorList[colorIdx], &color))
+                    if (gdk_rgba_parse (&color, colorList[colorIdx]))
                     {
                         pSet->color[colorIdx] = color;
                     } /* if */

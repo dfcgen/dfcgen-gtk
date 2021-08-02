@@ -3,7 +3,7 @@
  * \file     cairoPlot.c
  * \brief    2-dimensional plot on a \e Cairo graphic context.
  *
- * \author   Copyright (C) 2006, 2011, 2012, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * \author   Copyright (C) 2006, 2011, 2012, 2020, 2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  ******************************************************************************/
 
@@ -106,12 +106,12 @@ typedef void (*PLOT_FUNC_DRAW)(cairo_t* cr, PLOT_AXIS_WORKSPACE* pY,
  *  \param index        Identifies the color (PLOT_COLOR) to be changed.
  *
  ******************************************************************************/
-#define PLOT_COLOR_SET(cr, colors, index)                               \
-    if ((colors) != NULL)                                               \
-    {                                                                   \
-        cairo_set_source_rgb ((cr), (colors)[(index)].red / 65535.0,    \
-                              (colors)[(index)].green / 65535.0,        \
-                              (colors)[(index)].blue / 65535.0);        \
+#define PLOT_COLOR_SET(cr, colors, index)                  \
+    if ((colors) != NULL)                                  \
+    {                                                      \
+        cairo_set_source_rgb ((cr), (colors)[(index)].red, \
+                              (colors)[(index)].green,     \
+                              (colors)[(index)].blue);     \
     }
 
 
@@ -135,7 +135,7 @@ static void drawLayout(cairo_t *cr, PangoLayout* layout, int x, int y);
 static void createAxisNameLayout(cairo_t *cr, PLOT_AXIS_WORKSPACE *p);
 static BOOL insertLabel(cairo_t *cr, PLOT_AXIS_WORKSPACE *p, int margin,
                         BOOL vertical, double coordinate, int idx);
-static void drawGridLabels (cairo_t *cr, GdkColor *colors,
+static void drawGridLabels (cairo_t *cr, GdkRGBA *colors,
                             int numx, PLOT_AXIS_WORKSPACE* pX,
                             int numy, PLOT_AXIS_WORKSPACE* pY);
 static int drawGraph (cairo_t *cr, int refsize, PLOT_DIAG *pDiag,
@@ -717,7 +717,7 @@ static int scaleLog(cairo_t *cr, PLOT_AXIS_WORKSPACE *p, int margin, BOOL vertic
  *
  *  \return             0 on success, else an error number from errno.h.
  ******************************************************************************/
-static void drawGridLabels (cairo_t *cr, GdkColor *colors,
+static void drawGridLabels (cairo_t *cr, GdkRGBA *colors,
                             int numx, PLOT_AXIS_WORKSPACE* pX,
                             int numy, PLOT_AXIS_WORKSPACE* pY)
 {

@@ -35,7 +35,7 @@ typedef struct
     RESPONSE_TYPE type;                     /**< Type of response plot/window */
     char *iconFile;                              /**< Name of icon (png) file */
     PLOT_DIAG diag;                                            /**< Plot data */
-    GdkColor colors[PLOT_COLOR_SIZE];        /**< Allocated colors to be used */
+    GdkRGBA colors[PLOT_COLOR_SIZE];        /**< Allocated colors to be used */
     int points;                 /**< Points drawed on last responsePlotDraw() */
     GdkRectangle zoom;                 /**< Zoom coordinates (last rectangle) */
     GdkGCValues original;                /**< Saved GdkGC values when zooming */
@@ -61,7 +61,7 @@ typedef struct
 /* LOCAL FUNCTION DECLARATIONS ************************************************/
 
 static void drawZoomRect (RESPONSE_WIN *pDesc);
-static void cancelZoomMode (RESPONSE_WIN *pDesc);
+static void cancelZoomMode (RESPONSE_WIN *pDesc, GdkDevice* device);
 static void responseWinCreate (RESPONSE_WIN *pDesc);
 static gboolean exposeHandler (GtkWidget *widget, GdkEventExpose *event, gpointer user_data);
 static BOOL responseWinExpose (RESPONSE_WIN* pDesc);
@@ -223,14 +223,13 @@ static void drawZoomRect (RESPONSE_WIN *pDesc)
  *  zoom mode, means the pointer is grabbed.
  *
  *  \param pDesc        Pointer to response window/widget description.
+ *  \param device       Associated GDK device.
  *
  ******************************************************************************/
-static void cancelZoomMode (RESPONSE_WIN *pDesc)
+static void cancelZoomMode (RESPONSE_WIN *pDesc, GdkDevice* device)
 {
     drawZoomRect (pDesc);
-    gdk_pointer_ungrab (GDK_CURRENT_TIME);       /* clear zoom mode indicator */
-    gdk_keyboard_ungrab (GDK_CURRENT_TIME);
-
+    gdk_device_ungrab (device, GDK_CURRENT_TIME);   /* clear zoom indicator */
     gdk_gc_set_values (RESPONSE_WIN_ZOOM_GC(pDesc->draw), &pDesc->original,
                        GDK_GC_FUNCTION);
 } /* cancelZoomMode() */
@@ -407,15 +406,18 @@ static BOOL responseWinExpose (RESPONSE_WIN* pDesc)
 static gboolean exposeHandler (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
 {
     cairo_t* cr;
+    GdkDisplay* display;
+    GdkCursor* cursor;
     char labelString[128];
 
     RESPONSE_WIN* pDesc = user_data;
     GdkDrawable* drawable = GDK_DRAWABLE(widget->window);
-    GdkCursor* cursor = gdk_cursor_new (GDK_WATCH);
 
     ASSERT(pDesc != NULL);
+    display = gtk_widget_get_display (pDesc->topWidget);
+    cursor = gdk_cursor_new_from_name (display, "watch");
     gdk_window_set_cursor (pDesc->topWidget->window, cursor);
-    gdk_cursor_unref (cursor);       /* free client side resource immediately */
+    g_object_unref (cursor);       /* free client side resource immediately */
 
     pDesc->diag.area.x = pDesc->diag.area.y = 0;     /* set size of plot area */
     gdk_drawable_get_size (drawable, &pDesc->diag.area.width, &pDesc->diag.area.height);
@@ -637,12 +639,15 @@ void responseWinRedraw (RESPONSE_TYPE type)
 static gboolean responseWinKeyPress (GtkWidget *widget, GdkEventKey *event,
                                      gpointer user_data)
 {
-    if (gdk_pointer_is_grabbed ())                           /* in zoom mode? */
+    RESPONSE_WIN* pDesc = user_data;
+    GdkDevice* device = gdk_event_get_device ((GdkEvent *) event);
+
+    if (gdk_display_device_is_grabbed (gtk_widget_get_display (pDesc->draw), device))
     {
-        cancelZoomMode (user_data);
+        cancelZoomMode (pDesc, device);
     } /* if */
 
-    return FALSE;                      /* propagate signal to default handler */
+    return FALSE;                    /* propagate signal to default handler */
 } /* responseWinKeyPress() */
 
 
@@ -663,11 +668,13 @@ static gboolean responseWinButtonPress (GtkWidget* widget, GdkEventButton* event
     GdkCursor* cursor;
     GdkGC* gc;
 
-    RESPONSE_WIN *pDesc = user_data;
+    RESPONSE_WIN* pDesc = user_data;
+    GdkDevice* device = gdk_event_get_device ((GdkEvent *) event);
+    GdkDisplay* display = gtk_widget_get_display (pDesc->draw);
 
-    if (gdk_pointer_is_grabbed ())                           /* in zoom mode? */
+    if (gdk_display_device_is_grabbed (display, device))   /* in zoom mode? */
     {
-        cancelZoomMode (user_data);
+        cancelZoomMode (pDesc, device);
     } /* if */
 
     if ((event->button == 1) &&                         /* left mouse button? */
@@ -685,49 +692,45 @@ static gboolean responseWinButtonPress (GtkWidget* widget, GdkEventButton* event
                                         pDesc->diag.area.y + pDesc->diag.area.height,
                                         pDesc->diag.area.y, event->y));
 
-        cursor = gdk_cursor_new (GDK_CROSS);
+        cursor = gdk_cursor_new_from_name (display, "cross");
 
-        if (gdk_pointer_grab (pDesc->draw->window, FALSE,
-                              GDK_BUTTON_MOTION_MASK |
-                              GDK_BUTTON_PRESS_MASK |
-                              GDK_BUTTON_RELEASE_MASK,
-                              pDesc->draw->window,
-                              cursor, event->time) == GDK_GRAB_SUCCESS)
+        if (gdk_device_grab (device,
+                             pDesc->draw->window,
+                             GDK_OWNERSHIP_NONE,
+                             FALSE,
+                             GDK_BUTTON_MOTION_MASK |              /* mouse */
+                             GDK_BUTTON_PRESS_MASK |
+                             GDK_BUTTON_RELEASE_MASK |
+                             GDK_KEY_PRESS_MASK,                /* keyboard */
+                             cursor,
+                             gdk_event_get_time ((GdkEvent *) event)) == GDK_GRAB_SUCCESS)
         {
-            if (gdk_keyboard_grab (pDesc->topWidget->window, GDK_KEY_PRESS_MASK,
-                                   event->time) == GDK_GRAB_SUCCESS)
+            pDesc->zoom.x = event->x;
+
+            if (pDesc->diag.y.flags & PLOT_AXIS_FLAG_AUTO)
             {
-                pDesc->zoom.x = event->x;
-
-                if (pDesc->diag.y.flags & PLOT_AXIS_FLAG_AUTO)
-                {
-                    pDesc->zoom.y = pDesc->diag.area.y;
-                } /* if */
-                else
-                {
-                    pDesc->zoom.y = event->y;
-                } /* else */
-
-                pDesc->zoom.width = pDesc->zoom.height = 0;
-
-                gc = RESPONSE_WIN_ZOOM_GC(pDesc->draw);
-                gdk_gc_get_values (gc, &pDesc->original);
-                gdk_gc_set_function (gc, GDK_XOR);
-                gdk_gc_set_line_attributes (gc, 1, GDK_LINE_ON_OFF_DASH,
-                                            GDK_CAP_BUTT, GDK_JOIN_MITER);
-                gdk_gc_set_clip_rectangle (gc, &pDesc->diag.area);
-                drawZoomRect (pDesc);
+                pDesc->zoom.y = pDesc->diag.area.y;
             } /* if */
-            else                                                     /* error */
+            else
             {
-                gdk_pointer_ungrab (GDK_CURRENT_TIME);
+                pDesc->zoom.y = event->y;
             } /* else */
+
+            pDesc->zoom.width = pDesc->zoom.height = 0;
+
+            gc = RESPONSE_WIN_ZOOM_GC(pDesc->draw);
+            gdk_gc_get_values (gc, &pDesc->original);
+            gdk_gc_set_function (gc, GDK_XOR);
+            gdk_gc_set_line_attributes (gc, 1, GDK_LINE_ON_OFF_DASH,
+                                        GDK_CAP_BUTT, GDK_JOIN_MITER);
+            gdk_gc_set_clip_rectangle (gc, &pDesc->diag.area);
+            drawZoomRect (pDesc);
         } /* if */
 
-        gdk_cursor_unref (cursor);   /* free client side resource immediately */
+        g_object_unref (cursor);   /* free client side resource immediately */
     } /* if */
 
-    return FALSE;                      /* propagate signal to default handler */
+    return FALSE;                    /* propagate signal to default handler */
 } /* responseWinButtonPress() */
 
 
@@ -750,10 +753,11 @@ static gboolean responseWinButtonRelease (GtkWidget* widget, GdkEventButton* eve
     double tmpx, tmpy;
 
     RESPONSE_WIN *pDesc = user_data;
+    GdkDevice* device = gdk_event_get_device ((GdkEvent *) event);
 
-    if (gdk_pointer_is_grabbed ())                           /* in zoom mode? */
+    if (gdk_display_device_is_grabbed (gtk_widget_get_display (pDesc->draw), device))
     {
-        cancelZoomMode (pDesc);
+        cancelZoomMode (pDesc, device);
 
         if (event->button == 1)                         /* left mouse button? */
         {
@@ -837,10 +841,11 @@ static gboolean responseWinButtonRelease (GtkWidget* widget, GdkEventButton* eve
 static gboolean responseWinMotionNotify (GtkWidget *widget, GdkEventMotion *event,
                                          gpointer user_data)
 {
-    if (gdk_pointer_is_grabbed ())                           /* in zoom mode? */
-    {
-        RESPONSE_WIN *pDesc = user_data;
+    RESPONSE_WIN* pDesc = user_data;
 
+    if (gdk_display_device_is_grabbed (gtk_widget_get_display (pDesc->draw),
+                                       gdk_event_get_device ((GdkEvent *) event)))
+    {
         drawZoomRect (pDesc);                          /* erase old rectangle */
         pDesc->zoom.width = event->x - pDesc->zoom.x;
 

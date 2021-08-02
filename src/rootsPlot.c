@@ -297,8 +297,8 @@ static gboolean rootsPlotExposeHandler (GtkWidget *widget, GdkEventExpose *event
     static const char realText[] = N_("Re(z)");
     static const char imagText[] = N_("Im(z)");
 
-    static GdkColor circleColor[PLOT_COLOR_SIZE];
-    static GdkColor rootsColor[PLOT_COLOR_SIZE];
+    static GdkRGBA circleColor[PLOT_COLOR_SIZE];
+    static GdkRGBA rootsColor[PLOT_COLOR_SIZE];
 
 
     static PLOT_DIAG rplots[] =
@@ -348,13 +348,14 @@ static gboolean rootsPlotExposeHandler (GtkWidget *widget, GdkEventExpose *event
 
         int points = 0;
         int numPlots = N_ELEMENTS (rplots);
-        GtkWidget *topWidget = gtk_widget_get_toplevel (widget);
+        GtkWidget* topWidget = gtk_widget_get_toplevel (widget);
         const CFG_DESKTOP* pPrefs = cfgGetDesktopPrefs ();
         GdkDrawable* drawable = GDK_DRAWABLE(widget->window);
-        GdkCursor* cursor = gdk_cursor_new (GDK_WATCH);
+        GdkDisplay* display = gtk_widget_get_display (topWidget);
+        GdkCursor* cursor = gdk_cursor_new_from_name (display, "watch");
 
         gdk_window_set_cursor (topWidget->window, cursor);
-        gdk_cursor_unref (cursor);   /* free client side resource immediately */
+        g_object_unref (cursor);   /* free client side resource immediately */
 
         GSL_SET_COMPLEX (&rmax, 1, 1);        /* at least in interval [-1,+1] */
         GSL_SET_COMPLEX (&rmin, -1, -1);
