@@ -321,12 +321,12 @@ static void responseWinCreate (RESPONSE_WIN *pDesc)
                       G_CALLBACK (responseWinBtnPrintActivate),
                       pDesc);
 
-    GTK_WIDGET_SET_FLAGS (pDesc->btnPrint, GTK_CAN_DEFAULT);
+    gtk_widget_set_can_default (pDesc->btnPrint, TRUE);
     gtk_widget_set_tooltip_text (pDesc->btnPrint, _("Print this response plot"));
 
     btnSettings = DFCGEN_GTK_IMAGE_BUTTON_NEW(DFCGEN_GTK_STOCK_PREFERENCES);
     gtk_box_pack_end (GTK_BOX (hbox), btnSettings, FALSE, FALSE, 6);
-    GTK_WIDGET_SET_FLAGS (btnSettings, GTK_CAN_DEFAULT);
+    gtk_widget_set_can_default (btnSettings, TRUE);
     gtk_widget_set_tooltip_text (btnSettings, _("Set response plot preferences"));
 
     gtk_widget_add_events (pDesc->topWidget, GDK_KEY_PRESS_MASK);

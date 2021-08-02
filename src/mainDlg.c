@@ -977,7 +977,7 @@ GtkWidget* mainDlgCreate (void)
 
     button = DFCGEN_GTK_IMAGE_BUTTON_NEW(DFCGEN_GTK_STOCK_BUTTON_APPLY);
     gtk_container_add (GTK_CONTAINER (widget), button);
-    GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+    gtk_widget_set_can_default (button, TRUE);
     g_signal_connect ((gpointer) button, "clicked",
                       G_CALLBACK (designDlgApply), comboFilterClass);
     gtk_widget_set_tooltip_text (button, _("Apply input data"));

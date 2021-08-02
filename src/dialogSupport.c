@@ -319,11 +319,11 @@ BOOL dlgPopupDouble (char *title, char *label, char *comment, double *pResult)
 
     widget = DFCGEN_GTK_IMAGE_BUTTON_NEW(DFCGEN_GTK_STOCK_BUTTON_CANCEL);
     gtk_dialog_add_action_widget (GTK_DIALOG (dialog), widget, GTK_RESPONSE_CANCEL);
-    GTK_WIDGET_SET_FLAGS (widget, GTK_CAN_DEFAULT);
+    gtk_widget_set_can_default (widget, TRUE);
 
     widget = DFCGEN_GTK_IMAGE_BUTTON_NEW(DFCGEN_GTK_STOCK_BUTTON_OK);
     gtk_dialog_add_action_widget (GTK_DIALOG (dialog), widget, GTK_RESPONSE_OK);
-    GTK_WIDGET_SET_FLAGS (widget, GTK_CAN_DEFAULT);
+    gtk_widget_set_can_default (widget, TRUE);
     gtk_widget_grab_default (widget);
 
     gtk_widget_show_all (dialog);
