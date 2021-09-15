@@ -224,17 +224,16 @@ void stdIirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
 
     GSList *iirTypeRadioGroup = NULL;
 
-    stdIirDesignDlgMain = gtk_table_new (2, 2, FALSE);
-    gtk_box_pack_start (GTK_BOX (boxDesignDlg), stdIirDesignDlgMain, TRUE, TRUE, 0);
+    stdIirDesignDlgMain = gtk_grid_new ();  /* gtk_table_new (2, 2, FALSE); */
+    gtk_widget_set_valign (stdIirDesignDlgMain, GTK_ALIGN_START);
+    gtk_box_pack_start (GTK_BOX (boxDesignDlg), stdIirDesignDlgMain, FALSE, FALSE, 0);
     gtk_box_reorder_child (GTK_BOX (boxDesignDlg), stdIirDesignDlgMain, 1);
     GLADE_HOOKUP_OBJECT (topWidget, stdIirDesignDlgMain, STDIIRDLG_WIDGET_MAIN);
 
     /* Characteristic
      */
     frame = gtk_frame_new (NULL);
-    gtk_table_attach (GTK_TABLE (stdIirDesignDlgMain), frame, 0, 1, 1, 2,
-                      (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                      (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+    gtk_grid_attach (GTK_GRID (stdIirDesignDlgMain), frame, 0, 1, 1, 1);
     gtk_container_set_border_width (GTK_CONTAINER (frame), 6);
     gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
 
@@ -269,9 +268,7 @@ void stdIirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     /* Frequency transformation
      */
     frame = gtk_frame_new (NULL);
-    gtk_table_attach (GTK_TABLE (stdIirDesignDlgMain), frame, 1, 2, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (GTK_FILL), 0, 0);
+    gtk_grid_attach (GTK_GRID (stdIirDesignDlgMain), frame, 1, 0, 1, 1);
     gtk_container_set_border_width (GTK_CONTAINER (frame), 6);
     gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
 
@@ -279,27 +276,20 @@ void stdIirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     gtk_frame_set_label_widget (GTK_FRAME (frame), label);
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
 
-    widget = gtk_alignment_new (0.5, 0.5, 1, 1);
-    gtk_container_add (GTK_CONTAINER (frame), widget);
-    gtk_alignment_set_padding (GTK_ALIGNMENT (widget), 0, 0, 12, 0);
-
-    table = gtk_table_new (4, 3, FALSE);
-    gtk_container_add (GTK_CONTAINER (widget), table);
+    table = gtk_grid_new ();                /* gtk_table_new (4, 3, FALSE); */
+    gtk_container_add (GTK_CONTAINER (frame), table);
     gtk_container_set_border_width (GTK_CONTAINER (table), 6);
-    gtk_table_set_row_spacings (GTK_TABLE (table), 6);
-    gtk_table_set_col_spacings (GTK_TABLE (table), 6);
+    gtk_widget_set_margin_start (table, GUI_INDENT_CHILD_PIXEL);
+    gtk_grid_set_row_spacing (GTK_GRID (table), 6);
+    gtk_grid_set_column_spacing (GTK_GRID (table), 6);
 
     widget = gtk_event_box_new ();
-    gtk_table_attach (GTK_TABLE (table), widget, 1, 3, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 1, 0, 2, 1);
     gtk_widget_set_tooltip_text (widget, _("Type of frequency transformation"));
 
     label = gtk_label_new_with_mnemonic (_("_Type"));
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 3, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 0, 0, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
 
     comboFtr = gtk_combo_box_text_new ();   /* frequency transform combobox */
     gtk_container_add (GTK_CONTAINER (widget), comboFtr);
@@ -313,58 +303,44 @@ void stdIirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
 
     widget = gtk_entry_new ();                                   /* bandwidth */
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
-    gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 2, 3,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 1, 2, 1, 1);
     gtk_widget_set_tooltip_text (widget, _("Bandwidth"));
     gtk_entry_set_width_chars (GTK_ENTRY (widget), GUI_ENTRY_WIDTH_CHARS);
     GLADE_HOOKUP_OBJECT (topWidget, widget, STDIIRDLG_ENTRY_BANDW);
 
     label = gtk_label_new (NULL);
-    gtk_label_set_markup_with_mnemonic (GTK_LABEL(label), _("f<sub>Bandw.</sub>"));
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 3, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_label_set_markup_with_mnemonic (GTK_LABEL (label), _("f<sub>Bandw.</sub>"));
+    gtk_grid_attach (GTK_GRID (table), label, 0, 2, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
 
     label = gtk_label_new (pPrefs->frequUnit.name);         /* bandwidth unit */
-    gtk_table_attach (GTK_TABLE (table), label, 2, 3, 2, 3,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 2, 2, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_START);
     GLADE_HOOKUP_OBJECT (topWidget, label, STDIIRDLG_UNIT_BANDW);
 
     widget = gtk_entry_new ();                            /* center frequency */
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
-    gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 1, 2,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 1, 1, 1, 1);
     gtk_widget_set_tooltip_text (widget, _("Cutoff frequency (highpass) or center"
                                            " frequency (bandpass, bandstop)"));
     gtk_entry_set_width_chars (GTK_ENTRY (widget), GUI_ENTRY_WIDTH_CHARS);
     GLADE_HOOKUP_OBJECT (topWidget, widget, STDIIRDLG_ENTRY_CENTER);
 
     label = gtk_label_new (NULL);
-    gtk_label_set_markup_with_mnemonic (GTK_LABEL(label), STDIIRDLG_LABEL_CENTER_TEXT);
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 3, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_label_set_markup_with_mnemonic (GTK_LABEL (label), STDIIRDLG_LABEL_CENTER_TEXT);
+    gtk_grid_attach (GTK_GRID (table), label, 0, 1, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
     GLADE_HOOKUP_OBJECT (topWidget, label, STDIIRDLG_LABEL_CENTER);
 
     label = gtk_label_new (pPrefs->frequUnit.name);  /* center frequency unit */
-    gtk_table_attach (GTK_TABLE (table), label, 2, 3, 1, 2,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 2, 1, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_START);
     GLADE_HOOKUP_OBJECT (topWidget, label, STDIIRDLG_UNIT_CENTER);
 
     widget = gtk_check_button_new_with_mnemonic (_("_Geometric"));
-    gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 3, 4,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 1, 3, 1, 1);
     gtk_widget_set_tooltip_text (widget,
                                  _("Check this if the center frequency shall be the"
                                    " geometric mean between both cutoff frequencies"
@@ -374,9 +350,7 @@ void stdIirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     /* Reference Lowpass
      */
     frame = gtk_frame_new (NULL);
-    gtk_table_attach (GTK_TABLE (stdIirDesignDlgMain), frame, 0, 1, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (GTK_FILL), 0, 0);
+    gtk_grid_attach (GTK_GRID (stdIirDesignDlgMain), frame, 0, 0, 1, 1);
     gtk_container_set_border_width (GTK_CONTAINER (frame), 6);
     gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
 
@@ -384,61 +358,47 @@ void stdIirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     gtk_frame_set_label_widget (GTK_FRAME (frame), label);
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
 
-    widget = gtk_alignment_new (0.5, 0.5, 1, 1);
-    gtk_container_add (GTK_CONTAINER (frame), widget);
-    gtk_alignment_set_padding (GTK_ALIGNMENT (widget), 0, 0, 12, 0);
-
-    table = gtk_table_new (3, 3, FALSE);
-    gtk_container_add (GTK_CONTAINER (widget), table);
+    table = gtk_grid_new ();                /* gtk_table_new (3, 3, FALSE); */
+    gtk_container_add (GTK_CONTAINER (frame), table);
     gtk_container_set_border_width (GTK_CONTAINER (table), 6);
-    gtk_table_set_row_spacings (GTK_TABLE (table), 6);
-    gtk_table_set_col_spacings (GTK_TABLE (table), 6);
+    gtk_widget_set_margin_start (table, GUI_INDENT_CHILD_PIXEL);
+    gtk_grid_set_row_spacing (GTK_GRID (table), 6);
+    gtk_grid_set_column_spacing (GTK_GRID (table), 6);
 
     widget = gtk_entry_new ();                            /* cutoff frequency */
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
-    gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 2, 3,
-                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 1, 2, 1, 1);
     gtk_entry_set_width_chars (GTK_ENTRY (widget), GUI_ENTRY_WIDTH_CHARS);
     gtk_widget_set_tooltip_text (widget, _("Cutoff frequency"));
     GLADE_HOOKUP_OBJECT (topWidget, widget, STDIIRDLG_ENTRY_CUTOFF);
 
     label = gtk_label_new (NULL);
-    gtk_label_set_markup_with_mnemonic (GTK_LABEL(label), STDIIRDLG_LABEL_CUTOFF_TEXT);
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 3, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_label_set_markup_with_mnemonic (GTK_LABEL (label), STDIIRDLG_LABEL_CUTOFF_TEXT);
+    gtk_grid_attach (GTK_GRID (table), label, 0, 2, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
 
     label = gtk_label_new (pPrefs->frequUnit.name); /* cutoff frequency unit label */
-    gtk_table_attach (GTK_TABLE (table), label, 2, 3, 2, 3,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 2, 2, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_START);
     GLADE_HOOKUP_OBJECT (topWidget, label, STDIIRDLG_UNIT_CUTOFF);
 
     widget = gtk_entry_new ();                            /* sample frequency */
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
-    gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 1, 2,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 1, 1, 1, 1);
     gtk_widget_set_tooltip_text (widget, _("Sample frequency"));
     gtk_entry_set_width_chars (GTK_ENTRY (widget), GUI_ENTRY_WIDTH_CHARS);
     GLADE_HOOKUP_OBJECT (topWidget, widget, STDIIRDLG_ENTRY_SAMPLE);
 
     label = gtk_label_new (NULL);
     gtk_label_set_markup_with_mnemonic (GTK_LABEL (label), _("f<sub>_Sample</sub>"));
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 3, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 0, 1, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
 
     label = gtk_label_new (pPrefs->frequUnit.name);  /* sample frequency unit */
-    gtk_table_attach (GTK_TABLE (table), label, 2, 3, 1, 2,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 2, 1, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_START);
     GLADE_HOOKUP_OBJECT (topWidget, label, STDIIRDLG_UNIT_SAMPLE);
 
 
@@ -446,26 +406,20 @@ void stdIirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     spinAdjust = gtk_adjustment_new (1, FLT_DEGREE_MIN, FLT_DEGREE_MAX, 1, 10, 0);
     widget = gtk_spin_button_new (spinAdjust, 1, 0);
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
-    gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 1, 0, 1, 1);
     gtk_widget_set_tooltip_text (widget, _("Degree of filter"));
     gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (widget), TRUE);
     GLADE_HOOKUP_OBJECT (topWidget, widget, STDIIRDLG_SPIN_DEGREE);
 
     label = gtk_label_new_with_mnemonic (_("_Degree"));
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 3, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 0, 0, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
 
     /* Parameters
      */
     frame = gtk_frame_new (NULL);
-    gtk_table_attach (GTK_TABLE (stdIirDesignDlgMain), frame, 1, 2, 1, 2,
-                      (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                      (GtkAttachOptions) (GTK_FILL), 0, 0);
+    gtk_grid_attach (GTK_GRID (stdIirDesignDlgMain), frame, 1, 1, 1, 1);
     gtk_container_set_border_width (GTK_CONTAINER (frame), 6);
     gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
 
@@ -473,84 +427,63 @@ void stdIirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     gtk_frame_set_label_widget (GTK_FRAME (frame), label);
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
 
-    widget = gtk_alignment_new (0.5, 0.5, 1, 1);
-    gtk_container_add (GTK_CONTAINER (frame), widget);
-    gtk_alignment_set_padding (GTK_ALIGNMENT (widget), 0, 0, 12, 0);
-
-    table = gtk_table_new (3, 3, FALSE);
-    gtk_container_add (GTK_CONTAINER (widget), table);
+    table = gtk_grid_new ();                /* gtk_table_new (3, 3, FALSE); */
+    gtk_container_add (GTK_CONTAINER (frame), table);
     gtk_container_set_border_width (GTK_CONTAINER (table), 6);
-    gtk_table_set_row_spacings (GTK_TABLE (table), 6);
-    gtk_table_set_col_spacings (GTK_TABLE (table), 6);
+    gtk_widget_set_margin_start (table, GUI_INDENT_CHILD_PIXEL);
+    gtk_grid_set_row_spacing (GTK_GRID (table), 6);
+    gtk_grid_set_column_spacing (GTK_GRID (table), 6);
 
     label = gtk_label_new ("dB");
-    gtk_table_attach (GTK_TABLE (table), label, 2, 3, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 2, 0, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_START);
 
     label = gtk_label_new ("dB");
-    gtk_table_attach (GTK_TABLE (table), label, 2, 3, 1, 2,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 2, 1, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_START);
 
     label = gtk_label_new ("°");       /* angle unit (degree, coded as UTF-8) */
-    gtk_table_attach (GTK_TABLE (table), label, 2, 3, 2, 3,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 2, 2, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_START);
 
     widget = gtk_entry_new ();                 /* passband ripple attenuation */
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
-    gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 1, 0, 1, 1);
     gtk_widget_set_tooltip_text (widget, _("Passband ripple in dB"));
     gtk_entry_set_width_chars (GTK_ENTRY (widget), GUI_ENTRY_WIDTH_CHARS);
     gtk_widget_set_sensitive (widget, FALSE);
     GLADE_HOOKUP_OBJECT (topWidget, widget, STDIIRDLG_ENTRY_RIPPLE);
 
     label = gtk_label_new_with_mnemonic (_("Ripple"));
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 3, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 0, 0, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
 
     widget = gtk_entry_new ();                /* minimum stopband attenuation */
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
-    gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 1, 2,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 1, 1, 1, 1);
     gtk_widget_set_tooltip_text (widget, _("Stopband attenuation in dB"));
     gtk_entry_set_width_chars (GTK_ENTRY (widget), GUI_ENTRY_WIDTH_CHARS);
     gtk_widget_set_sensitive (widget, FALSE);
     GLADE_HOOKUP_OBJECT (topWidget, widget, STDIIRDLG_ENTRY_MINATT);
 
     label = gtk_label_new_with_mnemonic (_("Stop"));
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 3, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 0, 1, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
 
     spinAdjust = gtk_adjustment_new (45, 1, 89, 1, 10, 0); /* elliptic angle */
     widget = gtk_spin_button_new (spinAdjust, 1, 0);
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
-    gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 2, 3,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 1, 2, 1, 1);
     gtk_widget_set_tooltip_text (widget, _("Modular angle in degree"));
     gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (widget), TRUE);
     gtk_widget_set_sensitive (widget, FALSE);
     GLADE_HOOKUP_OBJECT (topWidget, widget, STDIIRDLG_SPIN_ANGLE);
 
     label = gtk_label_new_with_mnemonic (_("Angle"));
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 3, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 0, 2, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
 
     g_signal_connect ((gpointer) comboFtr, "changed",

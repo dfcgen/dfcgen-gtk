@@ -46,7 +46,7 @@ typedef struct
 #define MISCDLG_SPIN_DEGREE     "spinDegree" /**< Degree of filter entry/spin */
 #define MISCDLG_COMBO_TYPE      "comboType"      /**< Type of filter combobox */
 #define MISCDLG_LABEL_DESC      "labelDesc"        /**< Description of filter */
-#define MISCDLG_EXPANDER_DESC   "expanderDesc"           /**< Expander widget */
+#define MISCDLG_FRAME_DESC      "frameDesc"     /**< Description frame widget */
 #define MISCDLG_UNIT_SAMPLE     "unitSampleF" /**< Sample frequency unit label */
 
 
@@ -116,7 +116,7 @@ static GtkWidget* createDialog (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
                                 const CFG_DESKTOP* pPrefs)
 {
     GtkWidget *miscDesignDlgMain, *miscDesignDlgTable;
-    GtkWidget *label, *expander, *combo, *widget;
+    GtkWidget *label, *combo, *frame, *widget;
     GtkAdjustment *spinAdjust;
 
     miscDesignDlgMain = gtk_frame_new (NULL);             /* create the frame */
@@ -126,20 +126,16 @@ static GtkWidget* createDialog (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     gtk_box_reorder_child (GTK_BOX (boxDesignDlg), miscDesignDlgMain, 1);
     GLADE_HOOKUP_OBJECT (topWidget, miscDesignDlgMain, MISCDLG_WIDGET_MAIN);
 
-    widget = gtk_alignment_new (0.5, 0.5, 1, 1);
-    gtk_container_add (GTK_CONTAINER (miscDesignDlgMain), widget);
-    gtk_alignment_set_padding (GTK_ALIGNMENT (widget), 0, 0, 12, 0); /* indent childs */
-
-    miscDesignDlgTable = gtk_table_new (4, 3, FALSE);
-    gtk_container_add (GTK_CONTAINER (widget), miscDesignDlgTable);
+    miscDesignDlgTable = gtk_grid_new ();   /* gtk_table_new (4, 3, FALSE); */
+    gtk_container_add (GTK_CONTAINER (miscDesignDlgMain), miscDesignDlgTable);
     gtk_container_set_border_width (GTK_CONTAINER (miscDesignDlgTable), 6);
-    gtk_table_set_row_spacings (GTK_TABLE (miscDesignDlgTable), 6);
-    gtk_table_set_col_spacings (GTK_TABLE (miscDesignDlgTable), 6);
+    gtk_widget_set_margin_start (miscDesignDlgTable, GUI_INDENT_CHILD_PIXEL);
+    gtk_grid_set_row_spacing (GTK_GRID (miscDesignDlgTable), 6);
+    gtk_grid_set_column_spacing (GTK_GRID (miscDesignDlgTable), 6);
 
     combo = gtk_combo_box_text_new ();           /* type of filter combobox */
-    gtk_table_attach (GTK_TABLE (miscDesignDlgTable), combo, 0, 3, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 6);
+    gtk_grid_attach (GTK_GRID (miscDesignDlgTable), combo, 0, 0, 3, 1);
+
     g_signal_connect_after ((gpointer) combo, "changed",
                             G_CALLBACK (miscDlgOnTypeComboChanged),
                             NULL);
@@ -151,53 +147,48 @@ static GtkWidget* createDialog (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), combo);
 
     label = gtk_label_new_with_mnemonic (_("f<sub>_Sample</sub>"));
-    gtk_table_attach (GTK_TABLE (miscDesignDlgTable), label, 0, 1, 2, 3,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 3, 0);
+    gtk_grid_attach (GTK_GRID (miscDesignDlgTable), label, 0, 2, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
     gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 
     widget = gtk_entry_new ();
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
-    gtk_table_attach (GTK_TABLE (miscDesignDlgTable), widget, 1, 2, 2, 3,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (miscDesignDlgTable), widget, 1, 2, 1, 1);
     gtk_widget_set_tooltip_text (widget, _("Sample frequency"));
     gtk_entry_set_width_chars (GTK_ENTRY (widget), GUI_ENTRY_WIDTH_CHARS);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
     GLADE_HOOKUP_OBJECT (topWidget, widget, MISCDLG_ENTRY_SAMPLE);
 
     label = gtk_label_new (pPrefs->frequUnit.name);  /* sample frequency unit */
-    gtk_table_attach (GTK_TABLE (miscDesignDlgTable), label, 2, 3, 2, 3,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (miscDesignDlgTable), label, 2, 2, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_START);
     GLADE_HOOKUP_OBJECT (topWidget, label, MISCDLG_UNIT_SAMPLE);
 
     label = gtk_label_new_with_mnemonic (_("_Degree"));
-    gtk_table_attach (GTK_TABLE (miscDesignDlgTable), label, 0, 1, 1, 2,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (miscDesignDlgTable), label, 0, 1, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
 
     spinAdjust = gtk_adjustment_new (1, FLT_DEGREE_MIN, FLT_DEGREE_MAX, 1, 10, 0);
     widget = gtk_spin_button_new (spinAdjust, 1, 0);
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
-    gtk_table_attach (GTK_TABLE (miscDesignDlgTable), widget, 1, 2, 1, 2,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (miscDesignDlgTable), widget, 1, 1, 1, 1);
     gtk_widget_set_tooltip_text (widget, _("Degree of system"));
     gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (widget), TRUE);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
     GLADE_HOOKUP_OBJECT (topWidget, widget, MISCDLG_SPIN_DEGREE);
 
-    expander = gtk_expander_new (NULL);
-    gtk_table_attach (GTK_TABLE (miscDesignDlgTable), expander, 0, 3, 3, 4,
-                      (GtkAttachOptions) (GTK_SHRINK | GTK_FILL),
-                      (GtkAttachOptions) (GTK_SHRINK | GTK_FILL), 0, 12);
-    gtk_expander_set_expanded (GTK_EXPANDER (expander), TRUE);
-    gtk_expander_set_spacing (GTK_EXPANDER (expander), 12);
-    GLADE_HOOKUP_OBJECT (topWidget, expander, MISCDLG_EXPANDER_DESC);
+    widget = gtk_label_new ("");   /* simulate an empty row with this label */
+    gtk_grid_attach (GTK_GRID (miscDesignDlgTable), widget, 0, 3, 3, 1);
+
+    frame = gtk_frame_new (NULL);
+    gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
+    gtk_grid_attach (GTK_GRID (miscDesignDlgTable), frame, 0, 4, 3, 1);
+    GLADE_HOOKUP_OBJECT (topWidget, frame, MISCDLG_FRAME_DESC);
+
+    label = gtk_label_new (_("<i>Description</i>:"));
+    gtk_frame_set_label_widget (GTK_FRAME (frame), label);
+    gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
 
     label = gtk_label_new ("");                      /* filter description text */
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
@@ -206,10 +197,6 @@ static GtkWidget* createDialog (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
     gtk_container_add (GTK_CONTAINER (expander), label);
     GLADE_HOOKUP_OBJECT (topWidget, label, MISCDLG_LABEL_DESC);
-
-    label = gtk_label_new (_("<i>Description</i>"));
-    gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
-    gtk_expander_set_label_widget (GTK_EXPANDER (expander), label);
 
     gtk_widget_show_all (miscDesignDlgMain);
 
@@ -256,7 +243,7 @@ static void updateLayout (GtkWidget *topWidget, GtkWidget *combo, int index)
         gtk_widget_set_sensitive (widget, FALSE);
     } /* else */
 
-    widget = lookup_widget (topWidget, MISCDLG_EXPANDER_DESC);
+    widget = lookup_widget (topWidget, MISCDLG_FRAME_DESC);
 
     if ((desc != NULL) && (g_utf8_strlen (desc, -1) > 0)) /* show description if available */
     {

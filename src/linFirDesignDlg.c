@@ -234,17 +234,16 @@ void linFirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     GSList *firTypeRadioGroup = NULL;
     GSList *dspWinRadioGroup = NULL;
 
-    linFirDesignDlgMain = gtk_table_new (2, 2, FALSE);
-    gtk_box_pack_start (GTK_BOX (boxDesignDlg), linFirDesignDlgMain, TRUE, TRUE, 0);
+    linFirDesignDlgMain = gtk_grid_new ();  /* gtk_table_new (2, 2, FALSE); */
+    gtk_widget_set_valign (linFirDesignDlgMain, GTK_ALIGN_START);
+    gtk_box_pack_start (GTK_BOX (boxDesignDlg), linFirDesignDlgMain, FALSE, FALSE, 0);
     gtk_box_reorder_child (GTK_BOX (boxDesignDlg), linFirDesignDlgMain, 1);
     GLADE_HOOKUP_OBJECT (topWidget, linFirDesignDlgMain, LINFIRDLG_WIDGET_MAIN);
 
     /* Characteristic
      */
     frame = gtk_frame_new (NULL);
-    gtk_table_attach (GTK_TABLE (linFirDesignDlgMain), frame, 0, 1, 1, 2,
-                      (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                      (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+    gtk_grid_attach (GTK_GRID (linFirDesignDlgMain), frame, 0, 1, 1, 1);
     gtk_container_set_border_width (GTK_CONTAINER (frame), 6);
     gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
 
@@ -276,9 +275,7 @@ void linFirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     /* Frequency transformation
      */
     frame = gtk_frame_new (NULL);
-    gtk_table_attach (GTK_TABLE (linFirDesignDlgMain), frame, 1, 2, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (GTK_FILL), 0, 0);
+    gtk_grid_attach (GTK_GRID (linFirDesignDlgMain), frame, 1, 0, 1, 1);
     gtk_container_set_border_width (GTK_CONTAINER (frame), 6);
     gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
 
@@ -286,27 +283,20 @@ void linFirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     gtk_frame_set_label_widget (GTK_FRAME (frame), label);
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
 
-    widget = gtk_alignment_new (0.5, 0.5, 1, 1);
-    gtk_container_add (GTK_CONTAINER (frame), widget);
-    gtk_alignment_set_padding (GTK_ALIGNMENT (widget), 0, 0, 12, 0);
-
-    table = gtk_table_new (4, 3, FALSE);
-    gtk_container_add (GTK_CONTAINER (widget), table);
+    table = gtk_grid_new ();                /* gtk_table_new (4, 3, FALSE); */
+    gtk_container_add (GTK_CONTAINER (frame), table);
     gtk_container_set_border_width (GTK_CONTAINER (table), 6);
-    gtk_table_set_row_spacings (GTK_TABLE (table), 6);
-    gtk_table_set_col_spacings (GTK_TABLE (table), 6);
+    gtk_widget_set_margin_start (table, GUI_INDENT_CHILD_PIXEL);
+    gtk_grid_set_row_spacing (GTK_GRID (table), 6);
+    gtk_grid_set_column_spacing (GTK_GRID (table), 6);
 
     widget = gtk_event_box_new ();
-    gtk_table_attach (GTK_TABLE (table), widget, 1, 3, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 1, 0, 2, 1);
     gtk_widget_set_tooltip_text (widget, _("Type of frequency transformation"));
 
     label = gtk_label_new_with_mnemonic (_("_Type"));
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 3, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 0, 0, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
 
     comboFtr = gtk_combo_box_text_new ();   /* frequency transform combobox */
     gtk_container_add (GTK_CONTAINER (widget), comboFtr);
@@ -320,58 +310,44 @@ void linFirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
 
     widget = gtk_entry_new ();                                   /* bandwidth */
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
-    gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 2, 3,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 1, 2, 1, 1);
     gtk_widget_set_tooltip_text (widget, _("Bandwidth"));
     gtk_entry_set_width_chars (GTK_ENTRY (widget), GUI_ENTRY_WIDTH_CHARS);
     GLADE_HOOKUP_OBJECT (topWidget, widget, LINFIRDLG_ENTRY_BANDW);
 
     label = gtk_label_new (NULL);
-    gtk_label_set_markup_with_mnemonic (GTK_LABEL(label), _("f<sub>Bandw.</sub>"));
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 3, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_label_set_markup_with_mnemonic (GTK_LABEL (label), _("f<sub>Bandw.</sub>"));
+    gtk_grid_attach (GTK_GRID (table), label, 0, 2, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
 
     label = gtk_label_new (pPrefs->frequUnit.name);         /* bandwidth unit */
-    gtk_table_attach (GTK_TABLE (table), label, 2, 3, 2, 3,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 2, 2, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_START);
     GLADE_HOOKUP_OBJECT (topWidget, label, LINFIRDLG_UNIT_BANDW);
 
     widget = gtk_entry_new ();                            /* center frequency */
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
-    gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 1, 2,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 1, 1, 1, 1);
     gtk_widget_set_tooltip_text (widget, _("Cutoff frequency (highpass) or center"
                                            " frequency (bandpass, bandstop)"));
     gtk_entry_set_width_chars (GTK_ENTRY (widget), GUI_ENTRY_WIDTH_CHARS);
     GLADE_HOOKUP_OBJECT (topWidget, widget, LINFIRDLG_ENTRY_CENTER);
 
     label = gtk_label_new (NULL);
-    gtk_label_set_markup_with_mnemonic (GTK_LABEL(label), LINFIRDLG_LABEL_CENTER_TEXT);
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 3, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_label_set_markup_with_mnemonic (GTK_LABEL (label), LINFIRDLG_LABEL_CENTER_TEXT);
+    gtk_grid_attach (GTK_GRID (table), label, 0, 1, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
     GLADE_HOOKUP_OBJECT (topWidget, label, LINFIRDLG_LABEL_CENTER);
 
     label = gtk_label_new (pPrefs->frequUnit.name);  /* center frequency unit */
-    gtk_table_attach (GTK_TABLE (table), label, 2, 3, 1, 2,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 2, 1, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_START);
     GLADE_HOOKUP_OBJECT (topWidget, label, LINFIRDLG_UNIT_CENTER);
 
     widget = gtk_check_button_new_with_mnemonic (_("_Geometric"));
-    gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 3, 4,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 1, 3, 1, 1);
     gtk_widget_set_tooltip_text (widget,
                                  _("Check this if the center frequency shall be the"
                                    " geometric mean between both cutoff frequencies"
@@ -381,9 +357,7 @@ void linFirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     /* Reference Lowpass
      */
     frame = gtk_frame_new (NULL);
-    gtk_table_attach (GTK_TABLE (linFirDesignDlgMain), frame, 0, 1, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (GTK_FILL), 0, 0);
+    gtk_grid_attach (GTK_GRID (linFirDesignDlgMain), frame, 0, 0, 1, 1);
     gtk_container_set_border_width (GTK_CONTAINER (frame), 6);
     gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
 
@@ -391,61 +365,47 @@ void linFirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     gtk_frame_set_label_widget (GTK_FRAME (frame), label);
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
 
-    widget = gtk_alignment_new (0.5, 0.5, 1, 1);
-    gtk_container_add (GTK_CONTAINER (frame), widget);
-    gtk_alignment_set_padding (GTK_ALIGNMENT (widget), 0, 0, 12, 0);
-
-    table = gtk_table_new (3, 3, FALSE);
-    gtk_container_add (GTK_CONTAINER (widget), table);
+    table = gtk_grid_new ();                /* gtk_table_new (3, 3, FALSE); */
+    gtk_container_add (GTK_CONTAINER (frame), table);
     gtk_container_set_border_width (GTK_CONTAINER (table), 6);
-    gtk_table_set_row_spacings (GTK_TABLE (table), 6);
-    gtk_table_set_col_spacings (GTK_TABLE (table), 6);
+    gtk_widget_set_margin_start (table, GUI_INDENT_CHILD_PIXEL);
+    gtk_grid_set_row_spacing (GTK_GRID (table), 6);
+    gtk_grid_set_column_spacing (GTK_GRID (table), 6);
 
     widget = gtk_entry_new ();                            /* cutoff frequency */
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
-    gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 2, 3,
-                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 1, 2, 1, 1);
     gtk_entry_set_width_chars (GTK_ENTRY (widget), GUI_ENTRY_WIDTH_CHARS);
     gtk_widget_set_tooltip_text (widget, _("Cutoff frequency"));
     GLADE_HOOKUP_OBJECT (topWidget, widget, LINFIRDLG_ENTRY_CUTOFF);
 
     label = gtk_label_new (NULL);
-    gtk_label_set_markup_with_mnemonic (GTK_LABEL(label), LINFIRDLG_LABEL_CUTOFF_TEXT);
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 3, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_label_set_markup_with_mnemonic (GTK_LABEL (label), LINFIRDLG_LABEL_CUTOFF_TEXT);
+    gtk_grid_attach (GTK_GRID (table), label, 0, 2, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
 
     label = gtk_label_new (pPrefs->frequUnit.name); /* cutoff frequency unit label */
-    gtk_table_attach (GTK_TABLE (table), label, 2, 3, 2, 3,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 2, 2, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_START);
     GLADE_HOOKUP_OBJECT (topWidget, label, LINFIRDLG_UNIT_CUTOFF);
 
     widget = gtk_entry_new ();                            /* sample frequency */
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
-    gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 1, 2,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 1, 1, 1, 1);
     gtk_widget_set_tooltip_text (widget, _("Sample frequency"));
     gtk_entry_set_width_chars (GTK_ENTRY (widget), GUI_ENTRY_WIDTH_CHARS);
     GLADE_HOOKUP_OBJECT (topWidget, widget, LINFIRDLG_ENTRY_SAMPLE);
 
     label = gtk_label_new (NULL);
     gtk_label_set_markup_with_mnemonic (GTK_LABEL (label), _("f<sub>_Sample</sub>"));
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 3, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 0, 1, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
 
     label = gtk_label_new (pPrefs->frequUnit.name);  /* sample frequency unit */
-    gtk_table_attach (GTK_TABLE (table), label, 2, 3, 1, 2,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 2, 1, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_START);
     GLADE_HOOKUP_OBJECT (topWidget, label, LINFIRDLG_UNIT_SAMPLE);
 
 
@@ -453,27 +413,21 @@ void linFirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     spinAdjust = gtk_adjustment_new (1, FLT_DEGREE_MIN, FLT_DEGREE_MAX, 1, 10, 0);
     widget = gtk_spin_button_new (spinAdjust, 1, 0);
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
-    gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 1, 0, 1, 1);
     gtk_widget_set_tooltip_text (widget, _("Degree of filter"));
     gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (widget), TRUE);
     GLADE_HOOKUP_OBJECT (topWidget, widget, LINFIRDLG_SPIN_DEGREE);
 
     label = gtk_label_new_with_mnemonic (_("_Degree"));
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 3, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 0, 0, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
 
 
     /* DSP window
      */
     frame = gtk_frame_new (NULL);
-    gtk_table_attach (GTK_TABLE (linFirDesignDlgMain), frame, 1, 2, 1, 2,
-                      (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                      (GtkAttachOptions) (GTK_FILL), 0, 0);
+    gtk_grid_attach (GTK_GRID (linFirDesignDlgMain), frame, 1, 1, 1, 1);
     gtk_container_set_border_width (GTK_CONTAINER (frame), 6);
     gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
 
@@ -481,14 +435,11 @@ void linFirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     gtk_frame_set_label_widget (GTK_FRAME (frame), label);
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
 
-    widget = gtk_alignment_new (0.5, 0.5, 1, 1);
-    gtk_container_add (GTK_CONTAINER (frame), widget);
-    gtk_alignment_set_padding (GTK_ALIGNMENT (widget), 0, 0, 12, 0);
-
-    table = gtk_table_new (5, 3, FALSE);
-    gtk_container_add (GTK_CONTAINER (widget), table);
+    table = gtk_grid_new ();                /* gtk_table_new (5, 3, FALSE); */
+    gtk_container_add (GTK_CONTAINER (frame), table);
     gtk_container_set_border_width (GTK_CONTAINER (table), 6);
-    gtk_table_set_col_spacings (GTK_TABLE (table), 6);
+    gtk_widget_set_margin_start (table, GUI_INDENT_CHILD_PIXEL);
+    gtk_grid_set_column_spacing (GTK_GRID (table), 6);
 
     for (win = 0; win < LINFIR_DSPWIN_SIZE; win++)
     {
@@ -496,10 +447,8 @@ void linFirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
             gtk_radio_button_new_with_mnemonic (
                 NULL, gettext (linFirDlgWin[win].name));
 
-        gtk_table_attach (GTK_TABLE (table), linFirDlgWin[win].btn,
-                          0, (win == LINFIR_DSPWIN_KAISER)? 1 : 2,
-                          win,  win + 1, (GtkAttachOptions) (GTK_FILL),
-                          (GtkAttachOptions) (0), 0, 0);
+        gtk_grid_attach (GTK_GRID (table), linFirDlgWin[win].btn,
+                         0, win, (win == LINFIR_DSPWIN_KAISER)? 1 : 2, 1);
         gtk_container_set_border_width (GTK_CONTAINER (linFirDlgWin[win].btn), 1);
         gtk_radio_button_set_group (GTK_RADIO_BUTTON (linFirDlgWin[win].btn), dspWinRadioGroup);
         dspWinRadioGroup = gtk_radio_button_get_group (GTK_RADIO_BUTTON (linFirDlgWin[win].btn));
@@ -509,9 +458,7 @@ void linFirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
 
 
     widget = gtk_entry_new ();
-    gtk_table_attach (GTK_TABLE (table), widget, 2, 3, 4, 5,
-                      (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 2, 4, 1, 1);
     gtk_widget_set_sensitive (widget, FALSE);
     gtk_widget_set_tooltip_text (widget, _("Parameter of Kaiser window"));
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
@@ -519,10 +466,8 @@ void linFirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     GLADE_HOOKUP_OBJECT (topWidget, widget, LINFIRDLG_ENTRY_KAISER);
 
     label = gtk_label_new (_("α="));
-    gtk_table_attach (GTK_TABLE (table), label, 1, 2, 4, 5,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 1, 4, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
 
     /* Final

@@ -1001,15 +1001,18 @@ GtkWidget* mainDlgCreate (void)
     gtk_frame_set_label_widget (GTK_FRAME (widget), label);
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
 
-    table = gtk_table_new (2, 2, FALSE);
+    table = gtk_grid_new ();                /* gtk_table_new (2, 2, FALSE); */
     gtk_paned_pack2 (GTK_PANED (vpaneFilter), table, TRUE, TRUE);
     gtk_container_set_border_width (GTK_CONTAINER (table), 6);
-    gtk_table_set_col_spacings (GTK_TABLE (table), 12);
+    gtk_grid_set_column_spacing (GTK_GRID (table), 16);
+    gtk_grid_set_column_homogeneous (GTK_GRID (table), TRUE);
 
     widget = gtk_scrolled_window_new (NULL, NULL);
-    gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 1, 2,
-                      (GtkAttachOptions) (GTK_EXPAND | GTK_SHRINK | GTK_FILL),
-                      (GtkAttachOptions) (GTK_EXPAND | GTK_SHRINK | GTK_FILL), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 1, 1, 1, 1);
+    gtk_widget_set_halign (widget, GTK_ALIGN_FILL);
+    gtk_widget_set_hexpand (widget, TRUE);
+    gtk_widget_set_valign (widget, GTK_ALIGN_FILL);
+    gtk_widget_set_vexpand (widget, TRUE);
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (widget), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (widget), GTK_SHADOW_IN);
 
@@ -1018,9 +1021,11 @@ GtkWidget* mainDlgCreate (void)
     gtk_widget_set_tooltip_text (GTK_WIDGET (treeDenominator), _("Denominator coefficients"));
 
     widget = gtk_scrolled_window_new (NULL, NULL);
-    gtk_table_attach (GTK_TABLE (table), widget, 0, 1, 1, 2,
-                      (GtkAttachOptions) (GTK_EXPAND | GTK_SHRINK | GTK_FILL),
-                      (GtkAttachOptions) (GTK_EXPAND | GTK_SHRINK | GTK_FILL), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 0, 1, 1, 1);
+    gtk_widget_set_halign (widget, GTK_ALIGN_FILL);
+    gtk_widget_set_hexpand (widget, TRUE);
+    gtk_widget_set_valign (widget, GTK_ALIGN_FILL);
+    gtk_widget_set_vexpand (widget, TRUE);
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (widget), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (widget), GTK_SHADOW_IN);
 
@@ -1029,17 +1034,15 @@ GtkWidget* mainDlgCreate (void)
     gtk_widget_set_tooltip_text (GTK_WIDGET (treeNumerator), _("Numerator coefficients"));
 
     label = gtk_label_new (_("<b>Numerator</b>"));
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 6);
+    gtk_grid_attach (GTK_GRID (table), label, 0, 0, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_FILL);
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
     gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
     gtk_label_set_ellipsize (GTK_LABEL (label), PANGO_ELLIPSIZE_END);
 
     label = gtk_label_new (_("<b>Denominator</b>"));
-    gtk_table_attach (GTK_TABLE (table), label, 1, 2, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 6);
+    gtk_grid_attach (GTK_GRID (table), label, 1, 0, 1, 1);
+    gtk_widget_set_halign (widget, GTK_ALIGN_FILL);
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
     gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
     gtk_label_set_ellipsize (GTK_LABEL (label), PANGO_ELLIPSIZE_END);

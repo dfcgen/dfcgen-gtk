@@ -115,33 +115,27 @@ static GtkWidget* createSettingsDlg (const CFG_DESKTOP* pPrefs)
     box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_container_add (GTK_CONTAINER (notebook), box);
 
-    table = gtk_table_new (3, 2, FALSE);
+    table = gtk_grid_new ();                /* gtk_table_new (3, 2, FALSE); */
     gtk_box_pack_start (GTK_BOX (box), table, TRUE, TRUE, 0);
-    gtk_container_set_border_width (GTK_CONTAINER (table), 12);
-    gtk_table_set_row_spacings (GTK_TABLE (table), 6);
-    gtk_table_set_col_spacings (GTK_TABLE (table), 12);
+    gtk_container_set_border_width (GTK_CONTAINER (table), 6);
+    gtk_grid_set_row_spacing (GTK_GRID (table), 6);
+    gtk_grid_set_column_spacing (GTK_GRID (table), 6);
 
     spinAdjust = gtk_adjustment_new (pPrefs->outprec, 1, DBL_DIG, 1, 1, 0);
     widget = gtk_spin_button_new (spinAdjust, 1, 0);
-    gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 1, 0, 1, 1);
     gtk_widget_set_tooltip_text (widget, _("The number of digits following the decimal point of a floating point number"));
     gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (widget), TRUE);
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
     GLADE_HOOKUP_OBJECT (settingsDlg, widget, EDITSETDLG_SPIN_PREC);
 
     label = gtk_label_new_with_mnemonic (_("Output _Precision"));
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 0, 0, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
 
     box = gtk_event_box_new ();
-    gtk_table_attach (GTK_TABLE (table), box, 1, 2, 1, 2,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (GTK_FILL), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), box, 1, 1, 1, 1);
     gtk_widget_set_tooltip_text (box, _("Frequency unit to be used for in-/output"));
 
     widget = gtk_combo_box_text_new ();
@@ -157,16 +151,12 @@ static GtkWidget* createSettingsDlg (const CFG_DESKTOP* pPrefs)
                               searchUnit (unitF, N_ELEMENTS (unitF),
                                           pPrefs->frequUnit.name));
     label = gtk_label_new_with_mnemonic (_("_Frequency Unit"));
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 0, 1, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
 
     box = gtk_event_box_new ();
-    gtk_table_attach (GTK_TABLE (table), box, 1, 2, 2, 3,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (GTK_FILL), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), box, 1, 2, 1, 1);
     gtk_widget_set_tooltip_text (box, _("Time unit to be used for in-/output"));
 
     widget = gtk_combo_box_text_new ();
@@ -183,10 +173,8 @@ static GtkWidget* createSettingsDlg (const CFG_DESKTOP* pPrefs)
                                           pPrefs->timeUnit.name));
 
     label = gtk_label_new_with_mnemonic (_("_Time Unit"));
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 0, 2, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
 
     label = gtk_label_new_with_mnemonic (_("_In-/Output"));
@@ -319,17 +307,17 @@ static GtkWidget* createInfoDlg (const DFCPRJ_INFO *pInfo)
     } /* if */
 
 
-    table = gtk_table_new (3, 2, FALSE);
-    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
+    table = gtk_grid_new ();                /* gtk_table_new (3, 2, FALSE); */
+    gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))),
                         table, TRUE, TRUE, 0);
-    gtk_container_set_border_width (GTK_CONTAINER (table), 12);
-    gtk_table_set_row_spacings (GTK_TABLE (table), 6);
-    gtk_table_set_col_spacings (GTK_TABLE (table), 12);
+    gtk_container_set_border_width (GTK_CONTAINER (table), 6);
+    gtk_grid_set_row_spacing (GTK_GRID (table), 6);
+    gtk_grid_set_column_spacing (GTK_GRID (table), 6);
 
     entry = gtk_entry_new ();                                       /* author */
-    gtk_table_attach (GTK_TABLE (table), entry, 1, 2, 0, 1,
-                      (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), entry, 1, 0, 1, 1);
+    gtk_widget_set_halign (entry, GTK_ALIGN_FILL);
+    gtk_widget_set_hexpand (entry, TRUE);
     gtk_widget_set_tooltip_text (entry, _("Author of filter/system"));
     gtk_entry_set_max_length (GTK_ENTRY (entry), 40);
     gtk_entry_set_activates_default (GTK_ENTRY (entry), TRUE);
@@ -340,16 +328,14 @@ static GtkWidget* createInfoDlg (const DFCPRJ_INFO *pInfo)
     GLADE_HOOKUP_OBJECT (dialog, entry, EDITINFODLG_ENTRY_AUTHOR);
 
     label = gtk_label_new_with_mnemonic (_("_Author"));
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), entry);
+    gtk_grid_attach (GTK_GRID (table), label, 0, 0, 1, 1);
 
     entry = gtk_entry_new ();                                        /* title */
-    gtk_table_attach (GTK_TABLE (table), entry, 1, 2, 1, 2,
-                      (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), entry, 1, 1, 1, 1);
+    gtk_widget_set_halign (entry, GTK_ALIGN_FILL);
+    gtk_widget_set_hexpand (entry, TRUE);
     gtk_entry_set_max_length (GTK_ENTRY (entry), 80);
     gtk_entry_set_activates_default (GTK_ENTRY (entry), TRUE);
 
@@ -362,16 +348,16 @@ static GtkWidget* createInfoDlg (const DFCPRJ_INFO *pInfo)
     GLADE_HOOKUP_OBJECT (dialog, entry, EDITINFODLG_ENTRY_TITLE);
 
     label = gtk_label_new_with_mnemonic (_("_Title"));
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), entry);
+    gtk_grid_attach (GTK_GRID (table), label, 0, 1, 1, 1);
 
     widget = gtk_scrolled_window_new (NULL, NULL);             /* description */
-    gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 2, 3,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 1, 2, 1, 1);
+    gtk_widget_set_hexpand (widget, TRUE);
+    gtk_widget_set_halign (widget, GTK_ALIGN_FILL);
+    gtk_widget_set_vexpand (widget, TRUE);
+    gtk_widget_set_valign (widget, GTK_ALIGN_FILL);
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (widget), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
     gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (widget), GTK_SHADOW_IN);
 
@@ -389,11 +375,9 @@ static GtkWidget* createInfoDlg (const DFCPRJ_INFO *pInfo)
     GLADE_HOOKUP_OBJECT (dialog, entry, EDITINFODLG_TEXTVIEW_DESC);
 
     label = gtk_label_new_with_mnemonic (_("_Description"));
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
+    gtk_grid_attach (GTK_GRID (table), label, 0, 2, 1, 1);
 
 
     /* Action area

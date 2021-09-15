@@ -185,25 +185,19 @@ static int responseDlgGetAxis (GtkWidget* topWidget, const char *widgets[],
  *  \param pAxis        Pointer to current plot configuration of axis.
  *
  ******************************************************************************/
-static void createLogGridButton (GtkWidget *topWidget, GtkTable *table,
+static void createLogGridButton (GtkWidget *topWidget, GtkGrid *table,
                                  char *logBtnName, char *gridBtnName,
                                  PLOT_AXIS *pAxis)
 {
     GtkWidget *checkbutton = gtk_check_button_new_with_mnemonic (_("Logarithmic"));
 
-    gtk_table_attach (GTK_TABLE (table), checkbutton, 1, 3, 2, 3,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_container_set_border_width (GTK_CONTAINER (checkbutton), 1);
+    gtk_grid_attach (table, checkbutton, 1, 2, 2, 1);
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton),
                                   pAxis->flags & PLOT_AXIS_FLAG_LOG);
     GLADE_HOOKUP_OBJECT (topWidget, checkbutton, logBtnName);
 
     checkbutton = gtk_check_button_new_with_mnemonic (_("Show Grid"));
-    gtk_table_attach (GTK_TABLE (table), checkbutton, 1, 3, 3, 4,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_container_set_border_width (GTK_CONTAINER (checkbutton), 1);
+    gtk_grid_attach (table, checkbutton, 1, 3, 2, 1);
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton),
                                   pAxis->flags & PLOT_AXIS_FLAG_GRID);
     GLADE_HOOKUP_OBJECT (topWidget, checkbutton, gridBtnName);
@@ -229,7 +223,6 @@ static void autoScalingChanged (GtkCheckButton* button, gpointer user_data)
                                              RESPONSE_DLG_ENTRY_STOPY),
                               sensitive);
 } /* autoScalingChanged() */
-
 
 
 /* FUNCTION *******************************************************************/
@@ -314,22 +307,19 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     gtk_frame_set_label_widget (GTK_FRAME (frame), label);
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
 
-    table = gtk_table_new (5, 3, FALSE);
-    gtk_container_add (GTK_CONTAINER (alignment), table);
+    table = gtk_grid_new ();                /* gtk_table_new (5, 3, FALSE); */
+    gtk_container_add (GTK_CONTAINER (frame), table);
     gtk_container_set_border_width (GTK_CONTAINER (table), 6);
-    gtk_table_set_row_spacings (GTK_TABLE (table), 6);
-    gtk_table_set_col_spacings (GTK_TABLE (table), 12);
+    gtk_widget_set_margin_start (table, GUI_INDENT_CHILD_PIXEL);
+    gtk_grid_set_row_spacing (GTK_GRID (table), 6);
+    gtk_grid_set_column_spacing (GTK_GRID (table), 6);
 
     label = gtk_label_new (_("Start"));                            /* x-start */
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 0, 0, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
 
     widget = gtk_entry_new ();
-    gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 1, 0, 1, 1);
     gtk_widget_set_tooltip_text (widget, _("Start of x-axis interval"));
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
     gtk_entry_set_width_chars (GTK_ENTRY (widget), RESPONSE_DLG_WIDTH_CHARS);
@@ -341,15 +331,11 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     gtk_widget_grab_focus (widget);
 
     label = gtk_label_new (_("Stop"));                              /* x-stop */
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 0, 1, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
 
     widget = gtk_entry_new ();
-    gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 1, 2,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 1, 1, 1, 1);
     gtk_widget_set_tooltip_text (widget, _("End of x-axis interval"));
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
     gtk_entry_set_width_chars (GTK_ENTRY (widget), RESPONSE_DLG_WIDTH_CHARS);
@@ -359,15 +345,12 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
 
     label = gtk_label_new (_("Samples"));                          /* samples */
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 4, 5,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), label, 0, 4, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
 
     spinAdjust = gtk_adjustment_new (0, 0, RESPONSE_DLG_SPIN_MAX, 1, 10, 0);
     widget = gtk_spin_button_new (spinAdjust, 1, 0);
-    gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 4, 5,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 1, 4, 1, 1);
     gtk_widget_set_tooltip_text (widget, _("The number of samples to be used (0 = all)"));
     gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (widget), TRUE);
     GLADE_HOOKUP_OBJECT (responseDlg, widget, RESPONSE_DLG_SPIN_SAMPLES);
@@ -384,16 +367,12 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     } /* else */
 
     label = gtk_label_new (NULL);                             /* x-start unit */
-    gtk_table_attach (GTK_TABLE (table), label, 2, 3, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 2, 0, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_START);
 
     widget = gtk_label_new (NULL);                             /* x-stop unit */
-    gtk_table_attach (GTK_TABLE (table), widget, 2, 3, 1, 2,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (widget), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), widget, 2, 1, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_START);
 
     if (pDiag->x.pUnit != NULL)
     {
@@ -406,7 +385,7 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
         gtk_widget_hide (widget);
     } /* else */
 
-    createLogGridButton (responseDlg, GTK_TABLE (table),
+    createLogGridButton (responseDlg, GTK_GRID (table),
                          RESPONSE_DLG_CHKBTN_LOGX, RESPONSE_DLG_CHKBTN_GRIDX,
                          &pDiag->x);
 
@@ -430,22 +409,19 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     gtk_frame_set_label_widget (GTK_FRAME (frame), label);
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
 
-    table = gtk_table_new (5, 3, FALSE);
-    gtk_container_add (GTK_CONTAINER (alignment), table);
+    table = gtk_grid_new ();                /* gtk_table_new (5, 3, FALSE); */
+    gtk_container_add (GTK_CONTAINER (frame), table);
     gtk_container_set_border_width (GTK_CONTAINER (table), 6);
-    gtk_table_set_row_spacings (GTK_TABLE (table), 6);
-    gtk_table_set_col_spacings (GTK_TABLE (table), 12);
+    gtk_widget_set_margin_start (table, GUI_INDENT_CHILD_PIXEL);
+    gtk_grid_set_row_spacing (GTK_GRID (table), 6);
+    gtk_grid_set_column_spacing (GTK_GRID (table), 6);
 
     label = gtk_label_new (_("Start"));                            /* y-start */
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 0, 0, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
 
     widget = gtk_entry_new ();
-    gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 1, 0, 1, 1);
     gtk_widget_set_tooltip_text (widget, _("Start of y-axis interval"));
     gtk_widget_set_sensitive (widget, FALSE);
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
@@ -457,15 +433,11 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
 
     label = gtk_label_new (_("Stop"));                              /* y-stop */
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 0, 1, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
 
     widget = gtk_entry_new ();
-    gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 1, 2,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 1, 1, 1, 1);
     gtk_widget_set_tooltip_text (widget, _("End of y-axis interval"));
     gtk_widget_set_sensitive (widget, FALSE);
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
@@ -477,16 +449,12 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
 
     label = gtk_label_new (NULL);                             /* y-start unit */
-    gtk_table_attach (GTK_TABLE (table), label, 2, 3, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 2, 0, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_START);
 
     widget = gtk_label_new (NULL);                             /* y-stop unit */
-    gtk_table_attach (GTK_TABLE (table), widget, 2, 3, 1, 2,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (widget), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), widget, 2, 1, 1, 1);
+    gtk_widget_set_halign (widget, GTK_ALIGN_START);
 
     if (pDiag->y.pUnit != NULL)
     {
@@ -500,16 +468,14 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     } /* else */
 
 
-    createLogGridButton (responseDlg, GTK_TABLE (table),
+    createLogGridButton (responseDlg, GTK_GRID (table),
                          RESPONSE_DLG_CHKBTN_LOGY, RESPONSE_DLG_CHKBTN_GRIDY,
                          &pDiag->y);
 
     widget = gtk_check_button_new_with_mnemonic (_("Autoscaling"));
     gtk_widget_set_tooltip_text (widget, _("Autoscaling of y-axis with respect"
                                            " to minimum and maximum values in interval"));
-    gtk_table_attach (GTK_TABLE (table), widget, 1, 3, 4, 5,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 1, 4, 2, 1);
     gtk_container_set_border_width (GTK_CONTAINER (widget), 1);
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget),
                                   pDiag->y.flags & PLOT_AXIS_FLAG_AUTO);
@@ -532,28 +498,18 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 24);
     gtk_container_add (GTK_CONTAINER (widget), box);
 
-    table = gtk_table_new (2, 3, FALSE);
+    table = gtk_grid_new ();                /* gtk_table_new (2, 3, FALSE); */
     gtk_box_pack_start (GTK_BOX (box), table, FALSE, FALSE, 6);
-    gtk_table_set_row_spacings (GTK_TABLE (table), 24);
-    gtk_table_set_col_spacings (GTK_TABLE (table), 12);
-
-    widget = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_OUT);
-    gtk_table_attach (GTK_TABLE (table), widget, 2, 3, 1, 2,
-                      (GtkAttachOptions) (GTK_EXPAND | GTK_SHRINK | GTK_FILL),
-                      (GtkAttachOptions) (GTK_EXPAND | GTK_SHRINK | GTK_FILL), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (widget), 0.2, 0.5);
+    gtk_grid_set_row_spacing (GTK_GRID (table), 6);
+    gtk_grid_set_column_spacing (GTK_GRID (table), 6);
 
     label = gtk_label_new (_("Graph"));
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 0, 0, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
 
     label = gtk_label_new (_("Color"));
-    gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (0), 0, 0);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+    gtk_grid_attach (GTK_GRID (table), label, 0, 1, 1, 1);
+    gtk_widget_set_halign (label, GTK_ALIGN_END);
 
     responseDlgColorItem = 0;                         /* color item selection */
     memcpy (responseDlgColorVals, pDiag->colors, sizeof (responseDlgColorVals));
@@ -566,9 +522,7 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (colorSel),
                                            responseDlgColorVals);
     widget = gtk_event_box_new ();
-    gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 0, 1,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (GTK_FILL), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 1, 0, 1, 1);
     gtk_widget_set_tooltip_text (widget, _("Style of graph"));
 
     box = gtk_combo_box_text_new ();
@@ -582,9 +536,7 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     gtk_combo_box_set_active (GTK_COMBO_BOX (box), pDiag->style);
 
     widget = gtk_event_box_new ();
-    gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 1, 2,
-                      (GtkAttachOptions) (GTK_FILL),
-                      (GtkAttachOptions) (GTK_FILL), 0, 0);
+    gtk_grid_attach (GTK_GRID (table), widget, 1, 1, 1, 1);
     gtk_widget_set_tooltip_text (widget, _("Choose the color item to be changed, then modify the color"));
 
     box = gtk_combo_box_text_new ();
