@@ -251,12 +251,8 @@ void linFirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     gtk_frame_set_label_widget (GTK_FRAME (frame), label);
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
 
-    widget = gtk_alignment_new (0.5, 0.5, 1, 1);
-    gtk_container_add (GTK_CONTAINER (frame), widget);
-    gtk_alignment_set_padding (GTK_ALIGNMENT (widget), 0, 0, 12, 0);
-
     box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-    gtk_container_add (GTK_CONTAINER (widget), box);
+    gtk_container_add (GTK_CONTAINER (frame), box);
     gtk_container_set_border_width (GTK_CONTAINER (box), 6);
 
     for (type = 0; type < LINFIR_TYPE_SIZE; type++)

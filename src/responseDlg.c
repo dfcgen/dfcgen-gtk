@@ -294,10 +294,6 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     gtk_container_set_border_width (GTK_CONTAINER (frame), 6);
     gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
 
-    alignment = gtk_alignment_new (0.5, 0.5, 1, 1);
-    gtk_container_add (GTK_CONTAINER (frame), alignment);
-    gtk_alignment_set_padding (GTK_ALIGNMENT (alignment), 0, 0, 12, 0);
-
     /* x-axis values
      */
     axisName = g_strdup_printf ("<b>%s '%s'</b>", _("Axis"),
@@ -395,10 +391,6 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     gtk_box_pack_start (GTK_BOX (box), frame, TRUE, TRUE, 0);
     gtk_container_set_border_width (GTK_CONTAINER (frame), 6);
     gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
-
-    alignment = gtk_alignment_new (0.5, 0.5, 1, 1);
-    gtk_container_add (GTK_CONTAINER (frame), alignment);
-    gtk_alignment_set_padding (GTK_ALIGNMENT (alignment), 0, 0, 12, 0);
 
     /* y-axis values
      */
