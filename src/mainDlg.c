@@ -1037,14 +1037,12 @@ GtkWidget* mainDlgCreate (void)
     gtk_grid_attach (GTK_GRID (table), label, 0, 0, 1, 1);
     gtk_widget_set_halign (label, GTK_ALIGN_FILL);
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
     gtk_label_set_ellipsize (GTK_LABEL (label), PANGO_ELLIPSIZE_END);
 
     label = gtk_label_new (_("<b>Denominator</b>"));
     gtk_grid_attach (GTK_GRID (table), label, 1, 0, 1, 1);
     gtk_widget_set_halign (widget, GTK_ALIGN_FILL);
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
     gtk_label_set_ellipsize (GTK_LABEL (label), PANGO_ELLIPSIZE_END);
 
     hbox2 = gtk_hbutton_box_new ();
@@ -1060,6 +1058,7 @@ GtkWidget* mainDlgCreate (void)
         gtk_container_add (GTK_CONTAINER (hbox2), pAction->btn);
         gtk_widget_set_sensitive (pAction->btn, FALSE);
         gtk_widget_set_tooltip_text (pAction->btn, gettext (pAction->tooltip));
+
         g_signal_connect ((gpointer) pAction->btn, "clicked",
                           G_CALLBACK (mainDlgCoeffAction), pAction);
     } /* for */

@@ -150,7 +150,6 @@ static GtkWidget* createDialog (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     gtk_grid_attach (GTK_GRID (miscDesignDlgTable), label, 0, 2, 1, 1);
     gtk_widget_set_halign (label, GTK_ALIGN_END);
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 
     widget = gtk_entry_new ();
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
@@ -194,7 +193,6 @@ static GtkWidget* createDialog (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
     gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
     gtk_label_set_selectable (GTK_LABEL (label), TRUE);
-    gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
     gtk_container_add (GTK_CONTAINER (expander), label);
     GLADE_HOOKUP_OBJECT (topWidget, label, MISCDLG_LABEL_DESC);
 

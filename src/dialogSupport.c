@@ -295,8 +295,7 @@ BOOL dlgPopupDouble (char *title, char *label, char *comment, double *pResult)
         widget = gtk_label_new (comment);
         gtk_label_set_line_wrap (GTK_LABEL (widget), TRUE);
         gtk_label_set_use_markup (GTK_LABEL (widget), TRUE);
-        gtk_misc_set_padding (GTK_MISC (widget), 12, 0);
-        gtk_box_pack_start (GTK_BOX (vbox), widget, FALSE, FALSE, 12);
+        gtk_box_pack_start (GTK_BOX (vbox), widget, FALSE, FALSE, 6);
     } /* if */
 
     hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
@@ -304,7 +303,6 @@ BOOL dlgPopupDouble (char *title, char *label, char *comment, double *pResult)
 
     widget = gtk_label_new_with_mnemonic (label);
     gtk_box_pack_start (GTK_BOX (hbox), widget, FALSE, FALSE, 0);
-    gtk_misc_set_padding (GTK_MISC (widget), 12, 0);
 
     entry = gtk_entry_new ();
     gtk_box_pack_start (GTK_BOX (hbox), entry, FALSE, TRUE, 0);
