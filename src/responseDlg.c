@@ -263,28 +263,30 @@ static void colorItemChanged (GtkComboBox *combobox, gpointer user_data)
  *                      gtk_combo_box_append_text() must be adopted to reflect
  *                      this.
  *
+ *  \param topWindow    Parent window.
  *  \param pDiag        Pointer to current plot configuration (for preset).
  *
  *  \return             Dialog widget.
  ******************************************************************************/
-GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
+GtkWidget* responseDlgCreate (GtkWindow *topWindow, PLOT_DIAG *pDiag)
 {
     GtkWidget *widget, *label, *box, *frame, *alignment, *table, *colorSel;
     GtkAdjustment *spinAdjust;
     char *axisName;
 
     GtkWidget *responseDlg = gtk_dialog_new ();
+    gtk_window_set_transient_for (GTK_WINDOW (responseDlg), topWindow);
+    gtk_window_set_destroy_with_parent (GTK_WINDOW (responseDlg), TRUE);
 
     /* Some generic and global layout settings first
      */
     gtk_window_set_title (GTK_WINDOW (responseDlg), _("Response Settings"));
     gtk_window_set_resizable (GTK_WINDOW (responseDlg), FALSE);
-    gtk_window_set_destroy_with_parent (GTK_WINDOW (responseDlg), TRUE);
-    gtk_window_set_icon_name (GTK_WINDOW (responseDlg), GTK_STOCK_PREFERENCES);
+    gtk_window_set_icon_name (GTK_WINDOW (responseDlg), GUI_ICON_IMAGE_PREFS);
     gtk_window_set_type_hint (GTK_WINDOW (responseDlg), GDK_WINDOW_TYPE_HINT_DIALOG);
 
     box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12); /* x- and y-side of dialog */
-    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (responseDlg)->vbox),
+    gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (responseDlg))),
                         box, FALSE, FALSE, 6);
 
     /* x-axis
@@ -478,7 +480,7 @@ GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag)
     /* Style settings
      */
     widget = gtk_expander_new (NULL);                        /* style xpander */
-    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (responseDlg)->vbox),
+    gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (responseDlg))),
                         widget, FALSE, FALSE, 6);
     gtk_container_set_border_width (GTK_CONTAINER (widget), 12);
     gtk_expander_set_spacing (GTK_EXPANDER (widget), 6);

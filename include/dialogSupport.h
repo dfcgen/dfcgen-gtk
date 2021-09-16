@@ -3,7 +3,7 @@
  * \file
  *           Dialog helper functions.
  *
- * \author   Copyright (C) 2006, 2011, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * \author   Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  ******************************************************************************/
 
@@ -115,6 +115,7 @@ extern "C" {
 /* FUNCTION *******************************************************************/
 /** A little popup dialog, where the user shall enter a double value.
  *
+ *  \param topWindow    Parent window.
  *  \param title        Title of window.
  *  \param label        Label to put before the GtkEntry text field.
  *  \param comment      An introduction displayed at top of the dialog (may be
@@ -124,7 +125,8 @@ extern "C" {
  *
  *  \return             TRUE on success, FALSE if the user has canceled.
  ******************************************************************************/
-    BOOL dlgPopupDouble (char *title, char *label, char *comment, double *pResult);
+    BOOL dlgPopupDouble (GtkWindow *topWindow, char *title, char *label,
+                         char *comment, double *pResult);
 
 
 #ifdef  __cplusplus

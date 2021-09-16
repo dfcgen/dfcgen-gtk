@@ -286,7 +286,8 @@ static BOOL mainDlgCoeffEdit (FLTCOEFF *pFilter, MATHPOLY *poly, int index)
         g_strdup_printf (_("Changes coefficient of tap z<sup>-%d</sup> in"
                            " the selected list to a new value."), index);
 
-    BOOL ret = dlgPopupDouble (_("Change coefficient"),
+    BOOL ret = dlgPopupDouble (GTK_WINDOW (topWidget),
+                               _("Change coefficient"),
                                _("_New"), intro, poly->coeff + index);
     g_free (intro);
 
@@ -313,7 +314,8 @@ static BOOL mainDlgCoeffsFactor (FLTCOEFF *pFilter, MATHPOLY *poly, int index)
     int i;
     double factor = 1.0;
 
-    BOOL ret = dlgPopupDouble (_("Multiply coefficients"),
+    BOOL ret = dlgPopupDouble (GTK_WINDOW (topWidget),
+                               _("Multiply coefficients"),
                                _("_Factor"),
                                _("Multiplies all coefficients in the"
                                  " selected list with the given factor."),

@@ -170,11 +170,7 @@ void designDlgBoxRealize(GtkWidget *widget, gpointer user_data)
                                         gettext (dlgDesc[index].name));
     } /* for */
 
-#if GTK_CHECK_VERSION (2, 18, 0)
-    if (gtk_widget_is_toplevel (topWidget))                /* new since 2.18 */
-#else
-    if (GTK_WIDGET_TOPLEVEL (topWidget))            /* deprecated since 2.20 */
-#endif
+    if (gtk_widget_is_toplevel (topWidget))
     {
         index = dfcPrjGetDesign(NULL);
 

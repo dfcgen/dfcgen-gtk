@@ -3,7 +3,7 @@
  * \file
  *           Response settings/properties dialog.
  *
- * \author   Copyright (C) 2006, 2011, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * \author   Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  ******************************************************************************/
 
@@ -41,11 +41,12 @@ extern "C" {
 /* FUNCTION *******************************************************************/
 /** Creates the properties dialog for a response plot.
  *
+ *  \param topWindow    Parent window.
  *  \param pDiag        Pointer to current plot configuration (for preset).
  *
  *  \return             Dialog widget.
  ******************************************************************************/
-    GtkWidget* responseDlgCreate (PLOT_DIAG *pDiag);
+    GtkWidget* responseDlgCreate (GtkWindow *topWindow, PLOT_DIAG *pDiag);
 
 
 /* FUNCTION *******************************************************************/

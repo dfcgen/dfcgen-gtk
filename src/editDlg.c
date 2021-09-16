@@ -76,8 +76,8 @@ static PLOT_UNIT unitT[] =
 /* LOCAL FUNCTION DECLARATIONS ************************************************/
 
 static char *dupInfoStr (const char* info);
-static GtkWidget* createInfoDlg (const DFCPRJ_INFO *pInfo);
-static GtkWidget* createSettingsDlg (const CFG_DESKTOP* pPrefs);
+static GtkWidget* createInfoDlg (GtkWidget *topWidget, const DFCPRJ_INFO *pInfo);
+static GtkWidget* createSettingsDlg (GtkWidget *topWidget, const CFG_DESKTOP* pPrefs);
 static int searchUnit (PLOT_UNIT units[], int size, const char* unitName);
 static GtkResponseType editDlgSettingsAccept (GtkWidget* dialog);
 
@@ -89,26 +89,28 @@ static GtkResponseType editDlgSettingsAccept (GtkWidget* dialog);
 /* FUNCTION *******************************************************************/
 /** Application settings dialog creation function.
  *
- *  \param pPrefs   Pointer to desktop preferences.
+ *  \param topWidget    Parent widget.
+ *  \param pPrefs       Pointer to desktop preferences.
  *
  *  \return Settings dialog widget pointer.
  ******************************************************************************/
-static GtkWidget* createSettingsDlg (const CFG_DESKTOP* pPrefs)
+static GtkWidget* createSettingsDlg (GtkWidget *topWidget, const CFG_DESKTOP* pPrefs)
 {
     int i;
-    GtkWidget *settingsDlg, *widget, *label, *box, *table, *notebook;
+    GtkWidget *dialog, *widget, *label, *box, *table, *notebook;
     GtkAdjustment *spinAdjust;
 
-    settingsDlg = gtk_dialog_new ();
-    gtk_container_set_border_width (GTK_CONTAINER (settingsDlg), 6);
-    gtk_window_set_title (GTK_WINDOW (settingsDlg), _(PACKAGE " Settings"));
-    gtk_window_set_resizable (GTK_WINDOW (settingsDlg), FALSE);
-    gtk_window_set_destroy_with_parent (GTK_WINDOW (settingsDlg), TRUE);
-    gtk_window_set_icon_name (GTK_WINDOW (settingsDlg), GTK_STOCK_PREFERENCES);
-    gtk_window_set_type_hint (GTK_WINDOW (settingsDlg), GDK_WINDOW_TYPE_HINT_DIALOG);
+    dialog = gtk_dialog_new ();
+    gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (topWidget));
+    gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), TRUE);
 
-    box = GTK_DIALOG (settingsDlg)->vbox;
+    gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
+    gtk_window_set_title (GTK_WINDOW (dialog), _(PACKAGE " Settings"));
+    gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
+    gtk_window_set_icon_name (GTK_WINDOW (dialog), GUI_ICON_IMAGE_PREFS);
+    gtk_window_set_type_hint (GTK_WINDOW (dialog), GDK_WINDOW_TYPE_HINT_DIALOG);
 
+    box = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
     notebook = gtk_notebook_new ();
     gtk_box_pack_start (GTK_BOX (box), notebook, TRUE, TRUE, 0);
 
@@ -127,7 +129,7 @@ static GtkWidget* createSettingsDlg (const CFG_DESKTOP* pPrefs)
     gtk_widget_set_tooltip_text (widget, _("The number of digits following the decimal point of a floating point number"));
     gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (widget), TRUE);
     gtk_entry_set_activates_default (GTK_ENTRY (widget), TRUE);
-    GLADE_HOOKUP_OBJECT (settingsDlg, widget, EDITSETDLG_SPIN_PREC);
+    GLADE_HOOKUP_OBJECT (dialog, widget, EDITSETDLG_SPIN_PREC);
 
     label = gtk_label_new_with_mnemonic (_("Output _Precision"));
     gtk_grid_attach (GTK_GRID (table), label, 0, 0, 1, 1);
@@ -140,7 +142,7 @@ static GtkWidget* createSettingsDlg (const CFG_DESKTOP* pPrefs)
 
     widget = gtk_combo_box_text_new ();
     gtk_container_add (GTK_CONTAINER (box), widget);
-    GLADE_HOOKUP_OBJECT (settingsDlg, widget, EDITSETDLG_COMBO_UNIT_FREQU);
+    GLADE_HOOKUP_OBJECT (dialog, widget, EDITSETDLG_COMBO_UNIT_FREQU);
 
     for (i = 0; i < N_ELEMENTS (unitF); i++)
     {
@@ -161,7 +163,7 @@ static GtkWidget* createSettingsDlg (const CFG_DESKTOP* pPrefs)
 
     widget = gtk_combo_box_text_new ();
     gtk_container_add (GTK_CONTAINER (box), widget);
-    GLADE_HOOKUP_OBJECT (settingsDlg, widget, EDITSETDLG_COMBO_UNIT_TIME);
+    GLADE_HOOKUP_OBJECT (dialog, widget, EDITSETDLG_COMBO_UNIT_TIME);
 
     for (i = 0; i < N_ELEMENTS (unitT); i++)
     {
@@ -190,14 +192,9 @@ static GtkWidget* createSettingsDlg (const CFG_DESKTOP* pPrefs)
                                 gtk_notebook_get_nth_page (
                                     GTK_NOTEBOOK (notebook), 1), label);
 
-    /* Action area
-     */
-    box = GTK_DIALOG (settingsDlg)->action_area;
-    gtk_button_box_set_layout (GTK_BUTTON_BOX (box), GTK_BUTTONBOX_END);
-
     widget = DFCGEN_GTK_IMAGE_BUTTON_NEW(DFCGEN_GTK_STOCK_BUTTON_HELP);
     gtk_widget_show (widget);
-    gtk_dialog_add_action_widget (GTK_DIALOG (settingsDlg), widget,
+    gtk_dialog_add_action_widget (GTK_DIALOG (dialog), widget,
                                   GTK_RESPONSE_HELP);
 #ifndef TODO
     gtk_widget_set_sensitive (widget, FALSE);
@@ -205,7 +202,7 @@ static GtkWidget* createSettingsDlg (const CFG_DESKTOP* pPrefs)
     gtk_widget_set_can_default (widget, TRUE);
 
     widget = DFCGEN_GTK_IMAGE_BUTTON_NEW(DFCGEN_GTK_STOCK_BUTTON_CANCEL);
-    gtk_dialog_add_action_widget (GTK_DIALOG (settingsDlg), widget,
+    gtk_dialog_add_action_widget (GTK_DIALOG (dialog), widget,
                                   GTK_RESPONSE_CANCEL);
     gtk_widget_set_can_default (widget, TRUE);
 
@@ -214,9 +211,9 @@ static GtkWidget* createSettingsDlg (const CFG_DESKTOP* pPrefs)
                                   GTK_RESPONSE_OK);
     gtk_widget_set_can_default (widget, TRUE);
 
-    gtk_widget_show_all (settingsDlg);
+    gtk_widget_show_all (dialog);
 
-    return settingsDlg;
+    return dialog;
 } /* createSettingsDlg() */
 
 
@@ -284,19 +281,22 @@ static GtkResponseType editDlgSettingsAccept (GtkWidget* dialog)
 /* FUNCTION *******************************************************************/
 /** Project info dialog creation function.
  *
- *  \param pInfo    Pointer to current project info (for preset of GtkEntry).
+ *  \param topWidget    Parent widget.
+ *  \param pInfo        Pointer to current project info (for preset of GtkEntry).
  *
- *  \return         Dialog widget pointer.
+ *  \return             Dialog widget pointer.
  ******************************************************************************/
-static GtkWidget* createInfoDlg (const DFCPRJ_INFO *pInfo)
+static GtkWidget* createInfoDlg (GtkWidget *topWidget, const DFCPRJ_INFO *pInfo)
 {
     GtkWidget *dialog, *widget, *entry, *label, *table;
     GdkPixbuf *pixbuf;
 
     dialog = gtk_dialog_new ();
+    gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (topWidget));
+    gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), TRUE);
+
     gtk_window_set_title (GTK_WINDOW (dialog), _("Project Info"));
     gtk_window_set_type_hint (GTK_WINDOW (dialog), GDK_WINDOW_TYPE_HINT_DIALOG);
-    gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), TRUE);
 
     pixbuf = createPixbufFromFile (PACKAGE_ICON);
 
@@ -379,12 +379,6 @@ static GtkWidget* createInfoDlg (const DFCPRJ_INFO *pInfo)
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
     gtk_grid_attach (GTK_GRID (table), label, 0, 2, 1, 1);
 
-
-    /* Action area
-     */
-    gtk_button_box_set_layout (
-        GTK_BUTTON_BOX (GTK_DIALOG (dialog)->action_area), GTK_BUTTONBOX_END);
-
     widget = DFCGEN_GTK_IMAGE_BUTTON_NEW(DFCGEN_GTK_STOCK_BUTTON_HELP);
     gtk_dialog_add_action_widget (GTK_DIALOG (dialog), widget, GTK_RESPONSE_HELP);
 #ifndef TODO
@@ -454,8 +448,8 @@ void editDlgSettingsActivate (GtkWidget* widget, gpointer user_data)
 {
     gint result;
 
-    GtkWidget *dialog = createSettingsDlg(cfgGetDesktopPrefs ());
-
+    GtkWidget *dialog = createSettingsDlg (gtk_widget_get_toplevel (widget),
+                                           cfgGetDesktopPrefs ());
     do
     {
         result = gtk_dialog_run (GTK_DIALOG (dialog));
@@ -500,9 +494,8 @@ void editDlgInfoActivate (GtkWidget* widget, gpointer user_data)
     GtkTextIter start, stop;
 
     DFCPRJ_INFO info = {NULL, NULL, NULL};
-    GtkWidget *dialog = createInfoDlg(dfcPrjGetInfo ());
-
-
+    GtkWidget *dialog = createInfoDlg (gtk_widget_get_toplevel (widget),
+                                       dfcPrjGetInfo ());
     do
     {
         result = gtk_dialog_run (GTK_DIALOG (dialog));

@@ -268,6 +268,7 @@ void dlgSetDouble (GtkWidget* topWidget, const char *name,
 /* FUNCTION *******************************************************************/
 /** A little popup dialog, where the user shall enter a double value.
  *
+ *  \param topWindow    Parent window.
  *  \param title        Title of window.
  *  \param label        Label to put before the GtkEntry text field.
  *  \param comment      An introduction displayed at top of the dialog (may be
@@ -277,18 +278,20 @@ void dlgSetDouble (GtkWidget* topWidget, const char *name,
  *
  *  \return             TRUE on success, FALSE if the user has canceled.
  ******************************************************************************/
-BOOL dlgPopupDouble (char *title, char *label, char *comment, double *pResult)
+BOOL dlgPopupDouble (GtkWindow *topWindow, char *title, char *label,
+                     char *comment, double *pResult)
 {
     BOOL ret;
     char text[128];
     GtkWidget *widget, *entry, *vbox, *hbox;
 
     GtkWidget *dialog = gtk_dialog_new ();
+    gtk_window_set_transient_for (GTK_WINDOW (dialog), topWindow);
+    gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), TRUE);
 
     gtk_window_set_title (GTK_WINDOW (dialog), title);
     gtk_window_set_type_hint (GTK_WINDOW (dialog), GDK_WINDOW_TYPE_HINT_DIALOG);
-
-    vbox = GTK_DIALOG (dialog)->vbox;
+    vbox = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
 
     if (comment != NULL)
     {
@@ -312,9 +315,6 @@ BOOL dlgPopupDouble (char *title, char *label, char *comment, double *pResult)
     gtk_entry_set_text (GTK_ENTRY (entry), text);
     GLADE_HOOKUP_OBJECT (dialog, entry, "entry");
     gtk_label_set_mnemonic_widget (GTK_LABEL (widget), entry);
-
-    vbox = GTK_DIALOG (dialog)->action_area;
-    gtk_button_box_set_layout (GTK_BUTTON_BOX (vbox), GTK_BUTTONBOX_END);
 
     widget = DFCGEN_GTK_IMAGE_BUTTON_NEW(DFCGEN_GTK_STOCK_BUTTON_CANCEL);
     gtk_dialog_add_action_widget (GTK_DIALOG (dialog), widget, GTK_RESPONSE_CANCEL);
