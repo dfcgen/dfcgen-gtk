@@ -89,11 +89,7 @@ gchar* getPackageDirectory (DIRECTORY_ID dir_id)
     gchar* path;
 
 #ifdef G_OS_WIN32
-#if GTK_CHECK_VERSION (2, 18, 0)
     gchar* root = g_win32_get_package_installation_directory_of_module (NULL);
-#else
-    gchar* root = g_win32_get_package_installation_directory (NULL, NULL);
-#endif
 
     if (root != NULL)                       /* installation directory found? */
     {
