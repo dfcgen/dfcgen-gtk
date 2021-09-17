@@ -577,7 +577,7 @@ int cfgFlushSettings ()
  *  \param pDiag        Pointer to plot which holds the current settings.
  *
  ******************************************************************************/
-void cfgSaveResponseSettings(RESPONSE_TYPE type, PLOT_DIAG* pDiag)
+void cfgSaveResponseSettings (RESPONSE_TYPE type, PLOT_DIAG* pDiag)
 {
     CFG_RESPONSE_SETTINGS* pSet = &respSet[type];
 
@@ -612,7 +612,7 @@ void cfgSaveResponseSettings(RESPONSE_TYPE type, PLOT_DIAG* pDiag)
  *                      FALSE if not (off).
  *
  ******************************************************************************/
-BOOL cfgRestoreResponseSettings(RESPONSE_TYPE type, PLOT_DIAG* pDiag)
+BOOL cfgRestoreResponseSettings (RESPONSE_TYPE type, PLOT_DIAG* pDiag)
 {
     BOOL state;
 
@@ -636,7 +636,6 @@ BOOL cfgRestoreResponseSettings(RESPONSE_TYPE type, PLOT_DIAG* pDiag)
         pSet->flags |= CFG_FLAG_VISIBLE;                  /* prepare for save */
 
     } /* if */
-
 
     return state;
 

@@ -484,8 +484,8 @@ void stdIirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
 
     gtk_widget_show_all (stdIirDesignDlgMain);
 
-    gtk_combo_box_set_active(GTK_COMBO_BOX (comboFtr), FTR_NON);
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(stdIirDlgChar[STDIIR_TYPE_BUTTERWORTH].btn), TRUE);
+    gtk_combo_box_set_active (GTK_COMBO_BOX (comboFtr), FTR_NON);
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (stdIirDlgChar[STDIIR_TYPE_BUTTERWORTH].btn), TRUE);
 
 } /* stdIirDesignDlgCreate() */
 

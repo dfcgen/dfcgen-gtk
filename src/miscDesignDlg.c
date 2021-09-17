@@ -526,7 +526,7 @@ void miscDesignDlgDestroy (GtkWidget *topWidget)
         GLADE_HOOKUP_OBJECT_NO_REF (topWidget, NULL, MISCDLG_SPIN_DEGREE);
         GLADE_HOOKUP_OBJECT_NO_REF (topWidget, NULL, MISCDLG_EXPANDER_DESC);
         GLADE_HOOKUP_OBJECT_NO_REF (topWidget, NULL, MISCDLG_LABEL_DESC);
-        gtk_widget_destroy(widget);
+        gtk_widget_destroy (widget);
     } /* if */
 
 } /* miscDesignDlgDestroy() */

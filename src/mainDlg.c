@@ -711,8 +711,7 @@ GtkWidget* mainDlgCreate (void)
     gtk_window_set_role (GTK_WINDOW (topWidget), PACKAGE);
 
     g_signal_connect ((gpointer) topWidget, "destroy",
-                      G_CALLBACK (mainDlgDestroy),
-                      NULL);
+                      G_CALLBACK (mainDlgDestroy), NULL);
 
     vbox1 = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
     gtk_container_add (GTK_CONTAINER (topWidget), vbox1);
@@ -1007,7 +1006,7 @@ GtkWidget* mainDlgCreate (void)
     gtk_box_pack_start (GTK_BOX (hbox1), boxFilterDlg, TRUE, TRUE, 0);
     gtk_container_set_border_width (GTK_CONTAINER (boxFilterDlg), 6);
 
-    vpaneFilter = gtk_paned_new(GTK_ORIENTATION_VERTICAL);
+    vpaneFilter = gtk_paned_new (GTK_ORIENTATION_VERTICAL);
     gtk_box_pack_start (GTK_BOX (boxFilterDlg), vpaneFilter, TRUE, TRUE, 0);
     gtk_container_set_border_width (GTK_CONTAINER (vpaneFilter), 6);
 
@@ -1184,7 +1183,7 @@ void mainDlgUpdatePrjInfo ()
  ******************************************************************************/
 BOOL mainDlgUpdateFilter (int err)
 {
-    FLTCOEFF* pFilter = dfcPrjGetFilter();
+    FLTCOEFF* pFilter = dfcPrjGetFilter ();
     BOOL valid = pFilter != NULL;
 
     if (!FLTERR_CRITICAL (err))

@@ -3,7 +3,7 @@
  * \file     fileDlg.c
  * \brief    File menu dialogs.
  *
- * \author   Copyright (C) 2006, 2011-2012, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * \author   Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  ******************************************************************************/
 
@@ -95,7 +95,7 @@ static void previewUpdate (GtkFileChooser *chooser, gpointer labelWidget)
 
                 buf = g_strdup_printf (_("<b>Title</b>: %s\n<b>Author</b>: %s"),
                                        title, author);
-                gtk_file_chooser_set_preview_widget_active(chooser, TRUE);
+                gtk_file_chooser_set_preview_widget_active (chooser, TRUE);
                 gtk_label_set_markup (GTK_LABEL (labelWidget), buf);
 
                 prjFileFree (&info);                    /* free project info */
@@ -109,7 +109,7 @@ static void previewUpdate (GtkFileChooser *chooser, gpointer labelWidget)
     } /* if */
 
 
-    gtk_file_chooser_set_preview_widget_active(chooser, FALSE);
+    gtk_file_chooser_set_preview_widget_active (chooser, FALSE);
 } /* previewUpdate() */
 
 

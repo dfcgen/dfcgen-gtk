@@ -1,9 +1,10 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file
+ * \file     linFirFilter.c
+ *
  *           Linear FIR filter coefficients generator.
  *
- * \author   Copyright (C) 2006, 2011, 2012, 2020 Ralf Hoppe
+ * \author   Copyright (C) 2006, 2011, 2012, 2020, 2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  ******************************************************************************/
 
@@ -179,7 +180,6 @@ static int genCosineSystem (double x, MATHPOLY *poly)
 
     for (i = 0; i <= poly->degree; i++)
     {
-
         tmp = x * (i - deg2);
         poly->coeff[i] = mathTryDiv (cos (4.0 * M_PI * tmp),
                                      1.0 - 64 * tmp * tmp);
@@ -461,6 +461,8 @@ static double firWinVanHann (int step, int degree, double param)
  ******************************************************************************/
 static double firWinBlackman (int step, int degree, double param)
 {
+    (void)param; /* unused */
+
     return mathFuncBlackman ((double) (step + 1) / (degree + 2));
 } /* firWinBlackman() */
 
