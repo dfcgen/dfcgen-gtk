@@ -1,9 +1,10 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file
- *           2-dimensional plot functions (GDK), normally for filter responses.
+ * \file     cairoPlot.h
  *
- * \author   Copyright (C) 2006, 2011, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * \brief    Two-dimensional plot functions, normally for filter responses.
+ *
+ * \author   Copyright (C) 2006-2021,  Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  ******************************************************************************/
 
@@ -17,7 +18,7 @@
 #include "base.h"    /* includes config.h (include before GNU system headers) */
 
 #include <gdk/gdk.h>
-#include <cairo.h>
+#include <cairo/cairo.h>
 
 #ifdef  __cplusplus
 extern "C" {
@@ -197,8 +198,8 @@ extern "C" {
         PLOT_FUNC_INIT initFunc; /**< plot initialization function (may be NULL) */
         PLOT_FUNC_GET sampleFunc;             /**< real-world function y=f(x) */
         PLOT_FUNC_END endFunc; /**< plot de-initialization function (may be NULL) */
-        GdkColor *colors;      /**< Pointer to allocated colors (may be NULL) */
-        GdkRectangle area;        /**< In: drawing area, out: graph rectangle */
+        GdkRGBA *colors;     /**< Pointer to allocated colors (may be NULL) */
+        GdkRectangle area;      /**< In: drawing area, out: graph rectangle */
     } PLOT_DIAG;
 
 

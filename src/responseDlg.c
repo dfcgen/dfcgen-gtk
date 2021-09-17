@@ -66,7 +66,9 @@ static void createLogGridButton (GtkWidget *topWidget, GtkGrid *table,
                                  char *logBtnName, char *gridBtnName,
                                  PLOT_AXIS *pAxis);
 static void autoScalingChanged (GtkCheckButton* button, gpointer user_data);
+static void applyStyleColor (GtkComboBox *combobox, GtkColorChooser *colorsel);
 static void colorItemChanged (GtkComboBox *combobox, gpointer user_data);
+static void colorChooserApply (GtkColorChooser *colorsel, gpointer user_data);
 static int responseDlgGetAxis (GtkWidget* topWidget, const char *widgets[],
                                 double vmin, double vmax, PLOT_AXIS *pAxis);
 
@@ -226,7 +228,31 @@ static void autoScalingChanged (GtkCheckButton* button, gpointer user_data)
 
 
 /* FUNCTION *******************************************************************/
-/** This function is called if the color selection changes.
+/** Appply currently selected color.
+ *
+ *  \param combobox     Combobox widget which identifies the item.
+ *  \param colorsel     \e GtkColorChooser widget.
+ *
+ ******************************************************************************/
+static void applyStyleColor (GtkComboBox *combobox, GtkColorChooser *colorsel)
+{
+    int idx = gtk_combo_box_get_active (combobox);
+
+    if (idx < 0)
+    {
+        idx = 0;                        /* set any, in case nothing selected */
+    } /* if */
+
+    gtk_color_chooser_get_rgba (
+        colorsel, &responseDlgColorVals[responseDlgColorItem]);
+    responseDlgColorItem = idx;           /* remind last selected color item */
+    gtk_color_chooser_set_rgba (colorsel, &responseDlgColorVals[idx]);
+
+} /* applyStyleColor() */
+
+
+/* FUNCTION *******************************************************************/
+/** This function is called if the color item \e GtkComboBox selection changes.
  *
  *  \param combobox     Combobox widget which determines the color selection.
  *  \param user_data    User data set when the signal handler was connected (unused).
@@ -234,22 +260,25 @@ static void autoScalingChanged (GtkCheckButton* button, gpointer user_data)
  ******************************************************************************/
 static void colorItemChanged (GtkComboBox *combobox, gpointer user_data)
 {
-    int idx = gtk_combo_box_get_active(combobox);
-    GtkColorSelection *colorsel = GTK_COLOR_SELECTION (
-        lookup_widget (GTK_WIDGET (combobox), RESPONSE_DLG_COLOR_SELECT));
-
-    if (idx < 0)
-    {
-        idx = 0;                        /* set any, in case nothing selected */
-    } /* if */
-
-
-    gtk_color_selection_get_current_color (
-        colorsel, &responseDlgColorVals[responseDlgColorItem]);
-    responseDlgColorItem = idx;           /* remind last selected color item */
-    gtk_color_selection_set_current_color (colorsel, &responseDlgColorVals[idx]);
+    applyStyleColor (combobox, GTK_COLOR_CHOOSER (
+        lookup_widget (GTK_WIDGET (combobox), RESPONSE_DLG_COLOR_SELECT)));
 
 } /* colorItemChanged() */
+
+
+/* FUNCTION *******************************************************************/
+/** This function is called if the selected color in \e GtkColorChooser has been applied.
+ *
+ *  \param colorsel     \e GtkColorChooser widget.
+ *  \param user_data    User data set when the signal handler was connected (unused).
+ *
+ ******************************************************************************/
+static void colorChooserApply (GtkColorChooser *colorsel, gpointer user_data)
+{
+    applyStyleColor (GTK_COMBO_BOX (
+                         lookup_widget (GTK_WIDGET (colorsel), RESPONSE_DLG_COMBO_COLOR)),
+                     colorsel);
+} /* colorChooserApply() */
 
 
 /* EXPORTED FUNCTION DEFINITIONS **********************************************/
@@ -260,8 +289,7 @@ static void colorItemChanged (GtkComboBox *combobox, gpointer user_data)
  *
  *  \attention          If anyone changes the enums PLOT_STYLE or PLOT_COLOR
  *                      from cairoPlot.h then the calls into
- *                      gtk_combo_box_append_text() must be adopted to reflect
- *                      this.
+ *                      gtk_combo_box_text_append_text() must be adopted.
  *
  *  \param topWindow    Parent window.
  *  \param pDiag        Pointer to current plot configuration (for preset).
@@ -270,7 +298,7 @@ static void colorItemChanged (GtkComboBox *combobox, gpointer user_data)
  ******************************************************************************/
 GtkWidget* responseDlgCreate (GtkWindow *topWindow, PLOT_DIAG *pDiag)
 {
-    GtkWidget *widget, *label, *box, *frame, *alignment, *table, *colorSel;
+    GtkWidget *widget, *label, *box, *frame, *table, *colorSel;
     GtkAdjustment *spinAdjust;
     char *axisName;
 
@@ -506,13 +534,13 @@ GtkWidget* responseDlgCreate (GtkWindow *topWindow, PLOT_DIAG *pDiag)
     responseDlgColorItem = 0;                         /* color item selection */
     memcpy (responseDlgColorVals, pDiag->colors, sizeof (responseDlgColorVals));
 
-    colorSel = gtk_color_selection_new ();
+    colorSel = gtk_color_chooser_widget_new ();
     gtk_box_pack_start (GTK_BOX (box), colorSel, FALSE, FALSE, 0);
-    gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (colorSel), FALSE);
-    gtk_color_selection_set_has_palette (GTK_COLOR_SELECTION (colorSel), TRUE);
+    gtk_color_chooser_set_use_alpha (GTK_COLOR_CHOOSER (colorSel), FALSE);
+    gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (colorSel), responseDlgColorVals);
     GLADE_HOOKUP_OBJECT (responseDlg, colorSel, RESPONSE_DLG_COLOR_SELECT);
-    gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (colorSel),
-                                           responseDlgColorVals);
+    g_signal_connect (colorSel, "color-activated", G_CALLBACK (colorChooserApply), NULL);
+
     widget = gtk_event_box_new ();
     gtk_grid_attach (GTK_GRID (table), widget, 1, 0, 1, 1);
     gtk_widget_set_tooltip_text (widget, _("Style of graph"));

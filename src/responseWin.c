@@ -35,10 +35,11 @@ typedef struct
     RESPONSE_TYPE type;                     /**< Type of response plot/window */
     char *iconFile;                              /**< Name of icon (png) file */
     PLOT_DIAG diag;                                            /**< Plot data */
-    GdkRGBA colors[PLOT_COLOR_SIZE];        /**< Allocated colors to be used */
-    int points;                 /**< Points drawed on last responsePlotDraw() */
+    GdkRGBA colors[PLOT_COLOR_SIZE];         /**< Allocated colors to be used */
+    cairo_surface_t *surface;   /**< surface to store current painting (diag) */
+    int points;       /**< Number of points drawed on last responsePlotDraw() */
     GdkRectangle zoom;                 /**< Zoom coordinates (last rectangle) */
-    GdkGCValues original;                /**< Saved GdkGC values when zooming */
+    gboolean grabbed; /**< \c TRUE on pointer grab in zoom mode, else \c FALSE */
     GtkCheckMenuItem *menuref;            /**< (Backward) menu item reference */
     GtkWidget* btnPrint;                  /**< Print button widget reference */
     GtkWidget* topWidget; /**< response plot top-level widget (NULL if not exists) */
@@ -53,18 +54,15 @@ typedef struct
 #define RESPONSE_WIN_GRAPH_THICKNESS    (2.0)           /**< Graph line width */
 
 
-/** Used GDK graphics context for zoom rectangle
- */
-#define RESPONSE_WIN_ZOOM_GC(widget)  (widget)->style->dark_gc[GTK_STATE_NORMAL]
-
 
 /* LOCAL FUNCTION DECLARATIONS ************************************************/
 
-static void drawZoomRect (RESPONSE_WIN *pDesc);
+static void plotToSurface (RESPONSE_WIN *pDesc, GtkWidget *widget);
+static void drawZoomRect (RESPONSE_WIN *pDesc, cairo_t* gc);
 static void cancelZoomMode (RESPONSE_WIN *pDesc, GdkDevice* device);
 static void responseWinCreate (RESPONSE_WIN *pDesc);
-static gboolean exposeHandler (GtkWidget *widget, GdkEventExpose *event, gpointer user_data);
-static BOOL responseWinExpose (RESPONSE_WIN* pDesc);
+static gboolean responseWinDrawHandler (GtkWidget *widget, cairo_t *gc, gpointer user_data);
+static void responseWinExpose (RESPONSE_WIN* pDesc);
 static void responseWinMapped (GtkWidget* widget, gpointer user_data);
 static void responseWinDestroyed (GtkWidget* object, gpointer user_data);
 static void responseWinBtnPropActivate (GtkButton *button, gpointer user_data);
@@ -185,17 +183,51 @@ static RESPONSE_WIN responseWidget[RESPONSE_TYPE_SIZE] =
 /* LOCAL FUNCTION DEFINITIONS *************************************************/
 
 
-
-/* FUNCTION *******************************************************************/
-/** Cancels the zoom mode by restoring the original graphics context and
- *  erasing the last zoom rubberband. Call this function only if really in
- *  zoom mode, means the pointer is grabbed.
+/**
+ * \brief           (Re-) Create the surface and plot the response diagram into.
+ * \note            This function should be called after change of plot area size.
  *
- *  \param pDesc        Pointer to response window/widget description.
- *
- ******************************************************************************/
-static void drawZoomRect (RESPONSE_WIN *pDesc)
+ * \param[in,out]   pDesc       Pointer to response window/widget descriptor.
+ * \param[in,out]   widget      \GTkDrawingArea widget (which is the final target,
+ *                              but used only as a template for \p pDesc->surface).
+ */
+static void plotToSurface (RESPONSE_WIN *pDesc, GtkWidget *widget)
 {
+    cairo_t *gc;
+
+    int width = gtk_widget_get_allocated_width (widget);
+    int height = gtk_widget_get_allocated_height (widget);
+
+    if (pDesc->surface != NULL)
+    {
+        cairo_surface_destroy (pDesc->surface);
+    }
+
+    pDesc->surface = gdk_window_create_similar_surface (
+        gtk_widget_get_window (widget), CAIRO_CONTENT_COLOR_ALPHA, width, height);
+
+    pDesc->diag.area.x = pDesc->diag.area.y = 0;   /* set size of plot area */
+    pDesc->diag.area.width = width;
+    pDesc->diag.area.height = height;
+
+    gc = cairo_create (pDesc->surface);
+    pDesc->points = responsePlotDraw (gc, pDesc->type, &pDesc->diag);
+    cairo_destroy (gc);
+}
+
+
+/**
+ * \brief   Draw zoom rubberband into graphics context.
+ *
+ *  \pre    Call this function only if really in zoom mode (mouse grabbed).
+ *
+ *  \param  pDesc       Pointer to response window/widget descriptor.
+ *  \param  gc          Graphics context.
+ */
+static void drawZoomRect (RESPONSE_WIN *pDesc, cairo_t* gc)
+{
+    static double dashes = 4.0;
+
     GdkRectangle rect = pDesc->zoom;
 
     if (rect.width < 0)
@@ -210,42 +242,44 @@ static void drawZoomRect (RESPONSE_WIN *pDesc)
         rect.height = -rect.height;
     } /* if */
 
-    gdk_draw_rectangle (GDK_DRAWABLE(pDesc->draw->window),  /* erase old rect */
-                        RESPONSE_WIN_ZOOM_GC(pDesc->draw), FALSE,
-                        rect.x, rect.y, rect.width, rect.height);
+    // FIXME: use gdk_cairo_set_source_rgba () or cairo_set_source_rgb(gc, 1, 1, 1) ???
+    // cairo_set_source_rgb (gc, 1, 1, 1);
+    cairo_set_operator (gc, CAIRO_OPERATOR_OVER);
+    cairo_set_line_width (gc, 1);
+    cairo_set_dash (gc, &dashes, 1, 0.0);
+    cairo_set_line_cap (gc, CAIRO_LINE_CAP_BUTT);
+    cairo_set_line_join (gc, CAIRO_LINE_JOIN_MITER);
+
+    gdk_cairo_rectangle (gc, &rect);                   /* cairo_rectangle() */
+    cairo_stroke (gc);
 } /* drawZoomRect() */
 
 
 
-/* FUNCTION *******************************************************************/
-/** Cancels the zoom mode by restoring the original graphics context and
- *  erasing the last zoom rubberband. Call this function only if really in
- *  zoom mode, means the pointer is grabbed.
+/** 
+ * \brief   Cancels the zoom mode, then exposes the drawing widget.
+ * \pre     Call this function only if really in zoom mode (pointer is grabbed).
  *
  *  \param pDesc        Pointer to response window/widget description.
- *  \param device       Associated GDK device.
- *
- ******************************************************************************/
+ *  \param device       Mouse device.
+ */
 static void cancelZoomMode (RESPONSE_WIN *pDesc, GdkDevice* device)
 {
-    drawZoomRect (pDesc);
-    gdk_device_ungrab (device, GDK_CURRENT_TIME);   /* clear zoom indicator */
-    gdk_gc_set_values (RESPONSE_WIN_ZOOM_GC(pDesc->draw), &pDesc->original,
-                       GDK_GC_FUNCTION);
+    gdk_device_ungrab (device, GDK_CURRENT_TIME);
+    pDesc->grabbed = FALSE;
+    responseWinExpose (pDesc);
 } /* cancelZoomMode() */
 
 
 
-/* FUNCTION *******************************************************************/
-/** \e Clicked event callback emitted when a print menuitem/button is pressed.
+/**
+ * \brief   \e Clicked event callback emitted when a print menuitem/button is pressed.
  *
- *  \param[in] srcWidget \c GtkToolButton on event \e clicked, which causes
- *                       this call.
-
- *  \param user_data    Pointer to response description (::RESPONSE_WIN) as
+ * \param   srcWidget   \c GtkToolButton on event \e clicked, which causes
+ *                      this call.
+ * \param   user_data   Pointer to response description (::RESPONSE_WIN) as
  *                      supplied to function g_signal_connect().
- *
- ******************************************************************************/
+ */
 static void responseWinBtnPrintActivate (GtkWidget* srcWidget, gpointer user_data)
 {
     RESPONSE_WIN* pDesc = (RESPONSE_WIN*)user_data;
@@ -256,20 +290,16 @@ static void responseWinBtnPrintActivate (GtkWidget* srcWidget, gpointer user_dat
 
 
 
-
-
-/* FUNCTION *******************************************************************/
-/** Creates a filter response widget/window. Such a window is used to display
- *  - magnitude reponse
- *  - phase response
- *  - step response etc.
+/**
+ * \brief   Creates a filter response widget/window. Such a window is used to display
+ *          - magnitude reponse,
+ *          - phase response,
+ *          - step response etc.
  *
- *  \note               This function has changed after \e glade code generation.
+ * \param   pDesc       Pointer to response window/widget description.
  *
- *  \param pDesc        Pointer to response window/widget description.
- *
- *  \todo               Restore size of drawing area from last session
- ******************************************************************************/
+ * \todo    Restore size of drawing area from last session.
+ */
 static void responseWinCreate (RESPONSE_WIN *pDesc)
 {
     GtkWidget *vbox;
@@ -343,9 +373,8 @@ static void responseWinCreate (RESPONSE_WIN *pDesc)
     g_signal_connect ((gpointer) pDesc->topWidget, "key_press_event",
                       G_CALLBACK (responseWinKeyPress),
                       pDesc);
-
-    g_signal_connect ((gpointer) pDesc->draw, "expose_event",
-                      G_CALLBACK (exposeHandler),
+    g_signal_connect ((gpointer) pDesc->draw, "draw",
+                      G_CALLBACK (responseWinDrawHandler),
                       pDesc);
     g_signal_connect ((gpointer) pDesc->draw, "destroy",
                       G_CALLBACK (responseWinDestroyed),
@@ -359,7 +388,6 @@ static void responseWinCreate (RESPONSE_WIN *pDesc)
 
 
     gtk_widget_show_all (pDesc->topWidget);
-
     gtk_widget_grab_focus (btnSettings);
     gtk_widget_grab_default (btnSettings);
 
@@ -367,154 +395,144 @@ static void responseWinCreate (RESPONSE_WIN *pDesc)
 
 
 
-/* FUNCTION *******************************************************************/
-/** Invalidates the drawing area of a response window.
+/**
+ * \brief   Invalidates the drawing area of a response window.
  *
- *  \param pDesc    Pointer to response window description.
- *
- *  \return             TRUE if the associated response does really exist, else
- *                      FALSE.
- ******************************************************************************/
-static BOOL responseWinExpose (RESPONSE_WIN* pDesc)
+ * \param   pDesc   Pointer to response window description.
+ */
+static void responseWinExpose (RESPONSE_WIN* pDesc)
 {
-    if (pDesc->topWidget != NULL)
+    if ((pDesc->topWidget != NULL) && (pDesc->draw != NULL))
     {
-        gdk_window_invalidate_region (pDesc->draw->window,
-                                      gdk_drawable_get_visible_region (
-                                          GDK_DRAWABLE(pDesc->draw->window)),
-                                      FALSE);
-        return TRUE;
+        gdk_window_invalidate_rect (
+            gtk_widget_get_window (pDesc->draw), NULL, FALSE);
     } /* if */
-
-    return FALSE;
 } /* responseWinExpose() */
 
 
 
-/* FUNCTION *******************************************************************/
-/** Redraws a response widget in case an \e expose event is received.
+/**
+ * \brief   Redraws a response widget in case an \e draw event is received.
  *
- *  \param widget       Pointer to widget (GtkDrawingArea, GDK drawable), which
- *                      have to be redrawn with a particular filter response.
- *  \param event        \e expose event data.
- *  \param user_data    Pointer to response description (of type RESPONSE_WIN)
- *                      as supplied to function g_signal_connect() for \e expose
+ * \param   widget      Pointer to \c GtkDrawingArea widget, which has to be
+ *                      redrawn with a particular filter response.
+ * \param   gc          \e Cairo graphics context.
+ * \param   user_data   Pointer to response description (of type RESPONSE_WIN)
+ *                      as supplied to function g_signal_connect() for \e draw
  *                      event.
- *  \return             TRUE if the callback handled the signal, and no further
- *                      handling is needed.
- ******************************************************************************/
-static gboolean exposeHandler (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
+ * \return  \c TRUE if the callback handled the signal, and no further
+ *          handling is needed.
+ * \see     Documentation of \e GtkDrawingArea.
+ */
+static gboolean responseWinDrawHandler (GtkWidget *widget, cairo_t *gc,
+                                        gpointer user_data)
 {
-    cairo_t* cr;
-    GdkDisplay* display;
-    GdkCursor* cursor;
     char labelString[128];
 
     RESPONSE_WIN* pDesc = user_data;
-    GdkDrawable* drawable = GDK_DRAWABLE(widget->window);
+    GdkWindow* topWindow = gtk_widget_get_window (pDesc->topWidget);
 
-    ASSERT(pDesc != NULL);
-    display = gtk_widget_get_display (pDesc->topWidget);
-    cursor = gdk_cursor_new_from_name (display, "watch");
-    gdk_window_set_cursor (pDesc->topWidget->window, cursor);
-    g_object_unref (cursor);       /* free client side resource immediately */
+    ASSERT (pDesc != NULL);
+    ASSERT (widget == pDesc->draw);
 
-    pDesc->diag.area.x = pDesc->diag.area.y = 0;     /* set size of plot area */
-    gdk_drawable_get_size (drawable, &pDesc->diag.area.width, &pDesc->diag.area.height);
-
-    cr = gdk_cairo_create (drawable);                 /* create cairo context */
-    pDesc->points = responsePlotDraw (cr, pDesc->type, &pDesc->diag);
-
-    if (pDesc->points >= 0)
+    if (pDesc->grabbed && (pDesc->surface != NULL))
     {
-        g_snprintf (labelString, sizeof(labelString), _("%d Points"), pDesc->points);
-        gtk_label_set_text (GTK_LABEL(pDesc->label), labelString);
-    } /* if */
+        cairo_save (gc);
+        cairo_set_source_surface (gc, pDesc->surface, 0, 0);
+        cairo_paint (gc);                 /* copy surface into drawing area */
+        cairo_restore (gc);
+
+        drawZoomRect (pDesc, gc);
+    }
     else
     {
-        gtk_label_set_text (GTK_LABEL(pDesc->label), "");
-    } /* else */
+        GdkCursor* cursor = gdk_cursor_new_from_name (
+            gtk_widget_get_display (pDesc->topWidget), GUI_CURSOR_IMAGE_WATCH);
+        gdk_window_set_cursor (topWindow, cursor);
+        g_object_unref (cursor);
+
+        plotToSurface (pDesc, widget);
+        // gtk_render_background (gtk_widget_get_style_context (widget), gc, ...
+        cairo_set_source_surface (gc, pDesc->surface, 0, 0);
+        cairo_paint (gc);                 /* copy surface into drawing area */
+
+        if (pDesc->points >= 0)
+        {
+            g_snprintf (labelString, sizeof (labelString), _("%d Points"), pDesc->points);
+            gtk_label_set_text (GTK_LABEL (pDesc->label), labelString);
+        } /* if */
+        else
+        {
+            gtk_label_set_text (GTK_LABEL (pDesc->label), "");
+        } /* else */
+
+        gdk_window_set_cursor (topWindow, NULL);   /* restore parent cursor */
+    }
+
+    return TRUE;                                           /* stop emission */
+} /* responseWinDrawHandler() */
 
 
-    cairo_destroy(cr);                                  /* free cairo context */
-    gdk_window_set_cursor(pDesc->topWidget->window, NULL); /* restore parent cursor */
 
-    return TRUE;                                             /* stop emission */
-} /* exposeHandler() */
-
-
-
-/* FUNCTION *******************************************************************/
-/** This function is called when a response widget (GtkDrawingArea) is
- *  destroyed.
+/**
+ * \brief   This function is called when a response widget (GtkDrawingArea) is
+ *          destroyed.
  *
- *  \note  The function isn't called if the window is destroyed because of
- *         main application exit (e.g. by pressing Ctrl-Q).
+ * \note    The function isn't called if the window is destroyed because of
+ *          main application exit (e.g. by pressing Ctrl-Q).
  *
- *  \param object       Response widget which was destroyed.
- *  \param user_data    Pointer to response description (of type RESPONSE_WIN)
+ * \param   object      Response widget which was destroyed.
+ * \param   user_data   Pointer to response description (of type RESPONSE_WIN)
  *                      as supplied to function g_signal_connect() for \e destroy
  *                      event.
- *
- ******************************************************************************/
-static void responseWinDestroyed(GtkWidget* object, gpointer user_data)
+ */
+static void responseWinDestroyed (GtkWidget* object, gpointer user_data)
 {
     RESPONSE_WIN* pDesc = user_data;
 
     ASSERT(pDesc != NULL);
 
     pDesc->topWidget = NULL;
-    gdk_colormap_free_colors (gdk_colormap_get_system (), pDesc->colors,
-                              PLOT_COLOR_SIZE);
     gtk_check_menu_item_set_active (pDesc->menuref, FALSE);    /* update menu */
 
 } /* responseWinDestroyed() */
 
 
 
-/* FUNCTION *******************************************************************/
-/** This function is called when a response widget (GtkDrawingArea) is realized.
+/**
+ * \brief   This function is called when a response widget is realized (becomes
+ *          visible).
  *
- *  \param widget       Response widget which was realized.
- *  \param user_data    Pointer to response description (of type RESPONSE_WIN)
+ * \param   widget      Response widget (\e GtkDrawingArea) which was realized.
+ * \param   user_data   Pointer to response description (of type RESPONSE_WIN)
  *                      as supplied to function g_signal_connect() for \e realize
  *                      event.
- *
- ******************************************************************************/
+ */
 static void responseWinMapped (GtkWidget* widget, gpointer user_data)
 {
-    gboolean success[PLOT_COLOR_SIZE];
-
     RESPONSE_WIN* pDesc = user_data;
 
     ASSERT(pDesc != NULL);
     pDesc->diag.colors = pDesc->colors;      /* set pointer for color restore */
     cfgRestoreResponseSettings (pDesc->type, &pDesc->diag);
 
-    if (gdk_colormap_alloc_colors (gdk_colormap_get_system (), pDesc->colors,
-                                   PLOT_COLOR_SIZE, TRUE, TRUE, success) != 0)
-    {
-        DEBUG_LOG ("Could not allocate colors in system colormap");
-    } /* if */
-
 } /* responseWinMapped() */
 
 
 
-/* FUNCTION *******************************************************************/
-/** This function should be called when then properties button is clicked.
+/**
+ * \brief   This function should be called when then properties button is clicked.
  *
- *  \param button       Button widget.
- *  \param user_data    Pointer to response description (of type RESPONSE_WIN)
+ * \param   button      Button widget.
+ * \param   user_data   Pointer to response description (of type RESPONSE_WIN)
  *                      as supplied to function g_signal_connect().
- *
- ******************************************************************************/
+ */
 static void responseWinBtnPropActivate (GtkButton *button, gpointer user_data)
 {
     gint result;
 
     RESPONSE_WIN *pDesc = user_data;
-    GtkWidget *dialog = responseDlgCreate (&pDesc->diag);
+    GtkWidget *dialog = responseDlgCreate (GTK_WINDOW (pDesc->topWidget), &pDesc->diag);
 
     do
     {
@@ -547,18 +565,19 @@ static void responseWinBtnPropActivate (GtkButton *button, gpointer user_data)
 } /* responseWinBtnPropActivate */
 
 
+
 /* EXPORTED FUNCTION DEFINITIONS **********************************************/
 
 
-/* FUNCTION *******************************************************************/
-/** Toggles visibility of a filter response widget/window. This function
- *  should be called if a \e GtkCheckMenuItem from the \e View menu receives
- *  an \e activate event.
+/**
+ * \brief   Toggles visibility of a filter response widget/window.
+ * \note    This function should be called if a \e GtkCheckMenuItem from the
+ *          \e View menu receives an \e activate event.
  *
- *  \param menuitem     Menu item which has received the \e activate event.
- *  \param user_data    Pointer to response window type (RESPONSE_WIN_TYPE).
+ * \param   menuitem    Menu item which has received the \e activate event.
+ * \param   user_data   Pointer to response window type (RESPONSE_WIN_TYPE).
  *
- ******************************************************************************/
+ */
 void responseWinMenuActivate (GtkMenuItem* menuitem, gpointer user_data)
 {
     RESPONSE_WIN *pDesc;
@@ -572,6 +591,8 @@ void responseWinMenuActivate (GtkMenuItem* menuitem, gpointer user_data)
     {
         if (pDesc->topWidget == NULL)
         {
+            pDesc->surface = NULL;
+            pDesc->grabbed = FALSE;
             responseWinCreate (pDesc);                   /* and create window */
 
             /* Because sometimes the expose event is missing after creation,
@@ -591,13 +612,12 @@ void responseWinMenuActivate (GtkMenuItem* menuitem, gpointer user_data)
 
 
 
-/* FUNCTION *******************************************************************/
-/** Invalidates one or all response windows for redrawing.
+/**
+ * \brief   Invalidates one or all response windows for redrawing.
  *
- *  \param type         The response window which shall be redrawn. Set this
+ * \param   type        The response window which shall be redrawn. Set this
  *                      parameter to RESPONSE_TYPE_SIZE to redraw all.
- *
- ******************************************************************************/
+ */
 void responseWinRedraw (RESPONSE_TYPE type)
 {
     RESPONSE_TYPE start, stop;
@@ -620,61 +640,65 @@ void responseWinRedraw (RESPONSE_TYPE type)
             gtk_widget_set_sensitive (responseWidget[type].btnPrint, filterValid);
         } /* if */
 
-        (void)responseWinExpose (&responseWidget[type]);
+        responseWinExpose (&responseWidget[type]);
     } /* for */
 } /* responseWinRedraw() */
 
 
-/* FUNCTION *******************************************************************/
-/** Top widget callback function on \e key_press_event. This function is used
- *  to detect zoom mode cancel.
+/**
+ * \brief   Top widget callback function on \e key_press_event.
+ * \note    This function is used to detect zoom mode cancel.
  *
- *  \param widget       Response plot widget handle (top-level).
- *  \param event        GDK event structure associated with \e key_press_event.
- *  \param user_data    Pointer to response window type (RESPONSE_WIN_TYPE).
+ * \param   widget      Response plot widget handle (top-level).
+ * \param   event       GDK event structure associated with \e key_press_event.
+ * \param   user_data   Pointer to response window type (RESPONSE_WIN_TYPE).
  *
- *  \return             TRUE if the signal shall be propagated to the GDK
- *                      default handler, else FALSE.
- ******************************************************************************/
+ * \return  \c TRUE if the signal shall be propagated to the GDK default handler,
+ *          else \c FALSE.
+ */
 static gboolean responseWinKeyPress (GtkWidget *widget, GdkEventKey *event,
                                      gpointer user_data)
 {
     RESPONSE_WIN* pDesc = user_data;
-    GdkDevice* device = gdk_event_get_device ((GdkEvent *) event);
 
-    if (gdk_display_device_is_grabbed (gtk_widget_get_display (pDesc->draw), device))
+    if (pDesc->grabbed)
     {
-        cancelZoomMode (pDesc, device);
+        GdkDevice* mouse = gdk_device_manager_get_client_pointer (
+            gdk_display_get_device_manager (
+                gtk_widget_get_display (pDesc->draw)));
+
+        cancelZoomMode (pDesc, mouse);
     } /* if */
 
     return FALSE;                    /* propagate signal to default handler */
 } /* responseWinKeyPress() */
 
 
-/* FUNCTION *******************************************************************/
-/** Drawing area widget callback function on \e button_press_event. This
- *  function is used to detect start of zoom mode.
+/**
+ * \brief   Drawing area widget callback function on \e button_press_event (mouse
+ *          button press).
+ * \note    This function is used to detect start of zoom mode.
  *
- *  \param widget       Drawing area widget handle.
- *  \param event        GDK event structure associated with \e button_press_event.
- *  \param user_data    Pointer to response window type (RESPONSE_WIN_TYPE).
+ * \param   widget      Drawing area widget handle.
+ * \param   event       GDK event structure associated with \e button_press_event.
+ * \param   user_data   Pointer to response window type (RESPONSE_WIN_TYPE).
  *
- *  \return             TRUE if the event shall be propagated to the GDK
- *                      default handler, else FALSE.
- ******************************************************************************/
+ * \return  \c TRUE if the event shall be propagated to the GDK default handler,
+ *          else \c FALSE.
+ */
 static gboolean responseWinButtonPress (GtkWidget* widget, GdkEventButton* event,
                                         gpointer user_data)
 {
     GdkCursor* cursor;
-    GdkGC* gc;
 
     RESPONSE_WIN* pDesc = user_data;
-    GdkDevice* device = gdk_event_get_device ((GdkEvent *) event);
     GdkDisplay* display = gtk_widget_get_display (pDesc->draw);
+    GdkDevice* mouse = gdk_device_manager_get_client_pointer (
+        gdk_display_get_device_manager (display));
 
-    if (gdk_display_device_is_grabbed (display, device))   /* in zoom mode? */
+    if (pDesc->grabbed)
     {
-        cancelZoomMode (pDesc, device);
+        cancelZoomMode (pDesc, mouse);
     } /* if */
 
     if ((event->button == 1) &&                         /* left mouse button? */
@@ -692,10 +716,10 @@ static gboolean responseWinButtonPress (GtkWidget* widget, GdkEventButton* event
                                         pDesc->diag.area.y + pDesc->diag.area.height,
                                         pDesc->diag.area.y, event->y));
 
-        cursor = gdk_cursor_new_from_name (display, "cross");
+        cursor = gdk_cursor_new_from_name (display, GUI_CURSOR_IMAGE_CROSS);
 
-        if (gdk_device_grab (device,
-                             pDesc->draw->window,
+        if (gdk_device_grab (mouse,
+                             gtk_widget_get_window (pDesc->draw),
                              GDK_OWNERSHIP_NONE,
                              FALSE,
                              GDK_BUTTON_MOTION_MASK |              /* mouse */
@@ -705,6 +729,7 @@ static gboolean responseWinButtonPress (GtkWidget* widget, GdkEventButton* event
                              cursor,
                              gdk_event_get_time ((GdkEvent *) event)) == GDK_GRAB_SUCCESS)
         {
+            pDesc->grabbed = TRUE;
             pDesc->zoom.x = event->x;
 
             if (pDesc->diag.y.flags & PLOT_AXIS_FLAG_AUTO)
@@ -717,14 +742,6 @@ static gboolean responseWinButtonPress (GtkWidget* widget, GdkEventButton* event
             } /* else */
 
             pDesc->zoom.width = pDesc->zoom.height = 0;
-
-            gc = RESPONSE_WIN_ZOOM_GC(pDesc->draw);
-            gdk_gc_get_values (gc, &pDesc->original);
-            gdk_gc_set_function (gc, GDK_XOR);
-            gdk_gc_set_line_attributes (gc, 1, GDK_LINE_ON_OFF_DASH,
-                                        GDK_CAP_BUTT, GDK_JOIN_MITER);
-            gdk_gc_set_clip_rectangle (gc, &pDesc->diag.area);
-            drawZoomRect (pDesc);
         } /* if */
 
         g_object_unref (cursor);   /* free client side resource immediately */
@@ -735,17 +752,17 @@ static gboolean responseWinButtonPress (GtkWidget* widget, GdkEventButton* event
 
 
 
-/* FUNCTION *******************************************************************/
-/** Drawing area widget callback function on \e button_release_event. This
- *  function is used to detect (regular) end of zoom mode.
+/**
+ * \brief   Drawing area widget callback function on \e button_release_event.
+ * \note    This function is used to detect (regular) end of zoom mode.
  *
- *  \param widget       Drawing area widget handle.
- *  \param event        GDK event structure associated with \e button_release_event.
- *  \param user_data    Pointer to response window type (RESPONSE_WIN_TYPE).
+ * \param   widget      Drawing area widget handle.
+ * \param   event       GDK event structure associated with \e button_release_event.
+ * \param   user_data   Pointer to response window type (RESPONSE_WIN_TYPE).
  *
- *  \return             TRUE if the event shall be propagated to the GDK
- *                      default handler, else FALSE.
- ******************************************************************************/
+ * \return  \c TRUE if the event shall be propagated to the GDK default handler,
+ *          else \c FALSE.
+ */
 static gboolean responseWinButtonRelease (GtkWidget* widget, GdkEventButton* event,
                                           gpointer user_data)
 {
@@ -753,11 +770,14 @@ static gboolean responseWinButtonRelease (GtkWidget* widget, GdkEventButton* eve
     double tmpx, tmpy;
 
     RESPONSE_WIN *pDesc = user_data;
-    GdkDevice* device = gdk_event_get_device ((GdkEvent *) event);
 
-    if (gdk_display_device_is_grabbed (gtk_widget_get_display (pDesc->draw), device))
+    if (pDesc->grabbed)
     {
-        cancelZoomMode (pDesc, device);
+        GdkDevice* mouse = gdk_device_manager_get_client_pointer (
+            gdk_display_get_device_manager (
+                gtk_widget_get_display (pDesc->draw)));
+
+        cancelZoomMode (pDesc, mouse);
 
         if (event->button == 1)                         /* left mouse button? */
         {
@@ -813,7 +833,7 @@ static gboolean responseWinButtonRelease (GtkWidget* widget, GdkEventButton* eve
                     pDesc->diag.y.stop = tmpy;
                 } /* if */
 
-                (void)responseWinExpose (pDesc);    /* redraw with new ranges */
+                responseWinExpose (pDesc);          /* redraw with new ranges */
 
             } /* if */
         } /* if */
@@ -827,26 +847,24 @@ static gboolean responseWinButtonRelease (GtkWidget* widget, GdkEventButton* eve
 
 
 
-/* FUNCTION *******************************************************************/
-/** Drawing area widget callback function on \e motion_notify_event. This
- *  function is used to track pointer movements while in zoom mode.
+/**
+ * \brief   Drawing area widget callback function on \e motion_notify_event.
+ * \note    This function is used to track pointer movements while in zoom mode.
  *
- *  \param widget       Drawing area widget handle.
- *  \param event        GDK event structure associated with \e motion_notify_event.
- *  \param user_data    Pointer to response window type (RESPONSE_WIN_TYPE).
+ * \param   widget      Drawing area widget handle.
+ * \param   event       GDK event structure associated with \e motion_notify_event.
+ * \param   user_data   Pointer to response window type (RESPONSE_WIN_TYPE).
  *
- *  \return             TRUE if the event shall be propagated to the GDK
- *                      default handler, else FALSE.
- ******************************************************************************/
+ * \return  \c TRUE if the event shall be propagated to the GDK default handler,
+ *          else \c FALSE.
+ */
 static gboolean responseWinMotionNotify (GtkWidget *widget, GdkEventMotion *event,
                                          gpointer user_data)
 {
     RESPONSE_WIN* pDesc = user_data;
 
-    if (gdk_display_device_is_grabbed (gtk_widget_get_display (pDesc->draw),
-                                       gdk_event_get_device ((GdkEvent *) event)))
+    if (pDesc->grabbed)
     {
-        drawZoomRect (pDesc);                          /* erase old rectangle */
         pDesc->zoom.width = event->x - pDesc->zoom.x;
 
         if (pDesc->diag.y.flags & PLOT_AXIS_FLAG_AUTO)
@@ -858,15 +876,8 @@ static gboolean responseWinMotionNotify (GtkWidget *widget, GdkEventMotion *even
             pDesc->zoom.height = event->y - pDesc->zoom.y;
         } /* else */
 
-
-        drawZoomRect (pDesc);                           /* draw new rectangle */
-
+        responseWinExpose (pDesc);                          /* draw rectangle */
     } /* if */
 
     return FALSE;                      /* propagate signal to default handler */
 } /* responseWinMotionNotify() */
-
-
-/******************************************************************************/
-/* END OF FILE                                                                */
-/******************************************************************************/

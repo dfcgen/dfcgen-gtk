@@ -67,13 +67,13 @@ typedef struct
 #define CFG_DEFAULT_T_STOP      (10 / CFG_DEFAULT_F_STOP) /**< Default stop time */
 #define CFG_FLAG_VISIBLE        1             /**< Response window is visible */
 
-
-/** Color format string (old X11 spec). Because GDK 2.8 does not accept the
- *  newer one, we use the old format when writing the config file. This may
- *  change in the future if GDK understands both syntax.
+/** \brief  Color format in config file
+ *  \note   To be backward compatible do not use gdk_rgba_to_string() for the
+ *          purpose of config file write.
+ *  \see    gdk_rgba_parse()
  */
 #define COLOR_FORMAT_STRING     "#%04X%04X%04X"
-/* #define COLOR_FORMAT_STRING     "rgb:%04x/%04x/%04x"*/ /* New X11 color spec. format */
+
 
 #ifdef G_OS_WIN32
 #define CFG_FILE_NAME           PACKAGE ".ini"        /**< Configuration file */
@@ -183,25 +183,6 @@ static CFG_RESPONSE_SETTINGS respSet[RESPONSE_TYPE_SIZE] =
 
 
 /* LOCAL MACRO DEFINITIONS ****************************************************/
-
-
-/* MACRO **********************************************************************/
-/** Gets a widgets color.
- *
- * \note                The widget attribute \p var accessed by this macro may
- *                      deprecated in later revision of GTK. In that case they
- *                      will be replaced e.g. by functions as gtk_style_get_fg().
- *
- * \param widget        Widget.
- * \param var           Name of (may be private) color variable: fg, bg, light,
- *                      dark, mid, text, base, text_aa
- * \param state         State of widget: GTK_STATE_NORMAL, ...
- *
- * \return              Color associated with style and state.
- */
-#define CFG_WIDGET_COLOR(widget, var, state) (widget)->style->var[state]
-
-
 
 
 /* LOCAL FUNCTION DECLARATIONS ************************************************/
@@ -381,28 +362,29 @@ void cfgCacheSettings (GtkWidget *widget)
 {
     CFG_RESPONSE_SETTINGS* pSet;
     RESPONSE_TYPE i;
-    GdkRGBA color;
+    GdkRGBA colorNormal, colorInactive;
     char **colorList;  /* pointer to array of char pointers (NULL-terminated) */
     int colorIdx;
 
     GKeyFile* keyFile = g_key_file_new ();
     char *name = g_build_filename (g_get_user_config_dir (), CFG_FILE_NAME, NULL);
+    GtkStyleContext* ctx = gtk_widget_get_style_context (widget);
 
     /* First set default colors
      */
+    gtk_style_context_get_color (ctx, GTK_STATE_FLAG_NORMAL, &colorNormal);
+    gtk_style_context_get_color (ctx, GTK_STATE_FLAG_INSENSITIVE, &colorInactive);
+
     for (i = 0, pSet = respSet; i < RESPONSE_TYPE_SIZE; i++, pSet++)
     {
         pSet->color[PLOT_COLOR_LABELS] =
         pSet->color[PLOT_COLOR_AXIS_NAME] =
         pSet->color[PLOT_COLOR_BOX] =
         pSet->color[PLOT_COLOR_GRID] =
-        pSet->color[PLOT_COLOR_GRAPH] =
-            CFG_WIDGET_COLOR (widget, text, GTK_STATE_NORMAL);
-
+        pSet->color[PLOT_COLOR_GRAPH] = colorNormal;
 
         pSet->color[PLOT_COLOR_NOTE_TEXT] =
-        pSet->color[PLOT_COLOR_NOTE_BOX] =
-            CFG_WIDGET_COLOR (widget, text_aa, GTK_STATE_NORMAL);
+        pSet->color[PLOT_COLOR_NOTE_BOX] = colorInactive;
     } /* for */
 
 
@@ -435,9 +417,9 @@ void cfgCacheSettings (GtkWidget *widget)
 
                 while ((colorList[colorIdx] != NULL) && (colorIdx < PLOT_COLOR_SIZE))
                 {                                 /* get all colors from list */
-                    if (gdk_rgba_parse (&color, colorList[colorIdx]))
+                    if (gdk_rgba_parse (&colorNormal, colorList[colorIdx]))
                     {
-                        pSet->color[colorIdx] = color;
+                        pSet->color[colorIdx] = colorNormal;
                     } /* if */
                     else
                     {
@@ -539,9 +521,9 @@ int cfgFlushSettings ()
         for (colorIdx = 0; colorIdx < PLOT_COLOR_SIZE; colorIdx++)
         {
             colorStr[colorIdx] = g_strdup_printf (COLOR_FORMAT_STRING,
-                                                  pSet->color[colorIdx].red,
-                                                  pSet->color[colorIdx].green,
-                                                  pSet->color[colorIdx].blue);
+                                                  (guint)(pSet->color[colorIdx].red * 65535.0),
+                                                  (guint)(pSet->color[colorIdx].green * 65535.0),
+                                                  (guint)(pSet->color[colorIdx].blue * 65535.0));
         } /* for */
 
         g_key_file_set_string_list (keyFile, pSet->key, CFG_KEY_COLORS,

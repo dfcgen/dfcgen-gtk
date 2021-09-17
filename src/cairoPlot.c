@@ -95,10 +95,9 @@ typedef void (*PLOT_FUNC_DRAW)(cairo_t* cr, PLOT_AXIS_WORKSPACE* pY,
 
 
 /* MACRO **********************************************************************/
-/** Sets a color from \p colors array into \e Cairo context.
- *
- *  \note               Do not use the function gdk_cairo_set_source_color(),
- *                      because it does'nt work.
+/**
+ *  \brief  Sets a color from \p colors array into \e Cairo context (using
+ *          100% transparency).
  *
  *  \param cr           \e Cairo drawing context.
  *  \param colors       Pointer to array of GDK colors indexed by PLOT_COLOR.
@@ -106,12 +105,13 @@ typedef void (*PLOT_FUNC_DRAW)(cairo_t* cr, PLOT_AXIS_WORKSPACE* pY,
  *  \param index        Identifies the color (PLOT_COLOR) to be changed.
  *
  ******************************************************************************/
-#define PLOT_COLOR_SET(cr, colors, index)                  \
-    if ((colors) != NULL)                                  \
-    {                                                      \
-        cairo_set_source_rgb ((cr), (colors)[(index)].red, \
-                              (colors)[(index)].green,     \
-                              (colors)[(index)].blue);     \
+#define PLOT_COLOR_SET(cr, colors, index)                   \
+    if ((colors) != NULL)                                   \
+    {                                                       \
+        cairo_set_source_rgba ((cr), (colors)[(index)].red, \
+                              (colors)[(index)].green,      \
+                              (colors)[(index)].blue,       \
+                               1.0);                        \
     }
 
 

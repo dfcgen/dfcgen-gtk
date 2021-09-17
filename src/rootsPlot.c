@@ -3,7 +3,7 @@
  * \file
  *           Roots plot functions.
  *
- * \author   Copyright (C) 2006, 2011, 2018, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * \author   Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  ******************************************************************************/
 
@@ -34,7 +34,7 @@
 
 
 static int plotRootIndex;                     /**< Index of next root to plot */
-static GtkWidget *plotDrawable;        /**< Roots plot drawable widget handle */
+static GdkWindow *rootsPlotWindow = NULL; /**< window of roots plot \c GtkDrawingArea */
 
 
 /* LOCAL MACRO DEFINITIONS ****************************************************/
@@ -47,8 +47,8 @@ static double plotRoot (double *px, void *pData);
 static double returnZeroRoot (double *px, void *pData);
 static void updateRootsMinMax (MATHPOLY *poly, gsl_complex *rmin, gsl_complex *rmax);
 static int calcRoots (MATHPOLY *poly);
-static gboolean rootsPlotExposeHandler (GtkWidget *widget, GdkEventExpose *event,
-                                        gpointer user_data);
+static gboolean rootsPlotDrawHandler (GtkWidget *widget, cairo_t *gc,
+                                      gpointer user_data);
 static double plotUnitCircleBottom (double *px, void *pData);
 static double plotUnitCircleTop (double *px, void *pData);
 
@@ -84,6 +84,7 @@ static int rootsPlotInit (double start, double stop, void *pData)
 
     return poly->degree;
 } /* rootsPlotInit() */
+
 
 
 /* FUNCTION *******************************************************************/
@@ -280,19 +281,19 @@ static int calcRoots (MATHPOLY *poly)
 
 
 /* FUNCTION *******************************************************************/
-/** Redraws a response widget in case an \e expose event is received.
+/** Redraws a response widget in case an \e draw event is received.
  *
- *  \param widget       Pointer to widget (GtkDrawingArea, GDK drawable), which
- *                      have to be redrawn with a particular filter response.
- *  \param event        \e expose event data.
+ *  \param widget       Pointer to \c GtkDrawingArea widget, which has to be
+ *                      redrawn with a particular filter response.
+ *  \param gc           \e Cairo graphics context.
  *  \param user_data    Pointer to response description (of type RESPONSE_WIN)
- *                      as supplied to function g_signal_connect() for \e expose
+ *                      as supplied to function g_signal_connect() for \e draw
  *                      event.
  *  \return             TRUE if the callback handled the signal, and no further
  *                      handling is needed.
  ******************************************************************************/
-static gboolean rootsPlotExposeHandler (GtkWidget *widget, GdkEventExpose *event,
-                                        gpointer user_data)
+static gboolean rootsPlotDrawHandler (GtkWidget *widget, cairo_t *gc,
+                                      gpointer user_data)
 {
     static const char realText[] = N_("Re(z)");
     static const char imagText[] = N_("Im(z)");
@@ -342,20 +343,21 @@ static gboolean rootsPlotExposeHandler (GtkWidget *widget, GdkEventExpose *event
 
     if (pFilter != NULL)
     {
-        int i, width, height;
+        int i;
         gsl_complex rmax, rmin, delta;
-        cairo_t* cr;
+        GdkRGBA colorNormal, colorInactive;
+        GtkStyleContext* styleContext;
 
         int points = 0;
         int numPlots = N_ELEMENTS (rplots);
-        GtkWidget* topWidget = gtk_widget_get_toplevel (widget);
         const CFG_DESKTOP* pPrefs = cfgGetDesktopPrefs ();
-        GdkDrawable* drawable = GDK_DRAWABLE(widget->window);
-        GdkDisplay* display = gtk_widget_get_display (topWidget);
-        GdkCursor* cursor = gdk_cursor_new_from_name (display, "watch");
+        GtkWidget* topWidget = gtk_widget_get_toplevel (widget);
+        GdkWindow* topWindow = gtk_widget_get_window (topWidget);
 
-        gdk_window_set_cursor (topWidget->window, cursor);
-        g_object_unref (cursor);   /* free client side resource immediately */
+        GdkCursor* cursor = gdk_cursor_new_from_name (
+            gtk_widget_get_display (topWidget), GUI_CURSOR_IMAGE_WATCH);
+        gdk_window_set_cursor (topWindow, cursor);
+        g_object_unref (cursor);     /* free client side resource immediately */
 
         GSL_SET_COMPLEX (&rmax, 1, 1);        /* at least in interval [-1,+1] */
         GSL_SET_COMPLEX (&rmin, -1, -1);
@@ -391,47 +393,50 @@ static gboolean rootsPlotExposeHandler (GtkWidget *widget, GdkEventExpose *event
             } /* else */
         } /* else */
 
-        circleColor[PLOT_COLOR_LABELS] =                 /* set all invisible */
-            circleColor[PLOT_COLOR_GRID] =
-            circleColor[PLOT_COLOR_BOX] = 
-            circleColor[PLOT_COLOR_AXIS_NAME] = widget->style->bg[GTK_STATE_NORMAL];
 
-        circleColor[PLOT_COLOR_GRAPH] = widget->style->fg[GTK_STATE_INSENSITIVE];
+        styleContext = gtk_widget_get_style_context (widget);
+        gtk_style_context_get_color (styleContext, GTK_STATE_FLAG_NORMAL,
+                                     &colorNormal);
+        gtk_style_context_get_color (styleContext, GTK_STATE_FLAG_INSENSITIVE,
+                                     &colorInactive);
+
+        circleColor[PLOT_COLOR_LABELS] =
+        circleColor[PLOT_COLOR_GRID] =
+        circleColor[PLOT_COLOR_BOX] = 
+        circleColor[PLOT_COLOR_AXIS_NAME] = colorInactive;
+
+        circleColor[PLOT_COLOR_GRAPH] = colorInactive;
 
         rootsColor[PLOT_COLOR_GRID] =
-            rootsColor[PLOT_COLOR_AXIS_NAME] =
-            rootsColor[PLOT_COLOR_BOX] = widget->style->fg[GTK_STATE_INSENSITIVE];
+        rootsColor[PLOT_COLOR_AXIS_NAME] =
+        rootsColor[PLOT_COLOR_BOX] = colorInactive;
 
         rootsColor[PLOT_COLOR_LABELS] =
-            rootsColor[PLOT_COLOR_GRAPH] = widget->style->fg[GTK_STATE_NORMAL];
-
-        gdk_drawable_get_size (drawable, &width, &height);
-        cr = gdk_cairo_create (drawable);             /* create cairo context */
+        rootsColor[PLOT_COLOR_GRAPH] = colorNormal;
 
         for (i = 0; i < numPlots; i++)
         {
             rplots[i].area.x = rplots[i].area.y = 0;
-            rplots[i].area.width = width;            /* set size of plot area */
-            rplots[i].area.height = height;
+            rplots[i].area.width = gtk_widget_get_allocated_width (widget);
+            rplots[i].area.height = gtk_widget_get_allocated_height (widget);
             rplots[i].x.prec = rplots[i].y.prec = pPrefs->outprec;
             rplots[i].x.start = GSL_REAL (rmin);
             rplots[i].x.stop = GSL_REAL (rmax);
             rplots[i].y.start = GSL_IMAG (rmin);
             rplots[i].y.stop = GSL_IMAG (rmax);
 
-            points = cairoPlot2d (cr, &rplots[i]);
+            points = cairoPlot2d (gc, &rplots[i]);
         } /* for */
 
         if (points < 0)
         {
         } /* if */
 
-        cairo_destroy(cr);                              /* free cairo context */
-        gdk_window_set_cursor(topWidget->window, NULL);     /* restore cursor */
+        gdk_window_set_cursor (topWindow, NULL);            /* restore cursor */
     } /* if */
 
     return TRUE;                                             /* stop emission */
-} /* rootsPlotExposeHandler() */
+} /* rootsPlotDrawHandler() */
 
 
 
@@ -442,20 +447,18 @@ static gboolean rootsPlotExposeHandler (GtkWidget *widget, GdkEventExpose *event
 /* FUNCTION *******************************************************************/
 /** Creates a \e GtkDrawingArea used for roots display.
  *
- *  \return             Pointer to widget (\e GtkDrawingArea, GDK drawable), which
- *                      is used in function rootsPlotUpdate() to draw polynomial
- *                      roots.
+ *  \return             Pointer to \c GtkDrawingArea widget, which is used in
+ *                      function rootsPlotUpdate() to draw polynomial roots.
  ******************************************************************************/
 GtkWidget *rootsPlotCreate ()
 {
-    plotDrawable = gtk_drawing_area_new ();
+    GtkWidget* widget = gtk_drawing_area_new ();
 
-    g_signal_connect ((gpointer) plotDrawable, "expose_event",
-                      G_CALLBACK (rootsPlotExposeHandler), NULL);
-
-    return plotDrawable;
+    rootsPlotWindow = gtk_widget_get_window (widget);
+    g_signal_connect ((gpointer) widget, "draw",
+                      G_CALLBACK (rootsPlotDrawHandler), NULL);
+    return widget;
 } /* rootsPlotCreate() */
-
 
 
 
@@ -493,11 +496,10 @@ void rootsPlotUpdate (FLTCOEFF *pFilter)
  ******************************************************************************/
 void rootsPlotRedraw ()
 {
-    GdkWindow *win = plotDrawable->window;
-
-    gdk_window_invalidate_region (
-        win, gdk_drawable_get_visible_region (GDK_DRAWABLE (win)), FALSE);
-
+    if (rootsPlotWindow != NULL)
+    {
+        gdk_window_invalidate_rect (rootsPlotWindow, NULL, FALSE);
+    }
 } /* rootsPlotRedraw() */
 
 
