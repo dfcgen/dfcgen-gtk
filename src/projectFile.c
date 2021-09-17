@@ -1571,7 +1571,7 @@ void prjFileScan (const char *filename, DFCPRJ_INFO *pInfo, GError **err)
 
     if (*err == NULL)
     {
-        DEBUG_LOG ("Project file '%s' successfully scaned", filename);
+        DEBUG_LOG ("Project file '%s' successfully parsed", filename);
         *pInfo = tmpPrj.info;
     } /* if */
 } /* prjFileScan() */
