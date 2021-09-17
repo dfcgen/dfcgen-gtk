@@ -235,7 +235,6 @@ void stdIirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     frame = gtk_frame_new (NULL);
     gtk_grid_attach (GTK_GRID (stdIirDesignDlgMain), frame, 0, 1, 1, 1);
     gtk_container_set_border_width (GTK_CONTAINER (frame), 6);
-    gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
 
     label = gtk_label_new (_("<b>Characteristic</b>"));
     gtk_frame_set_label_widget (GTK_FRAME (frame), label);
@@ -266,7 +265,6 @@ void stdIirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     frame = gtk_frame_new (NULL);
     gtk_grid_attach (GTK_GRID (stdIirDesignDlgMain), frame, 1, 0, 1, 1);
     gtk_container_set_border_width (GTK_CONTAINER (frame), 6);
-    gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
 
     label = gtk_label_new (_("<b>Transform</b>"));
     gtk_frame_set_label_widget (GTK_FRAME (frame), label);
@@ -348,7 +346,6 @@ void stdIirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     frame = gtk_frame_new (NULL);
     gtk_grid_attach (GTK_GRID (stdIirDesignDlgMain), frame, 0, 0, 1, 1);
     gtk_container_set_border_width (GTK_CONTAINER (frame), 6);
-    gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
 
     label = gtk_label_new (_("<b>Lowpass</b>"));
     gtk_frame_set_label_widget (GTK_FRAME (frame), label);
@@ -417,7 +414,6 @@ void stdIirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     frame = gtk_frame_new (NULL);
     gtk_grid_attach (GTK_GRID (stdIirDesignDlgMain), frame, 1, 1, 1, 1);
     gtk_container_set_border_width (GTK_CONTAINER (frame), 6);
-    gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
 
     label = gtk_label_new (_("<b>Parameters</b>"));
     gtk_frame_set_label_widget (GTK_FRAME (frame), label);

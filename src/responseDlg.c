@@ -62,7 +62,7 @@ static PLOT_COLOR responseDlgColorItem; /**< Curently selected color item (label
 
 static void responseDlgSetEntry (GtkWidget* topWidget, const char *name,
                                  const PLOT_UNIT *pUnit, double value);
-static void createLogGridButton (GtkWidget *topWidget, GtkTable *table,
+static void createLogGridButton (GtkWidget *topWidget, GtkGrid *table,
                                  char *logBtnName, char *gridBtnName,
                                  PLOT_AXIS *pAxis);
 static void autoScalingChanged (GtkCheckButton* button, gpointer user_data);
@@ -294,7 +294,6 @@ GtkWidget* responseDlgCreate (GtkWindow *topWindow, PLOT_DIAG *pDiag)
     frame = gtk_frame_new (NULL);
     gtk_box_pack_start (GTK_BOX (box), frame, TRUE, TRUE, 0);
     gtk_container_set_border_width (GTK_CONTAINER (frame), 6);
-    gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
 
     /* x-axis values
      */
@@ -392,7 +391,6 @@ GtkWidget* responseDlgCreate (GtkWindow *topWindow, PLOT_DIAG *pDiag)
     frame = gtk_frame_new (NULL);
     gtk_box_pack_start (GTK_BOX (box), frame, TRUE, TRUE, 0);
     gtk_container_set_border_width (GTK_CONTAINER (frame), 6);
-    gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
 
     /* y-axis values
      */
