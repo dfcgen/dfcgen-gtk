@@ -243,6 +243,7 @@ void stdIirDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
     gtk_container_add (GTK_CONTAINER (frame), box);
     gtk_container_set_border_width (GTK_CONTAINER (box), 6);
+    gtk_widget_set_margin_start (box, GUI_INDENT_CHILD_PIXEL);
 
     for (type = 0; type < STDIIR_TYPE_SIZE; type++)
     {

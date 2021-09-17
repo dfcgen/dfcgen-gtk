@@ -339,7 +339,7 @@ static void responseWinCreate (RESPONSE_WIN *pDesc)
     gtk_box_pack_start (GTK_BOX (vbox), hseparator, FALSE, TRUE, 0);
 
     hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, TRUE, 6);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 6);
 
     pDesc->label = gtk_label_new ("");
     gtk_box_pack_start (GTK_BOX (hbox), pDesc->label, FALSE, FALSE, 6);

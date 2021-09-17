@@ -292,22 +292,24 @@ BOOL dlgPopupDouble (GtkWindow *topWindow, char *title, char *label,
     gtk_window_set_title (GTK_WINDOW (dialog), title);
     gtk_window_set_type_hint (GTK_WINDOW (dialog), GDK_WINDOW_TYPE_HINT_DIALOG);
     vbox = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+    gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
 
     if (comment != NULL)
     {
         widget = gtk_label_new (comment);
+        gtk_label_set_max_width_chars (GTK_LABEL (widget), GUI_LABEL_WRAP_CHARS);
         gtk_label_set_line_wrap (GTK_LABEL (widget), TRUE);
         gtk_label_set_use_markup (GTK_LABEL (widget), TRUE);
         gtk_box_pack_start (GTK_BOX (vbox), widget, FALSE, FALSE, 6);
     } /* if */
 
-    hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+    hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
     gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 6);
     widget = gtk_label_new_with_mnemonic (label);
     gtk_box_pack_start (GTK_BOX (hbox), widget, FALSE, FALSE, 0);
 
     entry = gtk_entry_new ();
-    gtk_box_pack_start (GTK_BOX (hbox), entry, FALSE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (hbox), entry, FALSE, FALSE, 0);
     gtk_entry_set_width_chars (GTK_ENTRY (entry), DBL_DIG);
     gtk_entry_set_activates_default (GTK_ENTRY (entry), TRUE);
     g_snprintf (text, sizeof(text), "%.*G", cfgGetDesktopPrefs()->outprec, *pResult);

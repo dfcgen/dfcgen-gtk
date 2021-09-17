@@ -313,7 +313,7 @@ GtkWidget* responseDlgCreate (GtkWindow *topWindow, PLOT_DIAG *pDiag)
     gtk_window_set_icon_name (GTK_WINDOW (responseDlg), GUI_ICON_IMAGE_PREFS);
     gtk_window_set_type_hint (GTK_WINDOW (responseDlg), GDK_WINDOW_TYPE_HINT_DIALOG);
 
-    box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12); /* x- and y-side of dialog */
+    box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6); /* x- and y-side of dialog */
     gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (responseDlg))),
                         box, FALSE, FALSE, 6);
 
@@ -508,7 +508,7 @@ GtkWidget* responseDlgCreate (GtkWindow *topWindow, PLOT_DIAG *pDiag)
     widget = gtk_expander_new (NULL);                        /* style xpander */
     gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (responseDlg))),
                         widget, FALSE, FALSE, 6);
-    gtk_container_set_border_width (GTK_CONTAINER (widget), 12);
+    gtk_widget_set_margin_start (widget, GUI_INDENT_CHILD_PIXEL);
     gtk_expander_set_spacing (GTK_EXPANDER (widget), 6);
 
     label = gtk_label_new (_("<b>Style</b>"));

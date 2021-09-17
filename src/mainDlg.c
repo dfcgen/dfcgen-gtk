@@ -574,7 +574,6 @@ static GtkTreeView* coeffCreateListTreeView (GtkTreeView **pOther)
     /* 2nd step: create the tree view
      */
     tree = GTK_TREE_VIEW (gtk_tree_view_new ());
-    gtk_tree_view_set_rules_hint (tree, TRUE);
     gtk_tree_view_set_hover_expand (tree, TRUE);
     gtk_tree_selection_set_mode (gtk_tree_view_get_selection (tree), GTK_SELECTION_SINGLE);
     gtk_tree_view_set_search_column (tree, MAINDLG_LIST_COLUMN_INDEX);
@@ -692,7 +691,6 @@ GtkWidget* mainDlgCreate (void)
     GtkAccelGroup *accel_group = gtk_accel_group_new ();
 
     topWidget = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-    gtk_container_set_border_width (GTK_CONTAINER (topWidget), 6);
 
 #ifndef G_OS_WIN32
     {
@@ -961,11 +959,11 @@ GtkWidget* mainDlgCreate (void)
     gtk_box_pack_start (GTK_BOX (vbox1), hbox1, TRUE, TRUE, 0);
     gtk_container_set_border_width (GTK_CONTAINER (hbox1), 6);
 
-    boxDesignDlg = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
-    gtk_box_pack_start (GTK_BOX (hbox1), boxDesignDlg, FALSE, TRUE, 0);
+    boxDesignDlg = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+    gtk_box_pack_start (GTK_BOX (hbox1), boxDesignDlg, FALSE, FALSE, 0);
     gtk_container_set_border_width (GTK_CONTAINER (boxDesignDlg), 6);
 
-    hbox3 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
+    hbox3 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
     gtk_box_pack_start (GTK_BOX (boxDesignDlg), hbox3, FALSE, FALSE, 0);
     gtk_container_set_border_width (GTK_CONTAINER (hbox3), 6);
 
@@ -974,7 +972,7 @@ GtkWidget* mainDlgCreate (void)
     gtk_box_pack_start (GTK_BOX (hbox3), label, FALSE, FALSE, 0);
 
     widget = gtk_event_box_new ();
-    gtk_box_pack_start (GTK_BOX (hbox3), widget, FALSE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (hbox3), widget, FALSE, FALSE, 0);
     gtk_widget_set_tooltip_text (widget, _("Class of filter (or system)"));
 
     comboFilterClass = gtk_combo_box_text_new ();
@@ -985,7 +983,7 @@ GtkWidget* mainDlgCreate (void)
     gtk_box_pack_start (GTK_BOX (boxDesignDlg), widget, FALSE, TRUE, 0);
     gtk_container_set_border_width (GTK_CONTAINER (widget), 6);
     gtk_button_box_set_layout (GTK_BUTTON_BOX (widget), GTK_BUTTONBOX_SPREAD);
-    gtk_box_set_spacing (GTK_BOX (widget), 12);
+    gtk_box_set_spacing (GTK_BOX (widget), 16);
 
     button = createImageButton (GUI_BUTTON_LABEL_HELP, GUI_BUTTON_IMAGE_HELP);
     gtk_container_add (GTK_CONTAINER (widget), button);
@@ -1011,7 +1009,7 @@ GtkWidget* mainDlgCreate (void)
     gtk_container_set_border_width (GTK_CONTAINER (vpaneFilter), 6);
 
     widget = gtk_frame_new (NULL);
-    gtk_paned_pack1 (GTK_PANED (vpaneFilter), widget, FALSE, TRUE);
+    gtk_paned_pack1 (GTK_PANED (vpaneFilter), widget, FALSE, FALSE);
     gtk_container_set_border_width (GTK_CONTAINER (widget), 6);
 
     gtk_container_add (GTK_CONTAINER (widget), rootsPlotCreate ());
@@ -1105,8 +1103,8 @@ GtkWidget* mainDlgCreate (void)
 
     mainDlgUpdateAll (NULL);                             /* set initial state */
 
-    gtk_widget_size_request (boxDesignDlg, &size);
-    gtk_paned_set_position (GTK_PANED (vpaneFilter), size.height / 3);
+    gtk_widget_get_preferred_size (boxDesignDlg, NULL, &size);
+    gtk_paned_set_position (GTK_PANED (vpaneFilter), size.height / 2);
 
     return topWidget;
 } /* mainDlgCreate() */

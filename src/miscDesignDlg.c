@@ -120,7 +120,8 @@ static GtkWidget* createDialog (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     GtkAdjustment *spinAdjust;
 
     miscDesignDlgMain = gtk_frame_new (NULL);             /* create the frame */
-    gtk_box_pack_start (GTK_BOX (boxDesignDlg), miscDesignDlgMain, TRUE, TRUE, 0);
+    gtk_widget_set_valign (miscDesignDlgMain, GTK_ALIGN_START);
+    gtk_box_pack_start (GTK_BOX (boxDesignDlg), miscDesignDlgMain, FALSE, FALSE, 0);
     gtk_container_set_border_width (GTK_CONTAINER (miscDesignDlgMain), 6);
     gtk_frame_set_shadow_type (GTK_FRAME (miscDesignDlgMain), GTK_SHADOW_NONE);
     gtk_box_reorder_child (GTK_BOX (boxDesignDlg), miscDesignDlgMain, 1);
@@ -193,7 +194,10 @@ static GtkWidget* createDialog (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
     gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
     gtk_label_set_selectable (GTK_LABEL (label), TRUE);
-    gtk_container_add (GTK_CONTAINER (expander), label);
+    gtk_label_set_max_width_chars (GTK_LABEL (label), GUI_LABEL_WRAP_CHARS);
+    gtk_widget_set_margin_start (label, GUI_INDENT_CHILD_PIXEL);
+    gtk_widget_set_margin_top (label, 6);
+    gtk_container_add (GTK_CONTAINER (frame), label);
     GLADE_HOOKUP_OBJECT (topWidget, label, MISCDLG_LABEL_DESC);
 
     gtk_widget_show_all (miscDesignDlgMain);
@@ -251,7 +255,7 @@ static void updateLayout (GtkWidget *topWidget, GtkWidget *combo, int index)
     } /* if */
     else
     {
-        gtk_widget_hide_all (widget);
+        gtk_widget_hide (widget);
     } /* else */
 
 } /* updateLayout() */
@@ -331,7 +335,7 @@ void miscDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
 
     /* 1st step: create dialog layout
      */
-    GtkComboBox* combo = GTK_COMBO_BOX (createDialog (topWidget, boxDesignDlg, pPrefs));
+    GtkWidget* combo = createDialog (topWidget, boxDesignDlg, pPrefs);
 
 
     /* 2nd step: insert misc filters
@@ -428,7 +432,7 @@ void miscDesignDlgCreate (GtkWidget *topWidget, GtkWidget *boxDesignDlg,
      * widget must must be limited. A good reference width (used here) ist the
      * combobox.
      */
-    gtk_widget_size_request (GTK_WIDGET (combo), &size);
+    gtk_widget_get_preferred_size (combo, NULL, &size);
     gtk_widget_set_size_request (lookup_widget (topWidget, MISCDLG_LABEL_DESC),
                                  size.width, -1);
 
@@ -524,7 +528,7 @@ void miscDesignDlgDestroy (GtkWidget *topWidget)
         GLADE_HOOKUP_OBJECT_NO_REF (topWidget, NULL, MISCDLG_ENTRY_SAMPLE);
         GLADE_HOOKUP_OBJECT_NO_REF (topWidget, NULL, MISCDLG_COMBO_TYPE);
         GLADE_HOOKUP_OBJECT_NO_REF (topWidget, NULL, MISCDLG_SPIN_DEGREE);
-        GLADE_HOOKUP_OBJECT_NO_REF (topWidget, NULL, MISCDLG_EXPANDER_DESC);
+        GLADE_HOOKUP_OBJECT_NO_REF (topWidget, NULL, MISCDLG_FRAME_DESC);
         GLADE_HOOKUP_OBJECT_NO_REF (topWidget, NULL, MISCDLG_LABEL_DESC);
         gtk_widget_destroy (widget);
     } /* if */
