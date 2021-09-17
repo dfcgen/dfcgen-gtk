@@ -192,7 +192,7 @@ static GtkWidget* createSettingsDlg (GtkWidget *topWidget, const CFG_DESKTOP* pP
                                 gtk_notebook_get_nth_page (
                                     GTK_NOTEBOOK (notebook), 1), label);
 
-    widget = DFCGEN_GTK_IMAGE_BUTTON_NEW(DFCGEN_GTK_STOCK_BUTTON_HELP);
+    widget = createImageButton (GUI_BUTTON_LABEL_HELP, GUI_BUTTON_IMAGE_HELP);
     gtk_widget_show (widget);
     gtk_dialog_add_action_widget (GTK_DIALOG (dialog), widget,
                                   GTK_RESPONSE_HELP);
@@ -201,13 +201,13 @@ static GtkWidget* createSettingsDlg (GtkWidget *topWidget, const CFG_DESKTOP* pP
 #endif
     gtk_widget_set_can_default (widget, TRUE);
 
-    widget = DFCGEN_GTK_IMAGE_BUTTON_NEW(DFCGEN_GTK_STOCK_BUTTON_CANCEL);
+    widget = createImageButton (GUI_BUTTON_LABEL_CANCEL, GUI_BUTTON_IMAGE_CANCEL);
     gtk_dialog_add_action_widget (GTK_DIALOG (dialog), widget,
                                   GTK_RESPONSE_CANCEL);
     gtk_widget_set_can_default (widget, TRUE);
 
-    widget = DFCGEN_GTK_IMAGE_BUTTON_NEW(DFCGEN_GTK_STOCK_BUTTON_OK);
-    gtk_dialog_add_action_widget (GTK_DIALOG (settingsDlg), widget,
+    widget = createImageButton (GUI_BUTTON_LABEL_OK, GUI_BUTTON_IMAGE_OK);
+    gtk_dialog_add_action_widget (GTK_DIALOG (dialog), widget,
                                   GTK_RESPONSE_OK);
     gtk_widget_set_can_default (widget, TRUE);
 
@@ -379,18 +379,18 @@ static GtkWidget* createInfoDlg (GtkWidget *topWidget, const DFCPRJ_INFO *pInfo)
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
     gtk_grid_attach (GTK_GRID (table), label, 0, 2, 1, 1);
 
-    widget = DFCGEN_GTK_IMAGE_BUTTON_NEW(DFCGEN_GTK_STOCK_BUTTON_HELP);
+    widget = createImageButton (GUI_BUTTON_LABEL_HELP, GUI_BUTTON_IMAGE_HELP);
     gtk_dialog_add_action_widget (GTK_DIALOG (dialog), widget, GTK_RESPONSE_HELP);
 #ifndef TODO
     gtk_widget_set_sensitive (widget, FALSE);
 #endif
     gtk_widget_set_can_default (widget, TRUE);
 
-    widget = DFCGEN_GTK_IMAGE_BUTTON_NEW(DFCGEN_GTK_STOCK_BUTTON_CANCEL);
+    widget = createImageButton (GUI_BUTTON_LABEL_CANCEL, GUI_BUTTON_IMAGE_CANCEL);
     gtk_dialog_add_action_widget (GTK_DIALOG (dialog), widget, GTK_RESPONSE_CANCEL);
     gtk_widget_set_can_default (widget, TRUE);
 
-    widget = DFCGEN_GTK_IMAGE_BUTTON_NEW(DFCGEN_GTK_STOCK_BUTTON_OK);
+    widget = createImageButton (GUI_BUTTON_LABEL_OK, GUI_BUTTON_IMAGE_OK);
     gtk_dialog_add_action_widget (GTK_DIALOG (dialog), widget, GTK_RESPONSE_OK);
     gtk_widget_set_can_default (widget, TRUE);
 

@@ -303,7 +303,6 @@ BOOL dlgPopupDouble (GtkWindow *topWindow, char *title, char *label,
 
     hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 6);
-
     widget = gtk_label_new_with_mnemonic (label);
     gtk_box_pack_start (GTK_BOX (hbox), widget, FALSE, FALSE, 0);
 
@@ -316,11 +315,11 @@ BOOL dlgPopupDouble (GtkWindow *topWindow, char *title, char *label,
     GLADE_HOOKUP_OBJECT (dialog, entry, "entry");
     gtk_label_set_mnemonic_widget (GTK_LABEL (widget), entry);
 
-    widget = DFCGEN_GTK_IMAGE_BUTTON_NEW(DFCGEN_GTK_STOCK_BUTTON_CANCEL);
+    widget = createImageButton (GUI_BUTTON_LABEL_CANCEL, GUI_BUTTON_IMAGE_CANCEL);
     gtk_dialog_add_action_widget (GTK_DIALOG (dialog), widget, GTK_RESPONSE_CANCEL);
     gtk_widget_set_can_default (widget, TRUE);
 
-    widget = DFCGEN_GTK_IMAGE_BUTTON_NEW(DFCGEN_GTK_STOCK_BUTTON_OK);
+    widget = createImageButton (GUI_BUTTON_LABEL_OK, GUI_BUTTON_IMAGE_OK);
     gtk_dialog_add_action_widget (GTK_DIALOG (dialog), widget, GTK_RESPONSE_OK);
     gtk_widget_set_can_default (widget, TRUE);
     gtk_widget_grab_default (widget);

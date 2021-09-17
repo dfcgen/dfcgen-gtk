@@ -175,19 +175,20 @@ GdkPixbuf* createPixbufFromFile (const gchar* filename)
 } /* createPixbufFromFile() */
 
 
-#if GTK_CHECK_VERSION (3, 10, 0)
 /* FUNCTION *******************************************************************/
 /** \brief Replacement for gtk_image_menu_item_new_from_stock() which is
  *         deprecated since GTK 3.10.
  *
- *  \param[in]      name    Label to be applied.
- *  \param[in]      img     Icon image name.
- *  \param[in,out]  accel   The associated accelerator group.
+ *  \param[in]      name    Label to be applied (translated by \e gettext).
+ *  \param[in]      img     Icon image (file) name.
+ *  \param[in,out]  accel_group   The accelerator group.
+ *  \param[in]      accel_key     The accelerator key, or \c GDK_KEY_VoidSymbol
+ *                          in case there is none.
  *
  *  \return    A newly created menu item.
  ******************************************************************************/
-GtkWidget* createImageMenuItem(const gchar* name, const gchar* img,
-                               GtkAccelGroup* accel)
+GtkWidget* createImageMenuItem (const gchar* name, const gchar* img,
+                                GtkAccelGroup* accel_group, guint accel_key)
 {
     GtkWidget *item = gtk_menu_item_new ();
     GtkWidget *box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
@@ -197,8 +198,13 @@ GtkWidget* createImageMenuItem(const gchar* name, const gchar* img,
     gtk_container_add (GTK_CONTAINER (box), icon);
     gtk_label_set_use_underline (GTK_LABEL (label), TRUE);
     gtk_label_set_xalign (GTK_LABEL (label), 0.0);
-    gtk_widget_add_accelerator (item, "activate", accel,
-                                GDK_KEY_m, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
+    if (accel_key != GDK_KEY_VoidSymbol)
+    {
+        gtk_widget_add_accelerator (item, "activate", accel_group,
+                                    accel_key, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+    }
+
     gtk_accel_label_set_accel_widget (GTK_ACCEL_LABEL (label), item);
     gtk_box_pack_end (GTK_BOX (box), label, TRUE, TRUE, 0);
     gtk_container_add (GTK_CONTAINER (item), box);
@@ -207,4 +213,21 @@ GtkWidget* createImageMenuItem(const gchar* name, const gchar* img,
     return item;
 }
 
-#endif  /* GTK_CHECK_VERSION 3.10 */
+
+/* FUNCTION *******************************************************************/
+/** \brief Replacement for gtk_button_new_from_stock() which is deprecated
+ *         since GTK 3.10.
+ *
+ *  \param[in]      name    Label to be applied (translated by \e gettext).
+ *  \param[in]      img     Icon image (file) name.
+ *
+ *  \return    A newly created \e GtkButton.
+ ******************************************************************************/
+GtkWidget* createImageButton (const gchar* name, const gchar* img)
+{
+    GtkWidget *widget = gtk_button_new_from_icon_name (img, GTK_ICON_SIZE_BUTTON);
+    gtk_button_set_label (GTK_BUTTON (widget), name);
+    gtk_button_set_use_underline (GTK_BUTTON (widget), TRUE);
+
+    return widget;
+}

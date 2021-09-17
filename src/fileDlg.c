@@ -204,11 +204,11 @@ void fileDlgOpenActivate (GtkWidget* srcWidget, gpointer user_data)
 {
     GError *err = NULL;
     GtkWidget *topWidget = gtk_widget_get_toplevel (srcWidget);
-    GtkWidget* dialog = createFileDialog (_("Load project file"),
-                                          GTK_WINDOW (topWidget),
-                                          GTK_FILE_CHOOSER_ACTION_OPEN,
-                                          GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                          GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT);
+    GtkWidget* dialog =
+        createFileDialog (_("Load project file"),
+                          GTK_WINDOW (topWidget), GTK_FILE_CHOOSER_ACTION_OPEN,
+                          GUI_BUTTON_IMAGE_CANCEL, GTK_RESPONSE_CANCEL,
+                          GUI_BUTTON_IMAGE_OPEN, GTK_RESPONSE_ACCEPT);
 
     gtk_file_chooser_set_show_hidden (GTK_FILE_CHOOSER (dialog), FALSE);
 
@@ -285,11 +285,11 @@ void fileDlgSaveAsActivate (GtkWidget* srcWidget, gpointer user_data)
     gchar* fname;
 
     GtkWidget *topWidget = gtk_widget_get_toplevel (srcWidget);
-    GtkWidget* dialog = createFileDialog (_("Save project file"),
-                                          GTK_WINDOW (topWidget),
-                                          GTK_FILE_CHOOSER_ACTION_SAVE,
-                                          GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                          GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT);
+    GtkWidget* dialog =
+        createFileDialog (_("Save project file"),
+                          GTK_WINDOW (topWidget), GTK_FILE_CHOOSER_ACTION_SAVE,
+                          GUI_BUTTON_IMAGE_CANCEL, GTK_RESPONSE_CANCEL,
+                          GUI_BUTTON_IMAGE_SAVE, GTK_RESPONSE_ACCEPT);
     if (dfcPrjFileName == NULL)
     {
         gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (dialog),
@@ -359,8 +359,8 @@ void fileDlgExportActivate (GtkWidget* srcWidget, gpointer user_data)
         gtk_file_chooser_dialog_new (_("Export coefficients"),
                                      GTK_WINDOW (gtk_widget_get_toplevel (srcWidget)),
                                      GTK_FILE_CHOOSER_ACTION_SAVE,
-                                     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                     GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL);
+                                     GUI_BUTTON_IMAGE_CANCEL, GTK_RESPONSE_CANCEL,
+                                     GUI_BUTTON_IMAGE_SAVE, GTK_RESPONSE_ACCEPT, NULL);
 
     gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (dialog), TRUE);
 

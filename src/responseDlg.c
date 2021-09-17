@@ -575,24 +575,21 @@ GtkWidget* responseDlgCreate (GtkWindow *topWindow, PLOT_DIAG *pDiag)
 
     /* Action area (buttons)
      */
-    widget = GTK_DIALOG (responseDlg)->action_area;
-    gtk_button_box_set_layout (GTK_BUTTON_BOX (widget), GTK_BUTTONBOX_END);
-
-    widget = DFCGEN_GTK_IMAGE_BUTTON_NEW(DFCGEN_GTK_STOCK_BUTTON_HELP);
+    widget = createImageButton (GUI_BUTTON_LABEL_HELP, GUI_BUTTON_IMAGE_HELP);
     gtk_dialog_add_action_widget (GTK_DIALOG (responseDlg), widget, GTK_RESPONSE_HELP);
 #ifndef TODO
     gtk_widget_set_sensitive (widget, FALSE);
 #endif
 
-    widget = DFCGEN_GTK_IMAGE_BUTTON_NEW(DFCGEN_GTK_STOCK_BUTTON_CANCEL);
+    widget = createImageButton (GUI_BUTTON_LABEL_CANCEL, GUI_BUTTON_IMAGE_CANCEL);
     gtk_dialog_add_action_widget (GTK_DIALOG (responseDlg), widget, GTK_RESPONSE_CANCEL);
     gtk_widget_set_can_default (widget, TRUE);
 
-    widget = DFCGEN_GTK_IMAGE_BUTTON_NEW(DFCGEN_GTK_STOCK_BUTTON_APPLY);
+    widget = createImageButton (GUI_BUTTON_LABEL_APPLY, GUI_BUTTON_IMAGE_APPLY);
     gtk_dialog_add_action_widget (GTK_DIALOG (responseDlg), widget, GTK_RESPONSE_APPLY);
     gtk_widget_set_can_default (widget, TRUE);
 
-    widget = DFCGEN_GTK_IMAGE_BUTTON_NEW(DFCGEN_GTK_STOCK_BUTTON_OK);
+    widget = createImageButton (GUI_BUTTON_LABEL_OK, GUI_BUTTON_IMAGE_OK);
     gtk_dialog_add_action_widget (GTK_DIALOG (responseDlg), widget, GTK_RESPONSE_OK);
     gtk_widget_set_can_default (widget, TRUE);
 
