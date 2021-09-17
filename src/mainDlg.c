@@ -1081,7 +1081,8 @@ GtkWidget* mainDlgCreate (void)
                           G_CALLBACK (mainDlgCoeffAction), pAction);
     } /* for */
 
-
+    widget = gtk_separator_new (GTK_ORIENTATION_HORIZONTAL);
+    gtk_box_pack_start (GTK_BOX (vbox1), widget, FALSE, FALSE, 0);
     statusbar = gtk_statusbar_new ();
     gtk_box_pack_start (GTK_BOX (vbox1), statusbar, FALSE, FALSE, 0);
 

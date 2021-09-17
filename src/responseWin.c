@@ -303,7 +303,7 @@ static void responseWinBtnPrintActivate (GtkWidget* srcWidget, gpointer user_dat
 static void responseWinCreate (RESPONSE_WIN *pDesc)
 {
     GtkWidget *vbox;
-    GtkWidget *hseparator;
+    GtkWidget *separator;
     GtkWidget *hbox;
     GtkWidget *btnSettings;
     GdkPixbuf *iconPixbuf;
@@ -335,8 +335,8 @@ static void responseWinCreate (RESPONSE_WIN *pDesc)
                            GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
     gtk_box_pack_start (GTK_BOX (vbox), pDesc->draw, TRUE, TRUE, 6);
 
-    hseparator = gtk_hseparator_new ();
-    gtk_box_pack_start (GTK_BOX (vbox), hseparator, FALSE, TRUE, 0);
+    separator = gtk_separator_new (GTK_ORIENTATION_HORIZONTAL);
+    gtk_box_pack_start (GTK_BOX (vbox), separator, FALSE, FALSE, 0);
 
     hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 6);
