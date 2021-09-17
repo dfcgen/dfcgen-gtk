@@ -979,8 +979,9 @@ GtkWidget* mainDlgCreate (void)
     gtk_container_add (GTK_CONTAINER (widget), comboFilterClass);
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), comboFilterClass);
 
-    widget = gtk_hbutton_box_new ();
-    gtk_box_pack_start (GTK_BOX (boxDesignDlg), widget, FALSE, TRUE, 0);
+    widget = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
+    gtk_widget_set_valign (widget, GTK_ALIGN_END);
+    gtk_box_pack_start (GTK_BOX (boxDesignDlg), widget, TRUE, TRUE, 0);
     gtk_container_set_border_width (GTK_CONTAINER (widget), 6);
     gtk_button_box_set_layout (GTK_BUTTON_BOX (widget), GTK_BUTTONBOX_SPREAD);
     gtk_box_set_spacing (GTK_BOX (widget), 16);
@@ -1062,8 +1063,8 @@ GtkWidget* mainDlgCreate (void)
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
     gtk_label_set_ellipsize (GTK_LABEL (label), PANGO_ELLIPSIZE_END);
 
-    hbox2 = gtk_hbutton_box_new ();
-    gtk_box_pack_start (GTK_BOX (boxFilterDlg), hbox2, FALSE, TRUE, 0);
+    hbox2 = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
+    gtk_box_pack_start (GTK_BOX (boxFilterDlg), hbox2, FALSE, FALSE, 0);
     gtk_container_set_border_width (GTK_CONTAINER (hbox2), 6);
     gtk_box_set_spacing (GTK_BOX (hbox2), 6);
 
