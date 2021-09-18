@@ -1,6 +1,6 @@
 dnl -*- mode: autoconf; coding: utf-8 -*-
 dnl
-dnl Copyright (C) 2006-2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+dnl Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
 dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl
@@ -8,7 +8,7 @@ dnl
 AC_PREREQ([2.69])
 
 AC_INIT([Digital Filter Coefficients Generator (GTK+)],
-        [0.5],
+        [0.6],
         [ralf.hoppe@dfcgen.de],
         [dfcgen-gtk],
         [http://www.dfcgen.de])
@@ -59,7 +59,6 @@ CFLAGS_DEBUG="-g -pg -O0 -fstack-protector-all -UNDEBUG"
 CFLAGS_NDEBUG="-DNDEBUG -DG_DISABLE_ASSERT"
 
 
-
 dnl Set CFLAGS before calling AC_PROG_CC, else default values are set. For
 dnl target specific flags use AM_CFLAGS in Makefile.am. Notice that CFLAGS
 dnl overwrites AM_CFLAGS (caused by order of evaluation in Makefile.am), so
@@ -88,7 +87,7 @@ AC_ARG_ENABLE([debug],
 
 dnl Additional Substitutions and Defines
 AC_SUBST(PACKAGE_AUTHOR, ["Ralf Hoppe"])
-AC_SUBST(COPYRIGHT_HOLDER, ["Copyright (C) 2006, 2011-2012 $PACKAGE_AUTHOR"])
+AC_SUBST(COPYRIGHT_HOLDER, ["Copyright (C) 2006-2021 $PACKAGE_AUTHOR"])
 AC_DEFINE_UNQUOTED(PACKAGE_AUTHOR, ["$PACKAGE_AUTHOR"], [package author])
 AC_DEFINE_UNQUOTED(PACKAGE_COPYRIGHT, ["$COPYRIGHT_HOLDER"], [copyright holder])
 AC_DEFINE(PACKAGE_ICON, ["dfcgen-gtk.png"], [package icon])

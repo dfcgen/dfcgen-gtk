@@ -1,3 +1,9 @@
+dfcgen-gtk (0.6-1) unstable; urgency=medium
+
+  * Migration to GTK 3.18 (Closes: #967310).
+
+ -- Ralf Hoppe <ralf.hoppe@dfcgen.de>  Mon, 20 Sep 2021 13:33:09 +0200
+
 dfcgen-gtk (0.5-1) unstable; urgency=medium
 
   * Support double click on coefficients list

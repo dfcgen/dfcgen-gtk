@@ -6,7 +6,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: dfcgen-gtk 0.5\n"
+"Project-Id-Version: dfcgen-gtk 0.6\n"
 "Report-Msgid-Bugs-To: ralf.hoppe@dfcgen.de\n"
 "POT-Creation-Date: 2020-08-06 21:47+0200\n"
 "PO-Revision-Date: 2020-08-02 20:23+0200\n"
