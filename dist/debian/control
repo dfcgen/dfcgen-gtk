@@ -1,14 +1,14 @@
 # Debian Control File
 # Note: Build a Debian package with 'dpkg-buildpackage -rfakeroot'
 #
-# Copyright (C) 2006, 2011, 2012, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+# Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
 #
 Source: dfcgen-gtk
 Section: electronics
 Priority: optional
 Maintainer: Ralf Hoppe <ralf.hoppe@dfcgen.de>
-Build-Depends: debhelper (>= 9), libgsl-dev, libgtk2.0-dev (>= 2.12)
-Standards-Version: 3.9.4
+Build-Depends: debhelper (>= 9), libgsl-dev, libgtk-3-dev (>= 3.18)
+Standards-Version: 3.9.8
 Homepage: http://www.dfcgen.de
 
 Package: dfcgen-gtk

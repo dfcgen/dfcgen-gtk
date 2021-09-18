@@ -54,8 +54,12 @@ CFLAGS_WARN="-Wall -Wundef -Wshadow \
 # -g  => include debug info
 # -pg => include code for gprof (GNU profiler)
 # -O0 => no optimization
-CFLAGS_DEBUG="-g -pg -O0 -fstack-protector-all -UNDEBUG"
+CFLAGS_DEBUG="-g -pg -O0 -fstack-protector-all -UNDEBUG \
+              -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED \
+              -DGTK_DISABLE_SINGLE_INCLUDES -DGSEAL_ENABLE"
 
+# NOTE: Because deprecations of GTK/GDK properties and signals cannot be
+# caught at compile time, you should set G_ENABLE_DIAGNOSTIC=1 when testing.
 CFLAGS_NDEBUG="-DNDEBUG -DG_DISABLE_ASSERT"
 
 
@@ -158,7 +162,7 @@ AM_CONDITIONAL(BUILD_OS_MINGW32, test x$build_mingw = xyes)
 dnl Check for libraries required by GSL, finally going into LIBS and LDFLAGS:
 dnl http://www.gnu.org/software/gsl/manual/html_node/Autoconf-Macros.html
 dnl
-dnl Note: Commented out because all work done by PKG_CHECK_MODULES()
+dnl NOTE: Commented out because all work done by PKG_CHECK_MODULES()
 dnl
 dnl AC_CHECK_LIB([m],[main])
 dnl AC_CHECK_LIB([gslcblas],[main])
@@ -168,10 +172,9 @@ dnl AC_CHECK_LIB([gsl],[main])
 dnl pkg-config library checks (automated -I, -l/L switches generation and
 dnl PKGCONF_CFLAGS, PKGCONF_LIBS variable creation)
 dnl
-dnl Note: The version numbers used here should match the numbers declared in
+dnl NOTE: The version numbers used here should match the numbers declared in
 dnl       Debian control file "./dist/debian/control".
-PKG_CHECK_MODULES(PKGCONF, [gdk-2.0 gtk+-2.0 >= 2.12 gsl >= 1.10])
-
+PKG_CHECK_MODULES(PKGCONF, [gtk+-3.0 >= 3.18 gsl >= 2.0])
 
 
 dnl Checks for header files
@@ -214,4 +217,3 @@ dnl Checks for system services
 
 
 AC_OUTPUT
-
