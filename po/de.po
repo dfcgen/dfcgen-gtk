@@ -1,15 +1,15 @@
 # -*- mode: po; coding: utf-8 -*-
 #
 # dfcgen-gtk German Translations
-# Copyright (C) 2006-2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+# Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
 # This file is distributed under the same license as the dfcgen-gtk package.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: dfcgen-gtk 0.6\n"
 "Report-Msgid-Bugs-To: ralf.hoppe@dfcgen.de\n"
-"POT-Creation-Date: 2020-08-06 21:47+0200\n"
-"PO-Revision-Date: 2020-08-02 20:23+0200\n"
+"POT-Creation-Date: 2021-09-18 17:09+0200\n"
+"PO-Revision-Date: 2021-09-18 17:14+0200\n"
 "Last-Translator: Ralf Hoppe <ralf.hoppe@dfcgen.de>\n"
 "Language-Team: Ralf Hoppe\n"
 "Language: de\n"
@@ -17,18 +17,42 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/support.c:125
+#: include/gui.h:95
+msgid "_Preferences"
+msgstr "_Einstellungen"
+
+#: include/gui.h:102
+msgid "Save _As"
+msgstr "Speichern _unter"
+
+#: include/gui.h:103 src/mainDlg.c:288
+msgid "_New"
+msgstr "_Neu"
+
+#: include/gui.h:104
+msgid "_Export"
+msgstr "_Export"
+
+#: include/gui.h:106 src/editDlg.c:298
+msgid "Project Info"
+msgstr "Projektinfo"
+
+#: include/gui.h:107
+msgid "_Quit"
+msgstr "_Beenden"
+
+#: src/support.c:122
 #, c-format
 msgid "Couldn't locate package sub-directory no. %d"
 msgstr ""
 "Konnte Unterverzeichnis der Installation mit der Nummer %d nicht finden."
 
-#: src/support.c:156
+#: src/support.c:153
 #, c-format
 msgid "Couldn't find pixmap file '%s'"
 msgstr "Konnte Bilddatei '%s' nicht finden"
 
-#: src/support.c:165
+#: src/support.c:162
 #, c-format
 msgid "Failed to create pixbuf from file '%s': %s"
 msgstr "Konnte Bild nicht aus Datei '%s' erzeugen: %s"
@@ -45,7 +69,7 @@ msgstr "Linear FIR"
 msgid "Standard IIR"
 msgstr "Standard IIR"
 
-#: src/designDlg.c:267
+#: src/designDlg.c:263
 msgid ""
 "Somewhere along the way you made some direct changes at the coefficients of "
 "current filter. Would you really forget these changes and generate new "
@@ -55,7 +79,7 @@ msgstr ""
 "Sie diese Änderungen wirklich verwerfen und alle Filterkoeffizienten jetzt "
 "neu generieren?"
 
-#: src/designDlg.c:284
+#: src/designDlg.c:280
 msgid ""
 "Cannot generate such a filter. Please check sample frequency, degree and "
 "other design parameters."
@@ -68,33 +92,33 @@ msgstr ""
 msgid "Change"
 msgstr "Ändern"
 
-#: src/mainDlg.c:120
+#: src/mainDlg.c:121
 msgid "Edit a single coefficient"
 msgstr "Einen einzelnen Koeffizienten ändern"
 
-#: src/mainDlg.c:123
+#: src/mainDlg.c:125
 msgid "Multiply"
 msgstr "Multiplizieren"
 
-#: src/mainDlg.c:124
+#: src/mainDlg.c:127
 msgid "Multiply all coefficients with a constant"
 msgstr "Alle Koeffizienten mit einer Konstante multiplizieren"
 
-#: src/mainDlg.c:127
+#: src/mainDlg.c:131
 msgid "Round"
 msgstr "Runden"
 
-#: src/mainDlg.c:128
+#: src/mainDlg.c:133
 msgid "Round all coefficients"
 msgstr "Alle Koeffizienten runden"
 
-#: src/mainDlg.c:169
+#: src/mainDlg.c:174
 msgid "The current filter/system has not been saved. Are you sure to quit now?"
 msgstr ""
 "Das aktuelle Filter/System wurde noch nicht gespeichert. Wollen Sie trotzdem "
 "beenden?"
 
-#: src/mainDlg.c:278
+#: src/mainDlg.c:283
 #, c-format
 msgid ""
 "Changes coefficient of tap z<sup>-%d</sup> in the selected list to a new "
@@ -102,35 +126,31 @@ msgid ""
 msgstr ""
 "Ändert den Koeffizient von Abzweig z<sup>-%d</sup> in der ausgewählten Liste"
 
-#: src/mainDlg.c:281
+#: src/mainDlg.c:287
 msgid "Change coefficient"
 msgstr "Koeffizient ändern"
 
-#: src/mainDlg.c:282
-msgid "_New"
-msgstr "_Neu"
-
 # Tooltip
-#: src/mainDlg.c:308
+#: src/mainDlg.c:315
 msgid "Multiply coefficients"
 msgstr "Koeffizient modifizieren"
 
-#: src/mainDlg.c:309
+#: src/mainDlg.c:316
 msgid "_Factor"
 msgstr "_Faktor"
 
-#: src/mainDlg.c:310
+#: src/mainDlg.c:317
 msgid "Multiplies all coefficients in the selected list with the given factor."
 msgstr ""
 "Multipliziert alle Koeffizienten in der ausgewählten Liste mit dem "
 "eingegebenen Faktor."
 
-#: src/mainDlg.c:348
+#: src/mainDlg.c:355
 msgid "Do you really want to round all coefficients in the selected list?"
 msgstr ""
 "Wollen Sie wirklich alle Koeffizienten in der ausgewählten Liste runden?"
 
-#: src/mainDlg.c:401
+#: src/mainDlg.c:408
 msgid ""
 "Cannot implement such a filter. Maybe the result of such an operation leads "
 "to vanishing coefficients at all."
@@ -138,7 +158,7 @@ msgstr ""
 "Kann ein solches Filter nicht erzeugen. Möglicherweise führt die Operation "
 "zu einem Ergebnis, in dem alle Koeffizienten annähernd Null sind."
 
-#: src/mainDlg.c:415
+#: src/mainDlg.c:422
 msgid ""
 "Cannot perform the desired operation. It seems that all the memory is "
 "exhausted."
@@ -146,117 +166,105 @@ msgstr ""
 "Kann die gewünschte Operation nicht ausführen. Es scheint, als ob Ihr "
 "Hauptspeicher nicht ausreicht."
 
-#: src/mainDlg.c:578
+#: src/mainDlg.c:584
 msgid "Tap"
 msgstr "Abzw."
 
-#: src/mainDlg.c:589
+#: src/mainDlg.c:595
 msgid "Coefficient"
 msgstr "Koeffizient"
 
-#: src/mainDlg.c:716
+#: src/mainDlg.c:720
 msgid "_File"
 msgstr "_Datei"
 
-#: src/mainDlg.c:751
-msgid "_Export"
-msgstr "_Export"
-
-#: src/mainDlg.c:775
+#: src/mainDlg.c:786
 msgid "_Edit"
 msgstr "_Bearbeiten"
 
-#: src/mainDlg.c:781 src/editDlg.c:308
-msgid "Project Info"
-msgstr "Projektinfo"
-
-#: src/mainDlg.c:788
+#: src/mainDlg.c:798
 msgid "Coefficient(s)"
 msgstr "Koeffizient(en)"
 
-#: src/mainDlg.c:818
+#: src/mainDlg.c:825
 msgid "_View"
 msgstr "_Ansicht"
 
-#: src/mainDlg.c:824
+#: src/mainDlg.c:831
 msgid "_Magnitude Response"
 msgstr "_Amplitudengang"
 
-#: src/mainDlg.c:830
+#: src/mainDlg.c:837
 msgid "_Attenuation"
 msgstr "_Dämpfung"
 
-#: src/mainDlg.c:836
+#: src/mainDlg.c:843
 msgid "_Characteristic Function"
 msgstr "D_rosselung"
 
-#: src/mainDlg.c:842
+#: src/mainDlg.c:849
 msgid "_Phase Response"
 msgstr "_Phasengang"
 
-#: src/mainDlg.c:848
+#: src/mainDlg.c:855
 msgid "Phase _Delay"
 msgstr "Phasen_laufzeit"
 
-#: src/mainDlg.c:854
+#: src/mainDlg.c:861
 msgid "_Group Delay"
 msgstr "_Gruppenlaufzeit"
 
-#: src/mainDlg.c:860
+#: src/mainDlg.c:867
 msgid "_Impulse Response"
 msgstr "_Impulsantwort"
 
-#: src/mainDlg.c:866
+#: src/mainDlg.c:873
 msgid "_Step Response"
 msgstr "_Sprungantwort"
 
-#: src/mainDlg.c:872
-msgid "_Help"
-msgstr "_Hilfe"
-
 # Label for filter class combobox
-#: src/mainDlg.c:941
+#: src/mainDlg.c:970
 msgid "<b>_Class</b>"
 msgstr "<b>_Klasse</b>"
 
 # Tooltip
-#: src/mainDlg.c:947
+#: src/mainDlg.c:976
 msgid "Class of filter (or system)"
 msgstr "Filterklasse"
 
 # Tooltip for help button
-#: src/mainDlg.c:961
+#: src/mainDlg.c:991
 msgid "Help"
 msgstr "Hilfe"
 
 # Tooltip
-#: src/mainDlg.c:971
+#: src/mainDlg.c:1001
 msgid "Apply input data"
 msgstr "Eingabe anwenden"
 
-#: src/mainDlg.c:988
+#: src/mainDlg.c:1018
 msgid "<b>Roots</b>"
 msgstr "<b>Wurzeln</b>"
 
 # Tooltip
-#: src/mainDlg.c:1006
+#: src/mainDlg.c:1039
 msgid "Denominator coefficients"
 msgstr "Nennerkoeffizienten"
 
 # Tooltip
-#: src/mainDlg.c:1017
+#: src/mainDlg.c:1052
 msgid "Numerator coefficients"
 msgstr "Zählerkoeffizienten"
 
-#: src/mainDlg.c:1019
+#: src/mainDlg.c:1054
 msgid "<b>Numerator</b>"
 msgstr "<b>Zähler</b>"
 
-#: src/mainDlg.c:1027
+#: src/mainDlg.c:1060
 msgid "<b>Denominator</b>"
 msgstr "<b>Nenner</b>"
 
-#: src/mainDlg.c:1167
+#: src/mainDlg.c:1198
 msgid ""
 "Filter generation has dropped some (near zero) coefficients, but the filter "
 "is still valid."
@@ -267,75 +275,80 @@ msgstr ""
 
 # Displayed if title, author or filename (may be a conversion error from filesystem
 # into UTF-8 coding) are unknown.
-#: src/mainDlg.c:1229 src/fileDlg.c:88 src/fileDlg.c:93 src/dialogSupport.c:132
+#: src/mainDlg.c:1260 src/fileDlg.c:88 src/fileDlg.c:93 src/dialogSupport.c:133
 msgid "<i>Unknown</i>"
 msgstr "<i>Unbekannt</i>"
 
-#: src/helpDlg.c:73
+#: src/helpDlg.c:67
+#, c-format
+msgid "Version %s"
+msgstr "Version %s"
+
+#: src/helpDlg.c:80
 msgid "translator-credits"
 msgstr "Ralf Hoppe"
 
 # f means the physical unit Frequency
-#: src/responseWin.c:94 src/responseWin.c:105 src/responseWin.c:116
-#: src/responseWin.c:127 src/responseWin.c:138 src/responseWin.c:149
+#: src/responseWin.c:93 src/responseWin.c:104 src/responseWin.c:115
+#: src/responseWin.c:126 src/responseWin.c:137 src/responseWin.c:148
 msgid "<b>f</b>"
 msgstr "<b>f</b>"
 
 # magnitude response H(f)
-#: src/responseWin.c:95
+#: src/responseWin.c:94
 msgid "<b>H(f)</b>"
 msgstr "<b>H(f)</b>"
 
 # attenuation
-#: src/responseWin.c:106
+#: src/responseWin.c:105
 msgid "<b>A(f)</b>"
 msgstr "<b>A(f)</b>"
 
 # characteristic function
-#: src/responseWin.c:117
+#: src/responseWin.c:116
 msgid "<b>D(f)</b>"
 msgstr "<b>D(f)</b>"
 
 # phase response
-#: src/responseWin.c:128
+#: src/responseWin.c:127
 msgid "<b>B(f)</b>"
 msgstr "<b>B(f)</b>"
 
 # phase delay
-#: src/responseWin.c:139
+#: src/responseWin.c:138
 msgid "<b>T<sub>p</sub>(f)</b>"
 msgstr "<b>T<sub>p</sub>(f)</b>"
 
 # group delay
-#: src/responseWin.c:150
+#: src/responseWin.c:149
 msgid "<b>T<sub>g</sub>(f)</b>"
 msgstr "<b>T<sub>g</sub>(f)</b>"
 
 # t means the physical unit Time
-#: src/responseWin.c:160 src/responseWin.c:171
+#: src/responseWin.c:159 src/responseWin.c:170
 msgid "<b>t</b>"
 msgstr "<b>t</b>"
 
 # step response
-#: src/responseWin.c:161
+#: src/responseWin.c:160
 msgid "<b>h(t)</b>"
 msgstr "<b>h(t)</b>"
 
 # impulse response
-#: src/responseWin.c:172
+#: src/responseWin.c:171
 msgid "<b>g(t)</b>"
 msgstr "<b>g(t)</b>"
 
-#: src/responseWin.c:325
+#: src/responseWin.c:353
 msgid "Print this response plot"
 msgstr "Diagramm drucken"
 
 # Tooltip
-#: src/responseWin.c:330
+#: src/responseWin.c:358
 msgid "Set response plot preferences"
 msgstr "Plot Einstellungen"
 
-#: src/responseWin.c:427
+#: src/responseWin.c:459
 #, c-format
 msgid "%d Points"
 msgstr "%d Stützwerte"
@@ -373,7 +386,7 @@ msgstr "Projektdateien (*%s)"
 msgid "All files (*)"
 msgstr "Alle Dateien (*)"
 
-#: src/fileDlg.c:207
+#: src/fileDlg.c:208
 msgid "Load project file"
 msgstr "Projektdatei laden"
 
@@ -387,7 +400,7 @@ msgstr "Fehler beim Laden der Projektdatei '%s'."
 msgid "Error saving project file '%s'."
 msgstr "Fehler beim Speichern der Projektdatei '%s'."
 
-#: src/fileDlg.c:288
+#: src/fileDlg.c:289
 msgid "Save project file"
 msgstr "Projektdatei speichern"
 
@@ -435,12 +448,12 @@ msgstr "unbenannt.txt"
 msgid "Error exporting to file '%s'."
 msgstr "Fehler beim Exportieren in die Datei '%s'."
 
-#: src/responseDlg.c:160
+#: src/responseDlg.c:163
 #, c-format
 msgid "Range (start, stop) for axis '%s' is invalid."
 msgstr "Intervall (Start, Stop) für Achse '%s' ist ungültig."
 
-#: src/responseDlg.c:191
+#: src/responseDlg.c:194
 msgid "Logarithmic"
 msgstr "Logarithmisch"
 
@@ -448,256 +461,256 @@ msgstr "Logarithmisch"
 msgid "Show Grid"
 msgstr "Grid"
 
-#: src/responseDlg.c:286
+#: src/responseDlg.c:311
 msgid "Response Settings"
 msgstr "Diagramm-Einstellungen"
 
-#: src/responseDlg.c:309 src/responseDlg.c:425
+#: src/responseDlg.c:328 src/responseDlg.c:425
 msgid "Axis"
 msgstr "Achse"
 
-#: src/responseDlg.c:322 src/responseDlg.c:438
+#: src/responseDlg.c:342 src/responseDlg.c:439
 msgid "Start"
 msgstr "Start"
 
-#: src/responseDlg.c:332
+#: src/responseDlg.c:348
 msgid "Start of x-axis interval"
 msgstr "Startpunkt der x-Achse"
 
-#: src/responseDlg.c:342 src/responseDlg.c:458 src/stdIirDesignDlg.c:530
+#: src/responseDlg.c:358 src/responseDlg.c:455 src/stdIirDesignDlg.c:463
 msgid "Stop"
 msgstr "Stop"
 
-#: src/responseDlg.c:352
+#: src/responseDlg.c:364
 msgid "End of x-axis interval"
 msgstr "Endepunkt der x-Achse"
 
-#: src/responseDlg.c:360
+#: src/responseDlg.c:372
 msgid "Samples"
 msgstr "Stützwerte"
 
-#: src/responseDlg.c:370
+#: src/responseDlg.c:379
 msgid "The number of samples to be used (0 = all)"
 msgstr "Die Anzahl der zu verwendenden Stützwerte (0 = Anzahl Pixel)"
 
-#: src/responseDlg.c:448
+#: src/responseDlg.c:445
 msgid "Start of y-axis interval"
 msgstr "Startpunkt der y-Achse"
 
-#: src/responseDlg.c:468
+#: src/responseDlg.c:461
 msgid "End of y-axis interval"
 msgstr "Endepunkt der y-Achse"
 
-#: src/responseDlg.c:506
+#: src/responseDlg.c:495
 msgid "Autoscaling"
 msgstr "Auto-Skalierung"
 
-#: src/responseDlg.c:507
+#: src/responseDlg.c:496
 msgid ""
 "Autoscaling of y-axis with respect to minimum and maximum values in interval"
 msgstr ""
 "Automatische Skalierung der y-Achse entsprechend Maximal- und Minimalwert"
 
-#: src/responseDlg.c:527
+#: src/responseDlg.c:514
 msgid "<b>Style</b>"
 msgstr "<b>Stil</b>"
 
-#: src/responseDlg.c:545 src/responseDlg.c:593
+#: src/responseDlg.c:526 src/responseDlg.c:566
 msgid "Graph"
 msgstr "Kurve"
 
-#: src/responseDlg.c:551
+#: src/responseDlg.c:530
 msgid "Color"
 msgstr "Farbe"
 
-#: src/responseDlg.c:571
+#: src/responseDlg.c:546
 msgid "Style of graph"
 msgstr "Stil der Kurve"
 
-#: src/responseDlg.c:575
+#: src/responseDlg.c:550
 msgid "Line (continuous)"
 msgstr "Linie (kontinuierlich)"
 
-#: src/responseDlg.c:576
+#: src/responseDlg.c:551
 msgid "Circle (discrete)"
 msgstr "Kreis (diskret)"
 
-#: src/responseDlg.c:577
+#: src/responseDlg.c:552
 msgid "Samples (discrete)"
 msgstr "Abtastwert (diskret)"
 
-#: src/responseDlg.c:578
+#: src/responseDlg.c:553
 msgid "Cross (discrete)"
 msgstr "Kreuz (diskret)"
 
-#: src/responseDlg.c:579
+#: src/responseDlg.c:554
 msgid "Box (discrete)"
 msgstr "Viereck (diskret)"
 
-#: src/responseDlg.c:587
+#: src/responseDlg.c:560
 msgid "Choose the color item to be changed, then modify the color"
 msgstr "Wählen Sie das Objekt, für welches die Farbe geändert werden soll"
 
-#: src/responseDlg.c:591
+#: src/responseDlg.c:564
 msgid "Labels"
 msgstr "Achsenbeschriftung"
 
-#: src/responseDlg.c:592
+#: src/responseDlg.c:565
 msgid "Grid"
 msgstr "Grid"
 
-#: src/responseDlg.c:594
+#: src/responseDlg.c:567
 msgid "Box"
 msgstr "Rahmen"
 
-#: src/responseDlg.c:595
+#: src/responseDlg.c:568
 msgid "Units"
 msgstr "Einheiten"
 
-#: src/editDlg.c:103
+#: src/editDlg.c:108
 msgid " Settings"
 msgstr "Einstellungen"
 
-#: src/editDlg.c:128
+#: src/editDlg.c:129
 msgid ""
 "The number of digits following the decimal point of a floating point number"
 msgstr "Die Anzahl der signifikaten Ziffern bei der Ausgabe von Zahlen"
 
-#: src/editDlg.c:133
+#: src/editDlg.c:134
 msgid "Output _Precision"
 msgstr "Ausgabe_präzision"
 
-#: src/editDlg.c:144
+#: src/editDlg.c:141
 msgid "Frequency unit to be used for in-/output"
 msgstr "Einheit von Frequenzwerten bei der Ein- und Ausgabe"
 
-#: src/editDlg.c:158
+#: src/editDlg.c:155
 msgid "_Frequency Unit"
 msgstr "Einheit _Frequenz"
 
-#: src/editDlg.c:169
+#: src/editDlg.c:162
 msgid "Time unit to be used for in-/output"
 msgstr "Einheit von Zeitwerten bei der Ein- und Ausgabe"
 
-#: src/editDlg.c:184
+#: src/editDlg.c:177
 msgid "_Time Unit"
 msgstr "Einheit _Zeit"
 
-#: src/editDlg.c:191
+#: src/editDlg.c:182
 msgid "_In-/Output"
 msgstr "_Ein-/Ausgabe"
 
-#: src/editDlg.c:199
+#: src/editDlg.c:190
 msgid "RFU"
 msgstr "RFU"
 
 # Tooltip
-#: src/editDlg.c:332
+#: src/editDlg.c:321
 msgid "Author of filter/system"
 msgstr "Autor des Filters/Systems"
 
-#: src/editDlg.c:341
+#: src/editDlg.c:330
 msgid "_Author"
 msgstr "_Autor"
 
-#: src/editDlg.c:360
+#: src/editDlg.c:347
 msgid "Project title"
 msgstr "Projekttitel"
 
-#: src/editDlg.c:363
+#: src/editDlg.c:350
 msgid "_Title"
 msgstr "_Titel"
 
-#: src/editDlg.c:380
+#: src/editDlg.c:367
 msgid "Project description"
 msgstr "Projektbeschreibung"
 
-#: src/editDlg.c:390
+#: src/editDlg.c:377
 msgid "_Description"
 msgstr "_Beschreibung"
 
-#: src/stdIirDesignDlg.c:48 src/linFirDesignDlg.c:55
+#: src/stdIirDesignDlg.c:49 src/linFirDesignDlg.c:56
 msgid "f<sub>Center</sub>"
 msgstr "Mittenfr."
 
 # f means the physical unit Frequency
-#: src/stdIirDesignDlg.c:52 src/linFirDesignDlg.c:59
+#: src/stdIirDesignDlg.c:53 src/linFirDesignDlg.c:60
 msgid "f<sub>Cutoff</sub>"
 msgstr "Grenzfr."
 
-#: src/stdIirDesignDlg.c:81
+#: src/stdIirDesignDlg.c:82
 msgid "Butterworth"
 msgstr "Butterworth"
 
-#: src/stdIirDesignDlg.c:82
+#: src/stdIirDesignDlg.c:83
 msgid "Chebyshev"
 msgstr "Tschebyscheff"
 
-#: src/stdIirDesignDlg.c:83
+#: src/stdIirDesignDlg.c:84
 msgid "Chebyshev Inv."
 msgstr "Tschebyscheff Inv."
 
-#: src/stdIirDesignDlg.c:84
+#: src/stdIirDesignDlg.c:85
 msgid "Cauer (Case I)"
 msgstr "Cauer (Fall I)"
 
-#: src/stdIirDesignDlg.c:85
+#: src/stdIirDesignDlg.c:86
 msgid "Cauer (Case II)"
 msgstr "Cauer (Fall II)"
 
-#: src/stdIirDesignDlg.c:86
+#: src/stdIirDesignDlg.c:87
 msgid "Bessel"
 msgstr "Bessel"
 
-#: src/stdIirDesignDlg.c:240 src/linFirDesignDlg.c:250
+#: src/stdIirDesignDlg.c:239 src/linFirDesignDlg.c:249
 msgid "<b>Characteristic</b>"
 msgstr "<b>Charakteristik</b>"
 
-#: src/stdIirDesignDlg.c:277 src/linFirDesignDlg.c:284
+#: src/stdIirDesignDlg.c:270 src/linFirDesignDlg.c:277
 msgid "<b>Transform</b>"
 msgstr "<b>Transformation</b>"
 
-#: src/stdIirDesignDlg.c:295 src/linFirDesignDlg.c:302
+#: src/stdIirDesignDlg.c:283 src/linFirDesignDlg.c:290
 msgid "Type of frequency transformation"
 msgstr "Art der Frequenztransformation"
 
-#: src/stdIirDesignDlg.c:297 src/linFirDesignDlg.c:304
+#: src/stdIirDesignDlg.c:285 src/linFirDesignDlg.c:292
 msgid "_Type"
 msgstr "_Typ"
 
-#: src/stdIirDesignDlg.c:305 src/linFirDesignDlg.c:98 src/linFirDesignDlg.c:312
+#: src/stdIirDesignDlg.c:291 src/linFirDesignDlg.c:99 src/linFirDesignDlg.c:298
 msgid "None"
 msgstr "Keine"
 
-#: src/stdIirDesignDlg.c:306 src/linFirDesignDlg.c:313
+#: src/stdIirDesignDlg.c:292 src/linFirDesignDlg.c:299
 msgid "Highpass"
 msgstr "Hochpaß"
 
-#: src/stdIirDesignDlg.c:307 src/linFirDesignDlg.c:314
+#: src/stdIirDesignDlg.c:293 src/linFirDesignDlg.c:300
 msgid "Bandpass"
 msgstr "Bandpaß"
 
-#: src/stdIirDesignDlg.c:308 src/linFirDesignDlg.c:315
+#: src/stdIirDesignDlg.c:294 src/linFirDesignDlg.c:301
 msgid "Bandstop"
 msgstr "Bandsperre"
 
-#: src/stdIirDesignDlg.c:318 src/linFirDesignDlg.c:325
+#: src/stdIirDesignDlg.c:302 src/linFirDesignDlg.c:309
 msgid "Bandwidth"
 msgstr "Bandbreite"
 
-#: src/stdIirDesignDlg.c:323 src/linFirDesignDlg.c:330
+#: src/stdIirDesignDlg.c:307 src/linFirDesignDlg.c:314
 msgid "f<sub>Bandw.</sub>"
 msgstr "Bandbr."
 
-#: src/stdIirDesignDlg.c:342 src/linFirDesignDlg.c:349
+#: src/stdIirDesignDlg.c:320 src/linFirDesignDlg.c:327
 msgid "Cutoff frequency (highpass) or center frequency (bandpass, bandstop)"
 msgstr "Grenzfrequenz (Hochpaß) oder Mittenfrequenz (Bandpaß, Bandsperre)"
 
-#: src/stdIirDesignDlg.c:363 src/linFirDesignDlg.c:370
+#: src/stdIirDesignDlg.c:337 src/linFirDesignDlg.c:344
 msgid "_Geometric"
 msgstr "_Geometrisch"
 
-#: src/stdIirDesignDlg.c:368 src/linFirDesignDlg.c:375
+#: src/stdIirDesignDlg.c:340 src/linFirDesignDlg.c:347
 msgid ""
 "Check this if the center frequency shall be the geometric mean between both "
 "cutoff frequencies (otherwise it is the arithmetic mean)."
@@ -706,63 +719,63 @@ msgstr ""
 "unterer und oberer Grenzfrequenz angesehen werden soll (sonst arithmetisches "
 "Mittel)."
 
-#: src/stdIirDesignDlg.c:382 src/linFirDesignDlg.c:389
+#: src/stdIirDesignDlg.c:351 src/linFirDesignDlg.c:358
 msgid "<b>Lowpass</b>"
 msgstr "<b>Tiefpaß</b>"
 
-#: src/stdIirDesignDlg.c:401 src/linFirDesignDlg.c:408
+#: src/stdIirDesignDlg.c:366 src/linFirDesignDlg.c:373
 msgid "Cutoff frequency"
 msgstr "Grenzfrequenz"
 
-#: src/stdIirDesignDlg.c:424 src/miscDesignDlg.c:164 src/linFirDesignDlg.c:431
+#: src/stdIirDesignDlg.c:383 src/miscDesignDlg.c:158 src/linFirDesignDlg.c:390
 msgid "Sample frequency"
 msgstr "Abtastfrequenz"
 
-#: src/stdIirDesignDlg.c:429 src/miscDesignDlg.c:152 src/linFirDesignDlg.c:436
+#: src/stdIirDesignDlg.c:388 src/miscDesignDlg.c:150 src/linFirDesignDlg.c:395
 msgid "f<sub>_Sample</sub>"
 msgstr "Abtastfr."
 
-#: src/stdIirDesignDlg.c:451 src/linFirDesignDlg.c:458
+#: src/stdIirDesignDlg.c:404 src/linFirDesignDlg.c:411
 msgid "Degree of filter"
 msgstr "Grad des Filters"
 
-#: src/stdIirDesignDlg.c:455 src/miscDesignDlg.c:176 src/linFirDesignDlg.c:462
+#: src/stdIirDesignDlg.c:408 src/miscDesignDlg.c:168 src/linFirDesignDlg.c:415
 msgid "_Degree"
 msgstr "_Grad"
 
-#: src/stdIirDesignDlg.c:471
+#: src/stdIirDesignDlg.c:419
 msgid "<b>Parameters</b>"
 msgstr "<b>Parameter</b>"
 
-#: src/stdIirDesignDlg.c:508
+#: src/stdIirDesignDlg.c:445
 msgid "Passband ripple in dB"
 msgstr "Welligkeit im Durchlaßbereich in dB"
 
-#: src/stdIirDesignDlg.c:513
+#: src/stdIirDesignDlg.c:450
 msgid "Ripple"
 msgstr "Welligkeit"
 
-#: src/stdIirDesignDlg.c:525
+#: src/stdIirDesignDlg.c:458
 msgid "Stopband attenuation in dB"
 msgstr "Minimale Sperrdämpfung in dB"
 
-#: src/stdIirDesignDlg.c:543
+#: src/stdIirDesignDlg.c:472
 msgid "Modular angle in degree"
 msgstr "Modulwinkel in Grad"
 
-#: src/stdIirDesignDlg.c:548
+#: src/stdIirDesignDlg.c:477
 msgid "Angle"
 msgstr "Modul"
 
-#: src/stdIirDesignDlg.c:784
+#: src/stdIirDesignDlg.c:711
 msgid "Degree must be even for bandpass/bandstop."
 msgstr "Für eine(n) Bandsperre/Bandpaß muß der Grad gerade sein."
 
-#: src/miscDesignDlg.c:57
+#: src/miscDesignDlg.c:58
 msgid "Hilbert transformer (FIR)"
 msgstr "Hilbert Transformator (FIR)"
 
-#: src/miscDesignDlg.c:58
+#: src/miscDesignDlg.c:59
 msgid ""
 "A <i>Hilbert</i> transformer is a 90° phase shifter with the impulse "
 "response g(t)=<sup>1</sup>/<sub>ϖt</sub>. The approximation is based on "
@@ -774,11 +787,11 @@ msgstr ""
 "<i>Fourier</i>-Reihenentwicklung des (periodischen) Amplitudenganges:\n"
 "H(f)=-j sgn(f)."
 
-#: src/miscDesignDlg.c:61
+#: src/miscDesignDlg.c:62
 msgid "Perfect Integrator (FIR)"
 msgstr "Idealer Integrator (FIR)"
 
-#: src/miscDesignDlg.c:62
+#: src/miscDesignDlg.c:63
 msgid ""
 "A perfect integrator has the <i>Heaviside</i> unit step function as it&apos;"
 "s impulse response. The approximation is based on <i>Fourier</i> series "
@@ -790,27 +803,27 @@ msgstr ""
 "Reihenentwicklung des (periodischen) Amplitudenganges:\n"
 "H(f)=½δ(f)+<sup>1</sup>/<sub>j2ϖf</sub>."
 
-#: src/miscDesignDlg.c:65
+#: src/miscDesignDlg.c:66
 msgid "Perfect Differentiator (FIR)"
 msgstr "Differenzierer (FIR)"
 
-#: src/miscDesignDlg.c:66
+#: src/miscDesignDlg.c:67
 msgid ""
 "A perfect differentiator has the <i>Dirac</i> impulse as it&apos;s impulse "
 "response.  The approximation is based on <i>Fourier</i> series expansion of "
 "the repetitive frequency response:\n"
 "H(f)=j2ϖf."
 msgstr ""
-"Der ideale Differenziererhat den <i>Dirac</i>-Stoß als Impulsantwort. Die "
+"Der ideale Differenzierer hat den <i>Dirac</i>-Stoß als Impulsantwort. Die "
 "Approximation basiert auf <i>Fourier</i>-Reihenentwicklung des "
 "(periodischen) Amplitudenganges:\n"
 "H(f)=j2ϖf."
 
-#: src/miscDesignDlg.c:69
+#: src/miscDesignDlg.c:70
 msgid "Comb filter (FIR)"
 msgstr "Kammfilter (FIR)"
 
-#: src/miscDesignDlg.c:70
+#: src/miscDesignDlg.c:71
 msgid ""
 "The comb filter is a computational physical model of a single discrete echo. "
 "It has the transfer function:\n"
@@ -822,11 +835,11 @@ msgstr ""
 "H(z)=1-z<sup>-n</sup>\n"
 "und deshalb eine lineare Phase."
 
-#: src/miscDesignDlg.c:73
+#: src/miscDesignDlg.c:74
 msgid "Moving average (FIR)"
 msgstr "Spalttiefpaß (FIR)"
 
-#: src/miscDesignDlg.c:74
+#: src/miscDesignDlg.c:75
 msgid ""
 "The moving average filter (also called digital window integrator or sinc "
 "filter) is an approximation of the impulse response of the ideal lowpass. As "
@@ -838,11 +851,11 @@ msgstr ""
 "Tiefpaß. Als FIR-Realisierung hat es die Übertragungsfunktion:\n"
 "H(z)=1+z<sup>-1</sup>+z<sup>-2</sup>+...+z<sup>-n</sup>."
 
-#: src/miscDesignDlg.c:77
+#: src/miscDesignDlg.c:78
 msgid "Moving average (IIR)"
 msgstr "Spalttiefpaß (IIR)"
 
-#: src/miscDesignDlg.c:78
+#: src/miscDesignDlg.c:79
 msgid ""
 "The moving average filter (also called digital window integrator or sinc "
 "filter) is an approximation of the impulse response of the ideal lowpass. As "
@@ -854,11 +867,11 @@ msgstr ""
 "Tiefpaß. Als IIR-Realisierung hat es die Übertragungsfunktion:\n"
 "H(z)=(1-z<sup>-n</sup>)/(1-z<sup>-1</sup>)."
 
-#: src/miscDesignDlg.c:81
+#: src/miscDesignDlg.c:82
 msgid "Exponential average (IIR)"
 msgstr "Exponentielles Mittelwertfilter (IIR)"
 
-#: src/miscDesignDlg.c:82
+#: src/miscDesignDlg.c:83
 msgid ""
 "The exponential average lowpass approximates a first order (analog RC-) "
 "lowpass. The transfer function is:\n"
@@ -868,24 +881,24 @@ msgstr ""
 "erster Ordnung. Die Übertragungsfunktion lautet:\n"
 "H(z)=1/[n-(n-1)z<sup>-1</sup>]."
 
-#: src/miscDesignDlg.c:147
+#: src/miscDesignDlg.c:145
 msgid "<b>_Type</b>"
 msgstr "<b>_Typ</b>"
 
-#: src/miscDesignDlg.c:188
+#: src/miscDesignDlg.c:176
 msgid "Degree of system"
 msgstr "Grad des Systems"
 
-#: src/miscDesignDlg.c:209
-msgid "<i>Description</i>"
-msgstr "<i>Beschreibung</i>"
+#: src/miscDesignDlg.c:189
+msgid "<i>Description</i>:"
+msgstr "<i>Beschreibung</i>:"
 
-#: src/miscDesignDlg.c:430
+#: src/miscDesignDlg.c:422
 #, c-format
 msgid "Could not load predefined filter(s) from '%s'"
 msgstr "Konnte das vordefinierte Filter von '%s' nicht laden"
 
-#: src/miscDesignDlg.c:490
+#: src/miscDesignDlg.c:482
 msgid ""
 "For this digital system only a limited set of design data is available. Thus "
 "the <i>Type</i> box and <i>Description</i> field will not reflect the "
@@ -896,7 +909,7 @@ msgstr ""
 "<i>Beschreibung</i> nicht aktualisiert (natürlich aber die angezeigten "
 "Koeffizienten)."
 
-#: src/miscDesignDlg.c:636
+#: src/miscDesignDlg.c:628
 #, c-format
 msgid "Could not load predefined filter from '%s'"
 msgstr "Konnte das vor definierte Filter nicht von '%s' laden"
@@ -926,68 +939,68 @@ msgstr "Unbekannte Frequenztransformation %d"
 msgid "Something seems wrong with the project in '%s'"
 msgstr "Irgendetwas scheint mit dem Projekt in '%s' nicht in Ordnung."
 
-#: src/dialogSupport.c:71
+#: src/dialogSupport.c:72
 #, c-format
 msgid "Input \"<b>%s</b>\" is invalid for <b>%s</b> (min. %G, max. %G)."
 msgstr "Eingabe \"<b>%s</b>\" für <b>%s</b> ist ungültig (Min. %G, Max. %G)."
 
-#: src/linFirDesignDlg.c:86
+#: src/linFirDesignDlg.c:87
 msgid "Rectangular (perfect)"
 msgstr "Rechteck (ideal)"
 
-#: src/linFirDesignDlg.c:87
+#: src/linFirDesignDlg.c:88
 msgid "Cosine"
 msgstr "Cosinus"
 
-#: src/linFirDesignDlg.c:88
+#: src/linFirDesignDlg.c:89
 msgid "Squared cosine"
 msgstr "Quadratischer Cosinus"
 
-#: src/linFirDesignDlg.c:89
+#: src/linFirDesignDlg.c:90
 msgid "Gaussian"
 msgstr "Gaußkurve"
 
-#: src/linFirDesignDlg.c:90
+#: src/linFirDesignDlg.c:91
 msgid "Squared 1st order"
 msgstr "Quadratisch 1. Ordnung"
 
-#: src/linFirDesignDlg.c:99
+#: src/linFirDesignDlg.c:100
 msgid "Hamming"
 msgstr "Hamming"
 
-#: src/linFirDesignDlg.c:100
+#: src/linFirDesignDlg.c:101
 msgid "van Hann"
 msgstr "van Hann"
 
-#: src/linFirDesignDlg.c:101
+#: src/linFirDesignDlg.c:102
 msgid "Blackman"
 msgstr "Blackman"
 
-#: src/linFirDesignDlg.c:102
+#: src/linFirDesignDlg.c:103
 msgid "Kaiser"
 msgstr "Kaiser"
 
-#: src/linFirDesignDlg.c:479
+#: src/linFirDesignDlg.c:427
 msgid "<b>Window</b>"
 msgstr "<b>Fensterfunktion</b>"
 
-#: src/linFirDesignDlg.c:515
+#: src/linFirDesignDlg.c:456
 msgid "Parameter of Kaiser window"
 msgstr "Parameter des Kaiser-Fensters"
 
-#: src/linFirDesignDlg.c:520
+#: src/linFirDesignDlg.c:461
 msgid "α="
 msgstr "α="
 
-#: src/linFirDesignDlg.c:729
+#: src/linFirDesignDlg.c:668
 msgid "Degree must be even for frequency transformation."
 msgstr "Für eine Frequenztransformation muß der Grad gerade sein."
 
-#: src/rootsPlot.c:297
+#: src/rootsPlot.c:298
 msgid "Re(z)"
 msgstr "Re(z)"
 
-#: src/rootsPlot.c:298
+#: src/rootsPlot.c:299
 msgid "Im(z)"
 msgstr "Im(z)"
 
@@ -1029,3 +1042,4 @@ msgstr "Nenner (%d)"
 #, c-format
 msgid "Error printing: %s"
 msgstr "Fehler beim Drucken: %s"
+

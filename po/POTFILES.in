@@ -1,7 +1,8 @@
 # List of source files containing translatable strings.
-# Copyright (C) 2006, 2011-2012, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+# Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
 
 # Source files
+include/gui.h
 src/support.c
 src/main.c
 src/designDlg.c
