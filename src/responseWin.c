@@ -242,8 +242,6 @@ static void drawZoomRect (RESPONSE_WIN *pDesc, cairo_t* gc)
         rect.height = -rect.height;
     } /* if */
 
-    // FIXME: use gdk_cairo_set_source_rgba () or cairo_set_source_rgb(gc, 1, 1, 1) ???
-    // cairo_set_source_rgb (gc, 1, 1, 1);
     cairo_set_operator (gc, CAIRO_OPERATOR_OVER);
     cairo_set_line_width (gc, 1);
     cairo_set_dash (gc, &dashes, 1, 0.0);
