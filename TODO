@@ -21,8 +21,13 @@
 
 * Functionality
 
+  - File: dfcProject
+    Introduce an option to export in second-order sections form, as
+    described in MathWorks Help Center for function tf2sos().
+    https://www.mathworks.com/help/signal/ref/tf2sos.html
+
   - Function: responseWinCreate
-    Restore size of drawing area from last session 
+    Restore size of drawing area from last session
 
   - Function: dfcPrjExport
     Create and use an export precision (for coefficients) instead of using
