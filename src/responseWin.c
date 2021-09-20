@@ -28,6 +28,17 @@
 
 /* LOCAL TYPE DECLARATIONS ****************************************************/
 
+/**
+ * \brief   GDK Device
+ * \note    Since GTK 3.20 this is a GDK \e Seat.
+ */
+#if GTK_CHECK_VERSION(3, 20, 0)
+typedef GdkSeat GRAB_DEV;
+#else
+typedef GdkDevice GRAB_DEV;
+#endif
+
+
 /** Response window description
  */
 typedef struct
@@ -39,7 +50,7 @@ typedef struct
     cairo_surface_t *surface;   /**< surface to store current painting (diag) */
     int points;       /**< Number of points drawed on last responsePlotDraw() */
     GdkRectangle zoom;                 /**< Zoom coordinates (last rectangle) */
-    gboolean grabbed; /**< \c TRUE on pointer grab in zoom mode, else \c FALSE */
+    GRAB_DEV* grab;  /**< mouse grab device in zoom mode, \c NULL if inactive */
     GtkCheckMenuItem *menuref;            /**< (Backward) menu item reference */
     GtkWidget* btnPrint;                  /**< Print button widget reference */
     GtkWidget* topWidget; /**< response plot top-level widget (NULL if not exists) */
@@ -59,7 +70,7 @@ typedef struct
 
 static void plotToSurface (RESPONSE_WIN *pDesc, GtkWidget *widget);
 static void drawZoomRect (RESPONSE_WIN *pDesc, cairo_t* gc);
-static void cancelZoomMode (RESPONSE_WIN *pDesc, GdkDevice* device);
+static void cancelZoomMode (RESPONSE_WIN *pDesc);
 static void responseWinCreate (RESPONSE_WIN *pDesc);
 static gboolean responseWinDrawHandler (GtkWidget *widget, cairo_t *gc, gpointer user_data);
 static void responseWinExpose (RESPONSE_WIN* pDesc);
@@ -219,8 +230,6 @@ static void plotToSurface (RESPONSE_WIN *pDesc, GtkWidget *widget)
 /**
  * \brief   Draw zoom rubberband into graphics context.
  *
- *  \pre    Call this function only if really in zoom mode (mouse grabbed).
- *
  *  \param  pDesc       Pointer to response window/widget descriptor.
  *  \param  gc          Graphics context.
  */
@@ -256,16 +265,21 @@ static void drawZoomRect (RESPONSE_WIN *pDesc, cairo_t* gc)
 
 /** 
  * \brief   Cancels the zoom mode, then exposes the drawing widget.
- * \pre     Call this function only if really in zoom mode (pointer is grabbed).
  *
- *  \param pDesc        Pointer to response window/widget description.
- *  \param device       Mouse device.
+ * \param   pDesc       Pointer to response window/widget description.
  */
-static void cancelZoomMode (RESPONSE_WIN *pDesc, GdkDevice* device)
+static void cancelZoomMode (RESPONSE_WIN *pDesc)
 {
-    gdk_device_ungrab (device, GDK_CURRENT_TIME);
-    pDesc->grabbed = FALSE;
-    responseWinExpose (pDesc);
+    if (pDesc->grab != NULL)
+    {
+#if GTK_CHECK_VERSION(3, 20, 0)
+        gdk_seat_ungrab (pDesc->grab);
+#else
+        gdk_device_ungrab (pDesc->grab, GDK_CURRENT_TIME);
+#endif
+        pDesc->grab = NULL;
+        responseWinExpose (pDesc);
+    }
 } /* cancelZoomMode() */
 
 
@@ -433,7 +447,7 @@ static gboolean responseWinDrawHandler (GtkWidget *widget, cairo_t *gc,
     ASSERT (pDesc != NULL);
     ASSERT (widget == pDesc->draw);
 
-    if (pDesc->grabbed && (pDesc->surface != NULL))
+    if ((pDesc->grab != NULL) && (pDesc->surface != NULL))
     {
         cairo_save (gc);
         cairo_set_source_surface (gc, pDesc->surface, 0, 0);
@@ -590,7 +604,7 @@ void responseWinMenuActivate (GtkMenuItem* menuitem, gpointer user_data)
         if (pDesc->topWidget == NULL)
         {
             pDesc->surface = NULL;
-            pDesc->grabbed = FALSE;
+            pDesc->grab = NULL;
             responseWinCreate (pDesc);                   /* and create window */
 
             /* Because sometimes the expose event is missing after creation,
@@ -659,14 +673,7 @@ static gboolean responseWinKeyPress (GtkWidget *widget, GdkEventKey *event,
 {
     RESPONSE_WIN* pDesc = user_data;
 
-    if (pDesc->grabbed)
-    {
-        GdkDevice* mouse = gdk_device_manager_get_client_pointer (
-            gdk_display_get_device_manager (
-                gtk_widget_get_display (pDesc->draw)));
-
-        cancelZoomMode (pDesc, mouse);
-    } /* if */
+    cancelZoomMode (pDesc);
 
     return FALSE;                    /* propagate signal to default handler */
 } /* responseWinKeyPress() */
@@ -691,13 +698,8 @@ static gboolean responseWinButtonPress (GtkWidget* widget, GdkEventButton* event
 
     RESPONSE_WIN* pDesc = user_data;
     GdkDisplay* display = gtk_widget_get_display (pDesc->draw);
-    GdkDevice* mouse = gdk_device_manager_get_client_pointer (
-        gdk_display_get_device_manager (display));
 
-    if (pDesc->grabbed)
-    {
-        cancelZoomMode (pDesc, mouse);
-    } /* if */
+    cancelZoomMode (pDesc);
 
     if ((event->button == 1) &&                         /* left mouse button? */
         (pDesc->points > 0) &&               /* else drawing area isn't valid */
@@ -706,6 +708,15 @@ static gboolean responseWinButtonPress (GtkWidget* widget, GdkEventButton* event
         (event->y >= pDesc->diag.area.y) &&
         (event->y < pDesc->diag.area.y + pDesc->diag.area.height))
     {
+        GRAB_DEV* mouse =
+#if GTK_CHECK_VERSION(3, 20, 0)
+            gdk_seat_get_pointer (
+                gdk_display_get_default_seat (display));
+#else
+            gdk_device_manager_get_client_pointer (
+                gdk_display_get_device_manager (display));
+#endif
+
         DEBUG_LOG ("Mouse button 1 pressed in plot box (x = %G, y = %G)",
                    cairoPlotCoordinate (&pDesc->diag.x, pDesc->diag.area.x,
                                         pDesc->diag.area.x + pDesc->diag.area.width,
@@ -716,6 +727,15 @@ static gboolean responseWinButtonPress (GtkWidget* widget, GdkEventButton* event
 
         cursor = gdk_cursor_new_from_name (display, GUI_CURSOR_IMAGE_CROSS);
 
+#if GTK_CHECK_VERSION(3, 20, 0)
+        if (gdk_seat_grab (mouse,
+                           gtk_widget_get_window (pDesc->draw),
+                           GDK_SEAT_CAPABILITY_ALL_POINTING,
+                           TRUE,
+                           cursor,
+                           (GdkEvent*) event,
+                           NULL, NULL) == GDK_GRAB_SUCCESS)
+#else
         if (gdk_device_grab (mouse,
                              gtk_widget_get_window (pDesc->draw),
                              GDK_OWNERSHIP_NONE,
@@ -726,8 +746,9 @@ static gboolean responseWinButtonPress (GtkWidget* widget, GdkEventButton* event
                              GDK_KEY_PRESS_MASK,                /* keyboard */
                              cursor,
                              gdk_event_get_time ((GdkEvent *) event)) == GDK_GRAB_SUCCESS)
+#endif
         {
-            pDesc->grabbed = TRUE;
+            pDesc->grab = mouse;
             pDesc->zoom.x = event->x;
 
             if (pDesc->diag.y.flags & PLOT_AXIS_FLAG_AUTO)
@@ -769,13 +790,9 @@ static gboolean responseWinButtonRelease (GtkWidget* widget, GdkEventButton* eve
 
     RESPONSE_WIN *pDesc = user_data;
 
-    if (pDesc->grabbed)
+    if (pDesc->grab != NULL)
     {
-        GdkDevice* mouse = gdk_device_manager_get_client_pointer (
-            gdk_display_get_device_manager (
-                gtk_widget_get_display (pDesc->draw)));
-
-        cancelZoomMode (pDesc, mouse);
+        cancelZoomMode (pDesc);
 
         if (event->button == 1)                         /* left mouse button? */
         {
@@ -861,7 +878,7 @@ static gboolean responseWinMotionNotify (GtkWidget *widget, GdkEventMotion *even
 {
     RESPONSE_WIN* pDesc = user_data;
 
-    if (pDesc->grabbed)
+    if (pDesc->grab != NULL)                                 /* in zoom mode? */
     {
         pDesc->zoom.width = event->x - pDesc->zoom.x;
 
