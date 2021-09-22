@@ -15,8 +15,8 @@
   - Feature: Response Plot
     Display coordinate when mouse moves over graph area
 
-  - Feature: GTK-Help
-    Implement GTK help, based on DocBook 5
+  - Feature: Help
+    Implement Yelp based help system
 
 
 * Functionality

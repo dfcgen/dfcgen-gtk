@@ -121,6 +121,11 @@ dnl Autoconf 2.61)
 AC_USE_SYSTEM_EXTENSIONS
 
 
+dnl TODO: Help (see https://wiki.gnome.org/Apps/Yelp/Tools/yelp.m4)
+dnl AX_REQUIRE_DEFINED([YELP_HELP_INIT])
+dnl YELP_HELP_INIT
+
+
 dnl GNU gettext
 dnl
 dnl Create a GETTEXT_PACKAGE make variable and define (config.h) with the same
