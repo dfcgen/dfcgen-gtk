@@ -58,13 +58,13 @@ void helpDlgMenuActivate (GtkMenuItem* menuitem, gpointer user_data)
 #endif
 
     GdkPixbuf* pixbuf = createPixbufFromFile (PACKAGE_ICON);
+    gchar* version = g_strdup_printf (_("Version %s"), VERSION);
     GtkWidget* dialog = gtk_about_dialog_new ();
     gtk_window_set_transient_for (
         GTK_WINDOW (dialog),
         GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (menuitem))));
     gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), TRUE);
 
-    gchar* version = g_strdup_printf (_("Version %s"), VERSION);
     gtk_about_dialog_set_version (GTK_ABOUT_DIALOG (dialog), version);
     g_free (version);
 
