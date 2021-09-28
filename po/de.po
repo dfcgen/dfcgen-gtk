@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: dfcgen-gtk 0.6\n"
 "Report-Msgid-Bugs-To: ralf.hoppe@dfcgen.de\n"
-"POT-Creation-Date: 2021-09-18 17:09+0200\n"
+"POT-Creation-Date: 2021-09-28 20:26+0200\n"
 "PO-Revision-Date: 2021-09-18 17:14+0200\n"
 "Last-Translator: Ralf Hoppe <ralf.hoppe@dfcgen.de>\n"
 "Language-Team: Ralf Hoppe\n"
@@ -279,7 +279,7 @@ msgstr ""
 msgid "<i>Unknown</i>"
 msgstr "<i>Unbekannt</i>"
 
-#: src/helpDlg.c:67
+#: src/helpDlg.c:61
 #, c-format
 msgid "Version %s"
 msgstr "Version %s"
@@ -289,66 +289,66 @@ msgid "translator-credits"
 msgstr "Ralf Hoppe"
 
 # f means the physical unit Frequency
-#: src/responseWin.c:93 src/responseWin.c:104 src/responseWin.c:115
-#: src/responseWin.c:126 src/responseWin.c:137 src/responseWin.c:148
+#: src/responseWin.c:104 src/responseWin.c:115 src/responseWin.c:126
+#: src/responseWin.c:137 src/responseWin.c:148 src/responseWin.c:159
 msgid "<b>f</b>"
 msgstr "<b>f</b>"
 
 # magnitude response H(f)
-#: src/responseWin.c:94
+#: src/responseWin.c:105
 msgid "<b>H(f)</b>"
 msgstr "<b>H(f)</b>"
 
 # attenuation
-#: src/responseWin.c:105
+#: src/responseWin.c:116
 msgid "<b>A(f)</b>"
 msgstr "<b>A(f)</b>"
 
 # characteristic function
-#: src/responseWin.c:116
+#: src/responseWin.c:127
 msgid "<b>D(f)</b>"
 msgstr "<b>D(f)</b>"
 
 # phase response
-#: src/responseWin.c:127
+#: src/responseWin.c:138
 msgid "<b>B(f)</b>"
 msgstr "<b>B(f)</b>"
 
 # phase delay
-#: src/responseWin.c:138
+#: src/responseWin.c:149
 msgid "<b>T<sub>p</sub>(f)</b>"
 msgstr "<b>T<sub>p</sub>(f)</b>"
 
 # group delay
-#: src/responseWin.c:149
+#: src/responseWin.c:160
 msgid "<b>T<sub>g</sub>(f)</b>"
 msgstr "<b>T<sub>g</sub>(f)</b>"
 
 # t means the physical unit Time
-#: src/responseWin.c:159 src/responseWin.c:170
+#: src/responseWin.c:170 src/responseWin.c:181
 msgid "<b>t</b>"
 msgstr "<b>t</b>"
 
 # step response
-#: src/responseWin.c:160
+#: src/responseWin.c:171
 msgid "<b>h(t)</b>"
 msgstr "<b>h(t)</b>"
 
 # impulse response
-#: src/responseWin.c:171
+#: src/responseWin.c:182
 msgid "<b>g(t)</b>"
 msgstr "<b>g(t)</b>"
 
-#: src/responseWin.c:353
+#: src/responseWin.c:367
 msgid "Print this response plot"
 msgstr "Diagramm drucken"
 
 # Tooltip
-#: src/responseWin.c:358
+#: src/responseWin.c:372
 msgid "Set response plot preferences"
 msgstr "Plot Einstellungen"
 
-#: src/responseWin.c:459
+#: src/responseWin.c:473
 #, c-format
 msgid "%d Points"
 msgstr "%d Stützwerte"
@@ -1042,4 +1042,3 @@ msgstr "Nenner (%d)"
 #, c-format
 msgid "Error printing: %s"
 msgstr "Fehler beim Drucken: %s"
-
