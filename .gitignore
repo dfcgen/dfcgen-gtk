@@ -5,6 +5,7 @@ config.h.in
 aclocal.m4
 configure
 stamp-*
+.settings
 src/dfcgen-gtk
 po/Makevars.template
 po/POTFILES
