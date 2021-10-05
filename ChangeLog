@@ -1,3 +1,210 @@
+2021-09-28  Ralf Hoppe  <ralf.hoppe@dfcgen.de>
+
+	* dist/debian/changelog: Update of Debian changelog for version
+	0.6-1.
+
+	* po/de.po: Update of line numbers (comments).
+
+2021-09-27  Ralf Hoppe <ralf.hoppe@dfcgen.de>
+
+	* .clang_complete: New, added for Vim/Emacs Irony completion.
+
+2021-09-22  Ralf Hoppe <ralf.hoppe@dfcgen.de>
+
+	* src/helpDlg.c (helpDlgMenuActivate): Fix a C90 warning.
+
+	* TODO, configure.ac: Added todo regarding Yelp based help
+	system.
+
+2021-09-20  Ralf Hoppe <ralf.hoppe@dfcgen.de>
+
+	* TODO: Added a todo for export in second-order section form.
+
+	* src/responseWin.c (cancelZoomMode, responseWinDrawHandler)
+	(responseWinMenuActivate, responseWinKeyPress)
+	(responseWinButtonPress, responseWinButtonRelease)
+	(responseWinMotionNotify): Make mouse pointer grab conditional
+	from GDK 3.20.
+
+2021-09-18  Ralf Hoppe  <ralf.hoppe@dfcgen.de>
+
+	* po/POTFILES.in, po/de.po: Updated translation language DE.
+
+	* configure.ac (PKG_CHECK_MODULES): Package dependencies updated
+	to GTK+ 3.18.
+	* dist/debian/control (Build-Depends, Standards-Version): Ditto.
+
+	* COPYING, README, configure.ac, dist/debian/changelog,
+	doc/Doxyfile, po/de.po: Update release date/version to 2021/v0.6
+
+	* src/cairoPlot.c: Some minor comment changes related to
+	drawing.
+        * src/responseWin.c (responseWinCreate): Ditto.
+
+2021-09-17  Ralf Hoppe  <ralf.hoppe@dfcgen.de>
+
+	* src/mainDlg.c (mainDlgCreate): Use GtkButtonBox instead of
+	obsolete GtkHButtonBox.
+
+	* src/mainDlg.c (mainDlgCreate): Use GtkSeparator instead of
+	obsolete GtkHSeparator.
+        * src/responseWin.c (responseWinCreate): Ditto.
+
+	* src/dialogSupport.c (dlgPopupDouble): Harmonized widget
+	padding and resize behavior.
+	* src/mainDlg.c (mainDlgCreate): Ditto.
+	* src/responseDlg.c (responseDlgCreate): Ditto.
+        * src/responseWin.c (responseWinCreate): Ditto.
+	* src/linFirDesignDlg.c (linFirDesignDlgCreate): Ditto.
+	* src/stdIirDesignDlg.c (stdIirDesignDlgCreate): Ditto.
+	* src/miscDesignDlg.c (createDialog, updateLayout): Ditto.
+
+	* src/helpDlg.c (helpDlgMenuActivate): Migration to
+	GtkAboutDialog of GTK+ 3.
+
+	* src/projectFile.c (prjFileScan): Fix a DEBUG_LOG() spelling
+	error.
+
+	* src/support.c (getPackageDirectory): Do not use
+	GTK_CHECK_VERSION() to test GTK+ 2 features.
+
+	* include/gui.h (G_, GUI_GTK_GETTEXT_DOMAIN)
+	(GUI_ICON_IMAGE_PREFS, GUI_LABEL_WRAP_CHARS)
+	(GUI_INDENT_CHILD_PIXEL, GUI_CURSOR_*, GUI_BUTTON_*)
+	(GUI_MENU_*): New.
+
+	* include/support.h (createImageButton): New.
+	* src/support.c (createImageButton): New.
+
+	* src/support.c (createImageMenuItem): Do not use deprecated
+	stock item functions.
+	* src/dialogSupport.c (dlgPopupDouble): Ditto.
+	* src/mainDlg.c (mainDlgCreate): Ditto.
+	* src/editDlg.c (createSettingsDlg, createInfoDlg): Ditto.
+        * src/fileDlg.c (fileDlgOpenActivate, fileDlgExportActivate): Ditto.
+	* src/responseDlg.c (responseDlgCreate): Ditto.
+        * src/responseWin.c (responseWinCreate): Ditto.
+
+	* include/cairoPlot.h (PLOT_DIAG): Adopt to GTK+ 3 draw, grab
+	and color model.
+	* src/cairoPlot.c (PLOT_COLOR_SET): Ditto.
+	* src/rootsPlot.c (rootsPlotDrawHandler, rootsPlotCreate):
+	Ditto.
+	* src/responseDlg.c (colorItemChanged, responseDlgCreate):
+	Ditto.
+	* src/responseWin.c (responseWinCreate, drawZoomRect)
+	(cancelZoomMode, responseWinExpose, responseWinDestroyed)
+	(responseWinMapped, responseWinBtnPropActivate)
+	(responseWinMenuActivate, responseWinRedraw)
+	(responseWinKeyPress, responseWinButtonPress)
+	(responseWinButtonRelease, responseWinMotionNotify): Ditto.
+	* src/cfgSettings.c (cfgCacheSettings, cfgFlushSettings): Ditto.
+
+	* src/responseWin.c (plotToSurface, responseWinDrawHandler)
+	(applyStyleColor, colorChooserApply): New.
+
+	* src/responseWin.c (exposeHandler): Deleted.
+
+	* src/responseDlg.c (responseDlgCreate): Always use GtkFrame
+	with default outline.
+	* src/linFirDesignDlg.c (linFirDesignDlgCreate): Ditto.
+	* src/stdIirDesignDlg.c (stdIirDesignDlgCreate): Ditto.
+
+2021-09-16  Ralf Hoppe  <ralf.hoppe@dfcgen.de>
+
+	* include/dialogSupport.h (dlgPopupDouble): Update dialog window
+	handling to GTK+ 3 GtkDialog API.
+	* include/responseDlg.h (responseDlgCreate): Ditto.
+	* src/dialogSupport.c (dlgPopupDouble): Ditto.
+	* src/responseDlg.c (responseDlgCreate): Ditto.
+	* src/designDlg.c (designDlgBoxRealize): Ditto.
+	* src/mainDlg.c (mainDlgCreate): Ditto.
+	* src/helpDlg.c (mainDlgCoeffEdit, mainDlgCoeffsFactor): Ditto.
+
+2021-09-15  Ralf Hoppe  <ralf.hoppe@dfcgen.de>
+
+	* src/responseDlg.c (responseDlgCreate): GtkAligment widget does
+	not exist anymore.
+	* src/linFirDesignDlg.c (linFirDesignDlgCreate): Ditto.
+	* src/stdIirDesignDlg.c (stdIirDesignDlgCreate): Ditto.
+
+	* src/dialogSupport.c (dlgPopupDouble): gtk_misc_... functions
+	are not available anymore.
+	* src/mainDlg.c (mainDlgCreate): Ditto.
+	* src/miscDesignDlg.c (createDialog): Ditto.
+
+	* src/mainDlg.c (mainDlgCreate): Use GtkGrid instead of
+	deprecated GtkTable.
+	* src/responseDlg.c (createLogGridButton, responseDlgCreate): Ditto.
+	* src/editDlg.c (createSettingsDlg, createInfoDlg): Ditto.
+	* src/linFirDesignDlg.c (linFirDesignDlgCreate): Ditto.
+	* src/stdIirDesignDlg.c (stdIirDesignDlgCreate): Ditto.
+	* src/miscDesignDlg.c (createDialog, updateLayout): Ditto.
+
+2021-08-02  Ralf Hoppe  <ralf.hoppe@dfcgen.de>
+
+	* src/dialogSupport.c (dlgPopupDouble): Avoid use of
+	GTK_WIDGET_SET_FLAGS().
+	* src/mainDlg.c (mainDlgCreate): Ditto.
+	* src/responseDlg.c (responseDlgCreate): Ditto.
+	* src/responseWin.c (responseWinCreate): Ditto.
+	* src/editDlg.c (createSettingsDlg, createInfoDlg): Ditto.
+
+	* src/dialogSupport.c (dlgPopupDouble): Use gtk_box_new()
+	instead of deprecated hbox/vbox variants.
+	* src/mainDlg.c (mainDlgCreate): Ditto.
+	* src/responseDlg.c (responseDlgCreate): Ditto.
+	* src/responseWin.c (responseWinCreate): Ditto.
+	* src/editDlg.c (createSettingsDlg): Ditto.
+	* src/linFirDesignDlg.c (linFirDesignDlgCreate): Ditto.
+	* src/stdIirDesignDlg.c (stdIirDesignDlgCreate): Ditto.
+
+	* src/mainDlg.c (mainDlgCreate): Adopt old GtkComboBox to new
+	GtkComboBoxText API.
+	* src/designDlg.c (designDlgBoxRealize): Ditto.
+	* src/responseDlg.c (responseDlgCreate): Ditto.
+	* src/editDlg.c (createSettingsDlg): Ditto.
+	* src/linFirDesignDlg.c (linFirDesignDlgCreate): Ditto.
+	* src/stdIirDesignDlg.c (stdIirDesignDlgCreate): Ditto.
+	* src/miscDesignDlg.c (createDialog, miscDesignDlgCreate): Ditto.
+
+	* src/cairoPlot.c (PLOT_COLOR_SET, drawGridLabels): Use GdkRGBA
+	instead of GdkColor.
+	* src/cfgSettings.c (cfgCacheSettings): Ditto.
+	* src/responseDlg.c (responseDlgColorVals): Ditto.
+	* src/rootsPlot.c (rootsPlotExposeHandler): Ditto.
+
+	* src/responseWin.c (cancelZoomMode,responseWinKeyPress)
+	(responseWinButtonPress, responseWinButtonRelease)
+	(responseWinMotionNotify): Make use of GdkDevice type and
+	associated gdk_device_* grab functions.
+
+2021-01-17  Ralf Hoppe  <ralf.hoppe@dfcgen.de>
+
+	* include/support.h (createImageMenuItem): New.
+	* src/support.c (createImageMenuItem): Ditto.
+
+	* src/dialogSupport.c (dlgPopupDouble): Use workarounds for
+	deprecated stock item functions.
+	* src/editDlg.c (createSettingsDlg, createInfoDlg): Ditto.
+	* src/mainDlg.c (mainDlgCreate): Ditto.
+	* src/responseDlg.c (responseDlgCreate): Ditto.
+	* src/responseWin.c (responseWinCreate): Ditto.
+
+2021-01-02  Ralf Hoppe  <ralf.hoppe@dfcgen.de>
+
+	* src/support.c (lookup_widget): No direct access to member
+	GtkWidget::parent.
+
+	* src/editDlg.c (createSettingsDlg): Do not use deprecated type
+	GtkObject.
+	* src/responseDlg.c (responseDlgCreate): Ditto.
+	* src/responseWin.c (responseWinDestroyed): Ditto.
+	* src/mainDlg.c (mainDlgDestroy): Ditto.
+	* src/linFirDesignDlg.c (linFirDesignDlgCreate): Ditto.
+	* src/stdIirDesignDlg.c (stdIirDesignDlgCreate): Ditto.
+	* src/miscDesignDlg.c (createDialog): Ditto.
+
 2020-09-26  Ralf Hoppe  <ralf.hoppe@dfcgen.de>
 
 	* src/mainDlg.c (treeDblClickedCallback): Cast 1st parameter to
@@ -1149,4 +1356,4 @@
 	* .*: Initial import.
 
 
-Copyright (C) 2006-2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
