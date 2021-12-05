@@ -28,16 +28,6 @@
 
 /* LOCAL TYPE DECLARATIONS ****************************************************/
 
-/**
- * \brief   GDK Device
- * \note    Since GTK 3.20 this is a GDK \e Seat.
- */
-#if GTK_CHECK_VERSION(3, 20, 0)
-typedef GdkSeat GRAB_DEV;
-#else
-typedef GdkDevice GRAB_DEV;
-#endif
-
 
 /** Response window description
  */
@@ -50,7 +40,11 @@ typedef struct
     cairo_surface_t *surface;   /**< surface to store current painting (diag) */
     int points;       /**< Number of points drawed on last responsePlotDraw() */
     GdkRectangle zoom;                 /**< Zoom coordinates (last rectangle) */
-    GRAB_DEV* grab;  /**< mouse grab device in zoom mode, \c NULL if inactive */
+#if GTK_CHECK_VERSION(3, 20, 0)
+    GdkSeat* grab;          /**< mouse grab in zoom mode, \c NULL if inactive */
+#else
+    GdkDevice* grab;
+#endif
     GtkCheckMenuItem *menuref;            /**< (Backward) menu item reference */
     GtkWidget* btnPrint;                  /**< Print button widget reference */
     GtkWidget* topWidget; /**< response plot top-level widget (NULL if not exists) */
@@ -708,13 +702,11 @@ static gboolean responseWinButtonPress (GtkWidget* widget, GdkEventButton* event
         (event->y >= pDesc->diag.area.y) &&
         (event->y < pDesc->diag.area.y + pDesc->diag.area.height))
     {
-        GRAB_DEV* mouse =
 #if GTK_CHECK_VERSION(3, 20, 0)
-            gdk_seat_get_pointer (
-                gdk_display_get_default_seat (display));
+        GdkSeat* mouse = gdk_display_get_default_seat (display);
 #else
-            gdk_device_manager_get_client_pointer (
-                gdk_display_get_device_manager (display));
+        GdkDevice* mouse = gdk_device_manager_get_client_pointer (
+            gdk_display_get_device_manager (display));
 #endif
 
         DEBUG_LOG ("Mouse button 1 pressed in plot box (x = %G, y = %G)",

@@ -1,3 +1,11 @@
+2021-12-05  Ralf Hoppe  <ralf.hoppe@dfcgen.de>
+
+	* src/stdIirFilter.c (debugLogCoeffs): Fix warning.
+
+	* src/responseWin.c (RESPONSE_WIN): Make member 'grab'
+	conditional from GDK 3.20, explicitly.
+	(responseWinButtonPress): Fix seat handling in GDK 3.20+.
+
 2021-09-28  Ralf Hoppe  <ralf.hoppe@dfcgen.de>
 
 	* dist/debian/changelog: Update of Debian changelog for version
