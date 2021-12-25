@@ -3,7 +3,7 @@
  * \file     cairoPlot.c
  * \brief    2-dimensional plot on a \e Cairo graphic context.
  *
- * \author   Copyright (C) 2006, 2011, 2012, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * \author   Copyright (C) 2006, 2011, 2012, 2020, 2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  ******************************************************************************/
 
@@ -1169,18 +1169,12 @@ static int drawGraph (cairo_t *cr, int size, PLOT_DIAG *pDiag,
     World      = 10^(log(WorldMin) + (Screen - ScreenMin)/DeltaRatio))
                = WorldMin*10^((Screen - ScreenMin)/DeltaRatio)
  *
- *  \param cr           \e Cairo context for drawing, which may be retrieved
- *                      by the help of following functions:
- *                      - gdk_cairo_create ()
- *                      - gtk_print_context_get_cairo_context().
- *                      Notice, that the \e Cairo context is preserved (nothing
- *                      chenged).
+ *  \param cr           \e Cairo context for drawing.
  *  \param pDiag        Pointer to plot descriptor.
  *
  *  \return             0 on success, else an error number from errno.h.
  *  \todo               Make axisX.start and axisX.stop positions dependent of
- *                      number of digits. Especially think about the corrections
- *                      of axisX.stop (which is an estimation at the moment).
+ *                      number of digits.
  ******************************************************************************/
 int cairoPlot2d(cairo_t* cr, PLOT_DIAG *pDiag)
 {

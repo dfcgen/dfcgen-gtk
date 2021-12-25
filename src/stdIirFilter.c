@@ -3,7 +3,7 @@
  * \file
  *           Standard IIR filter coefficients generator.
  *
- * \author   Copyright (C) 2006, 2011-2012, 2020 Ralf Hoppe
+ * \author   Copyright (C) 2006, 2011-2012, 2020-2021 Ralf Hoppe
  *
  ******************************************************************************/
 
@@ -84,7 +84,7 @@ static double approxBessel (FLTCOEFF *pFilter);
 /* LOCAL FUNCTION DEFINITIONS *************************************************/
 
 
-#ifdef DEBUG
+#if 0
 
 /* FUNCTION *******************************************************************/
 /** Logs filter coefficients.

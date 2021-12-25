@@ -1,14 +1,12 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file
- *           Basic types, constants and macros.
+ * \file     base.h
  *
- * \author   Copyright (C) 2006, 2011, 2012, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * \brief    Basic types, constants and macros.
  *
+ * \author   Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  ******************************************************************************/
-
-
 #ifndef BASE_H
 #define BASE_H
 
@@ -16,7 +14,7 @@
 /* INCLUDE FILES **************************************************************/
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include <glib.h>

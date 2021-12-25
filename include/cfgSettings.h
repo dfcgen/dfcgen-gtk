@@ -1,12 +1,13 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file
- *           DFCGen configuration settings.
+ * \file     cfgSettings.h
+ *
+ * \brief    DFCGen configuration settings.
  *
  * \note     All double values written to the configuration file are formated
  *           in the "C" locale for LC_NUMERIC.
  *
- * \author   Copyright (C) 2006, 2011, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * \author   Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  ******************************************************************************/
 
@@ -129,4 +130,3 @@ typedef struct
 /******************************************************************************/
 /* END OF FILE                                                                */
 /******************************************************************************/
-
