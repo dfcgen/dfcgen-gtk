@@ -1,6 +1,5 @@
 -I.
--I..
--I../include
+-I./include
 -I/usr/include/clang/3.8/include
 -I/usr/include/gsl
 -I/usr/include/gtk-3.0
