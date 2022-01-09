@@ -1,11 +1,8 @@
-/********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file
- *           Standard IIR filter coefficients generator.
- *
- * \author   Copyright (C) 2006, 2011-2012, 2020-2021 Ralf Hoppe
- *
- ******************************************************************************/
+ * \file        stdIirFilter.c
+ * \brief       Standard IIR filter coefficients generator.
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ */
 
 
 /* INCLUDE FILES **************************************************************/

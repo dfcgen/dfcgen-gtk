@@ -1,15 +1,10 @@
-/********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file
- *           Project file handling.
- *
- * \note     All double values written to a DFCGen project file are formated
- *           in the "C" locale for LC_NUMERIC.
- *
- * \author   Copyright (C) 2006, 2011, 2012, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
- *
- ******************************************************************************/
-
+ * \file        projectFile.h
+ * \brief       Project file handling.
+ * \note        All double values written to a DFCGen project file are
+ *              formatted in the \e C locale for \c LC_NUMERIC.
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ */
 
 #ifndef PRJFILE_H
 #define PRJFILE_H

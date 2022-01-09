@@ -1,19 +1,14 @@
-/********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file     projectFile.c
- * \brief    Project file handling.
- *
- * \note     The DFCGen filter project file functions implemented here are
- *           very closely related to the \e GLib XML support functions.
- *           Adoption to other platforms or to libxml is possible, but need
- *           some rework.
- *
- * \note     All double values written to a DFCGen project file are formated
- *           in the \e C locale for LC_CTYPE.
- *
- * \author   Copyright (C) 2006, 2011-2012 Ralf Hoppe <ralf.hoppe@dfcgen.de>
- *
- ******************************************************************************/
+ * \file        projectFile.c
+ * \brief       Project file handling.
+ * \note        The DFCGen filter project file functions implemented here are
+ *              very closely related to the \e GLib XML support functions.
+ *              Adoption to other platforms (or to libxml) is possible, but
+ *              needs some rework.
+ * \note        All double values written to a DFCGen project file are
+ *              formatted in the \e C locale for \c LC_NUMERIC.
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ */
 
 
 /* INCLUDE FILES **************************************************************/

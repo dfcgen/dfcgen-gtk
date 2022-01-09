@@ -1,12 +1,8 @@
-/********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file     linFirDesignDlg.c
- *
- * \brief    Linear FIR filter dialog functions.
- *
- * \author   Copyright (C) 2006-2021 Ralf Hoppe
- *
- ******************************************************************************/
+ * \file        linFirDesignDlg.c
+ * \brief       Linear FIR filter dialog functions.
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe
+ */
 
 
 /* INCLUDE FILES **************************************************************/

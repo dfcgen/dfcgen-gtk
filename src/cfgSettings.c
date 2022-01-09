@@ -1,14 +1,10 @@
-/********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file     cfgSettings.c
- * \brief    DFCGen configuration settings.
- *
- * \note     All double values written to the configuration file are formated
- *           in the "C" locale for LC_NUMERIC.
- *
- * \author   Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
- *
- ******************************************************************************/
+ * \file        cfgSettings.c
+ * \brief       DFCGen configuration settings.
+ * \note        All double values written to the configuration file are
+ *              formatted in the "C" locale for \c LC_NUMERIC.
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ */
 
 
 /* INCLUDE FILES **************************************************************/

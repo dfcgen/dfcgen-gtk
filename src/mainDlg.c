@@ -1,12 +1,8 @@
-/********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file     mainDlg.c
- *
- * \brief    Main dialog elements (right, bottom of window) handling.
- *
- * \author   Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
- *
- ******************************************************************************/
+ * \file        mainDlg.c
+ * \brief       Main dialog elements (right, bottom of window) handling.
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ */
 
 
 

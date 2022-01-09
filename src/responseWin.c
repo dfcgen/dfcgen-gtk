@@ -1,12 +1,8 @@
-/********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file     responseWin.c
- *
- * \brief    Digital filter response window creation and callbacks.
- *
- * \author   Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
- *
- ******************************************************************************/
+ * \file        responseWin.c
+ * \brief       Digital filter response window creation and callbacks.
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ */
 
 
 /* INCLUDE FILES **************************************************************/

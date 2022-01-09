@@ -1,13 +1,8 @@
-/********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file     cairoPlot.h
- *
- * \brief    Two-dimensional plot functions, normally for filter responses.
- *
- * \author   Copyright (C) 2006-2021,  Ralf Hoppe <ralf.hoppe@dfcgen.de>
- *
- ******************************************************************************/
-
+ * \file        cairoPlot.h
+ * \brief       Two-dimensional plot functions, normally for filter responses.
+ * \copyright   Copyright (C) 2006-2022,  Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ */
 
 #ifndef CAIROPLOT_H
 #define CAIROPLOT_H

@@ -1,11 +1,8 @@
-/********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file     cairoPlot.c
- * \brief    2-dimensional plot on a \e Cairo graphic context.
- *
- * \author   Copyright (C) 2006, 2011, 2012, 2020, 2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
- *
- ******************************************************************************/
+ * \file        cairoPlot.c
+ * \brief       2-dimensional plot on a \e Cairo graphic context.
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ */
 
 
 /* INCLUDE FILES **************************************************************/

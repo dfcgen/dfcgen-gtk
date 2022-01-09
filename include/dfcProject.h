@@ -1,12 +1,8 @@
-/******************************************************************************/
 /**
- * \file
- *           DFCGen filter project management.
- *
- * \author   Copyright (C) 2006, 2011-2012, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
- *
- ******************************************************************************/
-
+ * \file        dfcProject.h
+ * \brief       DFCGen filter project management.
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ */
 
 #ifndef DCFPROJECT_H
 #define DCFPROJECT_H

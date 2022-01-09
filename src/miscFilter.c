@@ -1,14 +1,9 @@
-/********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file
- *           Misc filter design.
- *
- * \note     Includes raw filters (filters without a design, except \f$f_{Sample}\f$).
- *
- *
- * \author   Copyright (C) 2006, 2011, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
- *
- ******************************************************************************/
+ * \file        miscFilter.c
+ * \brief       Misc filter design.
+ * \note        Includes raw filters (filters without a design, except \f$f_{Sample}\f$).
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ */
 
 
 /* INCLUDE FILES **************************************************************/

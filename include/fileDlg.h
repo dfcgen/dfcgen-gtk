@@ -1,12 +1,9 @@
-/********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file     fileDlg.h
- *           Interface to dialog functions of \e File menu.
+ * \file        fileDlg.h
+ * \brief       Interface to dialog functions of \e File menu.
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
- * \author   Copyright (C) 2006, 2011-2012, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
- *
- ******************************************************************************/
-
+ */
 
 #ifndef FILEDLG_H
 #define FILEDLG_H

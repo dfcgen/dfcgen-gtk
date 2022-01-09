@@ -1,14 +1,9 @@
-/********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file     miscDesignDlg.c
- *
- * \brief    Miscellaneous FIR/IIR design dialogs.
- *
- * \note     Includes raw filters (filters without a design).
- *
- * \author   Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
- *
- ******************************************************************************/
+ * \file        miscDesignDlg.c
+ * \brief       Miscellaneous FIR/IIR design dialogs.
+ * \note        Includes raw filters (filters without a design).
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ */
 
 
 /* INCLUDE FILES **************************************************************/

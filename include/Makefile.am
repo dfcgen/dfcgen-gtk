@@ -1,6 +1,6 @@
-## -*- mode: makefile-automake -*-
+## Makefile.am
 ##
-## Copyright (C) 2006, 2011-2013, 2019, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+## Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
 ##
 
 noinst_HEADERS = \

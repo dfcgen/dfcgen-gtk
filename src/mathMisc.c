@@ -1,13 +1,9 @@
-/******************************************************************************/
 /**
- * \file
- *           Miscellaneous mathematical functions and macros.
- *
- * \author   Copyright (C) 2006, 2011, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
- *
- *  \todo               Implement a generic error handler
- *
- ******************************************************************************/
+ * \file        mathMisc.c
+ * \brief       Miscellaneous mathematical functions and macros.
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * \todo        Implement a generic error handler.
+ */
 
 
 /* INCLUDE FILES **************************************************************/

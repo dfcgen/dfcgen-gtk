@@ -1,12 +1,8 @@
-/********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file
- *           Design dialogs handler.
- *
- * \author   Copyright (C) 2006, 2011, 2012, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
- *
- ******************************************************************************/
-
+ * \file        designDlg.h
+ * \brief       Design dialogs handler.
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ */
 
 #ifndef DESIGNDLG_H
 #define DESIGNDLG_H

@@ -1,13 +1,9 @@
-/********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file     support.c
- *
- * \brief    Support functions, defines and macros, mostly for \e gettext,
- *           widget and file handling.
- *
- * \author   Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
- *
- ******************************************************************************/
+ * \file        support.c
+ * \brief       Support functions, defines and macros, mostly for \e gettext,
+ *              widget and file handling.
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ */
 
 #include "gui.h"     /* includes base.h and config.h */
 #include "support.h"

@@ -1,12 +1,8 @@
-/******************************************************************************/
 /**
- * \file
- *           Digital filter response window creation and callbacks.
- *
- * \author   Copyright (C) 2006, 2011, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
- *
- ******************************************************************************/
-
+ * \file        responseWin.h
+ * \brief       Digital filter response window creation and callbacks.
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ */
 
 #ifndef RESPONSE_WIN_H
 #define RESPONSE_WIN_H

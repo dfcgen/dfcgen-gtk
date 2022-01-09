@@ -1,10 +1,8 @@
 /**
- * \file     gui.h
- *           GUI header files.
- *
- * \author   Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
- *
- **/
+ * \file        gui.h
+ * \brief       GUI header files.
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ */
 
 #ifndef GUI_H
 #define GUI_H

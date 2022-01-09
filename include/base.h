@@ -1,12 +1,9 @@
-/********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file     base.h
- *
- * \brief    Basic types, constants and macros.
- *
- * \author   Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
- *
- ******************************************************************************/
+ * \file        base.h
+ * \brief       Basic types, constants and macros.
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ */
+
 #ifndef BASE_H
 #define BASE_H
 

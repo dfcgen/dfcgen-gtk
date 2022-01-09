@@ -1,12 +1,8 @@
-/******************************************************************************/
 /**
- * \file
- *           Miscellaneous mathematical functions and macros.
- *
- * \author   Copyright (C) 2006, 2011, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
- *
- ******************************************************************************/
-
+ * \file        mathMisc.h
+ * \brief       Miscellaneous mathematical functions and macros.
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ */
 
 #ifndef MATHMISC_H
 #define MATHMISC_H

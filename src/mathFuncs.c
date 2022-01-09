@@ -1,11 +1,9 @@
 /******************************************************************************/
 /**
- * \file
- *           Mathematical functions.
- *
- * \author   Copyright (C) 2006, 2011, 2012, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
- *
- ******************************************************************************/
+ * \file        mathFuncs.c
+ * \brief       Mathematical functions.
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ */
 
 
 /* INCLUDE FILES **************************************************************/

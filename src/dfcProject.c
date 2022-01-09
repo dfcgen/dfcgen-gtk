@@ -1,15 +1,12 @@
-/********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file
- *           DFCGen filter project management.
- *
- * \note     The filter project management functions implemented here are very
- *           to the \e GLib XML support functions. Adoption to other platforms
- *           or to libxml is possible, but need a lot of work.
- *
- * \author   Copyright (C) 2006, 2011, 2012, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
- *
- ******************************************************************************/
+ * \file        dfcProject.c
+ * \brief       DFCGen filter project management.
+ * \note        The filter project management functions implemented here are
+ *              very closely related to the \e GLib XML support functions.
+ *              Adoption to other platforms or to libxml is possible, but
+ *              needs some rework.
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ */
 
 
 /* INCLUDE FILES **************************************************************/

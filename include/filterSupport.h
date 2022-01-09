@@ -1,12 +1,8 @@
-/******************************************************************************/
 /**
- * \file
- *           Filter support functions.
- *
- * \author   Copyright (C) 2006, 2011, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
- *
- ******************************************************************************/
-
+ * \file        filterSupport.h
+ * \brief       Filter support functions.
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ */
 
 #ifndef FILTERSUPPORT_H
 #define FILTERSUPPORT_H

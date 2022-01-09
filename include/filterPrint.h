@@ -1,12 +1,8 @@
-/******************************************************************************/
 /**
- * \file
- * \brief    Filter print functions.
- *
- * \author   Copyright (C) 2006, 2011-2012, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
- *
- ******************************************************************************/
-
+ * \file        filterPrint.h
+ * \brief       Filter print functions.
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ */
 
 #ifndef FILTER_PRINT_H
 #define FILTER_PRINT_H

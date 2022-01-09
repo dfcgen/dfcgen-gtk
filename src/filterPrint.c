@@ -1,11 +1,8 @@
-/********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file     filterPrint.c
- * \brief    Filter print functions.
- *
- * \author   Copyright (C) 2011-2012, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de> 
- *
- ******************************************************************************/
+ * \file        filterPrint.c
+ * \brief       Filter print functions.
+ * \copyright   Copyright (C) 2011-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de> 
+ */
 
 
 /* INCLUDE FILES **************************************************************/

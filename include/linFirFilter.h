@@ -1,9 +1,8 @@
 /********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file
- *           Interface to Linear IIR Filter interpolation functions.
- *
- * \author   Copyright (C) 2006, 2011, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * \file     linFirFilter.h
+ * \brief    Interface to Linear IIR Filter interpolation functions.
+ * \author   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
  *
  ******************************************************************************/
 

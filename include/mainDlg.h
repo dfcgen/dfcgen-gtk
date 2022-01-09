@@ -1,12 +1,8 @@
-/******************************************************************************/
 /**
- * \file
- *           Main dialog management.
- *
- * \author   Copyright (C) 2006, 2011-2013, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
- *
- ******************************************************************************/
-
+ * \file        mainDlg.h
+ * \brief       Main dialog management.
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ */
 
 #ifndef MAINDLG_H
 #define MAINDLG_H

@@ -1,11 +1,8 @@
-/********************* -*- mode: C; coding: utf-8 -*- *************************/
 /**
- * \file
- *           Dialogs from the Help menu.
- *
- * \author   Copyright (C) 2006-2021 Ralf Hoppe
- *
- ******************************************************************************/
+ * \file        helpDlg.c
+ * \brief       Dialogs from the \e Help menu.
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ */
 
 
 /* INCLUDE FILES **************************************************************/

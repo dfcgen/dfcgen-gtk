@@ -1,12 +1,8 @@
-/******************************************************************************/
 /**
- * \file
- *           Interface to Standard IIR Filter approximation functions.
- *
- * \author   Copyright (C) 2006, 2011, 2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
- *
- ******************************************************************************/
-
+ * \file        stdIirFilter.h
+ * \brief       Interface to Standard IIR Filter approximation functions.
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ */
 
 #ifndef STDIIR_FILTER_H
 #define STDIIR_FILTER_H
