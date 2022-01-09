@@ -534,8 +534,8 @@ static BOOL insertLabel(cairo_t *cr, PLOT_AXIS_WORKSPACE *p, int margin,
     {
         PLOT_LABEL* pLast = &p->labels[idx - 1];            /* previous label */
 
-        bad = abs(pLabel->grid - pLast->grid) <        /* check space between */
-            (margin + size + abs(pLast->grid - pLast->pos));
+        bad = (abs ((int)(pLabel->grid - pLast->grid)) < /* chk space between */
+               (margin + size + abs ((int)pLast->grid - pLast->pos)));
     } /* if */
 
     return bad;
