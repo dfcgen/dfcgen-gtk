@@ -1,3 +1,14 @@
+2022-06-15  Ralf Hoppe  <ralf.hoppe@dfcgen.de>
+
+	* dist/debian/watch (opts): Add GitHub regexp for VCS watching.
+
+	* dist/debian/control (Vcs-Browser, Vcs-Git): Add VCS homepage.
+
+2022-01-09  Ralf Hoppe  <ralf.hoppe@dfcgen.de>
+
+	* src/cairoPlot.c (insertLabel): Make implicit double to int
+	conversion explicit.
+
 2021-12-05  Ralf Hoppe  <ralf.hoppe@dfcgen.de>
 
 	* src/stdIirFilter.c (debugLogCoeffs): Fix warning.
