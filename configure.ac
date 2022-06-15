@@ -1,6 +1,6 @@
 dnl -*- mode: autoconf; coding: utf-8 -*-
 dnl
-dnl Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+dnl Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
 dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl
