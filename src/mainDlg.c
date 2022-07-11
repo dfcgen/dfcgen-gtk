@@ -1225,6 +1225,7 @@ BOOL mainDlgUpdateFilter (int err)
 void mainDlgRedrawAll ()
 {
     responseWinRedraw (RESPONSE_TYPE_SIZE);     /* redraw all response plots */
+    designDlgUpdate (topWidget);                     /* redraw design dialog */
     rootsPlotRedraw ();                /* redraw roots window in main dialog */
     coeffRedrawListTreeViews (); /* redraw coefficients lists in main dialog */
 }

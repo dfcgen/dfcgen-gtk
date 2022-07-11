@@ -45,6 +45,7 @@ int main (int argc, char *argv[])
   topWidget = mainDlgCreate ();
   cfgCacheSettings (topWidget);   /* get all settings from configuration file */
   gtk_widget_show (topWidget);
+  designDlgUpdate (topWidget);           /* adopt layout to restored settings */
   gtk_main ();
   cfgFlushSettings ();
 

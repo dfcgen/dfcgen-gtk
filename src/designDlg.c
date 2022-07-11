@@ -85,29 +85,30 @@ static DESIGNDLG_DESC dlgDesc[FLTCLASS_SIZE] =
 
 /* LOCAL FUNCTION DECLARATIONS ************************************************/
 
-static void updateLayout (GtkWidget *topWidget, FLTCLASS type);
+static void designDlgAdopt (GtkWidget *topWidget, FLTCLASS type);
 
 
 /* LOCAL FUNCTION DEFINITIONS *************************************************/
 
 
 /* FUNCTION *******************************************************************/
-/** Updates the design layout.
+/** Adopt design dialog layout to passed-in filter class type.
  *
  *  \param topWidget    Top level widget.
  *  \param type         Filter class (may be FLTCLASS_NOTDEF).
  *
  ******************************************************************************/
-static void updateLayout (GtkWidget *topWidget, FLTCLASS type)
+static void designDlgAdopt (GtkWidget *topWidget, FLTCLASS type)
 {
     static FLTCLASS currentDlgType = FLTCLASS_NOTDEF;
 
     FLTCLASS i;
 
+    BOOL unspecified = (type < 0) || (type >= FLTCLASS_SIZE);
     GtkWidget* boxWidget = lookup_widget (topWidget, "boxDesignDlg");
     ASSERT (boxWidget != NULL);
 
-    if ((type < 0) || (type >= FLTCLASS_SIZE))
+    if (unspecified)
     {
         if (currentDlgType == FLTCLASS_NOTDEF)             /* the first call? */
         {
@@ -119,7 +120,7 @@ static void updateLayout (GtkWidget *topWidget, FLTCLASS type)
         } /* if */
     } /* if */
 
-    if (type != currentDlgType)
+    if (unspecified || (type != currentDlgType))
     {
         if (currentDlgType != FLTCLASS_NOTDEF)         /* not the first call? */
         {
@@ -134,7 +135,7 @@ static void updateLayout (GtkWidget *topWidget, FLTCLASS type)
         gtk_window_resize (GTK_WINDOW (topWidget), 1, 1); /* resize to minimum */
         currentDlgType = type;
     } /* if */
-} /* updateLayout() */
+} /* designDlgAdopt() */
 
 
 
@@ -177,7 +178,7 @@ void designDlgBoxRealize(GtkWidget *widget, gpointer user_data)
         } /* if */
 
         /* The following call emits a "changed" event, which then forces
-         * execution of updateLayout().
+         * execution of designDlgAdopt().
          */
         gtk_combo_box_set_active (GTK_COMBO_BOX (classWidget), index);
     } /* if */
@@ -199,7 +200,7 @@ void designDlgOnFilterComboChanged (GtkComboBox* combobox, gpointer user_data)
 
     ASSERT (topWidget != NULL);
     ASSERT (index < FLTCLASS_SIZE);
-    updateLayout (topWidget, index);
+    designDlgAdopt (topWidget, index);
 
 } /* designDlgOnFilterComboChanged() */
 
@@ -216,7 +217,7 @@ void designDlgUpdate (GtkWidget *topWidget)
     DESIGNDLG design;
     FLTCLASS type = dfcPrjGetDesign (&design);
 
-    updateLayout (topWidget, type);
+    designDlgAdopt (topWidget, type);
 
     if (type != FLTCLASS_NOTDEF)
     {
