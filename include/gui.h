@@ -43,8 +43,13 @@ extern "C" {
 
 /** @defgroup gui_icons Icons
  *
- *  \note   Some icon names conform to the \e Icon \e Naming
- *          \e Specification of freedektop.org
+ *  \note   All images/icons named \"gtk-*\" are deprecated since GTK 3.10
+ *          and should be replaced by icon names from freedektop.org
+ *          \e Icon \e Naming \e Specification.  OK/Cancel/Apply buttons
+ *          should not use images anymore (i ignored this for the moment).
+ *          Unfortunately some images like \"document-save.png\" are not
+ *          available in all sizes and in most themes (today). So i decided
+ *          (for the moment) to leave some as they were in the past.
  *  @{
  */
 
@@ -58,8 +63,8 @@ extern "C" {
 #define GUI_BUTTON_IMAGE_APPLY          "gtk-apply"
 #define GUI_BUTTON_IMAGE_HELP           "gtk-help"
 #define GUI_BUTTON_IMAGE_PRINT          "document-print"
-#define GUI_BUTTON_IMAGE_OPEN           "document-open"
-#define GUI_BUTTON_IMAGE_SAVE           "document-save"
+#define GUI_BUTTON_IMAGE_OPEN           "gtk-open"
+#define GUI_BUTTON_IMAGE_SAVE           "gtk-save"
 #define GUI_BUTTON_IMAGE_PREFS          GUI_ICON_IMAGE_PREFS
 #define GUI_BUTTON_IMAGE_COEFF_EDIT     "gtk-edit"
 #define GUI_BUTTON_IMAGE_COEFF_MULTIPLY "gtk-fullscreen"
