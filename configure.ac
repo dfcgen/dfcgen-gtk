@@ -182,8 +182,7 @@ dnl       Debian control file "./dist/debian/control".
 PKG_CHECK_MODULES(PKGCONF, [gtk+-3.0 >= 3.18 gsl >= 2.0])
 
 
-dnl Checks for header files
-AC_HEADER_STDC
+dnl Checks for non-standard header files
 AC_CHECK_HEADER([gsl/gsl_math.h],
                 [AC_DEFINE(HAVE_GSL_H, 1, [Define to 1 if you have GNU Scientific Library (GSL) header files])],
                 [AC_MSG_ERROR([You must have installed GNU Scientific Library (GSL) header files])])
