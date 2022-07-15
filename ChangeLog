@@ -1,3 +1,30 @@
+2022-07-15  Ralf Hoppe  <ralf.hoppe@dfcgen.de>
+
+	* configure.ac (COPYRIGHT_HOLDER): Update year.
+	(CFLAGS_DEBUG): Removed G_ENABLE_DIAGNOSTIC.
+
+2022-07-14  Ralf Hoppe  <ralf.hoppe@dfcgen.de>
+
+	* configure.ac: Removed obsolete macro AC_HEADER_STDC
+
+	* include/gui.h (GUI_BUTTON_IMAGE_OPEN): Fallback to GTK image
+	naming for some button images (in contrast to recommended
+	freedesktop.org icon naming)
+	(GUI_BUTTON_IMAGE_SAVE): Ditto.
+
+2022-07-11  Ralf Hoppe  <ralf.hoppe@dfcgen.de>
+
+	* src/designDlg.c (designDlgAdopt): Fix design dialog layout
+	adoption after settings restore.
+	* src/mainDlg.c (mainDlgRedrawAll): Ditto.
+	* src/main.c (main): Ditto.
+
+	* src/designDlg.c (updateLayout): Renamed to designDlgAdopt().
+
+	* src/Makefile.am: Removed Emacs header line.
+
+	* README: Declare make target 'dist-win32' as unsupported.
+
 2022-06-15  Ralf Hoppe  <ralf.hoppe@dfcgen.de>
 
 	* dist/debian/watch (opts): Add GitHub regexp for VCS watching.

@@ -1,9 +1,9 @@
 dfcgen-gtk (0.6-1) unstable; urgency=medium
 
-  * Migration to GTK+ 3.18 (Closes: #967310)
-  * Support of GTK versions 3.18 up to 3.24 (GTK+ 3 EOL)
+  * Migration to GTK 3.18, up to 3.24 (Closes: #967310)
+  * Fix missing window redraw after change of settings
 
- -- Ralf Hoppe <ralf.hoppe@dfcgen.de>  Tue, 24 May 2022 20:29:26 +0200
+ -- Ralf Hoppe <ralf.hoppe@dfcgen.de>  Thu, 14 Jul 2022 22:38:50 +0200
 
 dfcgen-gtk (0.5-1) unstable; urgency=medium
 
