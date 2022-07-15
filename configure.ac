@@ -56,7 +56,8 @@ CFLAGS_WARN="-Wall -Wundef -Wshadow \
 # -O0 => no optimization
 CFLAGS_DEBUG="-g -pg -O0 -fstack-protector-all -UNDEBUG \
               -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED \
-              -DGTK_DISABLE_SINGLE_INCLUDES -DGSEAL_ENABLE"
+              -DGTK_DISABLE_SINGLE_INCLUDES -DGSEAL_ENABLE \
+              -DG_ENABLE_DIAGNOSTIC=1"
 
 # NOTE: Because deprecations of GTK/GDK properties and signals cannot be
 # caught at compile time, you should set G_ENABLE_DIAGNOSTIC=1 when testing.
@@ -91,7 +92,7 @@ AC_ARG_ENABLE([debug],
 
 dnl Additional Substitutions and Defines
 AC_SUBST(PACKAGE_AUTHOR, ["Ralf Hoppe"])
-AC_SUBST(COPYRIGHT_HOLDER, ["Copyright (C) 2006-2021 $PACKAGE_AUTHOR"])
+AC_SUBST(COPYRIGHT_HOLDER, ["Copyright (C) 2006-2022 $PACKAGE_AUTHOR"])
 AC_DEFINE_UNQUOTED(PACKAGE_AUTHOR, ["$PACKAGE_AUTHOR"], [package author])
 AC_DEFINE_UNQUOTED(PACKAGE_COPYRIGHT, ["$COPYRIGHT_HOLDER"], [copyright holder])
 AC_DEFINE(PACKAGE_ICON, ["dfcgen-gtk.png"], [package icon])
