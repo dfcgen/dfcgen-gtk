@@ -56,7 +56,7 @@ CFLAGS_WARN="-Wall -Wundef -Wshadow \
 # -O0 => no optimization
 CFLAGS_DEBUG="-g -pg -O0 -fstack-protector-all -UNDEBUG \
               -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED \
-              -DGTK_DISABLE_SINGLE_INCLUDES -DGSEAL_ENABLE
+              -DGTK_DISABLE_SINGLE_INCLUDES -DGSEAL_ENABLE"
 
 # NOTE: Because deprecations of GTK/GDK properties and signals cannot be
 # caught at compile time, you should set G_ENABLE_DIAGNOSTIC=1 when testing.
