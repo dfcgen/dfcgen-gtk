@@ -56,8 +56,7 @@ maintainer make targets:
 
 * `make dist-debian' in root directory builds a Debian package
 
-* `make dist-win32' in root directory builds (on MinGW) a Win32 package (not
-  supported anymore)
+* `make dist-win64' in root directory builds a Win64 package using MXE
 
 * `make distcheck' in root directory checks the package for distribution (and
   updates the `gettext' database and `po' files)

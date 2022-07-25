@@ -72,7 +72,7 @@ dfcgen_gtk_SOURCES = \
 if BUILD_OS_MINGW32
 all-local: $(PACKAGE_RC_FILE).o
 
-$(PACKAGE_RC_FILE).o: ../dist/win32/$(PACKAGE_RC_FILE)
-	$(WINDRES) -i ../dist/win32/$(PACKAGE_RC_FILE) --input-format=rc -o $(PACKAGE_RC_FILE).o -O coff
+$(PACKAGE_RC_FILE).o: ../dist/win64/$(PACKAGE_RC_FILE)
+	$(WINDRES) -i ../dist/win64/$(PACKAGE_RC_FILE) --input-format=rc -o $(PACKAGE_RC_FILE).o -O coff
 
 endif

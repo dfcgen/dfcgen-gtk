@@ -1,6 +1,6 @@
-## -*- mode: makefile-automake; coding: utf-8 -*-
+## -*- mode: makefile-automake -*-
 ##
-## Copyright (C) 2006-2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+## Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
 ##
 
 ACLOCAL_AMFLAGS = -I m4
@@ -15,6 +15,7 @@ doc_DATA = \
 
 
 EXTRA_DIST = $(doc_DATA)
+distdir_sub = dist
 
 
 # Remove doc directory on uninstall
@@ -29,66 +30,74 @@ dox:
 .PHONY: dox
 
 
-# Maintainer rule for building the Debian package.
+# Maintainer rule for building a Debian package.
 # NOTE: Generates the changelog starting with release 0.4-1.
-dist_debian_dir="dist/$(distdir)"
+distdir_debian = "$(distdir_sub)/$(distdir)"
 
 dist-debian: dist
 	git log --pretty --numstat --summary --no-merges --since=29/10/2016 | git2cl > ChangeLog.$(shell date '+%g%m%d')
-	cp -f -t dist $(distdir).tar.gz
-	cd dist && gunzip -c $(distdir).tar.gz | tar xf -
-	cp -Rf dist/debian $(dist_debian_dir)
-	cd $(dist_debian_dir) && dpkg-buildpackage -rfakeroot
+	cp -f -t $(distdir_sub) $(distdir).tar.gz
+	cd $(distdir_sub) && gunzip -c $(distdir).tar.gz | tar xf -
+	cp -fR $(distdir_sub)/debian $(distdir_debian)
+	cd $(distdir_debian) && dpkg-buildpackage -rfakeroot
 	@echo '--------------------------------------------------------------------'
-	@dpkg-parsechangelog -l./dist/debian/changelog
+	@dpkg-parsechangelog -l./$(distdir_sub)/debian/changelog
 	@echo '--------------------------------------------------------------------'
-	-rm -Rf $(dist_debian_dir)
 
 
-# maintainer rule for "package" build on MinGW
+# Maintainer rule for Win64 build with MXE
 if BUILD_OS_MINGW32
 
-GTK_VERSION = $(shell $(PKG_CONFIG) --modversion "gtk+-2.0" | \
+GTK_VERSION = $(shell $(PKG_CONFIG) --modversion "gtk+-3.0" | \
                     sed -n 's/^\([0-9]\+\)\.\([0-9]\+\)\(\.[0-9]*\)\?/\1\2/p')
-dist_win32_dir = ./dist/$(PACKAGE)$(GTK_VERSION)-$(VERSION)
+dist_win64 = "$(PACKAGE)$(GTK_VERSION)-$(VERSION)"
+distdir_win64 = ./$(distdir_sub)/$(dist_win64)
+dist_archive = $(dist_win64).zip
 
-# all GTK/GDK DLLs needed by dfcgen-gtk (heuristically determined)
-GTK_DLL_COMMON = libgio-2.0-0.dll libatk-1.0-0.dll libcairo-2.dll libgdk_pixbuf-2.0-0.dll \
-         libgdk-win32-2.0-0.dll libglib-2.0-0.dll libgmodule-2.0-0.dll \
-         libgobject-2.0-0.dll libgsl-0.dll libgslcblas-0.dll \
-         libgtk-win32-2.0-0.dll libiconv-2.dll libintl-8.dll \
-         libpango-1.0-0.dll libpangocairo-1.0-0.dll libpangowin32-1.0-0.dll \
-         libpng*.dll libgthread-2.0-0.dll libpangoft2-1.0-0.dll zlib1.dll
+# MXE (M cross environment):
+# 1. download: git clone https://github.com/mxe/mxe.git
+# 2a) prepare file mxe/settings.mk, then simply do: make -C mxe
+# 2b) or, build w/o mxe/settings.mk: cd mxe && make gtk3 gsl adwaita-icon-theme -j8 MXE_TARGETS='x86_64-w64-mingw32.static'
+# 3. install: chmod -R o+r,o+X mxe; sudo cp -R mxe /opt
 
-GTK212_DLL_ADDONS = intl.dll libssp-0.dll
-GTK220_DLL_ADDONS = freetype6.dll libexpat-1.dll libfontconfig-1.dll
+# Useful sites:
+# - MXE Homepage: https://mxe.cc
+# - MXE Sources: https://github.com/mxe/mxe
+# - GTK 3 cross compile to Windows: https://gitlab.melroy.org/melroy/gtk-3-bundle-for-windows
+# - Setting up GTK for Windows: https://www.gtk.org/docs/installations/windows/
 
-GTK_DLL_LIST = $(GTK_DLL_COMMON) $(GTK212_DLL_ADDONS) $(GTK220_DLL_ADDONS)
+mxe_host_platform = x86_64-w64-mingw32.static
+mxe_win64_dir = /opt/mxe/usr/$(mxe_host_platform)/
+mxe_bin_dir = /opt/mxe/usr/bin
 
+dist-win64:
+	@echo "Building Win64 distribution in $(distdir_win64) ..."
 
-dist-win32: all
-	@echo "Building Win32 distribution in $(dist_win32_dir) ..."
-	rm -fR $(dist_win32_dir)
-	mkdir $(dist_win32_dir)
-	cp ./src/$(PACKAGE)$(EXEEXT) $(dist_win32_dir)
-	mkdir $(dist_win32_dir)/share
-	cp -R ./data/pixmaps $(dist_win32_dir)/share && rm -fR $(dist_win32_dir)/share/pixmaps/Makefile* $(dist_win32_dir)/share/pixmaps/.svn
-	cp -R ./data/filters $(dist_win32_dir)/share && rm -fR $(dist_win32_dir)/share/filters/Makefile* $(dist_win32_dir)/share/filters/.svn
-	cp -R ./data/templates $(dist_win32_dir)/share && rm -fR $(dist_win32_dir)/share/templates/Makefile* $(dist_win32_dir)/share/templates/.svn
-	mkdir $(dist_win32_dir)/share/locale
-	cp -R /mingw/share/locale/de $(dist_win32_dir)/share/locale
-	cp -R ./$(POSUB)/de.gmo $(dist_win32_dir)/share/locale/de/LC_MESSAGES/dfcgen-gtk.mo
-	cp -R /mingw/etc $(dist_win32_dir)
-	mkdir $(dist_win32_dir)/lib
-	cp -R /mingw/lib/gtk-2.0 $(dist_win32_dir)/lib && rm -fR $(dist_win32_dir)/lib/gtk-2.0/include
-	for f in $(GTK_DLL_LIST); do \
-	  echo -e "\tPackaging $(dist_win32_dir)/$$f"; \
-	  cp -t $(dist_win32_dir) /mingw/bin/$$f 2>/dev/null; \
-	  true; \
-	done
+	export PATH=$(mxe_bin_dir):$$PATH; \
+	./configure --host=$(mxe_host_platform) && make clean all
+
+	rm "./$(distdir_sub)/$(dist_archive)"
+	rm -fR $(distdir_win64)
+	mkdir -p $(distdir_win64)
+	mkdir -p $(distdir_win64)/share
+	mkdir -p $(distdir_win64)/share/glib-2.0
+	mkdir -p $(distdir_win64)/share/locale
+	mkdir -p $(distdir_win64)/share/icons
+	mkdir -p $(distdir_win64)/etc/gtk-3.0
+	cp ./src/$(PACKAGE)$(EXEEXT) $(distdir_win64)
+	cp -R ./data/pixmaps $(distdir_win64)/share && rm -fR $(distdir_win64)/share/pixmaps/Makefile*
+	cp -R ./data/filters $(distdir_win64)/share && rm -fR $(distdir_win64)/share/filters/Makefile*
+	cp -R ./data/templates $(distdir_win64)/share && rm -fR $(distdir_win64)/share/templates/Makefile*
+	cp -R $(mxe_win64_dir)/share/locale/de $(distdir_win64)/share/locale
+	cp -R ./$(POSUB)/de.gmo $(distdir_win64)/share/locale/de/LC_MESSAGES/dfcgen-gtk.mo
+	cp -R $(mxe_win64_dir)/share/icons/Adwaita $(distdir_win64)/share/icons
+	cp -R $(mxe_win64_dir)/share/glib-2.0/schemas $(distdir_win64)/share/glib-2.0
+	glib-compile-schemas $(distdir_win64)/share/glib-2.0/schemas
+	cp ./$(distdir_sub)/win64/settings.ini $(distdir_win64)/etc/gtk-3.0
+	cd ./$(distdir_sub); zip -r $(dist_archive) $(dist_win64)
 	@echo
 	@echo '--------------------------------------------------------------------'
-	@echo "Win32 package in $(dist_win32_dir) ready for upload"
+	@echo "Win64 archive $(dist_archive) ready for upload"
 	@echo '--------------------------------------------------------------------'
 
 endif
@@ -96,8 +105,9 @@ endif
 
 
 maintainer-clean-local:
-	-rm -Rf $(dist_debiandir)
+	-rm -fR $(distdir_debian)
+	-rm -fR $(distdir_win64)
 
 
 
-.PHONY: dist-debian dist-win32
+.PHONY: dist-debian dist-win64

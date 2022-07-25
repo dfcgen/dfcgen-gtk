@@ -30,7 +30,7 @@ AC_CONFIG_FILES([Makefile
                  dist/Makefile
                  dist/debian/Makefile
                  dist/debian/source/Makefile
-                 dist/win32/Makefile])
+                 dist/win64/Makefile])
 
 
 dnl We are not strictly GNU compatible (foreign), because the following files

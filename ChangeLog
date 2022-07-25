@@ -1,3 +1,16 @@
+2022-07-25  Ralf Hoppe  <ralf.hoppe@dfcgen.de>
+
+	* dist/win64/Makefile.am (EXTRA_DIST): Add file settings.ini.
+
+	* Makefile.am [MinGW]: Migrate MinGW rule to dist-win64 (MXE).
+
+	* dist/Makefile.am (SUBDIRS): Add subdir win64, remove win32.
+	* src/Makefile.am: Ditto.
+
+2022-07-19  Ralf Hoppe  <ralf.hoppe@dfcgen.de>
+
+	* configure.ac(CFLAGS_DEBUG): Fix forgotten apostrophe.
+
 2022-07-15  Ralf Hoppe  <ralf.hoppe@dfcgen.de>
 
 	* configure.ac (COPYRIGHT_HOLDER): Update year.
