@@ -1,3 +1,10 @@
+2022-07-26  Ralf Hoppe  <ralf.hoppe@dfcgen.de>
+
+	* include/gui.h (GUI_BUTTON_IMAGE_COEFF_MULTIPLY): Changed icon,
+	not available in Adwaita theme.
+	(GUI_MENU_IMAGE_INFO): Ditto.
+	(GUI_MENU_IMAGE_EXPORT): Ditto.
+
 2022-07-25  Ralf Hoppe  <ralf.hoppe@dfcgen.de>
 
 	* dist/win64/Makefile.am (EXTRA_DIST): Add file settings.ini.

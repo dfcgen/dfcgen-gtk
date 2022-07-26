@@ -67,19 +67,19 @@ extern "C" {
 #define GUI_BUTTON_IMAGE_SAVE           "gtk-save"
 #define GUI_BUTTON_IMAGE_PREFS          GUI_ICON_IMAGE_PREFS
 #define GUI_BUTTON_IMAGE_COEFF_EDIT     "gtk-edit"
-#define GUI_BUTTON_IMAGE_COEFF_MULTIPLY "gtk-fullscreen"
+#define GUI_BUTTON_IMAGE_COEFF_MULTIPLY "view-fullscreen"
 #define GUI_BUTTON_IMAGE_COEFF_ROUND    "gtk-convert"
 
 
 #define GUI_MENU_IMAGE_HELP             "help-contents"
 #define GUI_MENU_IMAGE_ABOUT            "help-about"
-#define GUI_MENU_IMAGE_INFO             "help-info"
+#define GUI_MENU_IMAGE_INFO             "document-properties"
 #define GUI_MENU_IMAGE_PRINT            "document-print"
 #define GUI_MENU_IMAGE_OPEN             "document-open"
 #define GUI_MENU_IMAGE_SAVE             "document-save"
 #define GUI_MENU_IMAGE_SAVE_AS          "document-save-as"
 #define GUI_MENU_IMAGE_NEW              "document-new"
-#define GUI_MENU_IMAGE_EXPORT           "document-export"
+#define GUI_MENU_IMAGE_EXPORT           "document-export" /* not available in Adwaita */
 #define GUI_MENU_IMAGE_PREFS            GUI_ICON_IMAGE_PREFS
 #define GUI_MENU_IMAGE_QUIT             "application-exit"
 
