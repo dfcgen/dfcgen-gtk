@@ -1,0 +1,58 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Format: 1.8
+Date: Thu, 14 Jul 2022 22:38:50 +0200
+Source: dfcgen-gtk
+Binary: dfcgen-gtk
+Built-For-Profiles: noudeb
+Architecture: source amd64
+Version: 0.6-1
+Distribution: unstable
+Urgency: medium
+Maintainer: Ralf Hoppe <ralf.hoppe@dfcgen.de>
+Changed-By: Ralf Hoppe <ralf.hoppe@dfcgen.de>
+Description:
+ dfcgen-gtk - Digital Filter Coefficients Generator (DFCGen) GTK+
+Closes: 967310
+Changes:
+ dfcgen-gtk (0.6-1) unstable; urgency=medium
+ .
+   * Migration to GTK 3.18, up to 3.24 (Closes: #967310)
+   * Fix missing window redraw after change of settings
+Checksums-Sha1:
+ 56fd8e0e5e5bdb662bfe5dbc7ba343b8aac0a3c7 1601 dfcgen-gtk_0.6-1.dsc
+ 90d6774130c04b845acf77dbbb4e7d68f5dee523 448727 dfcgen-gtk_0.6-1.tar.gz
+ 98249cfab338d3292b29dc0874f7cbf9700246cc 214802 dfcgen-gtk-dbgsym_0.6-1_amd64.ddeb
+ 88141f73163a5b4fcf079c70d685204d11a18edf 16772 dfcgen-gtk_0.6-1_amd64.buildinfo
+ 0aa7ce6ecde887bbce6d465c78c4ed324f65037d 109254 dfcgen-gtk_0.6-1_amd64.deb
+Checksums-Sha256:
+ ad22adc1d8635b064f353e28a5e4a27e85eab4e542ca7e86ce7a5dc9236222e5 1601 dfcgen-gtk_0.6-1.dsc
+ b6831e5f3484a57822f2b9e7dbc0c9af1c630c91deb7915f3b10e33d01d22ab5 448727 dfcgen-gtk_0.6-1.tar.gz
+ 7dd552725fe8f53899fdc9bca6d58aa63a151da63f50266d5d01265c04ac7659 214802 dfcgen-gtk-dbgsym_0.6-1_amd64.ddeb
+ 3e075a6453118fb4eba935db1ef1a3053901fca39a2753e22aa6e7b5bc32ea4a 16772 dfcgen-gtk_0.6-1_amd64.buildinfo
+ 5e44c091a22f5ccf2c3dfff0e3d289c535350b132ce6f4e916f2313635dc8905 109254 dfcgen-gtk_0.6-1_amd64.deb
+Files:
+ df61d849f8a9d83d75c8605be3f29f74 1601 electronics optional dfcgen-gtk_0.6-1.dsc
+ 59c37e73eceace505a394b8949aecffa 448727 electronics optional dfcgen-gtk_0.6-1.tar.gz
+ b986b23a26e137b166aea130f4739f06 214802 debug optional dfcgen-gtk-dbgsym_0.6-1_amd64.ddeb
+ d4461e1531894616c312d0ac3e901c3d 16772 electronics optional dfcgen-gtk_0.6-1_amd64.buildinfo
+ 7367003648ce5838f23468e379d6b2ae 109254 electronics optional dfcgen-gtk_0.6-1_amd64.deb
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJJBAEBCgAzFiEExAB6oV3lYsA0DXUm0E9vGhQsfQ8FAmLhjS8VHHJhbGYuaG9w
+cGVAZGZjZ2VuLmRlAAoJENBPbxoULH0PEUEP/2+a1NncL/tPZEnSbZfF9W/wxfqD
+8UvM68xNDxS/mbkvMGrfxkBDPly9bmZKWEwWIxP+YnGNf1FnSBbq5S1aCuC0at+b
+Mnpt2c4hAjVA5+F8rQ8uaD19K3l8kzjNb3P+zuSwBBgUqNnfPVGxmeo8nBJ9tI19
+jfuWsj+n8GxDvJdvyhYas+v98rPfqtx8W/GPpQoLnCC7fwB+SK7tH7unJ+v6hmqq
+I7D8CaISCJeQ9TIXOCKb+n03loORvWDnvvykObPCDruOTVrTEgVjjIWPhY5pi/17
+uEKBQ4Z8gXTDwvmKD/MG35MaxR0GlD9NfQf6sa8woIYUtVDK7fWaJwmsmUstCUr5
+fNtWKjCKm6NrmrJ1aR4Wo84JtFcHl4vAymOgiTs9go4yNGPjzjDAx9+O/f+IYph+
+F8b0x3ebkiVKun70CCtVTYsTszCh9mpvoCeIihwy+y6xwfzRuPptHMh1BsgunfHV
+/APu3m9X50tp4cRvAIdCChDW+uEwBhas8zd8vk2Ug+N3EK0rASB93w83VDicM9zy
+zptzbU5rP4YiuEVPM38CpHSm5ctUPt8XihnMmazoZtFvw/RwSJqXwZQmIdK7GKMD
+Z5ngjIrbI6y6NZnslqFV+V8qJ0tfUrXVsAP5M9wVjn8vaTmVDdWuHZ7XSuKYXZqX
+8uXtYpUXoRuRmwyx
+=2Hie
+-----END PGP SIGNATURE-----
