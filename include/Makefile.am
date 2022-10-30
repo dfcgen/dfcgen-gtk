@@ -1,6 +1,6 @@
 ## Makefile.am
 ##
-## Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+## Copyright (C) 2006-2022 Ralf Hoppe <dfcgen@rho62.de>
 ##
 
 noinst_HEADERS = \

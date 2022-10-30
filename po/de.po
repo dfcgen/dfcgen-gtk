@@ -1,16 +1,16 @@
 # -*- mode: po; coding: utf-8 -*-
 #
 # dfcgen-gtk German Translations
-# Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+# Copyright (C) 2006-2022 Ralf Hoppe <dfcgen@rho62.de>
 # This file is distributed under the same license as the dfcgen-gtk package.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: dfcgen-gtk 0.6\n"
-"Report-Msgid-Bugs-To: ralf.hoppe@dfcgen.de\n"
+"Report-Msgid-Bugs-To: dfcgen@rho62.de\n"
 "POT-Creation-Date: 2022-07-14 21:37+0200\n"
 "PO-Revision-Date: 2022-05-24 21:55+0200\n"
-"Last-Translator: Ralf Hoppe <ralf.hoppe@dfcgen.de>\n"
+"Last-Translator: Ralf Hoppe <dfcgen@rho62.de>\n"
 "Language-Team: Ralf Hoppe\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"

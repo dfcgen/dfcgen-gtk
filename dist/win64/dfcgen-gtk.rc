@@ -1,7 +1,7 @@
 /*****************************************************************************
  * dfcgen-gtk windows resource file, to be compiled with RC (MS) or WINDRES (MinGW)
  *
- * Author:  Copyright (C) 2011-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * Author:  Copyright (C) 2011-2022 Ralf Hoppe <dfcgen@rho62.de>
  *
  ******************************************************************************/
 
@@ -31,7 +31,7 @@ BEGIN
 			VALUE "InternalName", PACKAGE "\000"
 			VALUE "OriginalFilename", PACKAGE ".exe\000"
 			VALUE "ProductName", PACKAGE " for Windows\000"
-            VALUE "E-Mail", "ralf.hoppe@dfcgen.de"
+            VALUE "E-Mail", "dfcgen@rho62.de"
 		END
 	END
 

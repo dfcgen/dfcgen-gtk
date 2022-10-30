@@ -1,3 +1,17 @@
+2022-10-30  Ralf Hoppe  <dfcgen@rho62.de>
+
+	* configure.ac (AC_INIT):  Change of email contact.
+	* dist/debian/control (Maintainer): Ditto.
+	* dist/debian/copyright (Upstream-Contact): Ditto.
+
+	* configure.ac (AC_INIT): Changed homepage to dfcgen.rho62.de.
+	* dist/debian/control (Homepage): Ditto.
+	* dist/debian/copyright (Source): Ditto.
+
+	* ChangeLog, COPYING, po/Makevars, po/POTFILES.in, po/de.po:
+	Changed of copyright email in source file headers.
+	* data/templates/*, Makefile.am, include/*.h, src/*.c: Ditto.
+
 2022-07-26  Ralf Hoppe  <ralf.hoppe@dfcgen.de>
 
 	* include/gui.h (GUI_BUTTON_IMAGE_COEFF_MULTIPLY): Changed icon,
@@ -1422,4 +1436,4 @@
 	* .*: Initial import.
 
 
-Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+Copyright (C) 2006-2022 Ralf Hoppe <dfcgen@rho62.de>

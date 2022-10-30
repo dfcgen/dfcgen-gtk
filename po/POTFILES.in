@@ -1,5 +1,5 @@
 # List of source files containing translatable strings.
-# Copyright (C) 2006-2021 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+# Copyright (C) 2006-2022 Ralf Hoppe <dfcgen@rho62.de>
 
 # Source files
 include/gui.h

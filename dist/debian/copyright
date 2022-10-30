@@ -1,15 +1,15 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: DFCGen (GTK+)
-Upstream-Contact: Ralf Hoppe <ralf.hoppe@dfcgen.de>
-Source: http://www.dfcgen.de
+Upstream-Contact: Ralf Hoppe <dfcgen@rho62.de>
+Source: https://dfcgen.rho62.de
 
 Files: *
 License: GPL-2.0
-Copyright: 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+Copyright: 2006-2022 Ralf Hoppe <dfcgen@rho62.de>
 
 Files: debian/*
 License: GPL-2.0
-Copyright: 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+Copyright: 2006-2022 Ralf Hoppe <dfcgen@rho62.de>
            2016-2019 Graham Inggs <ginggs@debian.org>
 
 License: GPL-2.0

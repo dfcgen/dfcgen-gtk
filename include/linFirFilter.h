@@ -2,7 +2,7 @@
 /**
  * \file     linFirFilter.h
  * \brief    Interface to Linear IIR Filter interpolation functions.
- * \author   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * \author   Copyright (C) 2006-2022 Ralf Hoppe <dfcgen@rho62.de>
  *
  ******************************************************************************/
 

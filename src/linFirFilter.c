@@ -1,7 +1,7 @@
 /**
  * \file        linFirFilter.c
  * \brief       Linear FIR filter coefficients generator.
- * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <dfcgen@rho62.de>
  */
 
 

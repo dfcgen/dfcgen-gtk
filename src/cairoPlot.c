@@ -1,7 +1,7 @@
 /**
  * \file        cairoPlot.c
  * \brief       2-dimensional plot on a \e Cairo graphic context.
- * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <dfcgen@rho62.de>
  */
 
 

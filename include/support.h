@@ -2,7 +2,7 @@
  * \file        support.h
  * \brief       Support functions, defines and macros, mostly for \e gettext,
  *              widget and file handling.
- * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <dfcgen@rho62.de>
  */
 
 #ifndef SUPPORT_H

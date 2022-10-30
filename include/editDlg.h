@@ -1,7 +1,7 @@
 /**
  * \file        editDlg.h
  * \brief       Interface to dialog functions of \e Edit menu.
- * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <dfcgen@rho62.de>
  */
 
 #ifndef EDITDLG_H

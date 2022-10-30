@@ -2,7 +2,7 @@
  * \file        miscFilter.c
  * \brief       Misc filter design.
  * \note        Includes raw filters (filters without a design, except \f$f_{Sample}\f$).
- * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <dfcgen@rho62.de>
  */
 
 

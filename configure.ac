@@ -1,6 +1,6 @@
 dnl -*- mode: autoconf; coding: utf-8 -*-
 dnl
-dnl Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+dnl Copyright (C) 2006-2022 Ralf Hoppe <dfcgen@rho62.de>
 dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl
@@ -8,10 +8,10 @@ dnl
 AC_PREREQ([2.69])
 
 AC_INIT([Digital Filter Coefficients Generator (GTK+)],
-        [0.6],
-        [ralf.hoppe@dfcgen.de],
+        [0.7],
+        [dfcgen@rho62.de],
         [dfcgen-gtk],
-        [http://www.dfcgen.de])
+        [https://dfcgen.rho62.de])
 
 AC_CONFIG_HEADERS([config.h])
 

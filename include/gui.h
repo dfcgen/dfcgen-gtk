@@ -1,7 +1,7 @@
 /**
  * \file        gui.h
  * \brief       GUI header files.
- * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <dfcgen@rho62.de>
  */
 
 #ifndef GUI_H

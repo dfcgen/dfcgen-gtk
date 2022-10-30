@@ -1,7 +1,7 @@
 /**
  * \file        filterPrint.c
  * \brief       Filter print functions.
- * \copyright   Copyright (C) 2011-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de> 
+ * \copyright   Copyright (C) 2011-2022 Ralf Hoppe <dfcgen@rho62.de> 
  */
 
 

@@ -1,6 +1,6 @@
 ## -*- mode: makefile-automake -*-
 ##
-## Copyright (c) 2006-2020 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+## Copyright (c) 2006-2022 Ralf Hoppe <dfcgen@rho62.de>
 ##
 
 pixmapsdir = $(pkgpixmapsdir)

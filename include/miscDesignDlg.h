@@ -2,7 +2,7 @@
  * \file        miscDesignDlg.h
  * \brief       Miscellaneous FIR/IIR design dialogs.
  * \note        Includes raw filters (filters without a design, except \f$f_{Sample}\f$).
- * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <dfcgen@rho62.de>
  */
 
 #ifndef MISCFLT_DESIGNDLG_H

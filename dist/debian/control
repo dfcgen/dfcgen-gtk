@@ -1,10 +1,10 @@
 Source: dfcgen-gtk
 Section: electronics
 Priority: optional
-Maintainer: Ralf Hoppe <ralf.hoppe@dfcgen.de>
+Maintainer: Ralf Hoppe <dfcgen@rho62.de>
 Build-Depends: debhelper (>= 9), libgsl-dev, libgtk-3-dev (>= 3.18)
 Standards-Version: 3.9.8
-Homepage: http://www.dfcgen.de
+Homepage: https://dfcgen.rho62.de
 Vcs-Browser: https://github.com/dfcgen/dfcgen-gtk
 Vcs-Git: https://github.com/dfcgen/dfcgen-gtk.git
 

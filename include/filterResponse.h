@@ -1,7 +1,7 @@
 /**
  * \file        filterResponse.h
  * \brief       Filter response functions.
- * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <ralf.hoppe@dfcgen.de>
+ * \copyright   Copyright (C) 2006-2022 Ralf Hoppe <dfcgen@rho62.de>
  */
 
 #ifndef FILTER_RESPONSE_H
