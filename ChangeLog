@@ -1,3 +1,7 @@
+2022-10-31  Ralf Hoppe  <dfcgen@rho62.de>
+
+	* README: Reformatted using some markdown.
+
 2022-10-30  Ralf Hoppe  <dfcgen@rho62.de>
 
 	* configure.ac (AC_INIT):  Change of email contact.
